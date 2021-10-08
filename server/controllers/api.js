@@ -1,8 +1,8 @@
-import CreateProduct from "../models/product.js";
+import Product from "../models/product.js";
 
-export const mainPage = async (req, res) => {
+export const readAllProducts = async (req, res) => {
   try {
-    const product = await CreateProduct.find();
+    const product = await Product.find();
 
     res.status(200).json(product);
     
@@ -18,9 +18,9 @@ export const readProduct = async (req, res) => {
   var title = req.body;
 
   try {
-    const product = await CreateProduct.findById(title);
+    const product = await Product.findById(title);
 
-    console.log(product);
+    console.log('title');
 
     res.status(200).json(product);
   } catch (error) {
@@ -30,17 +30,21 @@ export const readProduct = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
-  var post = req.body;
+  const post = req.body;
+  // COGER EL TITULO
+  console.log(req.url.title);
 
-  const product = new CreateProduct(post);
+  const product = new Product(post);
+  
   try {
     await product.save();
 
     res.status(201).json(product);
-    console.log(product.title);
+    console.log(req.body);
 
   } catch (error) {
     res.status(409).json(error.message);
+    
     console.log('fail');
   }
 }

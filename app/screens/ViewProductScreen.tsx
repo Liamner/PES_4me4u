@@ -1,0 +1,75 @@
+import * as React from 'react';
+import { useState } from 'react';
+import { StyleSheet, Image, FlatList } from 'react-native';
+
+import { Text, View } from '../components/Themed';
+import { RootTabScreenProps } from '../types';
+
+export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+  const [tags, setTags] = useState([
+    { name:'#intercambio', key: 1},
+    { name:'#prestamo', key: 2},
+    { name:'#regalo', key: 3},
+  ]);
+
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.image}
+        source={require('../assets/images/adaptive-icon.png')} 
+      />
+      <Text style={styles.title}>Nombre Producto</Text>
+      <Text style={styles.smallText}> Nombre Usuario </Text>
+      <Text style={styles.smallText}> Descrpción </Text>
+      <FlatList 
+        // tiene mucho espacio por alguna razón
+        numColumns={3}
+        horizontal={false}
+        data={tags}
+        renderItem={({item}) => (
+          <Text style={styles.tags}> {item.name} </Text>
+        )}
+      />
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <Text style={styles.mediumText}> Abrir chat con Usuario </Text>
+      <Text style={styles.mediumText}> Guardar en la lista </Text>
+      <Text> Ubicación </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: 15,
+    height: 1,
+    width: '80%',
+  },
+  tags: {
+    backgroundColor: '#2f95dc',
+    margin: 5,
+  },
+  mediumText: {
+    fontSize: 15,
+  },
+  smallText: {
+    color: '#333',
+    fontSize: 13,
+  },
+  image: {
+    width: 250,
+    height: 250,
+    margin: 10
+  },
+  test: {
+    backgroundColor: 'red',
+  }
+});

@@ -6,7 +6,6 @@ export const readAllProducts = async (req, res) => {
 
     res.status(200).json(product);
     
-    
     console.log(product);
   } catch (error) {
     res.status(400).json(error.message);
@@ -15,10 +14,10 @@ export const readAllProducts = async (req, res) => {
 };
 
 export const readProduct = async (req, res) => {
-  var title = req.body;
+  const title = req.params.title;
 
   try {
-    const product = await Product.findById(title);
+    const product = await Product.find(title);
 
     console.log('title');
 
@@ -30,17 +29,15 @@ export const readProduct = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
-  const post = req.body;
-  // COGER EL TITULO
-  console.log(req.url.title);
+  const product = new Product();
+  product.title = req.params.title;
 
-  const product = new Product(post);
-  
+  console.log('Este es el titulo '+ req.params.title);
+
   try {
     await product.save();
 
     res.status(201).json(product);
-    console.log(req.body);
 
   } catch (error) {
     res.status(409).json(error.message);

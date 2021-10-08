@@ -19,21 +19,21 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         source={require('../assets/images/adaptive-icon.png')} 
       />
       <Text style={styles.title}>Nombre Producto</Text>
-      <Text style={styles.smallText}> Nombre Usuario </Text>
-      <Text style={styles.smallText}> Descrpción </Text>
+      <Text style={styles.smallText}>Publicado por: @Usuario</Text>
       <FlatList 
         // tiene mucho espacio por alguna razón
-        numColumns={3}
-        horizontal={false}
+        style={styles.flatlist}
+        horizontal={true}
         data={tags}
         renderItem={({item}) => (
           <Text style={styles.tags}> {item.name} </Text>
-        )}
+         )}
       />
+      <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text style={styles.mediumText}> Abrir chat con Usuario </Text>
-      <Text style={styles.mediumText}> Guardar en la lista </Text>
-      <Text> Ubicación </Text>
+      <Text style={styles.mediumText}>Abrir chat con @Usuario</Text>
+      <Text style={styles.mediumText}>Guardar en la lista</Text>
+      <Text style={styles.mediumText}>Ubicación</Text>
     </View>
   );
 }
@@ -42,23 +42,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+
   },
   separator: {
     marginVertical: 15,
     height: 1,
     width: '80%',
   },
+  flatlist: {
+    height: 30,
+    flexGrow: 0
+  },
   tags: {
     backgroundColor: '#2f95dc',
     margin: 5,
+    height: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   mediumText: {
     fontSize: 15,
+    alignSelf: 'flex-start',
+    marginLeft: '10%',
+    marginRight: '10%',
+    textAlign: 'justify',
   },
   smallText: {
     color: '#333',
@@ -69,7 +78,4 @@ const styles = StyleSheet.create({
     height: 250,
     margin: 10
   },
-  test: {
-    backgroundColor: 'red',
-  }
 });

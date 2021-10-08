@@ -20,10 +20,8 @@ const PORT = process.env.PORT || 5000;
 mongoose
   .connect(CONNECTION_URL, {
     useNewUrlParser: true,
-  })
-  .then(() =>
+  }).then(() =>
     app.listen(PORT, () =>
       console.log("Connection is established on port:" + PORT)
     )
-  )
-  .catch((err) => console.log(err.message));
+  ).catch((err) => console.log(err.message));

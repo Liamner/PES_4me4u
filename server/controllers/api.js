@@ -14,10 +14,8 @@ export const readAllProducts = async (req, res) => {
 };
 
 export const readProduct = async (req, res) => {
-  const title = req.params.title;
-
   try {
-    const product = await Product.find(title);
+    const product = await Product.findOne({title: req.params.title});
 
     console.log('title');
 
@@ -31,6 +29,7 @@ export const readProduct = async (req, res) => {
 export const createProduct = async (req, res) => {
   const product = new Product();
   product.title = req.params.title;
+  product.description = req.params.description;
 
   console.log('Este es el titulo '+ req.params.title);
 

@@ -7,6 +7,6 @@ const router = express.Router();
 // http://localhost:5000/api/
 router.get("/", readAllProducts);
 router.get("/:title", readProduct);
-router.post("/:title", createProduct);
+router.post("/:title&:description", createProduct);
 
 export default router;

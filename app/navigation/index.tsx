@@ -17,8 +17,9 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 
-import Login from '../screens/LoginScreen'
-import SignUp from '../screens/SignUpScreen'
+import Login from '../screens/LoginScreen';
+import SignUp from '../screens/SignUpScreen';
+import SignIn from '../screens/SignInScreen'
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -55,10 +56,6 @@ function RootNavigator() {
 
 const LoginStack = createNativeStackNavigator();
 
-/** Este LoginNavigator debería ser el RootNavigator ya 
- * que es la priemra pantalla que ha de ver el usuario
- */
-
 function LoginNavigator() {
   return(
     <LoginStack.Navigator screenOptions={{
@@ -71,7 +68,8 @@ function LoginNavigator() {
         }
     }}>
         <LoginStack.Screen name="Login" component = {Login} options={{headerShown: false}}/>
-        <LoginStack.Screen name="SignUp" component = {SignUp} options={{title: 'SignUp'}}/>
+        <LoginStack.Screen name="SignIn" component = {SignIn} options={{headerShown: false}}/>
+        <LoginStack.Screen name="SignUp" component = {SignUp} options={{title: 'SignUp', headerShown: false}}/>
         <LoginStack.Screen name="BottomTab" component = {RootNavigator} options={{headerShown: false}}/>
     </LoginStack.Navigator>
   );

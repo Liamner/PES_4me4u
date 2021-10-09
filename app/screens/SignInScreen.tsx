@@ -11,15 +11,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
 
-
-export default function SignUp({navigation}) {
+export default function SignInScreen({navigation}) {
+    
     const [data, setData] = React.useState({
         email:'',
         password:'',
-        confirmPassword:'',
         check_textInputChange: false,
-        secureTextEntry: true,
-        confirmSecureTextEntry: true
+        secureTextEntry: true
     });
 
     const textInputChange = (val) => {
@@ -45,12 +43,6 @@ export default function SignUp({navigation}) {
             password: val
         });
     }
-    const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirmPassword: val
-        });
-    }
 
     const updateSecureTextEntry = () => {
         setData({
@@ -59,18 +51,11 @@ export default function SignUp({navigation}) {
         });
     }
 
-    const updateConfirmSecureTextEntry = () => {
-        setData({
-            ...data,
-            confirmSecureTextEntry: !data.confirmSecureTextEntry
-        });
-    }
-
     return (
         <View style={styles.container}>
 
             <View style={styles.header}>
-                <Text style={styles.text_header}>¡Únete a 4me4u!</Text>
+                <Text style={styles.text_header}>¡Bienvenido a 4me4u!</Text>
             </View>
 
             <View style={styles.footer}>
@@ -133,39 +118,6 @@ export default function SignUp({navigation}) {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={[styles.text_footer, {
-                    marginTop: 35
-                }]}>Confirmación de contraseña</Text>
-
-                <View style={styles.action}>
-                    <FontAwesome
-                        name="lock"
-                        size={20}
-                    />
-                    <TextInput
-                        placeholder="Confirma tu contraseña"
-                        secureTextEntry={data.confirmSecureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handleConfirmPasswordChange(val)}
-                    />
-                    <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                        {data.secureTextEntry ?
-                            <Feather 
-                            name="eye-off"
-                            size={20}
-                            color="grey" 
-                            />
-                            :
-                            <Feather 
-                            name="eye"
-                            size={20}
-                            color="grey" 
-                            />
-                        }
-                    </TouchableOpacity>
-                </View>
-
                 <View style={styles.button}>
                     <TouchableOpacity
                             onPress={()=>navigation.navigate("BottomTab")}
@@ -177,12 +129,12 @@ export default function SignUp({navigation}) {
                         >
                             <Text style={[styles.textSign, 
                                 {color: '#fff'}]}>
-                                    Regístrate
+                                    Iniciar sesión
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={()=>navigation.goBack()}
+                        onPress={()=>navigation.navigate("SignUp")}
                         style={[styles.signIn, {
                             borderColor: '#90e0ef',
                             borderWidth: 1,
@@ -192,13 +144,13 @@ export default function SignUp({navigation}) {
                     >
                         <Text style={[styles.textSign,
                              {color: '#90e0ef'}]}
-                        >Volver</Text>
+                        >Registrarse</Text>
                     </TouchableOpacity>
                 </View>
                 
             </View>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({

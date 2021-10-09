@@ -22,7 +22,7 @@ const logoImage = require('../assets/images/logo.png')
             </View>
             <View style = {styles.footer}>
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("SignUp") }
+                onPress={()=>navigation.navigate("BottomTab") }
                 >
                     <LinearGradient
                         colors={['#4c669f', '#3b5998', '#192f6a']}
@@ -33,15 +33,15 @@ const logoImage = require('../assets/images/logo.png')
                         name = "facebook"
                         size = {20}
                         />
-                        <Text style = {styles.facebook}>  Continuar con Facebook</Text>
+                        <Text style = {styles.whiteText}>  Continuar con Facebook</Text>
                         </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("SignUp") }
+                onPress={()=>navigation.navigate("BottomTab")}
                 >
                     <LinearGradient
                         colors={['#ffffff', '#ffffff']}
-                        style={styles.button}
+                        style={[styles.button, {borderWidth: 1, borderColor: '#90e0ef'}]}
                     >
                        <FontAwesome
                         color = '#000'
@@ -52,7 +52,7 @@ const logoImage = require('../assets/images/logo.png')
                         </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("SignUp") }
+                onPress={()=>navigation.navigate("SignIn") }
                 >
                     <LinearGradient
                         colors={['#d90429', '#ef233c']}
@@ -63,7 +63,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "email"
                         size = {20}
                         />
-                        <Text style = {styles.facebook}>  Continuar con Email</Text>
+                        <Text style = {styles.whiteText}>  Continuar con Email</Text>
                         </LinearGradient>
                 </TouchableOpacity>
             </View>
@@ -77,7 +77,7 @@ const height_logo = height * 0.28;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fffff0'
+        backgroundColor: '#ffffff'
       },
       header: {
           flex: 2,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
       footer: {
           flex: 1,
           justifyContent: 'space-around',
-          alignItems: 'center'
+          alignItems: 'center',
       },
       logo: {
           width: height_logo,
@@ -100,15 +100,14 @@ const styles = StyleSheet.create({
       google: {
           color: '#000'
       },
-      facebook: {
+      whiteText: {
           color: '#fff'
       },
       button:{
           width: 200,
-          height: 60,
+          height: 50,
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: 50,
           flexDirection: 'row'
       }
 });

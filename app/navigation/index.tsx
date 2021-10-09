@@ -55,6 +55,10 @@ function RootNavigator() {
 
 const LoginStack = createNativeStackNavigator();
 
+/** Este LoginNavigator debería ser el RootNavigator ya 
+ * que es la priemra pantalla que ha de ver el usuario
+ */
+
 function LoginNavigator() {
   return(
     <LoginStack.Navigator screenOptions={{
@@ -68,7 +72,7 @@ function LoginNavigator() {
     }}>
         <LoginStack.Screen name="Login" component = {Login} options={{headerShown: false}}/>
         <LoginStack.Screen name="SignUp" component = {SignUp} options={{title: 'SignUp'}}/>
-        <LoginStack.Screen name="RootBottomTab" component = {RootNavigator} options={{headerShown: false}}/>
+        <LoginStack.Screen name="BottomTab" component = {RootNavigator} options={{headerShown: false}}/>
     </LoginStack.Navigator>
   );
 }

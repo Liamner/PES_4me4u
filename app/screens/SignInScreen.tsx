@@ -6,7 +6,6 @@ import { Platform, StyleSheet,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 import { Feather, FontAwesome } from '@expo/vector-icons';
-import { validate } from '@babel/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
@@ -87,7 +86,8 @@ export default function SignInScreen({navigation}) {
 
                 <Text style={[styles.text_footer, {
                     marginTop: 35
-                }]}>Contraseña</Text>
+                }]}>Contraseña
+                </Text>
 
                 <View style={styles.action}>
                     <FontAwesome
@@ -144,13 +144,13 @@ export default function SignInScreen({navigation}) {
                     >
                         <Text style={[styles.textSign,
                              {color: '#90e0ef'}]}
-                        >Registrarse</Text>
+                        >Registrarse
+                        </Text>
                     </TouchableOpacity>
                 </View>
-                
             </View>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

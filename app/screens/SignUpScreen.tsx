@@ -6,7 +6,6 @@ import { Platform, StyleSheet,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 import { Feather, FontAwesome } from '@expo/vector-icons';
-import { validate } from '@babel/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
@@ -150,7 +149,7 @@ export default function SignUp({navigation}) {
                         onChangeText={(val) => handleConfirmPasswordChange(val)}
                     />
                     <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                        {data.secureTextEntry ?
+                        {data.confirmSecureTextEntry ?
                             <Feather 
                             name="eye-off"
                             size={20}
@@ -181,6 +180,7 @@ export default function SignUp({navigation}) {
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
+
                     <TouchableOpacity
                         onPress={()=>navigation.goBack()}
                         style={[styles.signIn, {
@@ -194,8 +194,7 @@ export default function SignUp({navigation}) {
                              {color: '#90e0ef'}]}
                         >Volver</Text>
                     </TouchableOpacity>
-                </View>
-                
+                </View>               
             </View>
         </View>
     );

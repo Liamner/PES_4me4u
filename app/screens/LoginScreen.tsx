@@ -14,12 +14,14 @@ const logoImage = require('../assets/images/logo.png')
  export default function Login({navigation}) {
     return (
         <View style = {styles.container}>
+            
             <View style = {styles.header}>
                 <Image style= {styles.logo} 
                 source = {logoImage}
                 />
                 <Text style = {styles.title}>Presta, Intercambia y Regala</Text>
             </View>
+
             <View style = {styles.footer}>
                 <TouchableOpacity 
                 onPress={()=>navigation.navigate("BottomTab") }
@@ -33,7 +35,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "facebook"
                         size = {20}
                         />
-                        <Text style = {styles.whiteText}>  Continuar con Facebook</Text>
+                            <Text style = {styles.whiteText}>  Continuar con Facebook</Text>
                         </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity 
@@ -48,7 +50,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "google"
                         size = {20}
                         />
-                        <Text style = {styles.google}>  Continuar con Google</Text>
+                            <Text style = {styles.google}>  Continuar con Google</Text>
                         </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity 
@@ -63,7 +65,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "email"
                         size = {20}
                         />
-                        <Text style = {styles.whiteText}>  Continuar con Email</Text>
+                            <Text style = {styles.whiteText}>  Continuar con Email</Text>
                         </LinearGradient>
                 </TouchableOpacity>
             </View>

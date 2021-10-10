@@ -39,10 +39,18 @@ export const readProductsFiltered = async (req, res) => {
 }
 
 export const createProduct = async (req, res) => {
+  //const product = new Product();
+  // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
+  const { name, categories, description, publishingDate, exchange, img, state, owner } = req.body;
   const product = new Product();
-  // DEBERIA SER req.body???
-  product.title = req.params.title;
-  product.description = req.params.description;
+  product.name = name;
+  product.categories = categories;
+  if (description != null) product.description = description;
+  if (publishingDate != null) product.publishingDate = publishingDate;
+  product.exchange = exchange;  
+  if (img != null) product.img = img;
+  product.state = state;
+  product.owner = owner;
 
   console.log(product);
 
@@ -53,7 +61,7 @@ export const createProduct = async (req, res) => {
   } catch (error) {
     res.status(409).json(error.message);
     
-    console.log('fail');
+    console.log('Can not create the Product');
   }
 }
 

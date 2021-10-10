@@ -7,7 +7,7 @@ const router = express.Router();
 // http://localhost:5000/api/product/...
 
 // Create Product
-router.post("/product/create/:title&:description", createProduct);
+router.post('/product/create/', createProduct);
 
 // Read Product
 router.get("/product/:id", readProduct);
@@ -21,3 +21,12 @@ router.put('/product/update/:id', updateProduct);
 router.delete('/product/delete/:id', deleteProduct);
 
 export default router;
+
+/*
+ {
+    "name": "peluche",
+    "categories": ["tech","house"],
+    "exchange": "present",
+    "state": "available"
+}
+ */

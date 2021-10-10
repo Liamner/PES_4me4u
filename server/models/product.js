@@ -1,20 +1,27 @@
 import mongoose from 'mongoose';
 
-export const typeFilter = {
+export const typeObject = {
     values: ['tech', 'clothes', 'none']
 }
 
-/*export const typeFilter = {
-    TECH: 1,
-    CLOTHES: 2
-}*/
+export const actions = {
+    values: ['present', 'exchange ', 'none']
+}
+
 const ProductSchema = new mongoose.Schema({
     title: 'String',
     description: 'String',
-    filter: {
+    objectFilter: {
         type: 'String',
-        enum: typeFilter,
-        default: 'none'
+        enum: typeObject,
+        default: 'none',
+        required: false
+    },
+    actionFilter: {
+        type: 'String',
+        enum: actions,
+        default: 'none',
+        required: true
     }
 });
 

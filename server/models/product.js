@@ -10,19 +10,8 @@ export const actions = {
 
 const ProductSchema = new mongoose.Schema({
     title: 'String',
-    description: 'String',
-    objectFilter: {
-        type: 'String',
-        enum: typeObject,
-        default: 'none',
-        required: false
-    },
-    actionFilter: {
-        type: 'String',
-        enum: actions,
-        default: 'none',
-        required: true
-    }
+    description: 'String'
+    
 });
 
 const Product = mongoose.model('Product', ProductSchema);

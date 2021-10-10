@@ -1,19 +1,23 @@
 import mongoose from 'mongoose';
 
 export const typeFilter = {
-    values: ['tech', 'clothes']
+    values: ['tech', 'clothes', 'none']
 }
 
 /*export const typeFilter = {
     TECH: 1,
     CLOTHES: 2
 }*/
-const createProductSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
     title: 'String',
     description: 'String',
-    filter: [typeFilter]
+    filter: {
+        type: 'String',
+        enum: typeFilter,
+        default: 'none'
+    }
 });
 
-const CreateProduct = mongoose.model('CreateProduct', createProductSchema);
+const Product = mongoose.model('Product', ProductSchema);
 
-export default CreateProduct;
+export default Product;

@@ -1,5 +1,4 @@
 import Product from "../models/product.js";
-import typeFilter from '../models/product.js';
 
 export const readAllProducts = async (req, res) => {
   try {
@@ -16,9 +15,9 @@ export const readAllProducts = async (req, res) => {
 
 export const readProduct = async (req, res) => {
   try {
-    const product = await Product.findOne({title: req.params.title});
+    const product = await Product.findById({_id: req.params.id});
 
-    console.log('Reading product: ' + req.params.title);
+    console.log('Reading product: ' + req.params.id);
 
     res.status(200).json(product);
   } catch (error) {
@@ -41,14 +40,11 @@ export const readProductsFiltered = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   const product = new Product();
+  // DEBERIA SER req.body???
   product.title = req.params.title;
   product.description = req.params.description;
-  if (req.params.filter == "tech") {
-    product.filter.tech;
-  }
-  product.filter = req.params.filter;
 
-  console.log(req.params.filter);
+  console.log(product);
 
   try {
     await product.save();
@@ -59,4 +55,12 @@ export const createProduct = async (req, res) => {
     
     console.log('fail');
   }
+}
+
+export const updateProduct = async (req, res) => {
+
+}
+
+export const deleteProduct = async (req, res) => {
+
 }

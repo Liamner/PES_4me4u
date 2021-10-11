@@ -1,4 +1,5 @@
 import Product from "../models/product.js";
+import User from "../models/user.js";
 
 export const readAllProducts = async (req, res) => {
   try {
@@ -37,6 +38,33 @@ export const createProduct = async (req, res) => {
     await product.save();
 
     res.status(201).json(product);
+  } catch (error) {
+    res.status(409).json(error.message);
+    
+    console.log('fail');
+  }
+}
+
+export const updateProduct = async (req, res) => {
+
+}
+
+
+export const readProductsFiltered = async (req, res) => {
+
+}
+
+export const createUser = async (req, res) => {
+  const user = new User();
+  user.userId = req.params.userId;
+  user.email = req.params.email;
+  user.pwd = req.params.pwd;
+
+  console.log('Este es el usuarios '+ req.params.userId + ' con mail: ' + req.params.email);
+
+  try {
+    await user.save();
+    res.status(201).json(user);
   } catch (error) {
     res.status(409).json(error.message);
     

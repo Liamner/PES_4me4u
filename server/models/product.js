@@ -2,7 +2,14 @@ import mongoose from 'mongoose';
 
 const createProductSchema = mongoose.Schema({
     title: 'String',
-    description: 'String'
+    description: 'String',
+    id: 'String',
+    //categories[]: 'String', 
+    publishingDate: 'date',
+    exchangeType: 'String',
+    photo: 'String',
+    state: 'String',
+    owner: 'String'
 });
 
 const CreateProduct = mongoose.model('CreateProduct', createProductSchema);

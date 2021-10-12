@@ -1,3 +1,4 @@
+import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList } from 'react-native';
@@ -43,9 +44,30 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       />
       <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text style={styles.mediumText}>Abrir chat con @Usuario</Text>
-      <Text style={styles.mediumText}>Guardar en la lista</Text>
-      <Text style={styles.mediumText}>Ubicación</Text>
+      <View style={styles.row}>
+        <Ionicons
+          name="chatbox"
+          size={24}
+          color="#333"
+        />
+        <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
+      </View>
+      <View style={styles.row}>
+        <Entypo
+          name="save"
+          size={24}
+          color="#333"
+        />
+        <Text style={styles.normalText}>Guardar en la lista</Text>
+      </View>
+      <View style={styles.row}>
+        <Entypo
+          name="location"
+          size={24}
+          color="#333"
+        />
+        <Text style={styles.normalText}>Ubicación</Text>
+      </View>
     </View>
   );
 }
@@ -54,12 +76,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-
   },
   separator: {
     marginVertical: 15,
     height: 1,
     width: '80%',
+  },
+  row: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginLeft: '10%',
+    marginRight: '10%',
   },
   flatlist: {
     height: 30,
@@ -79,6 +106,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: '10%',
     marginRight: '10%',
+    textAlign: 'justify',
+  },
+  normalText: {
+    fontSize: 15,
+    alignSelf: 'flex-start',
+    marginLeft: 10,
     textAlign: 'justify',
   },
   smallText: {

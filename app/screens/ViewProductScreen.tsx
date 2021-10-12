@@ -10,22 +10,22 @@ import Layout from '../constants/Layout';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [tags] = useState([
-    { name:'#intercambio', key: 1},
-    { name:'#prestamo', key: 2},
-    { name:'#regalo', key: 3},
+    { name:'#intercambio', key: '1'},
+    { name:'#prestamo', key: '2'},
+    { name:'#regalo', key: '3'},
   ]);
   const [categories] = useState([
-    { name:'Categoria 1', key: 1},
-    { name:'Categoria 2', key: 2},
-    { name:'Categoria 3', key: 3},
+    { name:'Categoria 1', key: '1'},
+    { name:'Categoria 2', key: '2'},
+    { name:'Categoria 3', key: '3'},
   ]);
   const [images] = useState([
-    { link:'../assets/images/adaptive-icon.png', key: 1 },
-    { link:'../assets/images/adaptive-icon.png', key: 2 },
-    { link:'../assets/images/adaptive-icon.png', key: 3 },
-    { link:'../assets/images/adaptive-icon.png', key: 4 },
-    { link:'../assets/images/adaptive-icon.png', key: 5 },
-    { link:'../assets/images/adaptive-icon.png', key: 6 },
+    { link:'../assets/images/adaptive-icon.png', key: '1' },
+    { link:'../assets/images/adaptive-icon.png', key: '2' },
+    { link:'../assets/images/adaptive-icon.png', key: '3' },
+    { link:'../assets/images/adaptive-icon.png', key: '4' },
+    { link:'../assets/images/adaptive-icon.png', key: '5' },
+    { link:'../assets/images/adaptive-icon.png', key: '6' },
   ]);
   const [currentPage, setCurrentPage] = useState(1);
 

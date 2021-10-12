@@ -1,10 +1,12 @@
 import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Image, FlatList, TouchableHighlight} from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import Layout from '../constants/Layout';
+
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [tags] = useState([
@@ -17,13 +19,33 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     { name:'Categoria 2', key: 2},
     { name:'Categoria 3', key: 3},
   ]);
+  const [images] = useState([
+    { link:'../assets/images/adaptive-icon.png', key: 1 },
+    { link:'../assets/images/adaptive-icon.png', key: 2 },
+    { link:'../assets/images/adaptive-icon.png', key: 3 },
+    { link:'../assets/images/adaptive-icon.png', key: 4 },
+    { link:'../assets/images/adaptive-icon.png', key: 5 },
+    { link:'../assets/images/adaptive-icon.png', key: 6 },
+  ]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require('../assets/images/adaptive-icon.png')} 
+      <FlatList
+        data={images}
+        renderItem={({ item }) => ( 
+          <Image
+            style={styles.image}
+            source={require('../assets/images/adaptive-icon.png')}
+          />
+        )}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled={true}
       />
+      <Text>{`${currentPage} / ${images.length}`} </Text>
       <Text style={styles.title}>Nombre Producto</Text>
       <Text style={styles.smallText}>Publicado por: @Usuario</Text>
       <FlatList 
@@ -44,7 +66,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       />
       <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <TouchableHighlight style={styles.button} onPress={()=>console.log("boton chat pulsado")}>
+      <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton chat pulsado")}>
         <View style={styles.row}>
           <Ionicons
             name="chatbox"
@@ -54,7 +76,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
         </View>
       </TouchableHighlight>
-      <TouchableHighlight style={styles.button} onPress={()=>console.log("boton guardar pulsado")}>
+      <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton guardar pulsado")}>
         <View style={styles.row}>
           <Entypo
             name="save"
@@ -80,6 +102,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  scroll: {
+    backgroundColor: 'red',
   },
   separator: {
     marginVertical: 15,
@@ -126,9 +151,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   image: {
-    width: 250,
-    height: 250,
-    margin: 10,
-    borderRadius: 10
+    width: Layout.width,
+    height: Layout.width,
+    marginBottom: 10,
   },
 });

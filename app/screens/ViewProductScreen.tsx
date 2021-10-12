@@ -6,10 +6,15 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const [tags, setTags] = useState([
+  const [tags] = useState([
     { name:'#intercambio', key: 1},
     { name:'#prestamo', key: 2},
     { name:'#regalo', key: 3},
+  ]);
+  const [categories] = useState([
+    { name:'Categoria 1', key: 1},
+    { name:'Categoria 2', key: 2},
+    { name:'Categoria 3', key: 3},
   ]);
 
   return (
@@ -21,10 +26,17 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       <Text style={styles.title}>Nombre Producto</Text>
       <Text style={styles.smallText}>Publicado por: @Usuario</Text>
       <FlatList 
-        // tiene mucho espacio por alguna razón
         style={styles.flatlist}
         horizontal={true}
         data={tags}
+        renderItem={({item}) => (
+          <Text style={styles.tags}> {item.name} </Text>
+         )}
+      />
+      <FlatList 
+        style={styles.flatlist}
+        horizontal={true}
+        data={categories}
         renderItem={({item}) => (
           <Text style={styles.tags}> {item.name} </Text>
          )}
@@ -54,7 +66,7 @@ const styles = StyleSheet.create({
     flexGrow: 0
   },
   tags: {
-    backgroundColor: '#2f95dc',
+    backgroundColor: '#a2cff0',
     margin: 5,
     height: 20,
   },
@@ -76,6 +88,7 @@ const styles = StyleSheet.create({
   image: {
     width: 250,
     height: 250,
-    margin: 10
+    margin: 10,
+    borderRadius: 10
   },
 });

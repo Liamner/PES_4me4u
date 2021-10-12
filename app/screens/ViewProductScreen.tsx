@@ -1,7 +1,7 @@
 import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList } from 'react-native';
+import { StyleSheet, Image, FlatList, TouchableHighlight } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -44,22 +44,26 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       />
       <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <View style={styles.row}>
-        <Ionicons
-          name="chatbox"
-          size={24}
-          color="#333"
-        />
-        <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
-      </View>
-      <View style={styles.row}>
-        <Entypo
-          name="save"
-          size={24}
-          color="#333"
-        />
-        <Text style={styles.normalText}>Guardar en la lista</Text>
-      </View>
+      <TouchableHighlight style={styles.button} onPress={()=>console.log("boton chat pulsado")}>
+        <View style={styles.row}>
+          <Ionicons
+            name="chatbox"
+            size={24}
+            color="#333"
+          />
+          <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight style={styles.button} onPress={()=>console.log("boton guardar pulsado")}>
+        <View style={styles.row}>
+          <Entypo
+            name="save"
+            size={24}
+            color="#333"
+          />
+          <Text style={styles.normalText}>Guardar en la lista</Text>
+        </View>
+      </TouchableHighlight>
       <View style={styles.row}>
         <Entypo
           name="location"
@@ -117,6 +121,9 @@ const styles = StyleSheet.create({
   smallText: {
     color: '#333',
     fontSize: 13,
+  },
+  button: {
+    alignSelf: 'flex-start',
   },
   image: {
     width: 250,

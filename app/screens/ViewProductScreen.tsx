@@ -99,7 +99,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           size={24}
           color="#333"
         />
-        <Text style={styles.normalText}>Ubicación</Text>
+        <Text style={styles.normalText}>Ubicación</Text> 
       </View>
     </View>
   );

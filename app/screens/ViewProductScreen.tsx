@@ -29,7 +29,13 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   ]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  
+  const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
+    const width = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.x;
+
+    const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
+    setCurrentPage(currentNumber);
+  };
 
   return (
     <View style={styles.container}>
@@ -44,6 +50,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         pagingEnabled={true}
+        onMomentumScrollEnd={Scroll}
       />
       <Text>{`${currentPage} / ${images.length}`} </Text>
       <Text style={styles.title}>Nombre Producto</Text>

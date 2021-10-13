@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api", apiRoutes);
 
-app.use(cors());
+//app.use(cors());
 
 const CONNECTION_URL =
   "mongodb+srv://Jefe:1234@4me4u.iyl4h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";

@@ -43,7 +43,7 @@ const logoImage = require('../assets/images/logo.png')
                 >
                     <LinearGradient
                         colors={['#ffffff', '#ffffff']}
-                        style={[styles.button, {borderWidth: 1, borderColor: '#90e0ef'}]}
+                        style={[styles.button, {borderWidth: 1, borderColor: '#a2cff0'}]}
                     >
                        <FontAwesome
                         color = '#000'

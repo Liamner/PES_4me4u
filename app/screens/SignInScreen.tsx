@@ -16,7 +16,7 @@ export default function SignInScreen({navigation}) {
         email:'',
         password:'',
         check_textInputChange: false,
-        secureTextEntry: true
+        secureTextEntry: true,
     });
 
     const textInputChange = (val) => {
@@ -124,7 +124,7 @@ export default function SignInScreen({navigation}) {
                             style={{width: 250}}
                     >
                         <LinearGradient
-                            colors = {['#90e0ef','#ADE8F4']}
+                            colors = {['#a2cff0','#ADE8F4']}
                             style={styles.signIn}
                         >
                             <Text style={[styles.textSign, 
@@ -136,14 +136,14 @@ export default function SignInScreen({navigation}) {
                     <TouchableOpacity
                         onPress={()=>navigation.navigate("SignUp")}
                         style={[styles.signIn, {
-                            borderColor: '#90e0ef',
+                            borderColor: '#a2cff0',
                             borderWidth: 1,
                             width: 250,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign,
-                             {color: '#90e0ef'}]}
+                             {color: '#a2cff0'}]}
                         >Registrarse
                         </Text>
                     </TouchableOpacity>
@@ -156,7 +156,7 @@ export default function SignInScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1, 
-        backgroundColor: '#90e0ef'
+        backgroundColor: '#a2cff0'
       },
       header: {
           flex: 1,

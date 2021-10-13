@@ -18,22 +18,27 @@ export default function SignUp({navigation}) {
         confirmPassword:'',
         check_textInputChange: false,
         secureTextEntry: true,
-        confirmSecureTextEntry: true
+        confirmSecureTextEntry: true,
+        isValidEmail: true,
+        isValidPassword: true,
+        equalsPasswords: true,
     });
 
     const textInputChange = (val) => {
-        if(val.length !== 0) {
+        if(val.trim().length >= 4) {
             setData({
                 ...data,
                 email: val,
-                check_textInputChange: true
+                check_textInputChange: true,
+                isValidEmail: true
             });
         }
         else {
             setData({
                 ...data,
                 email: val,
-                check_textInputChange: false
+                check_textInputChange: false,
+                isValidEmail: false
             });
         }
     }
@@ -44,12 +49,14 @@ export default function SignUp({navigation}) {
             password: val
         });
     }
+
     const handleConfirmPasswordChange = (val) => {
         setData({
             ...data,
             confirmPassword: val
         });
-    }
+        handleEqualsPasswords(val);
+}
 
     const updateSecureTextEntry = () => {
         setData({
@@ -63,6 +70,48 @@ export default function SignUp({navigation}) {
             ...data,
             confirmSecureTextEntry: !data.confirmSecureTextEntry
         });
+    }
+
+    const handleValidEmail = (val) => {
+        if (val.trim().length >= 4) {
+            setData({
+                ... data,
+                isValidEmail: true
+            });
+        } else {
+            setData({
+                ... data,
+                isValidEmail: false
+            });
+        }
+    }
+
+    const handleValidPassword = (val) => {
+        if (val.trim().length >= 5) {
+            setData({
+                ... data,
+                isValidPassword: true
+            });
+        } else {
+            setData({
+                ... data,
+                isValidPassword: false
+            });
+        }
+    }
+
+    const handleEqualsPasswords = (val) => {
+        if (val === data.password) {
+            setData({
+                ... data,
+                equalsPasswords: true
+            });
+        } else {
+            setData({
+                ... data,
+                equalsPasswords: false
+            });
+        }
     }
 
     return (
@@ -85,6 +134,7 @@ export default function SignUp({navigation}) {
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => textInputChange(val)}
+                        onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
                     />
                     {data.check_textInputChange ?
                     <Animatable.View
@@ -98,6 +148,15 @@ export default function SignUp({navigation}) {
                     </Animatable.View>
                     : null}
                 </View>
+                
+                {data.isValidEmail ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text 
+                            style={styles.msgError}
+                        >El email no es válido.
+                        </Text>
+                    </Animatable.View>
+                } 
 
                 <Text style={[styles.text_footer, {
                     marginTop: 35
@@ -114,6 +173,7 @@ export default function SignUp({navigation}) {
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => handlePasswordChange(val)}
+                        onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text)}
                     />
                     <TouchableOpacity onPress={updateSecureTextEntry}>
                         {data.secureTextEntry ?
@@ -132,6 +192,15 @@ export default function SignUp({navigation}) {
                     </TouchableOpacity>
                 </View>
 
+                {data.isValidPassword ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text 
+                            style={styles.msgError}
+                        >La contraseña ha de tener almenos 5 caracteres.
+                        </Text>
+                     </Animatable.View>
+                }
+
                 <Text style={[styles.text_footer, {
                     marginTop: 35
                 }]}>Confirmación de contraseña</Text>
@@ -147,6 +216,7 @@ export default function SignUp({navigation}) {
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => handleConfirmPasswordChange(val)}
+                        onEndEditing={(e)=> handleEqualsPasswords(e.nativeEvent.text)}
                     />
                     <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
                         {data.confirmSecureTextEntry ?
@@ -165,13 +235,22 @@ export default function SignUp({navigation}) {
                     </TouchableOpacity>
                 </View>
 
+                {data.equalsPasswords ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text 
+                            style={styles.msgError}
+                        >Las contraseñas no coinciden.
+                        </Text>
+                     </Animatable.View>
+                }
+
                 <View style={styles.button}>
                     <TouchableOpacity
                             onPress={()=>navigation.navigate("BottomTab")}
                             style={{width: 250}}
                     >
                         <LinearGradient
-                            colors = {['#90e0ef','#ADE8F4']}
+                            colors = {['#a2cff0','#ADE8F4']}
                             style={styles.signIn}
                         >
                             <Text style={[styles.textSign, 
@@ -184,14 +263,14 @@ export default function SignUp({navigation}) {
                     <TouchableOpacity
                         onPress={()=>navigation.goBack()}
                         style={[styles.signIn, {
-                            borderColor: '#90e0ef',
+                            borderColor: '#a2cff0',
                             borderWidth: 1,
                             width: 250,
                             marginTop: 15
                         }]}
                     >
                         <Text style={[styles.textSign,
-                             {color: '#90e0ef'}]}
+                             {color: '#a2cff0'}]}
                         >Volver</Text>
                     </TouchableOpacity>
                 </View>               
@@ -203,7 +282,7 @@ export default function SignUp({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1, 
-        backgroundColor: '#90e0ef'
+        backgroundColor: '#a2cff0'
       },
       header: {
           flex: 1,
@@ -263,5 +342,8 @@ const styles = StyleSheet.create({
       },
       color_textPrivate: {
           color: 'grey'
-      }
+      },
+      msgError: {
+          color: 'red'
+      },
 });

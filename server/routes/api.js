@@ -8,7 +8,7 @@ import {
   readProductsFiltered,
   updateProduct,
   deleteProduct,
-} from "../controllers/api.js";
+} from "../controllers/apiProduct.js";
 
 const router = express.Router();
 

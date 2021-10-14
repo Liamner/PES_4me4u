@@ -4,15 +4,15 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "cd server && npx nodemon index.js",
+        "start": "cd app && expo start && cd ../server && npx nodemon index.js cd ../server && npx nodemon index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "heroku-postbuild": "npm install && cd server && npm install"
+        "heroku-postbuild": "npm install && cd app && npm install && cd ../server && npm install"
     },
     "author": "",
     "license": "ISC",
     "engines": {
         "node": ">=10.16.0"
     }
-    
+
   }
   

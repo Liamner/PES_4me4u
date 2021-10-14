@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "concurrently \"react-scripts start\" \"cd server && npm nodemon server\"",
+        "start": "concurrently \"cd server && npm nodemon server\"",
         "test": "echo \"Error: no test specified\" && exit 1",
         "heroku-postbuild": "npm install && npm run build && cd backend && npm install"
     },

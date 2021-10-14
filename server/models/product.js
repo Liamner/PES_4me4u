@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const categoryType = {
     values: ['tech', 'house']
@@ -51,6 +51,4 @@ const ProductSchema = new mongoose.Schema({
     }
 });
 
-const Product = mongoose.model('Product', ProductSchema);
-
-export default Product;
+module.exports = mongoose.model('Product', ProductSchema); 

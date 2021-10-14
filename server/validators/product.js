@@ -1,6 +1,6 @@
-import {check, validationResult} from 'express-validator';
+const {check, validationResult} = require('express-validator');
 
-export const validateCreateProduct = [
+const validateCreateProduct = [
     check('name')
         .exists()
         .not()
@@ -35,4 +35,4 @@ export const validateCreateProduct = [
 ];
 
 
-//module.exports(validationResult);
+module.exports = {validateCreateProduct};

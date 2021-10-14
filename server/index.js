@@ -1,15 +1,14 @@
-import express from "express";
-import bodyParser from "body-parser";
-import mongoose from "mongoose";
-import cors from "cors";
-
-import apiRoutes from "./routes/api.js";
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+//const cors = require('cors');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const apiRoutes = require('./routes/api.js')(app,express);
 app.use("/api", apiRoutes);
 
 //app.use(cors());

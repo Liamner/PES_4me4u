@@ -1,6 +1,6 @@
-import Product from "../models/product.js";
+const Product = require('../models/product.js');
 
-export const readAllProducts = async (req, res) => {
+exports.readAllProducts =  async (req, res) => {
   try {
     const product = await Product.find();
 
@@ -13,7 +13,7 @@ export const readAllProducts = async (req, res) => {
   }
 };
 
-export const readProduct = async (req, res) => {
+exports.readProduct = async (req, res) => {
   try {
     const product = await Product.findById({ _id: req.params.id });
 
@@ -26,7 +26,7 @@ export const readProduct = async (req, res) => {
   }
 };
 
-export const readProductsFiltered = async (req, res) => {
+exports.readProductsFiltered = async (req, res) => {
   try {
     const product = await Product.find({ filter: req.params.filter });
     console.log("Reading products with filter: " + req.paramas.filter);
@@ -38,7 +38,7 @@ export const readProductsFiltered = async (req, res) => {
   }
 };
 
-export const createProduct = async (req, res) => {
+exports.createProduct = async (req, res) => {
   //const product = new Product();
   // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
   const {
@@ -74,12 +74,9 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const updateProduct = async (req, res) => {};
+exports.updateProduct = async (req, res) => {};
 
-
-    
-
-export const deleteProduct = async (req, res) => {
+exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete({_id: req.params.id});
 
@@ -90,5 +87,4 @@ export const deleteProduct = async (req, res) => {
     res.status(404).json(error.message);
     console.log(error.message);
   }
-}
-;
+};

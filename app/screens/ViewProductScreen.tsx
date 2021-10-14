@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
 
 import { Text, View } from '../components/Themed';
-import { MapComponent } from '../components/MapView';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -151,7 +150,6 @@ const styles = StyleSheet.create({
     margin: 5,
     height: '100%',
     fontSize: 13,
-    borderRadius: 5,
   },
   title: {
     fontSize: 20,
@@ -185,8 +183,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mapview: {
-    width: Layout.width - 50,
-    height: Layout.width - 150,
+    width: '80%',
+    height: Layout.width - 175,
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,

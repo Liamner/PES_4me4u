@@ -6,7 +6,7 @@
     "scripts": {
         "start": "concurrently \"cd server && npm nodemon server\"",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "heroku-postbuild": "npm install && npm run build && cd backend && npm install"
+        "heroku-postbuild": "npm install"
     },
     "author": "",
     "license": "ISC",

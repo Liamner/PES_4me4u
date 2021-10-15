@@ -14,10 +14,10 @@ export const mapStyle = [
       elementType: 'geometry',
       stylers: [
         {
-          color: '#e9e9e9',
+          color: '#a2cff0',
         },
         {
-          lightness: 17,
+          lightness: 50,
         },
       ],
     },
@@ -207,7 +207,7 @@ export function CustomMarker(props: MarkerProps) {
   return (
       <Marker
       coordinate={coordinate}
-      pinColor={'aqua'}
+      pinColor={'#a2cff0'}
       {...otherProps}
       ></Marker>
   );

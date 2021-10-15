@@ -6,7 +6,7 @@ import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'rea
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [tags] = useState([
@@ -102,20 +102,22 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           />
           <Text style={styles.normalText}>Ubicación</Text> 
         </View>
-        <MapView
+        <CustomMap
+          style={styles.mapview}
           region={{
             latitude: 37.78825,
             longitude: -122.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          provider={ PROVIDER_GOOGLE }
-          style={styles.mapview}
-          scrollEnabled={false}
-          zoomEnabled={false}
-          zoomControlEnabled={false}
-          tintColor={'#a2cff0'}
-        ></MapView>
+        >
+          <CustomMarker
+            coordinate={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+            }}
+          ></CustomMarker>
+        </CustomMap>
       </ScrollView>
     </View>
   );

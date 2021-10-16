@@ -42,7 +42,7 @@ export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'D
       [
         {
           text: "No",
-          onPress: () => console.log("Cancel Pressed"),
+//          onPress: () => console.log("Cancel Pressed"),
         },
         { text: "Sí", onPress: () => removeItem(id) }
       ]

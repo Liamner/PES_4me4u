@@ -34,11 +34,26 @@ export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'D
     },
   ]);
 
-const removeItem = (id) => {
-  setData((prevData) => { // obtenemos a la persona que habiamos pulsado
-    return prevData.filter (data => data.id  != id); //si el id de la persona anterior no coincide con el id actual se borra de la array (op filter)
-  });
-};
+  //Alerta de confirmación de borrado
+  const deleteConfirmationAlert = (id: string) =>
+    Alert.alert(
+      "Alerta",
+      "¿Está seguro de que desea borrar el producto seleccionado?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancel Pressed"),
+        },
+        { text: "Sí", onPress: () => removeItem(id) }
+      ]
+    );
+
+  //función que se encarga de borrar el boton que se ha pulsado
+  const removeItem = (id: string) => {
+    setData((prevData) => { 
+      return prevData.filter (data => data.id  != id); 
+    });
+  };
   
   return (
     <View style={styles.container}>
@@ -60,19 +75,20 @@ const removeItem = (id) => {
         renderItem={({ item }) => {
           return (
 /*
+            //otra opción para un boton de borrar con otro tipo de objeto
             <TouchableOpacity
 
               style={styles.button}
-              onPress={() => removeItem(item.id)}
+              onPress={() => deleteConfirmationAlert(item.id)}
             >
-              <Text> ¡¡¡ AUTODESTRUCCIÓN !!! </Text>
+              <Text>Borrar</Text>
             </TouchableOpacity>
             
 */
           <Button
-          onPress={() => removeItem(item.id)}
-          title = "Kaboooom!"
-          color="#FF0000"
+          onPress={() => deleteConfirmationAlert(item.id)}
+          title = "Borrar"
+          color="#FF0000"//color de fondo rojo
           />
           );
         }}

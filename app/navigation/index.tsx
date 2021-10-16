@@ -67,7 +67,7 @@ function BottomTabNavigator() {
         name="CreateProduct"
         component={CreateProductScreen}
         options={({ navigation }: RootTabScreenProps<'CreateProduct'>) => ({
-          title: 'Tab One',
+          title: 'Crear Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable

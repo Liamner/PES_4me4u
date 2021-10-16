@@ -10,14 +10,15 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const [name, setName] = useState('Nombre Producto');
+  const [product, setProduct] = useState({});
   const [user] = useState('@Usuario')
-  const [tags, setTags] = useState([
+
+  const [tags] = useState([
     { name:'#intercambio', key: '1'},
     { name:'#prestamo', key: '2'},
     { name:'#regalo', key: '3'},
   ]);
-  const [categories, setCategories] = useState([
+  const [categories] = useState([
     { name:'Categoria 1', key: '1'},
     { name:'Categoria 2', key: '2'},
     { name:'Categoria 3', key: '3'},
@@ -41,10 +42,16 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     setCurrentPage(currentNumber);
   };
 
+  const setCorrectInfo = () => {
+    if(product.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(product.description)
+  }
+
   const getProductInfo = async () => {
     axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
-    .then(function (response) {
-      console.log(response.data);
+    .then(response => {
+        setProduct(response.data as {});
+        setCorrectInfo();
     })
     .catch(function (error) {
       console.log(error);
@@ -67,7 +74,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           onMomentumScrollEnd={Scroll}
         />
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
-        <Text style={styles.title}>{`${name}`}</Text>
+        <Text style={styles.title}>{`${product.name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}

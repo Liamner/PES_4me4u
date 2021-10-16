@@ -7,14 +7,17 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
+import axios from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const [tags] = useState([
+  const [name, setName] = useState('Nombre Producto');
+  const [user] = useState('@Usuario')
+  const [tags, setTags] = useState([
     { name:'#intercambio', key: '1'},
     { name:'#prestamo', key: '2'},
     { name:'#regalo', key: '3'},
   ]);
-  const [categories] = useState([
+  const [categories, setCategories] = useState([
     { name:'Categoria 1', key: '1'},
     { name:'Categoria 2', key: '2'},
     { name:'Categoria 3', key: '3'},
@@ -27,6 +30,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
   ]);
+  const [description, setDescription] = useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.')
   const [currentPage, setCurrentPage] = useState(1);
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -37,6 +41,15 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     setCurrentPage(currentNumber);
   };
 
+  const getProductInfo = async () => {
+    axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -54,8 +67,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           onMomentumScrollEnd={Scroll}
         />
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
-        <Text style={styles.title}>Nombre Producto</Text>
-        <Text style={styles.smallText}>Publicado por: @Usuario</Text>
+        <Text style={styles.title}>{`${name}`}</Text>
+        <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}
@@ -72,9 +85,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             <Text style={styles.tags}> {item.name} </Text>
           )}
         />
-        <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
+        <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton chat pulsado")}>
+        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={/*()=>console.log("boton chat pulsado")*/getProductInfo}>
           <View style={styles.row}>
             <Ionicons
               name="chatbox"

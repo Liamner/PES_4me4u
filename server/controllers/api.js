@@ -42,18 +42,6 @@ exports.readProductsFiltered = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   //const product = new Product();
-  // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
-  /*const {
-    name,
-    categories,
-    description,
-    publishingDate,
-    exchange,
-    img,
-    state,
-    owner,
-  } = req.body;*/
-  validateCreateProduct;
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;

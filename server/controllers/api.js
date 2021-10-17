@@ -1,6 +1,8 @@
-import Product from "../models/product.js";
+//import Product from "../models/product.js";
+const Product = require('../models/product.js');
+const validateCreateProduct = require('../validators/product.js');
 
-export const readAllProducts = async (req, res) => {
+exports.readAllProducts =  async (req, res) => {
   try {
     const product = await Product.find();
 
@@ -13,7 +15,7 @@ export const readAllProducts = async (req, res) => {
   }
 };
 
-export const readProduct = async (req, res) => {
+exports.readProduct = async (req, res) => {
   try {
     const product = await Product.findById({ _id: req.params.id });
 
@@ -26,7 +28,7 @@ export const readProduct = async (req, res) => {
   }
 };
 
-export const readProductsFiltered = async (req, res) => {
+exports.readProductsFiltered = async (req, res) => {
   try {
     const product = await Product.find({ filter: req.params.filter });
     console.log("Reading products with filter: " + req.paramas.filter);
@@ -38,10 +40,10 @@ export const readProductsFiltered = async (req, res) => {
   }
 };
 
-export const createProduct = async (req, res) => {
+exports.createProduct = async (req, res) => {
   //const product = new Product();
   // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
-  const {
+  /*const {
     name,
     categories,
     description,
@@ -50,16 +52,17 @@ export const createProduct = async (req, res) => {
     img,
     state,
     owner,
-  } = req.body;
+  } = req.body;*/
+  validateCreateProduct;
   const product = new Product();
-  product.name = name;
-  product.categories = categories;
-  product.description = description;
-  product.publishingDate = publishingDate;
-  product.exchange = exchange;
-  product.img = img;
-  product.state = state;
-  product.owner = owner;
+  product.name = req.body.name;
+  product.categories = req.body.categories;
+  product.description = req.body.description;
+  product.publishingDate = req.body.publishingDate;
+  product.exchange = req.body.exchange;
+  product.img = req.body.img;
+  product.state = req.body.state;
+  product.owner = req.body.owner;
 
   console.log(product);
 
@@ -74,6 +77,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const updateProduct = async (req, res) => {};
+exports.updateProduct = async (req, res) => {};
 
-export const deleteProduct = async (req, res) => {};
+exports.deleteProduct = async (req, res) => {};

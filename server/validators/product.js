@@ -1,16 +1,10 @@
-import {check, validationResult} from 'express-validator';
+const {check, validationResult} = require('express-validator');
 
-export const validateCreateProduct = [
+exports.validateCreateProduct = [
     check('name')
         .exists()
         .not()
-        .isEmpty()
-        .custom((value, {req}) => {
-            if (value == null) {
-                throw new Error('Name is not specified');
-            }
-            return true;
-        }),
+        .isEmpty(),
     check('categories')
         .exists()
         .not()

@@ -1,31 +1,32 @@
-import express from "express";
-import {validateCreateProduct} from '../validators/product.js';
+const express = require('express');
+const productController = require('../controllers/api.js');
+const { validateCreateProduct } = require('../validators/product.js');
 
-import {
-  readAllProducts,
-  createProduct,
-  readProduct,
-  readProductsFiltered,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/api.js";
+module.exports = function(app) {
+  const router = express.Router();
 
-const router = express.Router();
+  // Create Product
+  router.route('/product/create/')
+    .post((validateCreateProduct), productController.createProduct);
+    
+  // Read Product
+  router.route('/product/:id')
+    .get(productController.readProduct);
+  router.route('/product/')
+    .get(productController.readAllProducts);
 
+  // Update Product
+  router.route('/product/update/:id')
+    .put(productController.updateProduct);
+
+  // Delete Product
+  router.route('/product/delete/:id')
+    .delete(productController.deleteProduct);
+  return router;
+}
+
+/*
 // http://localhost:5000/api/product/...
-
-// Create Product
-router.post("/product/create/", validateCreateProduct, createProduct);
-
 // Read Product
-router.get("/product/:id", readProduct);
-router.get("/product/", readAllProducts);
-router.get("/product/filter/:filter", readProductsFiltered);
-
-// Update Product
-router.put("/product/update/:id", updateProduct);
-
-// Delete Product
-router.delete("/product/delete/:id", deleteProduct);
-
-export default router;
+router.get("/product/filter/:filter", productController.readProductsFiltered);
+*/

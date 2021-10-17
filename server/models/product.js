@@ -24,8 +24,7 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     description: {
-        type: 'String',
-        required: false
+        type: 'String'
     },
     publishingDate: {
         type: 'Date',
@@ -33,12 +32,12 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: {
-        type: 'String',
+        type: ['String'],
         enum: exchangeTypes,
         required: true
     },
     img: {
-        type: 'String',
+        type: ['String'],
         required: false
     },
     state: {

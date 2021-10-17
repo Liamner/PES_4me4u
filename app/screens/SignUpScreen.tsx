@@ -3,114 +3,98 @@ import { Platform, StyleSheet,
     Text, 
     View,
     TextInput,
+    Alert,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
+import axios from 'axios';
 
 
 export default function SignUp({navigation}) {
-    const [data, setData] = React.useState({
+    const [inputData, setinputData] = React.useState({
         email:'',
         password:'',
         confirmPassword:'',
-        check_textInputChange: false,
         secureTextEntry: true,
         confirmSecureTextEntry: true,
-        isValidEmail: true,
+        isValidEmail: false,
+        emailError: false,
         isValidPassword: true,
         equalsPasswords: true,
     });
 
-    const textInputChange = (val) => {
-        if(val.trim().length >= 4) {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: true,
-                isValidEmail: true
+    const handlePassword = (val) => {
+        if (val.trim().length >= 5) {
+            setinputData({
+                ... inputData,
+                password: val,
+                isValidPassword: true,
+                equalsPasswords: (val == inputData.confirmPassword)
             });
-        }
-        else {
-            setData({
-                ...data,
-                email: val,
-                check_textInputChange: false,
-                isValidEmail: false
+        } else {
+            setinputData({
+                ... inputData,
+                password: val,
+                isValidPassword: false,
+                equalsPasswords: (val == inputData.confirmPassword)
             });
         }
     }
 
-    const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val
+    const handleConfirmPassword = (val) => {
+        setinputData({
+            ...inputData,
+            confirmPassword: val,
+            equalsPasswords: (val == inputData.password)
         });
-    }
-
-    const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirmPassword: val
-        });
-        handleEqualsPasswords(val);
 }
 
     const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
+        setinputData({
+            ...inputData,
+            secureTextEntry: !inputData.secureTextEntry
         });
     }
 
     const updateConfirmSecureTextEntry = () => {
-        setData({
-            ...data,
-            confirmSecureTextEntry: !data.confirmSecureTextEntry
+        setinputData({
+            ...inputData,
+            confirmSecureTextEntry: !inputData.confirmSecureTextEntry
         });
     }
 
-    const handleValidEmail = (val) => {
-        if (val.trim().length >= 4) {
-            setData({
-                ... data,
-                isValidEmail: true
+    const handleEmail = (val) => {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        if (reg.test(val) === false) {
+            setinputData({
+                ... inputData,
+                email: val,
+                isValidEmail: false,
+                emailError: true
             });
         } else {
-            setData({
-                ... data,
-                isValidEmail: false
+            setinputData({
+                ... inputData,
+                email: val,
+                isValidEmail: true,
+                emailError: false
             });
         }
     }
 
-    const handleValidPassword = (val) => {
-        if (val.trim().length >= 5) {
-            setData({
-                ... data,
-                isValidPassword: true
-            });
-        } else {
-            setData({
-                ... data,
-                isValidPassword: false
-            });
+    function handleSignUp() {
+        if (!inputData.equalsPasswords || !inputData.isValidPassword || !inputData.isValidEmail) {
+            Alert.alert("Error", "Por favor compruebe que los campos sean correctos.")
         }
-    }
-
-    const handleEqualsPasswords = (val) => {
-        if (val === data.password) {
-            setData({
-                ... data,
-                equalsPasswords: true
-            });
-        } else {
-            setData({
-                ... data,
-                equalsPasswords: false
-            });
+        else if (inputData.password === '' || inputData.confirmPassword === '') {
+            Alert.alert("Error", "Las constraseñas no pueden ser vacías")
+        }
+        else {
+            {/*navigation.navigate("BottomTab")*/}
+            Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
         }
     }
 
@@ -133,10 +117,10 @@ export default function SignUp({navigation}) {
                         placeholder="Tu Email"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
-                        onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
+                        onChangeText={(val) => handleEmail(val)}
+                        onEndEditing={(e)=>handleEmail(e.nativeEvent.text)}
                     />
-                    {data.check_textInputChange ?
+                    {inputData.isValidEmail ?
                     <Animatable.View
                         animation="bounceIn"
                     >
@@ -149,13 +133,15 @@ export default function SignUp({navigation}) {
                     : null}
                 </View>
                 
-                {data.isValidEmail ? null :
+                {inputData.emailError ? 
                     <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text 
                             style={styles.msgError}
                         >El email no es válido.
                         </Text>
                     </Animatable.View>
+                    :
+                    null
                 } 
 
                 <Text style={[styles.text_footer, {
@@ -169,14 +155,14 @@ export default function SignUp({navigation}) {
                     />
                     <TextInput
                         placeholder="Tu contraseña"
-                        secureTextEntry={data.secureTextEntry ? true : false}
+                        secureTextEntry={inputData.secureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                        onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text)}
+                        onChangeText={(val) => handlePassword(val)}
+                        onEndEditing={(e)=>handlePassword(e.nativeEvent.text)}
                     />
                     <TouchableOpacity onPress={updateSecureTextEntry}>
-                        {data.secureTextEntry ?
+                        {inputData.secureTextEntry ?
                             <Feather 
                             name="eye-off"
                             size={20}
@@ -192,11 +178,11 @@ export default function SignUp({navigation}) {
                     </TouchableOpacity>
                 </View>
 
-                {data.isValidPassword ? null :
+                {inputData.isValidPassword ? null :
                         <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text 
                             style={styles.msgError}
-                        >La contraseña ha de tener almenos 5 caracteres.
+                        >La contraseña debe tener almenos 5 caracteres.
                         </Text>
                      </Animatable.View>
                 }
@@ -212,14 +198,14 @@ export default function SignUp({navigation}) {
                     />
                     <TextInput
                         placeholder="Confirma tu contraseña"
-                        secureTextEntry={data.confirmSecureTextEntry ? true : false}
+                        secureTextEntry={inputData.confirmSecureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => handleConfirmPasswordChange(val)}
-                        onEndEditing={(e)=> handleEqualsPasswords(e.nativeEvent.text)}
+                        onChangeText={(val) => handleConfirmPassword(val)}
+                        onEndEditing={(e)=> handleConfirmPassword(e.nativeEvent.text)}
                     />
                     <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                        {data.confirmSecureTextEntry ?
+                        {inputData.confirmSecureTextEntry ?
                             <Feather 
                             name="eye-off"
                             size={20}
@@ -235,7 +221,7 @@ export default function SignUp({navigation}) {
                     </TouchableOpacity>
                 </View>
 
-                {data.equalsPasswords ? null :
+                {inputData.equalsPasswords ? null :
                         <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text 
                             style={styles.msgError}
@@ -246,7 +232,7 @@ export default function SignUp({navigation}) {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                            onPress={()=>navigation.navigate("BottomTab")}
+                            onPress={()=>handleSignUp()}
                             style={{width: 250}}
                     >
                         <LinearGradient

@@ -1,6 +1,6 @@
 import Category from "../models/category.js";
 
-export const readAllProducts = async (req, res) => {
+export const readAllCategories = async (req, res) => {
     try {
       const category = await Category.find();
   
@@ -27,10 +27,9 @@ export const readAllProducts = async (req, res) => {
   }
   
   export const createCategory = async (req, res) => {
-    //const product = new Product();
     // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
     const { name, products} = req.body;
-    const category = new Product();
+    const category = new Category();
     category.name = name;
     //falta vincular productes!
     console.log(category);

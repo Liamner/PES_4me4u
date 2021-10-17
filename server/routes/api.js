@@ -1,5 +1,6 @@
 import express from "express";
 import {validateCreateProduct} from '../validators/product.js';
+import {validateCreateCategory} from '../validators/category.js';
 
 import {
   readAllProducts,
@@ -9,6 +10,14 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/apiProduct.js";
+
+import {
+  readAllCategories,
+  createCategory,
+  readCategory,
+  updateCategory,
+  deleteCategory,
+} from "../controllers/apiCategory.js";
 
 const router = express.Router();
 
@@ -27,5 +36,19 @@ router.put("/product/update/:id", updateProduct);
 
 // Delete Product
 router.delete("/product/delete/:id", deleteProduct);
+
+// Create Category
+router.post("/category/create/", validateCreateCategory, createCategory);
+
+// Read Category
+router.get("/category/:id", readCategory);
+router.get("/category/", readAllCategories);
+
+// Update Category
+router.put("/category/update/:id", updateCategory);
+
+// Delete Category
+router.delete("/category/delete/:id", deleteCategory);
+
 
 export default router;

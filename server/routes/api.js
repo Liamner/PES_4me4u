@@ -1,5 +1,6 @@
 const express = require('express');
 const productController = require('../controllers/api.js');
+const categoryController = require('../controllers/apiCategory.js');
 const { validateCreateProduct } = require('../validators/product.js');
 
 module.exports = function(app) {
@@ -22,11 +23,21 @@ module.exports = function(app) {
   // Delete Product
   router.route('/product/delete/:id')
     .delete(productController.deleteProduct);
+
+  router.route('/category/create/')
+    .post(validateCreateCategory, categoryController.createCategory);
+    // Create Category
+  router.route('category/:id')
+    .get(categoryController.readCategory);
+
+  router.route('/category/')
+    .post(categoryController.readAllCategories);
+  
+  router.route('/category/update/:id')
+    .put(categoryController.updateCategory);
+  
+  router.route('category/delete/:id')
+    .delete(categoryController.deleteCategory);
+
   return router;
 }
-
-/*
-// http://localhost:5000/api/product/...
-// Read Product
-router.get("/product/filter/:filter", productController.readProductsFiltered);
-*/

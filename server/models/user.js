@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 
-//import mongoose from 'mongoose';
-//import uniqueValidator from 'mongoose-unique-validator';
-
 let rolesValidos = {
     values: ["ADMIN", "USER"],
     message: '{VALUE} no es un role válido'
@@ -29,13 +26,12 @@ let usuarioSchema = new Schema({
         type: String,
         default: 'USER',
         //required: [true],
-        //enum: rolesValidos,
+        enum: rolesValidos,
     },
     location: {
         type: String,
         default: 'BARCELONA',
         //required: [true],
-        //enum: rolesValidos,
     },
     level: {
         type: String,
@@ -68,5 +64,3 @@ usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
 })
 module.exports = mongoose.model('Usuario', usuarioSchema);
-//const LoginRegister = mongoose.model('LoginRegister', usuarioSchema);
-//export default LoginRegister;

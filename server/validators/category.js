@@ -1,6 +1,6 @@
-import {check, validationResult} from 'express-validator';
+const {check, validationResult} = require('express-validator');
 
-export const validateCreateCategory = [
+exports.validateCreateCategory = [
     check('name')
         .exists()
         .not()

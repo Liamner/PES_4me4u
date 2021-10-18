@@ -1,7 +1,8 @@
 const express = require('express');
-const productController = require('../controllers/api.js');
+const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const { validateCreateProduct } = require('../validators/product.js');
+const { validateCreateCategory } = require('../validators/category.js');
 
 module.exports = function(app) {
   const router = express.Router();

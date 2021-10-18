@@ -19,7 +19,8 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);      
+  const [image6, setImage6] = React.useState(null);     
+  const imageArray = [image, image2, image3, image4, image5, image6] ;
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -72,27 +73,42 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 );  
     
   }
-  const pickImage = async (id?: Number) => {    
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+const pickImage = async (id?: Number) => {    
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
 
-    console.log(result);
+  console.log(result);
 
-    if (!result.cancelled ) {
-      if(!image || id == 1)setImage(result.uri);
-      else if(!image2 || id == 2)setImage2(result.uri);
-      else if(!image3 || id == 3)setImage3(result.uri);
-      else if(!image4 || id == 4)setImage4(result.uri);
-      else if(!image5 || id == 5)setImage5(result.uri);
-      else if(!image6 || id == 6)setImage6(result.uri);
+  if (!result.cancelled ) {
+    if(!image || id == 1)setImage(result.uri);
+    else if(!image2 || id == 2)setImage2(result.uri);
+    else if(!image3 || id == 3)setImage3(result.uri);
+    else if(!image4 || id == 4)setImage4(result.uri);
+    else if(!image5 || id == 5)setImage5(result.uri);
+    else if(!image6 || id == 6)setImage6(result.uri);
+    
+  }
+};
+const processImage = (uri: string) =>{
+  let formData = new FormData();
+  for(var actualImage in imageArray ){
+    if(actualImage != null){
+      let localUri = actualImage.uri;
+      let filename = localUri.split('/').pop();
+
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
       
-    }
-  };
-
+      formData.append('photo', { uri: localUri, name: filename, type });
+    }    
+  }
+  
+}
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -212,7 +228,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}><Text> Subir Producto !</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={processImage} ><Text> Subir Producto !</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>

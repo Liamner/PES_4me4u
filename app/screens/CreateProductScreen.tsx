@@ -50,8 +50,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }
   const unPickImage = async (id: Number) => {
     Alert.alert(
-  '¿Que quieres hacer con tu foto?',
-  '',
+  '¿Que quieres hacer con tu foto?', '',
   [    
     {
       text: 'Eliminar foto',
@@ -72,26 +71,26 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 );  
     
   }
-  const pickImage = async (id?: Number) => {    
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+const pickImage = async (id?: Number) => {    
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
 
-    console.log(result);
+  console.log(result);
 
-    if (!result.cancelled ) {
-      if(!image || id == 1)setImage(result.uri);
-      else if(!image2 || id == 2)setImage2(result.uri);
-      else if(!image3 || id == 3)setImage3(result.uri);
-      else if(!image4 || id == 4)setImage4(result.uri);
-      else if(!image5 || id == 5)setImage5(result.uri);
-      else if(!image6 || id == 6)setImage6(result.uri);
-      
-    }
-  };
+  if (!result.cancelled ) {
+    if(!image || id == 1)setImage(result.uri);
+    else if(!image2 || id == 2)setImage2(result.uri);
+    else if(!image3 || id == 3)setImage3(result.uri);
+    else if(!image4 || id == 4)setImage4(result.uri);
+    else if(!image5 || id == 5)setImage5(result.uri);
+    else if(!image6 || id == 6)setImage6(result.uri);
+    
+  }
+};
 
   return (
     <ScrollView>

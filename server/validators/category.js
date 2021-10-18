@@ -21,6 +21,3 @@ exports.validateCreateCategory = [
         }
     }
 ];
-
-
-//module.exports(validationResult);

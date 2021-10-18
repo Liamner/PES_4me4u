@@ -77,12 +77,13 @@ exports.updateProduct = async (req, res) => {
     const product = await Product.findById(id)
     console.log("Searching for product to update: " + req.params.id);
     
-    product.name = nname;
-    product.categories = ncategories;
+
+    if (nname != null)  product.name = nname;
+    if (ncategories != null) product.categories = ncategories;
     console.log(ncategories);
   
     product.description = ndescription;
-    product.exchange = nexchange;
+    if (nexchange != null) product.exchange = nexchange;
     product.img = nimg;
   
     console.log(product);

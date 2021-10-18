@@ -10,9 +10,23 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+  //Variables de las respuestas API
   const [product, setProduct] = useState({});
-  const [user] = useState('@Usuario')
+  const [user, setUser] = useState('@Usuario')
 
+  //Variables de la vista
+  const [state, setState] = useState('Cargando')
+  const [images] = useState([
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '3' },
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '4' },
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
+    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
+  ]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [name, setName] = useState('Cargando...') 
+  //nombre usuario
   const [tags] = useState([
     { name:'#intercambio', key: '1'},
     { name:'#prestamo', key: '2'},
@@ -23,16 +37,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     { name:'Categoria 2', key: '2'},
     { name:'Categoria 3', key: '3'},
   ]);
-  const [images] = useState([
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '3' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '4' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
-  ]);
-  const [description, setDescription] = useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.')
-  const [currentPage, setCurrentPage] = useState(1);
+  const [description, setDescription] = useState('Cargando...')
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -42,21 +47,49 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     setCurrentPage(currentNumber);
   };
 
-  const setCorrectInfo = () => {
+  const setUserInfo = () => {
+    //Required
+    //nombre usuario
+
+    //Optional
+    //ubicacion
+  }
+
+  const getUserInfo = async () => {
+    axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
+    .then(response => {
+        setUser(response.data as {});
+        setUserInfo();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+
+  const setProductInfo = () => {
+    //Required
+    setName(product.name);
+    //categorias
+    //tipo intercambio
+
+    //Optional
     if(product.description == null) setDescription('El usuario no nos ha dado una descripción...');
     else setDescription(product.description)
+    //images (typo)
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
   }
 
   const getProductInfo = async () => {
     axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
     .then(response => {
         setProduct(response.data as {});
-        setCorrectInfo();
+        setProductInfo();
     })
     .catch(function (error) {
       console.log(error);
     });
   };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -74,7 +107,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           onMomentumScrollEnd={Scroll}
         />
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
-        <Text style={styles.title}>{`${product.name}`}</Text>
+        <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}

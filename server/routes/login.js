@@ -1,15 +1,15 @@
 //importar dependencias que se requieren para el funcionamiento
-//const express = require('express');
-import express from "express";
+const express = require('express');
+//import express from "express";
 
-//const bcrypt = require('bcrypt');
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcrypt');
+//import bcrypt from 'bcryptjs';
 
-//const jwt = require('jsonwebtoken');
-import jwt from "jsonwebtoken";
+const jwt = require('jsonwebtoken');
+//import jwt from "jsonwebtoken";
 
-//const Usuario = require('./../models/usuario');
-import User from "../models/user.js";
+const Usuario = require('./../models/user');
+//import User from "../models/user.js";
 const app = express();
 
 app.post('/login', function (req, res) {
@@ -28,16 +28,16 @@ app.post('/login', function (req, res) {
             return res.status(400).json({
             ok: false,
             err: {
-                message: "Usuario o contraseña incorrectos"
+                message: "ROUTES LOGIN - Usuario o contraseña incorrectos: no existe el usuario"
             }
             })
         }
         // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
-        if (! bcrypt.compareSync(body.password, usuarioDB.password)){
+        if (!bcrypt.compareSync(body.password, usuarioDB.password)){
             return res.status(400).json({
                 ok: false,
                 err: {
-                message: "Usuario o contraseña incorrectos"
+                    message: "Usuario o contraseña incorrectos: la contraseña es incorrecta"
                 }
             });
         }
@@ -55,5 +55,5 @@ app.post('/login', function (req, res) {
     })
 });
 
-//module.exports = app;
-export default app;
+module.exports = app;
+//export default app;

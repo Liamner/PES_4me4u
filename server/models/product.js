@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const createProductSchema = mongoose.Schema({
     title: 'String',
@@ -12,6 +13,7 @@ const createProductSchema = mongoose.Schema({
     owner: 'String'
 });
 
-const CreateProduct = mongoose.model('CreateProduct', createProductSchema);
+//const CreateProduct = mongoose.model('CreateProduct', createProductSchema);
 
-export default CreateProduct;
+//export default CreateProduct;
+module.exports = mongoose.model('CreateProduct', createProductSchema);

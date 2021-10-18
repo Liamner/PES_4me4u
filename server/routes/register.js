@@ -1,15 +1,13 @@
 //aquí es donde se tiene que encriptar la contraseña y es donde se hace uso de bcrypt
 
-//const express = require('express');
-import express from "express";
-
-//const bcrypt = require('bcrypt');
-import bcrypt from 'bcryptjs';
-
-//const Usuario = require('./../models/usuario');
-import User from "../models/user.js";
-
+const express = require('express');
+//import express from "express";
+const bcrypt = require('bcrypt');
+//import bcrypt from 'bcryptjs';
+const Usuario = require('./../models/user');
+//import User from "../models/user.js";
 const app = express();
+
 app.post('/register', function (req, res) {
   let body = req.body;
   let { nombre, email, password, role } = body;
@@ -18,6 +16,7 @@ app.post('/register', function (req, res) {
     email,
     password: bcrypt.hashSync(password, 10),
     role
+    
   });
 usuario.save((err, usuarioDB) => {
     if (err) {
@@ -32,5 +31,5 @@ usuario.save((err, usuarioDB) => {
        });
     })
 });
-//module.exports = app;
-export default app;
+module.exports = app;
+//export default app;

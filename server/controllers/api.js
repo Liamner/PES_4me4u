@@ -1,6 +1,11 @@
-import Product from "../models/product.js";
-import User from "../models/user.js";
-
+//import Product from "../models/product.js";
+const Product = require('../models/product.js');
+//import User from "../models/user.js";
+const User = require('../models/user.js');
+const express = require('express');
+const bcrypt = require('bcrypt');
+const app = express();
+/*
 export const readAllProducts = async (req, res) => {
   try {
     const product = await Product.find();
@@ -71,3 +76,45 @@ export const createUser = async (req, res) => {
     console.log('fail');
   }
 }
+*/
+
+exports.registerUser = async (req, res) => {
+  console.log("Llega a llamar a la función");
+  let body = req.body;
+  let { userId, email, pwd, role } = body;
+  let usuario = new User({
+    userId,
+    email,
+    pwd: bcrypt.hashSync(pwd, 10),
+    role,
+    
+  });
+  console.log("Se cogen los datos correctamentre");
+  try {
+    await usuario.save();
+    res.status(400).json(error.message);
+    console.log("ENTRA EN EL TRY");
+      //usuario: usuarioDB
+    //usuario: usuarioDB
+  }
+  catch (error){
+    res.status(400).json(error.message);
+    console.log("Can not register the user");
+  }
+}
+  /*
+usuario.save((err, usuarioDB) => {
+    if (err) {
+      return res.status(400).json({
+         ok: false,
+         err,
+      });
+    }
+    res.json({
+          ok: true,
+          usuario: usuarioDB
+       });
+    })
+});
+*/
+//module.exports = app;

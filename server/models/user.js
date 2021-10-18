@@ -1,26 +1,9 @@
-/*
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+const bcrypt = require('bcrypt');
 
-const createUserSchema = mongoose.Schema({
-    userId: 'String',
-    email: 'String',
-    pwd: 'String',
-    location: 'String',
-    level: 'String',
-    postalCode: 'String',
-    //ecoPoints: 'Integer',
-    //score: 'Integer'
-});
-
-const CreateUser = mongoose.model('CreateUser', createUserSchema);
-
-export default CreateUser;
-*/
-
-//const mongoose = require('mongoose');
-//var uniqueValidator = require('mongoose-unique-validator');
-import mongoose from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
+//import mongoose from 'mongoose';
+//import uniqueValidator from 'mongoose-unique-validator';
 
 let rolesValidos = {
     values: ["ADMIN", "USER"],
@@ -45,8 +28,8 @@ let usuarioSchema = new Schema({
     role: {
         type: String,
         default: 'USER',
-        required: [true],
-        enum: rolesValidos,
+        //required: [true],
+        //enum: rolesValidos,
     },
     location: {
         type: String,
@@ -84,6 +67,6 @@ usuarioSchema.methods.toJSON = function() {
 usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
 })
-//module.exports = mongoose.model('Usuario', usuarioSchema);
-const LoginRegister = mongoose.model('LoginRegister', usuarioSchema);
-export default LoginRegister;
+module.exports = mongoose.model('Usuario', usuarioSchema);
+//const LoginRegister = mongoose.model('LoginRegister', usuarioSchema);
+//export default LoginRegister;

@@ -7,6 +7,7 @@ const { validateCreateCategory } = require('../validators/category.js');
 module.exports = function(app) {
   const router = express.Router();
 
+
   // Create Product
   router.route('/product/create/')
     .post((validateCreateProduct), productController.createProduct);
@@ -14,12 +15,16 @@ module.exports = function(app) {
   // Read Product
   router.route('/product/:id')
     .get(productController.readProduct);
+    
   router.route('/product/')
     .get(productController.readAllProducts);
 
   // Update Product
   router.route('/product/update/:id')
     .put(productController.updateProduct);
+
+  router.route('/product/updateState/:id')
+    .put(productController.updateStateProduct);
 
   // Delete Product
   router.route('/product/delete/:id')
@@ -42,3 +47,4 @@ module.exports = function(app) {
 
   return router;
 }
+

@@ -18,9 +18,6 @@ app.get('/', function(req, res) {
   res.sendFile(renderHTML);
 })
 
-const CONNECTION_URL =
-  "mongodb+srv://Jefe:1234@4me4u.iyl4h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-
 // Connect to MongoDB
 mongoose.connect(process.env.URLDB, {
   useNewUrlParser: true,

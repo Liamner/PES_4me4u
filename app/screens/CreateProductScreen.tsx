@@ -94,6 +94,8 @@ const pickImage = async (id?: Number) => {
   }
 };
 const processImage = (uri: string) =>{
+  //https://stackoverflow.com/questions/47630163/axios-post-request-to-send-form-data
+  //https://stackoverflow.com/questions/42521679/how-can-i-upload-a-photo-with-expo
   let formData = new FormData();
   for(var actualImage in imageArray ){
     if(actualImage != null){

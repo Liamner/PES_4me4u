@@ -27,16 +27,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('Cargando...') 
   //nombre usuario
-  const [tags] = useState([
-    { name:'#intercambio', key: '1'},
-    { name:'#prestamo', key: '2'},
-    { name:'#regalo', key: '3'},
-  ]);
-  const [categories] = useState([
-    { name:'Categoria 1', key: '1'},
-    { name:'Categoria 2', key: '2'},
-    { name:'Categoria 3', key: '3'},
-  ]);
+  const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
+  const [categories] = useState([{name: 'Cargando...', key: '10'}]);
   const [description, setDescription] = useState('Cargando...')
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -50,8 +42,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
   const setUserInfo = () => {
     //Required
     //nombre usuario
-
-    //Optional
     //ubicacion
   }
 
@@ -66,21 +56,58 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     });
   };
 
+  const getCorrectCategoriesType = () => {
+    categories.pop();
+    const aux = product.categories;
+    for(let i of aux) {
+      switch (i) {
+        case "tech":
+          categories.push({name: 'Tecnologia', key: '1'})
+          break;
+        case "house":
+          categories.push({name: 'Cosas de casa', key: '2'})
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  const getCorrectExchangeType = () => {
+    exchange.pop();
+    const aux2 = product.exchange;
+    for(let i of aux2) {
+      switch (i) {
+        case "exchange":
+          exchange.push({ name:'#intercambio', key: '1'})
+          break;
+        case "provide":
+          exchange.push({ name:'#prestamo', key: '2'})
+          break;
+        case "present":
+          exchange.push({ name:'#regalo', key: '3'})
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   const setProductInfo = () => {
     //Required
     setName(product.name);
-    //categorias
-    //tipo intercambio
+    getCorrectCategoriesType();
+    getCorrectExchangeType();
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
     if(product.description == null) setDescription('El usuario no nos ha dado una descripción...');
     else setDescription(product.description)
-    //images (typo)
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
   }
 
   const getProductInfo = async () => {
-    axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
+    await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
     .then(response => {
         setProduct(response.data as {});
         setProductInfo();
@@ -112,7 +139,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         <FlatList 
           style={styles.flatlist}
           horizontal={true}
-          data={tags}
+          data={exchange}
           renderItem={({item}) => (
             <Text style={styles.tags}> {item.name} </Text>
           )}

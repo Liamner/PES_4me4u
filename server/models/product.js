@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
-<<<<<<< HEAD
-=======
 const Category = require('./category.js');
 var Schema = mongoose.Schema;
->>>>>>> merge_back
 
 const categoryType = {
     values: ['tech', 'house']
@@ -59,9 +56,5 @@ const ProductSchema = new mongoose.Schema({
     }
 });
 
-<<<<<<< HEAD
-module.exports = mongoose.model('Product', ProductSchema); 
-=======
 
 module.exports = mongoose.model('Product', ProductSchema);
->>>>>>> merge_back

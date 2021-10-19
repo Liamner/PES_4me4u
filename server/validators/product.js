@@ -1,4 +1,5 @@
 const {check, validationResult} = require('express-validator');
+
 exports.validateCreateProduct = [
     check('name')
         .exists()
@@ -26,6 +27,3 @@ exports.validateCreateProduct = [
         }
     }
 ];
-
-
-module.exports = {validateCreateProduct};

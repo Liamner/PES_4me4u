@@ -3,16 +3,18 @@ import { Platform, StyleSheet,
     Text, 
     View,
     TextInput,
+    Alert,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
+import axios from 'axios';
 
 export default function SignInScreen({navigation}) {
     
-    const [data, setData] = React.useState({
+    const [inputData, setinputData] = React.useState({
         email:'',
         password:'',
         check_textInputChange: false,
@@ -21,15 +23,15 @@ export default function SignInScreen({navigation}) {
 
     const textInputChange = (val) => {
         if(val.length !== 0) {
-            setData({
-                ...data,
+            setinputData({
+                ...inputData,
                 email: val,
                 check_textInputChange: true
             });
         }
         else {
-            setData({
-                ...data,
+            setinputData({
+                ...inputData,
                 email: val,
                 check_textInputChange: false
             });
@@ -37,18 +39,42 @@ export default function SignInScreen({navigation}) {
     }
 
     const handlePasswordChange = (val) => {
-        setData({
-            ...data,
+        setinputData({
+            ...inputData,
             password: val
         });
     }
 
     const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
+        setinputData({
+            ...inputData,
+            secureTextEntry: !inputData.secureTextEntry
         });
     }
+
+    function handleLogin() {
+        {/*const url = 'apiURI';
+        axios
+        .post(url, credentials)
+        .then(function (response) {
+            const result = response.data;
+            const {data} = result;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    */}
+        if (inputData.email === '' || inputData.password === '') {
+            Alert.alert("Error","Por favor, rellene todos los campos.")
+        }
+
+        else  {
+            navigation.navigate("Main", {name: inputData.email})
+        }
+    }
+
+
+
 
     return (
         <View style={styles.container}>
@@ -71,7 +97,7 @@ export default function SignInScreen({navigation}) {
                         autoCapitalize="none"
                         onChangeText={(val) => textInputChange(val)}
                     />
-                    {data.check_textInputChange ?
+                    {inputData.check_textInputChange ?
                     <Animatable.View
                         animation="bounceIn"
                     >
@@ -96,13 +122,13 @@ export default function SignInScreen({navigation}) {
                     />
                     <TextInput
                         placeholder="Tu contraseña"
-                        secureTextEntry={data.secureTextEntry ? true : false}
+                        secureTextEntry={inputData.secureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={(val) => handlePasswordChange(val)}
                     />
                     <TouchableOpacity onPress={updateSecureTextEntry}>
-                        {data.secureTextEntry ?
+                        {inputData.secureTextEntry ?
                             <Feather 
                             name="eye-off"
                             size={20}
@@ -120,7 +146,9 @@ export default function SignInScreen({navigation}) {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                            onPress={()=>navigation.navigate("BottomTab")}
+                            onPress={()=> {
+                                handleLogin();
+                            }}
                             style={{width: 250}}
                     >
                         <LinearGradient

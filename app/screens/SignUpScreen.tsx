@@ -6,7 +6,7 @@ import { Platform, StyleSheet,
     Alert,
 } from 'react-native'
 import * as Animatable from 'react-native-animatable';
-import { Feather, FontAwesome } from '@expo/vector-icons';
+import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
@@ -17,6 +17,7 @@ export default function SignUp({navigation}) {
     const [inputData, setinputData] = React.useState({
         email:'',
         password:'',
+        userId: '',
         confirmPassword:'',
         secureTextEntry: true,
         confirmSecureTextEntry: true,
@@ -24,6 +25,7 @@ export default function SignUp({navigation}) {
         emailError: false,
         isValidPassword: true,
         equalsPasswords: true,
+        isValidUserId: false
     });
 
     const handlePassword = (val) => {
@@ -85,8 +87,18 @@ export default function SignUp({navigation}) {
         }
     }
 
+    function handleUserId(val) {
+        if (val !== '') {
+            setinputData({
+                ... inputData,
+                userId: val,
+                isValidUserId: true
+            });
+        }
+    }
+
     function handleSignUp() {
-        if (!inputData.equalsPasswords || !inputData.isValidPassword || !inputData.isValidEmail) {
+        if (!inputData.equalsPasswords || !inputData.isValidPassword || !inputData.isValidEmail || !inputData.isValidUserId) {
             Alert.alert("Error", "Por favor compruebe que los campos sean correctos.")
         }
         else if (inputData.password === '' || inputData.confirmPassword === '') {
@@ -109,10 +121,11 @@ export default function SignUp({navigation}) {
                 <Text style={styles.text_footer}>Email</Text>
 
                 <View style={styles.action}>
-                    <FontAwesome
-                        name="user-o"
-                        size={20}
-                    /> 
+                    <MaterialIcons
+                        color = '#000'
+                        name = "email"
+                        size = {20}
+                    />
                     <TextInput
                         placeholder="Tu Email"
                         style={styles.textInput}
@@ -142,7 +155,25 @@ export default function SignUp({navigation}) {
                     </Animatable.View>
                     :
                     null
-                } 
+                }
+
+                <Text style={[styles.text_footer, {
+                    marginTop: 35
+                }]}>Nombre</Text>
+
+                <View style={styles.action}>
+                    <FontAwesome
+                        name="user-o"
+                        size={20}
+                    />
+                    <TextInput
+                        placeholder="Tu nombre"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => handleUserId(val)}
+                        onEndEditing={(e)=>handleUserId(e.nativeEvent.text)}
+                    />
+                </View>
 
                 <Text style={[styles.text_footer, {
                     marginTop: 35

@@ -52,29 +52,27 @@ export default function SignInScreen({navigation}) {
         });
     }
 
-    function handleLogin() {
-        {/*const url = 'apiURI';
-        axios
-        .post(url, credentials)
-        .then(function (response) {
-            const result = response.data;
-            const {data} = result;
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    */}
+    const handleLogin = async () => {
         if (inputData.email === '' || inputData.password === '') {
             Alert.alert("Error","Por favor, rellene todos los campos.")
         }
 
         else  {
-            navigation.navigate("Main", {name: inputData.email})
+            const credentials = {
+                email: inputData.email,
+                pwd: inputData.password,
+                }
+            axios
+            .post('http://localhost:5000/api/login', credentials)
+            .then(function (response) {
+                const result = response.data;
+                navigation.navigate("Main", {name: inputData.email});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
-
-
-
 
     return (
         <View style={styles.container}>

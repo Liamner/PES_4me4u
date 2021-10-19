@@ -97,7 +97,7 @@ export default function SignUp({navigation}) {
         }
     }
 
-    function handleSignUp() {
+    const handleSignUp = async () => {
         if (!inputData.equalsPasswords || !inputData.isValidPassword || !inputData.isValidEmail || !inputData.isValidUserId) {
             Alert.alert("Error", "Por favor compruebe que los campos sean correctos.")
         }
@@ -105,8 +105,23 @@ export default function SignUp({navigation}) {
             Alert.alert("Error", "Las constraseñas no pueden ser vacías")
         }
         else {
-            {/*navigation.navigate("BottomTab")*/}
-            Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
+            const credentials = {
+                userId: inputData.userId,
+                email: inputData.email,
+                pwd: inputData.password,
+                role: 'USER'
+                }
+            axios
+            .post('http://localhost:5000/api/register', credentials)
+            .then(function (response) {
+                const result = response.data;
+                const {userId} = result;
+                Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+            {/*navigation.navigate("BottomTab")*/} 
         }
     }
 

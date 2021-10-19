@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+<<<<<<< HEAD
+=======
+const Category = require('./category.js');
+var Schema = mongoose.Schema;
+>>>>>>> merge_back
 
 const categoryType = {
     values: ['tech', 'house']
@@ -22,10 +27,13 @@ const ProductSchema = new mongoose.Schema({
         type: ['String'],
         enum: categoryType,
         required: true
+        /*
+        type: [Schema.ObjectId],
+        ref: "Category",
+        required: true*/
     },
     description: {
-        type: 'String',
-        required: false
+        type: 'String'
     },
     publishingDate: {
         type: 'Date',
@@ -33,16 +41,16 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: {
-        type: 'String',
+        type: ['String'],
         enum: exchangeTypes,
         required: true
     },
     img: {
-        type: 'String',
+        type: ['String'],
         required: false
     },
     state: {
-        type: 'String',
+        type: ['String'],
         enum: stateTypes,
         required: true
     },
@@ -51,4 +59,9 @@ const ProductSchema = new mongoose.Schema({
     }
 });
 
+<<<<<<< HEAD
 module.exports = mongoose.model('Product', ProductSchema); 
+=======
+
+module.exports = mongoose.model('Product', ProductSchema);
+>>>>>>> merge_back

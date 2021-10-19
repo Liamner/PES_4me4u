@@ -1,66 +1,52 @@
 const express = require('express');
-const validateCreateProduct = require('../validators/product.js');
-const { readAllProducts,
-  createProduct,
-  readProduct,
-  readProductsFiltered,
-  updateProduct,
-  deleteProduct} = require('../controllers/api.js');
-const Product = require('../models/product.js');
 
-  module.exports = function(app, express) {
-    const router = express.Router();
+const productController = require('../controllers/apiProduct.js');
+const categoryController = require('../controllers/apiCategory.js');
+const { validateCreateProduct } = require('../validators/product.js');
+const { validateCreateCategory } = require('../validators/category.js');
 
-    // http://localhost:5000/api/product/...
+module.exports = function(app) {
+  const router = express.Router();
 
-    // Create Product
-    router.route('/product/create/')
-      .post(async (req, res) => {
-        const {
-          name,
-          categories,
-          description,
-          publishingDate,
-          exchange,
-          img,
-          state,
-          owner,
-        } = req.body;
-        const product = new Product();
-        product.name = name;
-        product.categories = categories;
-        product.description = description;
-        product.publishingDate = publishingDate;
-        product.exchange = exchange;
-        product.img = img;
-        product.state = state;
-        product.owner = owner;
-      
-        console.log(product);
-      
-        try {
-          await product.save();
-      
-          res.status(201).json(product);
-        } catch (error) {
-          res.status(409).json(error.message);
-      
-          console.log("Can not create the Product");
-        }
-      });
-    //router.post("/product/create/", validateCreateProduct, createProduct);
 
-    // Read Product
-    router.get("/product/:id", readProduct);
-    router.get("/product/", readAllProducts);
-    router.get("/product/filter/:filter", readProductsFiltered);
+  // Create Product
+  router.route('/product/create/')
+    .post((validateCreateProduct), productController.createProduct);
+    
+  // Read Product
+  router.route('/product/:id')
+    .get(productController.readProduct);
+    
+  router.route('/product/')
+    .get(productController.readAllProducts);
 
-    // Update Product
-    router.put("/product/update/:id", updateProduct);
+  // Update Product
+  router.route('/product/update/:id')
+    .put(productController.updateProduct);
 
-    // Delete Product
-    router.delete("/product/delete/:id", deleteProduct);
+  router.route('/product/updateState/:id')
+    .put(productController.updateStateProduct);
 
-    return router;
-  }
+  // Delete Product
+  router.route('/product/delete/:id')
+    .delete(productController.deleteProduct);
+
+  router.route('/category/create/')
+    .post(validateCreateCategory, categoryController.createCategory);
+    // Create Category
+  router.route('category/:id')
+    .get(categoryController.readCategory);
+
+  router.route('/category/')
+    .post(categoryController.readAllCategories);
+  
+  router.route('/category/update/:id')
+    .put(categoryController.updateCategory);
+  
+  router.route('category/delete/:id')
+    .delete(categoryController.deleteCategory);
+
+  return router;
+}
+>>>>>>> merge_back
 

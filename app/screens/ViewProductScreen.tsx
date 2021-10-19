@@ -1,6 +1,6 @@
 import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
 
 import { Text, View } from '../components/Themed';
@@ -11,7 +11,7 @@ import axios from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   //Variables de las respuestas API
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({data: {}, done: false});
   const [user, setUser] = useState('@Usuario')
 
   //Variables de la vista
@@ -58,7 +58,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   const getCorrectCategoriesType = () => {
     categories.pop();
-    const aux = product.categories;
+    const aux = product.data.categories;
     for(let i of aux) {
       switch (i) {
         case "tech":
@@ -75,8 +75,8 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   const getCorrectExchangeType = () => {
     exchange.pop();
-    const aux2 = product.exchange;
-    for(let i of aux2) {
+    const aux = product.data.exchange;
+    for(let i of aux) {
       switch (i) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
@@ -93,29 +93,39 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     }
   }
 
-  const setProductInfo = () => {
+  const setProductInfo = async () => {
     //Required
-    setName(product.name);
+    setName(product.data.name);
     getCorrectCategoriesType();
     getCorrectExchangeType();
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
-    if(product.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(product.description)
+    if(product.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(product.data.description);
   }
 
   const getProductInfo = async () => {
-    await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
+    /*await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
     .then(response => {
         setProduct(response.data as {});
         setProductInfo();
     })
     .catch(function (error) {
       console.log(error);
-    });
+    });*/
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83');
+    setProduct({data: response.data as {}, done: true});
+    console.log(product.data);
+    console.log('acabado');
   };
+  
+  useEffect(() => {
+    getProductInfo();
+    console.log(product.data);
+    setProductInfo();
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -272,3 +282,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+

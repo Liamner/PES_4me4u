@@ -48,5 +48,3 @@ module.exports = function(app) {
 
   return router;
 }
->>>>>>> merge_back
-

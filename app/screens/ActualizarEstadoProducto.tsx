@@ -7,6 +7,7 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
+import axios from 'axios';
 
 
 
@@ -18,26 +19,45 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
   //Datos
   const [data, setData] = React.useState([
     {
-      id: "1",
-      name: "Osito de pelucher",
-      state: "Disponible"
-    },
+      id: '61645afb7f09d55d235f9c8',
+      name: 'HarryPotter',
+      state: 'available'
+    }/*,
     {
       id: "2",
       name: "Coche",
-      state: "Prestado"
+      state: "reserved"
     },
     {
       id: "3",
       name: "Libro",
-      state: "Vendido"
-    },
+      state: "provide"
+    },*/
   ]);
 
+
+  const putUpdateStatus = async (new_state: string) => {
+    // 'available', 'reserved', 'provide'
+    // disponible , reservado,  prestado
+    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/61645afb7f09d55d235f9c83', new_state)
+      .then(response => {
+        /*setData(response.data as {});*/
+      })
+      .catch(function (error) {
+        console.log(error);
+    });
+
+
+
+  
+  };
+
+ //En caso de recibir el id como variable      /${id}`,    en lugar de /61645afb7f09d55d235f9c83
+ 
   //Funcion que actualiza el estado de un producto en funcion del new_state pasado
   const updateStatus = (item: { id: string; name: string; state: string; }, new_state: string) => {
     item.state = new_state
-
+    putUpdateStatus(new_state);
     setData((prevData) => { 
       return prevData.filter (data => data.id  != null); 
     });
@@ -49,10 +69,10 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
       "Introduce el nuevo estado",
       "Estado actual: " + item.state,
       [
-        { text: "Disponible", onPress: () => updateStatus(item, "Disponible") },
-        { text: "Prestado",   onPress: () => updateStatus(item, "Prestado") },
-        { text: "Vendido",    onPress: () => updateStatus(item, "Vendido") },
-        { text: "Cancelar"}
+        { text: 'available', onPress: () => updateStatus(item, 'available') },
+        { text: 'reserved',   onPress: () => updateStatus(item, 'reserved') },
+        { text: 'provide',    onPress: () => updateStatus(item, 'provide') },
+        { text: 'Cancelar'}
       ]
     );
 

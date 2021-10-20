@@ -18,6 +18,9 @@ module.exports = function(app) {
     
   router.route('/product/')
     .get(productController.readAllProducts);
+ 
+  router.route('/ids/product/')
+    .get(productController.readProductsId);
 
   // Update Product
   router.route('/product/update/:id')

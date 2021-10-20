@@ -40,6 +40,18 @@ exports.readProductsFiltered = async (req, res) => {
   }
 };
 
+
+exports.readProductsId = async (req, res) => {
+  try {
+    const product = await Product.find({}, {_id: 1 });
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
 exports.createProduct = async (req, res) => {
   //const product = new Product();
   const product = new Product();

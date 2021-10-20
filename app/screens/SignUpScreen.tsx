@@ -111,10 +111,10 @@ export default function SignUp({navigation}) {
                 pwd: inputData.password,
                 role: 'USER'
                 }
-            axios
+            await axios
             .post('http://localhost:5000/api/register', credentials)
             .then(function (response) {
-                const result = response.data;
+                const result = response.data ;
                 const {userId} = result;
                 Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
             })

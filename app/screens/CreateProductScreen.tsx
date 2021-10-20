@@ -2,10 +2,12 @@ import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import EditScreenInfo from '../components/EditScreenInfo';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+import { resolvePlugin } from '@babel/core';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [name, onChangeName] = React.useState("");  
@@ -93,23 +95,21 @@ const pickImage = async (id?: Number) => {
     
   }
 };
-const processImage = (uri: string) =>{
-  //https://stackoverflow.com/questions/47630163/axios-post-request-to-send-form-data
-  //https://stackoverflow.com/questions/42521679/how-can-i-upload-a-photo-with-expo
-  let formData = new FormData();
-  for(var actualImage in imageArray ){
-    if(actualImage != null){
-      let localUri = actualImage.uri;
-      let filename = localUri.split('/').pop();
-
-      let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : `image`;
-
-      
-      formData.append('photo', { uri: localUri, name: filename, type });
-    }    
-  }
-  
+const sendApi = async () =>{
+  console.log("sending")
+  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    name : name,
+    categories : [selectedCategory],
+    description : description,
+    exchange :"present",
+    state :"available",
+    owner :"owner"
+  }).then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }
   return (
     <ScrollView>
@@ -135,7 +135,7 @@ const processImage = (uri: string) =>{
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Coches" value="coche" />
+          <Picker.Item label="Coches" value="tech" />
           <Picker.Item label="Motos" value="moto" />
         </Picker>        
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
@@ -230,7 +230,7 @@ const processImage = (uri: string) =>{
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={processImage} ><Text> Subir Producto !</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={sendApi} ><Text> Subir Producto !</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>

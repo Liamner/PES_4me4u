@@ -8,40 +8,47 @@ module.exports = function(app) {
   const router = express.Router();
 
 
-  // Create Product
+  // Create new product
   router.route('/product/create/')
     .post((validateCreateProduct), productController.createProduct);
     
-  // Read Product
+  // Read Product with id = id
   router.route('/product/:id')
     .get(productController.readProduct);
-    
+  
+  // Read all products
   router.route('/product/')
     .get(productController.readAllProducts);
 
-  // Update Product
+  // Update product with id = id
   router.route('/product/update/:id')
     .put(productController.updateProduct);
 
+  // Update atribute state of product with id = id
   router.route('/product/updateState/:id')
     .put(productController.updateStateProduct);
 
-  // Delete Product
+  // Delete product with id = id
   router.route('/product/delete/:id')
     .delete(productController.deleteProduct);
 
+  // Create new category
   router.route('/category/create/')
     .post(validateCreateCategory, categoryController.createCategory);
-    // Create Category
-  router.route('category/:id')
-    .get(categoryController.readCategory);
 
+  // Read category with id = id
+    router.route('category/:id')
+    .get(categoryController.readCategory);
+  
+  // Read all categories
   router.route('/category/')
     .post(categoryController.readAllCategories);
   
+  // Update category with id = id
   router.route('/category/update/:id')
     .put(categoryController.updateCategory);
   
+  // Delete category with id = id
   router.route('category/delete/:id')
     .delete(categoryController.deleteCategory);
 

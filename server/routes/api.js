@@ -4,6 +4,8 @@ const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
+const userController = require('../controllers/apiUser.js');
+
 
 module.exports = function(app) {
   const router = express.Router();
@@ -55,6 +57,10 @@ module.exports = function(app) {
   // Delete category with id = id
   router.route('category/delete/:id')
     .delete(categoryController.deleteCategory);
+
+
+router.route('/register').post(userController.registerUser);
+router.route('/login').post(userController.loginUser);
 
   return router;
 }

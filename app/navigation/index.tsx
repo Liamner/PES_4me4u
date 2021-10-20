@@ -16,7 +16,7 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import CreateProductScreen from '../screens/CreateProductScreen';
+import EditProductScreen from '../screens/EditProductScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -59,15 +59,15 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="CreateProduct"
+      initialRouteName="EditProduct"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="CreateProduct"
-        component={CreateProductScreen}
-        options={({ navigation }: RootTabScreenProps<'CreateProduct'>) => ({
-          title: 'Crear Producto',
+        name="EditProduct"
+        component={EditProductScreen}
+        options={({ navigation }: RootTabScreenProps<'EditProduct'>) => ({
+          title: 'Editar Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable

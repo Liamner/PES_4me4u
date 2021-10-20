@@ -7,7 +7,7 @@ import { Text, View } from '../components/Themed';
 import { TextInput } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 
-export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
+export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("Ya hay algo");  
   const [description, onChangeDescription] = React.useState("Aqui tambien hay algo que nos dará la api xD");  
   const [selectedCategory, setSelectedCategory] = React.useState("coche");

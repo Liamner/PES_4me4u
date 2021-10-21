@@ -19,7 +19,7 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
   //Datos
   const [data, setData] = React.useState([
     {
-      id: '61645afb7f09d55d235f9c8',
+      id: '61718c3da444e7c4e76a77e5',
       name: 'HarryPotter',
       state: 'available'
     }/*,
@@ -36,10 +36,11 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
   ]);
 
 
-  const putUpdateStatus = async (new_state: string) => {
+  const putUpdateStatus = async (id: string, new_state: string) => {
     // 'available', 'reserved', 'provide'
     // disponible , reservado,  prestado
-    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/61645afb7f09d55d235f9c83', new_state)
+
+    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/' + id, { state: [new_state] } )
       .then(response => {
         /*setData(response.data as {});*/
       })
@@ -57,7 +58,7 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
   //Funcion que actualiza el estado de un producto en funcion del new_state pasado
   const updateStatus = (item: { id: string; name: string; state: string; }, new_state: string) => {
     item.state = new_state
-    putUpdateStatus(new_state);
+    putUpdateStatus(item.id, new_state);
     setData((prevData) => { 
       return prevData.filter (data => data.id  != null); 
     });

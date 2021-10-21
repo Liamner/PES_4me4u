@@ -1,21 +1,20 @@
 import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   //Variables de las respuestas API
-  const [product, setProduct] = useState({data: {}, done: false});
-  const [user, setUser] = useState('@Usuario')
+  const [user] = useState('@Usuario');
 
   //Variables de la vista
-  const [state, setState] = useState('Cargando')
+  const [state, setState] = useState('Cargando');
   const [images] = useState([
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
@@ -39,28 +38,11 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     setCurrentPage(currentNumber);
   };
 
-  const setUserInfo = () => {
-    //Required
-    //nombre usuario
-    //ubicacion
-  }
-
-  const getUserInfo = async () => {
-    axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
-    .then(response => {
-        setUser(response.data as {});
-        setUserInfo();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-
-  const getCorrectCategoriesType = () => {
+  const getCorrectCategoriesType = (response: AxiosResponse) => {
     categories.pop();
-    const aux = product.data.categories;
-    for(let i of aux) {
-      switch (i) {
+    let aux = response.data.categories;
+    aux.forEach((element: any) => {
+      switch (element) {
         case "tech":
           categories.push({name: 'Tecnologia', key: '1'})
           break;
@@ -70,14 +52,14 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         default:
           break;
       }
-    }
+    });
   }
 
-  const getCorrectExchangeType = () => {
+  const getCorrectExchangeType = (response: AxiosResponse) => {
     exchange.pop();
-    const aux = product.data.exchange;
-    for(let i of aux) {
-      switch (i) {
+    let aux = response.data.exchange;
+    aux.forEach((element: any) => {
+      switch (element) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
           break;
@@ -90,43 +72,42 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
         default:
           break;
       }
+    });
+  }
+
+  const getCorrectStateType = (response: AxiosResponse) => {
+    switch (response.data.state) {
+      case "available":
+        setState("Disponible");
+        break;
+      case "reserved":
+        setState("Reservado");
+        break;
+      case "provide":
+        setState("Prestado");
+        break;
+      default:
+        break;
     }
   }
 
-  const setProductInfo = async () => {
+
+  const getProductInfo = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83');
     //Required
-    setName(product.data.name);
-    getCorrectCategoriesType();
-    getCorrectExchangeType();
+    setName(response.data.name);
+    getCorrectCategoriesType(response);
+    getCorrectExchangeType(response);
+    getCorrectStateType(response);
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
-    if(product.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(product.data.description);
-  }
-
-  const getProductInfo = async () => {
-    /*await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83')
-    .then(response => {
-        setProduct(response.data as {});
-        setProductInfo();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });*/
-    const response = await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83');
-    setProduct({data: response.data as {}, done: true});
-    console.log(product.data);
-    console.log('acabado');
+    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(response.data.description);
   };
+  getProductInfo()
   
-  useEffect(() => {
-    getProductInfo();
-    console.log(product.data);
-    setProductInfo();
-  }, [])
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -143,6 +124,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
+        <View style={styles.state}>
+          <Text style={{color: 'white'}}>{`${state}`}</Text>
+        </View>
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
         <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
@@ -237,6 +221,14 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     alignSelf: 'center'
   },
+  state: {
+    alignSelf: 'stretch',
+    padding: 5,
+    margin: 5,
+    backgroundColor: 'rgba(76,76,76, 0.8)',
+    position: 'absolute',
+    borderRadius: 10,
+  },
   tags: {
     backgroundColor: '#a2cff0',
     margin: 5,
@@ -282,4 +274,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+
 

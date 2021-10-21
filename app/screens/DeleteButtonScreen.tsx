@@ -5,6 +5,7 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
+import axios from 'axios'
 
 
 
@@ -21,18 +22,28 @@ export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'D
   //Datos
   const [data, setData] = React.useState([
     {
-      id: "1",
-      title: "BORRAR 1",
-    },
-    {
-      id: "2",
-      title: "BORRAR 2",
-    },
-    {
-      id: "3",
-      title: "BORRAR 3",
-    },
+      id: "6163458a586da8fbb9866e43"}
   ]);
+
+
+  const APIDeleteProduct= (id: string) =>{
+
+//    https://app4me4u.herokuapp.com/api/product/delete/:id
+    const response = axios.delete('https://app4me4u.herokuapp.com/api/product/delete/' + id /*616332ec74346adb25a77b94*/)
+      .then(res => {
+        console.log(res);})
+  }
+
+  //función que se encarga de borrar el boton que se ha pulsado
+  const removeItem = (id: string) => {
+    APIDeleteProduct(id)
+
+    setData((prevData) => { 
+      return prevData.filter (data => data.id  != id); 
+    });
+  };
+
+
 
   //Alerta de confirmación de borrado
   const deleteConfirmationAlert = (id: string) =>
@@ -48,12 +59,7 @@ export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'D
       ]
     );
 
-  //función que se encarga de borrar el boton que se ha pulsado
-  const removeItem = (id: string) => {
-    setData((prevData) => { 
-      return prevData.filter (data => data.id  != id); 
-    });
-  };
+
   
   return (
     <View style={styles.container}>

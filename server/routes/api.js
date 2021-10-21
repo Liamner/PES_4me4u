@@ -2,10 +2,11 @@ const express = require('express');
 
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
-const { validateCreateProduct } = require('../validators/product.js');
-const { validateCreateCategory } = require('../validators/category.js');
 const userController = require('../controllers/apiUser.js');
 
+const { validateCreateProduct } = require('../validators/product.js');
+const { validateCreateCategory } = require('../validators/category.js');
+const upload = require('../libs/storage.js');
 
 module.exports = function(app) {
   const router = express.Router();
@@ -13,8 +14,8 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post((validateCreateProduct), productController.createProduct);
-    
+    .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
+
   // Read Product with id = id
   router.route('/product/:id')
     .get(productController.readProduct);

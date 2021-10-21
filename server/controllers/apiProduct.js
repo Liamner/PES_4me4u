@@ -60,11 +60,11 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  product.img = req.body.img;
+  product.img = '/storage/imgs/' + req.file.filename;
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  console.log(product);
+  console.log(req.file.filename);
 
   try {
     await product.save();

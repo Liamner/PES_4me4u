@@ -77,6 +77,13 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+exports.getImg = async (req, res) => {
+  const product = await Product.findById({_id: req.params.id});
+  console.log(product);
+  res.render('holaa');
+  //res.render({product});
+}
+
 exports.updateProduct = async (req, res) => {
   try{
     const nname = req.body.name;

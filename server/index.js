@@ -2,6 +2,14 @@ require('./config/config.js');
 
 const express = require('express')
 const app = express()
+const cors=require("cors");
+const corsOptions ={
+   origin:'http://localhost:19006', 
+   credentials:true,            
+   optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) 
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const path = require('path');
@@ -17,6 +25,8 @@ let renderHTML = path.resolve(__dirname, '../public/index.html');
 app.get('/', function(req, res) {
   res.sendFile(renderHTML);
 })
+
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.URLDB, {

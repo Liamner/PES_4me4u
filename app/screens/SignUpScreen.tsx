@@ -97,32 +97,37 @@ export default function SignUp({navigation}) {
         }
     }
 
-    const handleSignUp = async () => {
-        if (!inputData.equalsPasswords || !inputData.isValidPassword || !inputData.isValidEmail || !inputData.isValidUserId) {
-            Alert.alert("Error", "Por favor compruebe que los campos sean correctos.")
-        }
-        else if (inputData.password === '' || inputData.confirmPassword === '') {
-            Alert.alert("Error", "Las constraseñas no pueden ser vacías")
-        }
-        else {
+    const handleSignUp = () => {
             const credentials = {
-                userId: inputData.userId,
-                email: inputData.email,
-                pwd: inputData.password,
-                role: 'USER'
-                }
-            await axios
+                userId:inputData.userId,
+                email:inputData.email,
+                pwd:inputData.password,
+                };
+
+                const cre = new URLSearchParams()
+                cre.append('userId', 'Aaaswq')
+                cre.append('email', 'kjad')
+                cre.append('pwd', 'asdd');
+
+                const config = {
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                  }
+
+            axios
             .post('http://localhost:5000/api/register', credentials)
             .then(function (response) {
-                const result = response.data ;
-                const {userId} = result;
-                Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
+               
+               // Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
+                const result = response.data
+                console.log(result.userId)
+                navigation.navigate("BottomTab")
             })
             .catch(function (error) {
                 console.log(error);
             });
             {/*navigation.navigate("BottomTab")*/} 
-        }
     }
 
     return (

@@ -39,6 +39,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     let response = await axios.get(url);
     console.log("data: " + response.data.publishingDate)
     console.log("data: " + response.data.name)
+    console.log("data: " + response.data.description)
     onChangeName(response.data.name)
     onChangeDescription(response.data.description)
     setSelectedCategory(response.data.categories[0])
@@ -74,9 +75,9 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       else if(element == "provide") setCheckedPrestar(true);
     })
 
-    console.log(productInfo.pname + 'npepe')
-    console.log(productInfo.pdescription)
-    console.log(productInfo.pexchange[0])
+    console.log(productInfo.pname + ' reloaded')
+    console.log(productInfo.pdescription + ' reloaded')
+    console.log(productInfo.pexchange[0] + ' reloaded')
   }
 
   const editProduct = async () => {
@@ -100,9 +101,17 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       .put('https://app4me4u.herokuapp.com/api/product/update/6163482e4d9725b976c99c2e', newInfo)
       .then(function(response) {
         const result = response.data
-        console.log(result.name)
-        console.log(result.description)
-        })
+        console.log(result.name + ' edited')
+        console.log(result.description + ' edited')
+        setProductInfo({
+          ...productInfo,
+          pname: result.name,
+          pcategories: result.categories,
+          pdescription: result.description,
+          pexchange: result.exchange
+        });
+        
+      })
       .catch(function(error) {
         console.log(error);
     });

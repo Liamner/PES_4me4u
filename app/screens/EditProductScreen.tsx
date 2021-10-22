@@ -22,10 +22,9 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);    
+  
   const getInfo = async () => {    
     let response = await axios.get("https://app4me4u.herokuapp.com/api/product/616d8fc9b87259e000d460b2");
-    console.log("data: " + response.data.publishingDate)
-    console.log("data: " + response.data.name)
     onChangeName(response.data.name)
     onChangeDescription(response.data.description)
     setSelectedCategory(response.data.categories[0])
@@ -37,6 +36,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     })
   };
   getInfo();  
+  
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {

@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 export default function MainScreen({navigation, route}) {
-    const {name} = route.params;
+    const {Id, userId, email, pwd, role} = route.params;
     return (
         <View style={styles.main}>
-            <Text>Hola {name} </Text>
+            <Text>Hola {userId} </Text>
         </View>
     )
 }

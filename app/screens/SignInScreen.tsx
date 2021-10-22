@@ -12,14 +12,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
 import axios from 'axios';
 
+
 export default function SignInScreen({navigation}) {
-    
     const [inputData, setinputData] = React.useState({
         email:'',
         password:'',
         check_textInputChange: false,
         secureTextEntry: true,
     });
+    const [errorLogin, setErrorLogin] = React.useState(false)
 
     const textInputChange = (val) => {
         if(val.length !== 0) {
@@ -55,8 +56,9 @@ export default function SignInScreen({navigation}) {
     const handleLogin = async () => {
         if (inputData.email === '' || inputData.password === '') {
             Alert.alert("Error","Por favor, rellene todos los campos.")
+            console.log("Error. Por favor, rellene todos los campos.")
+            setErrorLogin(true)
         }
-
         else  {
             const credentials = {
                 email: inputData.email,
@@ -66,10 +68,13 @@ export default function SignInScreen({navigation}) {
             .post('http://localhost:5000/api/login', credentials)
             .then(function (response) {
                 const result = response.data;
-                navigation.navigate("Main", {name: inputData.email});
+                if (result.ok) {
+                    navigation.navigate("Main", result.user);
+                }    
             })
             .catch(function (error) {
                 console.log(error);
+                setErrorLogin(true)
             });
         }
     }
@@ -159,6 +164,18 @@ export default function SignInScreen({navigation}) {
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
+                    
+                    {errorLogin ? 
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text 
+                                style={styles.msgError}
+                             >Email o contraseña incorrecta.
+                            </Text>
+                         </Animatable.View>
+                      :
+                      null
+                    }
+
                     <TouchableOpacity
                         onPress={()=>navigation.navigate("SignUp")}
                         style={[styles.signIn, {
@@ -242,5 +259,8 @@ const styles = StyleSheet.create({
       },
       color_textPrivate: {
           color: 'grey'
-      }
+      },
+      msgError: {
+        color: 'red'
+    },
 });

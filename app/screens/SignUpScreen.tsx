@@ -25,7 +25,7 @@ export default function SignUp({navigation}) {
         emailError: false,
         isValidPassword: true,
         equalsPasswords: true,
-        isValidUserId: false
+        isValidUserId: true
     });
     const [requestError, setRequestError] = React.useState(false);
 
@@ -89,35 +89,54 @@ export default function SignUp({navigation}) {
     }
 
     function handleUserId(val) {
-        if (val !== '') {
+        if (val.trim().length >= 5) {
             setinputData({
                 ... inputData,
                 userId: val,
                 isValidUserId: true
             });
         }
+        else {
+            setinputData({
+                ... inputData,
+                userId: val,
+                isValidUserId: false
+            });
+        }
     }
 
     const handleSignUp = () => {
-            const credentials = {
-                userId:inputData.userId,
-                email:inputData.email,
-                pwd:inputData.password,
-                };
-            axios
-            .post('http://localhost:5000/api/register', credentials)
-            .then(function (response) {
-               
-               //Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
-                const result = response.data
-                console.log(result.userId)
-                navigation.navigate("BottomTab")
-            })
-            .catch(function (error) {
-                console.log(error);
-                setRequestError(true)
-            });
-            {/*navigation.navigate("BottomTab")*/} 
+            if(!inputData.isValidEmail || !inputData.isValidPassword ||
+                 !inputData.isValidUserId || !inputData.equalsPasswords) {
+                     Alert.alert("Error", "Por favor compruebe que los campos son correctos")
+                     console.log("Error: Por favor compruebe que los campos son correctos")
+            }
+            else if (inputData.password === '' || inputData.confirmPassword === '') {
+                Alert.alert("Error", "La contreseña no puede ser vacía")
+                console.log("Error: La contreseña no puede ser vacía")
+            }
+            else if (inputData.userId === '') {
+                Alert.alert("Error", "El nombre puede ser vacío")
+                console.log("Error: El nombre puede ser vacío")
+            }
+            else {
+                const credentials = {
+                    userId:inputData.userId,
+                    email:inputData.email,
+                    pwd:inputData.password,
+                    };
+                axios
+                .post('http://localhost:5000/api/register', credentials)
+                .then(function (response) {
+                    const result = response.data
+                    console.log(result.userId)
+                    navigation.navigate("Main", result)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    setRequestError(true)
+                });
+            }
     }
 
     return (
@@ -184,6 +203,16 @@ export default function SignUp({navigation}) {
                         onEndEditing={(e)=>handleUserId(e.nativeEvent.text)}
                     />
                 </View>
+
+                {inputData.isValidUserId ? 
+                        null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text 
+                                style={styles.msgError}
+                             >El usuario ha de tener al menos 5 caracteres.
+                            </Text>
+                         </Animatable.View>
+                    }
 
                 <Text style={[styles.text_footer, {
                     marginTop: 35

@@ -135,8 +135,8 @@ const sendApi = async () =>{
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Coches" value="tech" />
-          <Picker.Item label="Motos" value="moto" />
+          <Picker.Item label="Tecnologia" value="tech" />
+          <Picker.Item label="Casas" value="house" />
         </Picker>        
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
         <View 

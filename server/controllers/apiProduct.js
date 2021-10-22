@@ -1,4 +1,3 @@
-//import Product from "../models/product.js";
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
 
@@ -64,7 +63,7 @@ exports.createProduct = async (req, res) => {
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  console.log(req.file.filename);
+  console.log(JSON.stringify(req.file));
 
   try {
     await product.save();

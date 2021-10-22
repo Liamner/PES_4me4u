@@ -27,6 +27,7 @@ export default function SignUp({navigation}) {
         equalsPasswords: true,
         isValidUserId: false
     });
+    const [requestError, setRequestError] = React.useState(false);
 
     const handlePassword = (val) => {
         if (val.trim().length >= 5) {
@@ -103,29 +104,18 @@ export default function SignUp({navigation}) {
                 email:inputData.email,
                 pwd:inputData.password,
                 };
-
-                const cre = new URLSearchParams()
-                cre.append('userId', 'Aaaswq')
-                cre.append('email', 'kjad')
-                cre.append('pwd', 'asdd');
-
-                const config = {
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                  }
-
             axios
             .post('http://localhost:5000/api/register', credentials)
             .then(function (response) {
                
-               // Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
+               //Alert.alert("SUCCES!", inputData.email + '\n' + inputData.password + '\n' + inputData.confirmPassword)
                 const result = response.data
                 console.log(result.userId)
                 navigation.navigate("BottomTab")
             })
             .catch(function (error) {
                 console.log(error);
+                setRequestError(true)
             });
             {/*navigation.navigate("BottomTab")*/} 
     }
@@ -296,6 +286,17 @@ export default function SignUp({navigation}) {
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
+
+                    {requestError ? 
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text 
+                                style={styles.msgError}
+                             >El email está en uso.
+                            </Text>
+                         </Animatable.View>
+                      :
+                      null
+                    }
 
                     <TouchableOpacity
                         onPress={()=>navigation.goBack()}

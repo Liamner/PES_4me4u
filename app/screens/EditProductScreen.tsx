@@ -21,22 +21,94 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);    
+  const [image6, setImage6] = React.useState(null); 
+  const [productInfo, setProductInfo] = React.useState ({
+    pname:"",
+    pcategories:[],
+    pdescription:"",
+    pexchange:[]
+  });  
+
+  const url = 'https://app4me4u.herokuapp.com/api/product/6163482e4d9725b976c99c2e';
+
+  React.useEffect(() => {
+    getInfo();
+  }, []);  
+
   const getInfo = async () => {    
-    let response = await axios.get("https://app4me4u.herokuapp.com/api/product/616d8fc9b87259e000d460b2");
+    let response = await axios.get(url);
     console.log("data: " + response.data.publishingDate)
     console.log("data: " + response.data.name)
     onChangeName(response.data.name)
     onChangeDescription(response.data.description)
     setSelectedCategory(response.data.categories[0])
-    let exchange = response.data.exchange;    
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    let exchange = response.data.exchange;
     exchange.forEach(element => {      
       if(element == "present") setCheckedDonar(true);
       else if(element == "exchange") setCheckedIntercambiar(true);
       else if(element == "provide") setCheckedPrestar(true);
     })
+    setProductInfo({
+      ...productInfo,
+      pname: response.data.name,
+      pcategories: response.data.categories,
+      pdescription: response.data.description,
+      pexchange: exchange
+    });
   };
-  getInfo();  
+
+  function reloadProduct() {
+    onChangeName(productInfo.pname)
+    onChangeDescription(productInfo.pdescription)
+    setSelectedCategory(productInfo.pcategories[0])
+    let exchange = productInfo.pexchange
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    exchange.forEach(element => {      
+      if(element == "present") setCheckedDonar(true);
+      else if(element == "exchange") setCheckedIntercambiar(true);
+      else if(element == "provide") setCheckedPrestar(true);
+    })
+
+    console.log(productInfo.pname + 'npepe')
+    console.log(productInfo.pdescription)
+    console.log(productInfo.pexchange[0])
+  }
+
+  const editProduct = async () => {
+    let ex = [];
+    if (checkedDonar) {
+      ex.push('present')
+    }
+    if (checkedIntercambiar) {
+      ex.push('exchange')
+    }
+    if (checkedPrestar) {
+      ex.push('provide')
+    }
+    const newInfo = {
+      name:name,
+      categories: selectedCategory,
+      description: description,
+      exchange: ex
+    };
+    await axios
+      .put('https://app4me4u.herokuapp.com/api/product/update/6163482e4d9725b976c99c2e', newInfo)
+      .then(function(response) {
+        const result = response.data
+        console.log(result.name)
+        console.log(result.description)
+        })
+      .catch(function(error) {
+        console.log(error);
+    });
+
+  }
+   
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -108,7 +180,7 @@ const pickImage = async (id?: Number) => {
     
   }
 };
-
+  
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -230,8 +302,8 @@ const pickImage = async (id?: Number) => {
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress={getInfo}><Text> Editar Producto !</Text></Pressable>
-        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}onPress={editProduct}><Text> Editar Producto !</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}onPress={reloadProduct}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>
   );

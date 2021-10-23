@@ -7,18 +7,14 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
+import axios, { AxiosResponse } from 'axios';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  const [tags] = useState([
-    { name:'#intercambio', key: '1'},
-    { name:'#prestamo', key: '2'},
-    { name:'#regalo', key: '3'},
-  ]);
-  const [categories] = useState([
-    { name:'Categoria 1', key: '1'},
-    { name:'Categoria 2', key: '2'},
-    { name:'Categoria 3', key: '3'},
-  ]);
+  //Variables de las respuestas API
+  const [user] = useState('@Usuario');
+
+  //Variables de la vista
+  const [state, setState] = useState('Cargando');
   const [images] = useState([
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
@@ -28,6 +24,11 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
   ]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [name, setName] = useState('Cargando...') 
+  //nombre usuario
+  const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
+  const [categories] = useState([{name: 'Cargando...', key: '10'}]);
+  const [description, setDescription] = useState('Cargando...')
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -37,6 +38,76 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     setCurrentPage(currentNumber);
   };
 
+  const getCorrectCategoriesType = (response: AxiosResponse) => {
+    categories.pop();
+    let aux = response.data.categories;
+    aux.forEach((element: any) => {
+      switch (element) {
+        case "tech":
+          categories.push({name: 'Tecnologia', key: '1'})
+          break;
+        case "house":
+          categories.push({name: 'Cosas de casa', key: '2'})
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  const getCorrectExchangeType = (response: AxiosResponse) => {
+    exchange.pop();
+    let aux = response.data.exchange;
+    aux.forEach((element: any) => {
+      switch (element) {
+        case "exchange":
+          exchange.push({ name:'#intercambio', key: '1'})
+          break;
+        case "provide":
+          exchange.push({ name:'#prestamo', key: '2'})
+          break;
+        case "present":
+          exchange.push({ name:'#regalo', key: '3'})
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  const getCorrectStateType = (response: AxiosResponse) => {
+    switch (response.data.state) {
+      case "available":
+        setState("Disponible");
+        break;
+      case "reserved":
+        setState("Reservado");
+        break;
+      case "provide":
+        setState("Prestado");
+        break;
+      default:
+        break;
+    }
+  }
+
+
+  const getProductInfo = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83');
+    //Required
+    setName(response.data.name);
+    getCorrectCategoriesType(response);
+    getCorrectExchangeType(response);
+    getCorrectStateType(response);
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+    //Optional
+    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(response.data.description);
+  };
+  getProductInfo()
+  
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -53,13 +124,16 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
+        <View style={styles.state}>
+          <Text style={{color: 'white'}}>{`${state}`}</Text>
+        </View>
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
-        <Text style={styles.title}>Nombre Producto</Text>
-        <Text style={styles.smallText}>Publicado por: @Usuario</Text>
+        <Text style={styles.title}>{`${name}`}</Text>
+        <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}
-          data={tags}
+          data={exchange}
           renderItem={({item}) => (
             <Text style={styles.tags}> {item.name} </Text>
           )}
@@ -72,9 +146,9 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
             <Text style={styles.tags}> {item.name} </Text>
           )}
         />
-        <Text style={styles.mediumText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra velit id nulla fringilla molestie quis ac diam. Nam porta.</Text>
+        <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton chat pulsado")}>
+        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={/*()=>console.log("boton chat pulsado")*/getProductInfo}>
           <View style={styles.row}>
             <Ionicons
               name="chatbox"
@@ -147,6 +221,14 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     alignSelf: 'center'
   },
+  state: {
+    alignSelf: 'stretch',
+    padding: 5,
+    margin: 5,
+    backgroundColor: 'rgba(76,76,76, 0.8)',
+    position: 'absolute',
+    borderRadius: 10,
+  },
   tags: {
     backgroundColor: '#a2cff0',
     margin: 5,
@@ -192,3 +274,5 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
 });
+
+

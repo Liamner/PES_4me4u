@@ -9,7 +9,7 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
   //Variables de las respuestas API
   const [user] = useState('@Usuario');
 

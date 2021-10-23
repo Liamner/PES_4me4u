@@ -6,18 +6,6 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 import axios from 'axios'
-
-
-
-
-
-
-
-
-
-
-
-
 export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'DeleteButton'>) {
   //Datos
   const [data, setData] = React.useState([

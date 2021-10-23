@@ -10,11 +10,6 @@ import { RootTabScreenProps } from '../types';
 import axios from 'axios';
 
 
-
-
-
-
-
 export default function ActualizarEstadoProducto({ navigation }: RootTabScreenProps<'ActualizarEstadoProducto'>) {
   //Datos
   const [data, setData] = React.useState([

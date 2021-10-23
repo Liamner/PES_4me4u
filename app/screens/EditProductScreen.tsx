@@ -7,12 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
-<<<<<<< HEAD:app/screens/EditProductScreen.tsx
-import axios from 'axios';
-=======
 import { resolvePlugin } from '@babel/core';
->>>>>>> develop:app/screens/CreateProductScreen.tsx
-
 
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");  

@@ -12,7 +12,6 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import DeleteButtonScreen from '../screens/DeleteButtonScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
@@ -21,6 +20,10 @@ import Login from '../screens/LoginScreen';
 import SignUp from '../screens/SignUpScreen';
 import SignIn from '../screens/SignInScreen'
 import Main from '../screens/MainScreen'
+import EditProduct from '../screens/EditProductScreen';
+import ViewProduct from '../screens/ViewProductScreen';
+import DeleteButton from '../screens/DeleteButtonScreen';
+import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -89,15 +92,15 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
 
-      initialRouteName="EditProduct"
+      initialRouteName="ViewProduct"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="EditProduct"
-        component={EditProductScreen}
-        options={({ navigation }: RootTabScreenProps<'EditProduct'>) => ({
-          title: 'Editar Producto',
+        name="ViewProduct"
+        component={ViewProduct}
+        options={({ navigation }: RootTabScreenProps<'ViewProduct'>) => ({
+          title: 'Ver Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
@@ -116,10 +119,26 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="EditProduct"
+        component={EditProduct}
         options={{
-          title: 'Tab Two',
+          title: 'Editar Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="DeleteButton"
+        component={DeleteButton}
+        options={{
+          title: 'Borrar Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="ActualizarEstadoProducto"
+        component={ActualizarEstadoProducto}
+        options={{
+          title: 'Actualizar Estado',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

@@ -14,7 +14,17 @@ export const validateCreateProduct = [
     check('categories')
         .exists()
         .not()
+<<<<<<< HEAD
+        .isEmpty()
+        .custom((value, {req}) => {
+            if (value == null) {
+                throw new Error('Categorie is not specified');
+            }
+            return true;
+        }),
+=======
         .isEmpty(),
+>>>>>>> develop
     check('exchange')
         .exists()
         .not()

@@ -74,6 +74,72 @@ export const createProduct = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+export const updateProduct = async (req, res) => {
+  
+try{
+  const nname = req.body.name;
+  const ncategories = req.body.categories;
+  const ndescription = req.body.description;
+  const nexchange = req.body.exchange;
+  const nimg = req.body.img;
+
+  const id = req.params.id;
+  const product = await Product.findById(id)
+  console.log("Searching for product to update: " + req.params.id);
+  
+  product.name = nname;
+  product.categories = ncategories;
+  console.log(ncategories);
+
+  product.description = ndescription;
+  product.exchange = nexchange;
+  product.img = nimg;
+
+  console.log(product);
+
+  try {
+    await product.save();
+  
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(409).json(error.message);
+  
+    console.log("Can not update the Product");
+  }
+  
+} catch (error) {
+  res.status(404).json(error.message);
+  console.log(error.message);
+}
+
+
+};
+
+export const updateStateProduct = async (req, res) => {
+  
+  try{
+    const nstate = req.body.state;
+  
+    const id = req.params.id;
+    const product = await Product.findById(id)
+    console.log("Searching for product to update its state: " + req.params.id);
+    
+    product.state = nstate;
+  
+    console.log(product);
+  
+    try {
+      await product.save();
+    
+      res.status(201).json(product);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the Product");
+    }
+    
+=======
 export const updateProduct = async (req, res) => {};
 
 
@@ -86,9 +152,18 @@ export const deleteProduct = async (req, res) => {
     console.log('Reading product: ' + req.params.id);
 
     res.status(200).json(product);
+>>>>>>> develop
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
+<<<<<<< HEAD
+  
+  
+  };
+
+export const deleteProduct = async (req, res) => {};
+=======
 }
 ;
+>>>>>>> develop

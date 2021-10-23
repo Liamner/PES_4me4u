@@ -7,9 +7,14 @@ import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+<<<<<<< HEAD:app/screens/EditProductScreen.tsx
+import axios from 'axios';
+=======
 import { resolvePlugin } from '@babel/core';
+>>>>>>> develop:app/screens/CreateProductScreen.tsx
 
-export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
+
+export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");  
   const [description, onChangeDescription] = React.useState("");  
   const [selectedCategory, setSelectedCategory] = React.useState();
@@ -21,8 +26,100 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);     
-  const imageArray = [image, image2, image3, image4, image5, image6] ;
+  const [image6, setImage6] = React.useState(null); 
+  const [productInfo, setProductInfo] = React.useState ({
+    pname:"",
+    pcategories:[],
+    pdescription:"",
+    pexchange:[]
+  });  
+
+  const url = 'https://app4me4u.herokuapp.com/api/product/6163482e4d9725b976c99c2e';
+
+  React.useEffect(() => {
+    getInfo();
+  }, []);  
+
+  const getInfo = async () => {    
+    let response = await axios.get(url);
+    onChangeName(response.data.name)
+    onChangeDescription(response.data.description)
+    setSelectedCategory(response.data.categories[0])
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    let exchange = response.data.exchange;
+    exchange.forEach(element => {      
+      if(element == "present") setCheckedDonar(true);
+      else if(element == "exchange") setCheckedIntercambiar(true);
+      else if(element == "provide") setCheckedPrestar(true);
+    })
+    setProductInfo({
+      ...productInfo,
+      pname: response.data.name,
+      pcategories: response.data.categories,
+      pdescription: response.data.description,
+      pexchange: exchange
+    });
+  };
+
+  function reloadProduct() {
+    onChangeName(productInfo.pname)
+    onChangeDescription(productInfo.pdescription)
+    setSelectedCategory(productInfo.pcategories[0])
+    let exchange = productInfo.pexchange
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    exchange.forEach(element => {      
+      if(element == "present") setCheckedDonar(true);
+      else if(element == "exchange") setCheckedIntercambiar(true);
+      else if(element == "provide") setCheckedPrestar(true);
+    })
+
+    console.log(productInfo.pname + ' reloaded')
+    console.log(productInfo.pdescription + ' reloaded')
+    console.log(productInfo.pexchange[0] + ' reloaded')
+  }
+
+  const editProduct = async () => {
+    let ex = [];
+    if (checkedDonar) {
+      ex.push('present')
+    }
+    if (checkedIntercambiar) {
+      ex.push('exchange')
+    }
+    if (checkedPrestar) {
+      ex.push('provide')
+    }
+    const newInfo = {
+      name:name,
+      categories: selectedCategory,
+      description: description,
+      exchange: ex
+    };
+    await axios
+      .put('https://app4me4u.herokuapp.com/api/product/update/6163482e4d9725b976c99c2e', newInfo)
+      .then(function(response) {
+        const result = response.data
+        console.log(result.name + ' edited')
+        console.log(result.description + ' edited')
+        setProductInfo({
+          ...productInfo,
+          pname: result.name,
+          pcategories: result.categories,
+          pdescription: result.description,
+          pexchange: result.exchange
+        });
+        
+      })
+      .catch(function(error) {
+        console.log(error);
+    });
+
+  }
+   
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -53,8 +150,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }
   const unPickImage = async (id: Number) => {
     Alert.alert(
-  '¿Que quieres hacer con tu foto?',
-  '',
+  '¿Que quieres hacer con tu foto?', '',
   [    
     {
       text: 'Eliminar foto',
@@ -134,9 +230,9 @@ const sendApi = async () =>{
         onValueChange={(itemValue, itemIndex) =>
           setSelectedCategory(itemValue)
         }>
-          <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Tecnologia" value="tech" />
+          <Picker.Item label="Selecciona un categoria..." value="default" />          
           <Picker.Item label="Casas" value="house" />
+          <Picker.Item label="Tecnologia" value="tech" />          
         </Picker>        
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
         <View 

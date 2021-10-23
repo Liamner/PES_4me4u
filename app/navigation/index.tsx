@@ -14,7 +14,6 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -58,16 +57,16 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="ActualizarEstadoProducto"
+
+      initialRouteName="EditProduct"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="ActualizarEstadoProducto"
-        component={ActualizarEstadoProducto}
-        options={({ navigation }: RootTabScreenProps<'ActualizarEstadoProducto'>) => ({
-          title: 'Tab One',
-
+        name="EditProduct"
+        component={EditProductScreen}
+        options={({ navigation }: RootTabScreenProps<'EditProduct'>) => ({
+          title: 'Editar Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable

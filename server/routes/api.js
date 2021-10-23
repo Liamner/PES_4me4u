@@ -10,11 +10,10 @@ const upload = require('../libs/storage.js');
 
 module.exports = function(app) {
   const router = express.Router();
-
-
+  
   // Create new product
   router.route('/product/create/')
-    .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
+    .post(/*upload.single('img'), */(validateCreateProduct), productController.createProduct);
 
   router.route('/product/image/:id')
     .get(productController.getImg)

@@ -48,8 +48,7 @@ const ProductSchema = new mongoose.Schema({
     },
     state: {
         type: 'String',
-        enum: stateTypes,
-        required: true
+        enum: stateTypes
     },
     owner: {
         type: 'String'

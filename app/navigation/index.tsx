@@ -16,6 +16,12 @@ import DeleteButtonScreen from '../screens/DeleteButtonScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
+
+import Login from '../screens/LoginScreen';
+import SignUp from '../screens/SignUpScreen';
+import SignIn from '../screens/SignInScreen'
+import Main from '../screens/MainScreen'
+
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -23,8 +29,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    >
+     {/* </RootNavigator>*/}
+     <LoginNavigator/>
     </NavigationContainer>
   );
 }
@@ -44,6 +52,28 @@ function RootNavigator() {
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
+  );
+}
+
+const LoginStack = createNativeStackNavigator();
+
+function LoginNavigator() {
+  return(
+    <LoginStack.Navigator screenOptions={{
+        headerStyle: {
+          backgroundColor: '#009387'
+        },
+        headerTintColor: '#fff', 
+        headerTitleStyle: {
+          fontWeight: 'bold'
+        }
+    }}>
+        <LoginStack.Screen name="Login" component = {Login} options={{headerShown: false}}/>
+        <LoginStack.Screen name="SignIn" component = {SignIn} options={{headerShown: false}}/>
+        <LoginStack.Screen name="SignUp" component = {SignUp} options={{title: 'SignUp', headerShown: false}}/>
+        <LoginStack.Screen name="Main" component = {Main} options={{headerShown: false}}/>
+        <LoginStack.Screen name="BottomTab" component = {RootNavigator} options={{headerShown: false}}/>
+    </LoginStack.Navigator>
   );
 }
 

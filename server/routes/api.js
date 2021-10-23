@@ -58,9 +58,11 @@ module.exports = function(app) {
   router.route('category/delete/:id')
     .delete(categoryController.deleteCategory);
 
+  router.route('/register')
+    .post(userController.registerUser);
 
-router.route('/register').post(userController.registerUser);
-router.route('/login').post(userController.loginUser);
+  router.route('/login')
+    .post(userController.loginUser);
 
   return router;
 }

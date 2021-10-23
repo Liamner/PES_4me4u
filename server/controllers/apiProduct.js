@@ -58,11 +58,13 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  //product.img = '/storage/imgs/' + req.file.filename;
+  product.img = req.file.filename;
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  console.log(JSON.stringify(req.file));
+  const image = req.file.filename;
+  console.log(product.img);
+  //console.log(JSON.stringify(req.file));
 
   try {
     await product.save();

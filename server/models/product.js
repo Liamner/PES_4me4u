@@ -1,19 +1,57 @@
 //import mongoose from 'mongoose';
 const mongoose = require('mongoose');
 
-const createProductSchema = mongoose.Schema({
-    title: 'String',
-    description: 'String',
-    id: 'String',
-    //categories[]: 'String', 
-    publishingDate: 'date',
-    exchangeType: 'String',
-    photo: 'String',
-    state: 'String',
-    owner: 'String'
+const categoryType = {
+    values: ['tech', 'house']
+}
+
+const exchangeTypes = {
+    values: ['present', 'exchange', 'provide']
+}
+
+const stateTypes = {
+    values: ['available', 'reserved', 'provide']
+}
+
+
+const ProductSchema = new mongoose.Schema({
+    name: {
+        type: 'String',
+        required: true
+    },
+    categories: {
+        type: ['String'],
+        enum: categoryType,
+        required: true
+    },
+    description: {
+        type: 'String',
+        required: false
+    },
+    publishingDate: {
+        type: 'Date',
+        default: Date.now(),
+        required: false
+    },
+    exchange: {
+        type: 'String',
+        enum: exchangeTypes,
+        required: true
+    },
+    img: {
+        type: 'String',
+        required: false
+    },
+    state: {
+        type: 'String',
+        enum: stateTypes,
+        required: true
+    },
+    owner: {
+        type: 'String'
+    }
 });
 
-//const CreateProduct = mongoose.model('CreateProduct', createProductSchema);
+const Product = mongoose.model('Product', ProductSchema);
 
-//export default CreateProduct;
-module.exports = mongoose.model('CreateProduct', createProductSchema);
+export default Product;

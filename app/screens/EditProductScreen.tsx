@@ -2,21 +2,124 @@ import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import EditScreenInfo from '../components/EditScreenInfo';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+<<<<<<< HEAD:app/screens/EditProductScreen.tsx
+import axios from 'axios';
+=======
+import { resolvePlugin } from '@babel/core';
+>>>>>>> develop:app/screens/CreateProductScreen.tsx
 
-export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>) {
-  const [name, onChangeName] = React.useState("Ya hay algo");  
-  const [description, onChangeDescription] = React.useState("Aqui tambien hay algo que nos dará la api xD");  
-  const [selectedCategory, setSelectedCategory] = React.useState("coche");
+
+export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
+  const [name, onChangeName] = React.useState("");  
+  const [description, onChangeDescription] = React.useState("");  
+  const [selectedCategory, setSelectedCategory] = React.useState();
+  const [checkedDonar, setCheckedDonar] = React.useState(false);
+  const [checkedIntercambiar, setCheckedIntercambiar] = React.useState(false);
+  const [checkedPrestar, setCheckedPrestar] = React.useState(false);
   const [image, setImage] = React.useState(null);
   const [image2, setImage2] = React.useState(null);
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);    
+  const [image6, setImage6] = React.useState(null); 
+  const [productInfo, setProductInfo] = React.useState ({
+    pname:"",
+    pcategories:[],
+    pdescription:"",
+    pexchange:[]
+  });  
+
+  const url = 'https://app4me4u.herokuapp.com/api/product/6163482e4d9725b976c99c2e';
+
+  React.useEffect(() => {
+    getInfo();
+  }, []);  
+
+  const getInfo = async () => {    
+    let response = await axios.get(url);
+    onChangeName(response.data.name)
+    onChangeDescription(response.data.description)
+    setSelectedCategory(response.data.categories[0])
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    let exchange = response.data.exchange;
+    exchange.forEach(element => {      
+      if(element == "present") setCheckedDonar(true);
+      else if(element == "exchange") setCheckedIntercambiar(true);
+      else if(element == "provide") setCheckedPrestar(true);
+    })
+    setProductInfo({
+      ...productInfo,
+      pname: response.data.name,
+      pcategories: response.data.categories,
+      pdescription: response.data.description,
+      pexchange: exchange
+    });
+  };
+
+  function reloadProduct() {
+    onChangeName(productInfo.pname)
+    onChangeDescription(productInfo.pdescription)
+    setSelectedCategory(productInfo.pcategories[0])
+    let exchange = productInfo.pexchange
+    setCheckedDonar(false)
+    setCheckedIntercambiar(false)
+    setCheckedPrestar(false)
+    exchange.forEach(element => {      
+      if(element == "present") setCheckedDonar(true);
+      else if(element == "exchange") setCheckedIntercambiar(true);
+      else if(element == "provide") setCheckedPrestar(true);
+    })
+
+    console.log(productInfo.pname + ' reloaded')
+    console.log(productInfo.pdescription + ' reloaded')
+    console.log(productInfo.pexchange[0] + ' reloaded')
+  }
+
+  const editProduct = async () => {
+    let ex = [];
+    if (checkedDonar) {
+      ex.push('present')
+    }
+    if (checkedIntercambiar) {
+      ex.push('exchange')
+    }
+    if (checkedPrestar) {
+      ex.push('provide')
+    }
+    const newInfo = {
+      name:name,
+      categories: selectedCategory,
+      description: description,
+      exchange: ex
+    };
+    await axios
+      .put('https://app4me4u.herokuapp.com/api/product/update/6163482e4d9725b976c99c2e', newInfo)
+      .then(function(response) {
+        const result = response.data
+        console.log(result.name + ' edited')
+        console.log(result.description + ' edited')
+        setProductInfo({
+          ...productInfo,
+          pname: result.name,
+          pcategories: result.categories,
+          pdescription: result.description,
+          pexchange: result.exchange
+        });
+        
+      })
+      .catch(function(error) {
+        console.log(error);
+    });
+
+  }
+   
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -47,8 +150,7 @@ export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>
   }
   const unPickImage = async (id: Number) => {
     Alert.alert(
-  '¿Que quieres hacer con tu foto?',
-  '',
+  '¿Que quieres hacer con tu foto?', '',
   [    
     {
       text: 'Eliminar foto',
@@ -69,27 +171,42 @@ export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>
 );  
     
   }
-  const pickImage = async (id?: Number) => {    
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+const pickImage = async (id?: Number) => {    
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
 
-    console.log(result);
+  console.log(result);
 
-    if (!result.cancelled ) {
-      if(!image || id == 1)setImage(result.uri);
-      else if(!image2 || id == 2)setImage2(result.uri);
-      else if(!image3 || id == 3)setImage3(result.uri);
-      else if(!image4 || id == 4)setImage4(result.uri);
-      else if(!image5 || id == 5)setImage5(result.uri);
-      else if(!image6 || id == 6)setImage6(result.uri);
-      
-    }
-  };
-
+  if (!result.cancelled ) {
+    if(!image || id == 1)setImage(result.uri);
+    else if(!image2 || id == 2)setImage2(result.uri);
+    else if(!image3 || id == 3)setImage3(result.uri);
+    else if(!image4 || id == 4)setImage4(result.uri);
+    else if(!image5 || id == 5)setImage5(result.uri);
+    else if(!image6 || id == 6)setImage6(result.uri);
+    
+  }
+};
+const sendApi = async () =>{
+  console.log("sending")
+  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    name : name,
+    categories : [selectedCategory],
+    description : description,
+    exchange :"present",
+    state :"available",
+    owner :"owner"
+  }).then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -113,14 +230,45 @@ export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>
         onValueChange={(itemValue, itemIndex) =>
           setSelectedCategory(itemValue)
         }>
-          <Picker.Item label="Selecciona un categoria" value="default" />
-          <Picker.Item label="Coches" value="coche" />
-          <Picker.Item label="Motos" value="moto" />
-        </Picker>                 
+          <Picker.Item label="Selecciona un categoria..." value="default" />          
+          <Picker.Item label="Casas" value="house" />
+          <Picker.Item label="Tecnologia" value="tech" />          
+        </Picker>        
+        <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedDonar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedDonar(!checkedDonar);
+          }}
+        />  
+        <Text >Donar</Text>
+        </View>    
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedPrestar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedPrestar(!checkedPrestar);
+          }}
+        />  
+        <Text >Prestar</Text>
+        </View> 
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedIntercambiar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedIntercambiar(!checkedIntercambiar);
+          }}
+        />  
+        <Text >Intercambiar</Text>
+        </View>          
         <View 
          style={{
           flexDirection: "row",          
-          marginTop: 20
+          marginTop: 30
         }}>
                   
           {image && 
@@ -177,8 +325,8 @@ export default function TabTwo({ navigation }: RootTabScreenProps<'EditProduct'>
           <TouchableOpacity style={styles.notImage} onPress={pickImage}>
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
-        </View>        
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}><Text> Editar Producto !</Text></Pressable>
+        </View>    
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={sendApi} ><Text> Subir Producto !</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>
@@ -201,6 +349,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: '90%',    
     backgroundColor: '#a2cff0',
+  },
+  checkbox:{
+    flexDirection: "row",           
+    marginTop: 10,
+    alignItems:'center',
+    width:'80%',  
   },
   image: {  
     marginHorizontal :5,

@@ -52,15 +52,13 @@ exports.readProductsId = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  //const product = new Product();
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  const nameImage = '/storage/imgs/' + req.file.filename
-  product.img = nameImage;
+  //product.img = '/storage/imgs/' + req.file.filename;
   product.state = req.body.state;
   product.owner = req.body.owner;
 

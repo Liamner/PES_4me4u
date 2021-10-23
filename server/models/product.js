@@ -47,7 +47,7 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     state: {
-        type: ['String'],
+        type: 'String',
         enum: stateTypes,
         required: true
     },

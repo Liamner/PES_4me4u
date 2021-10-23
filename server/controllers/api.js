@@ -74,6 +74,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 export const updateProduct = async (req, res) => {
   
 try{
@@ -138,12 +139,31 @@ export const updateStateProduct = async (req, res) => {
       console.log("Can not update the Product");
     }
     
+=======
+export const updateProduct = async (req, res) => {};
+
+
+    
+
+export const deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete({_id: req.params.id});
+
+    console.log('Reading product: ' + req.params.id);
+
+    res.status(200).json(product);
+>>>>>>> develop
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
+<<<<<<< HEAD
   
   
   };
 
 export const deleteProduct = async (req, res) => {};
+=======
+}
+;
+>>>>>>> develop

@@ -2,11 +2,16 @@ import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import EditScreenInfo from '../components/EditScreenInfo';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+<<<<<<< HEAD:app/screens/EditProductScreen.tsx
 import axios from 'axios';
+=======
+import { resolvePlugin } from '@babel/core';
+>>>>>>> develop:app/screens/CreateProductScreen.tsx
 
 
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
@@ -186,7 +191,22 @@ const pickImage = async (id?: Number) => {
     
   }
 };
-  
+const sendApi = async () =>{
+  console.log("sending")
+  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    name : name,
+    categories : [selectedCategory],
+    description : description,
+    exchange :"present",
+    state :"available",
+    owner :"owner"
+  }).then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -306,8 +326,8 @@ const pickImage = async (id?: Number) => {
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}onPress={editProduct}><Text> Editar Producto !</Text></Pressable>
-        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}onPress={reloadProduct}><Text> Cancelar </Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={sendApi} ><Text> Subir Producto !</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>
   );

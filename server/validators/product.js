@@ -14,6 +14,7 @@ export const validateCreateProduct = [
     check('categories')
         .exists()
         .not()
+<<<<<<< HEAD
         .isEmpty()
         .custom((value, {req}) => {
             if (value == null) {
@@ -21,6 +22,9 @@ export const validateCreateProduct = [
             }
             return true;
         }),
+=======
+        .isEmpty(),
+>>>>>>> develop
     check('exchange')
         .exists()
         .not()

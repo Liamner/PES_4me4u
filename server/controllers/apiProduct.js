@@ -62,8 +62,8 @@ exports.createProduct = async (req, res) => {
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  const image = req.file.filename;
-  console.log(product.img);
+  //const image = req.file.filename;
+  //console.log(product.img);
   //console.log(JSON.stringify(req.file));
 
   try {

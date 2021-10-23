@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
-
+import * as ImagePicker from 'expo-image-picker';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -11,9 +11,65 @@ export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditU
   const [name, onChangeName] = React.useState("");  
   const [firstSurname, onChangeFirstSurname] = React.useState("");  
   const [secondSurname, onChangeSecondSurname] = React.useState("");  
+  const [email, onChangeEmail] = React.useState("");  
+  const [image, setImage] = React.useState(null);
+
+  const pickImage = async () => {    
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    console.log(result);
+  
+    if (!result.cancelled ) {
+      setImage(result.uri);
+    }
+    };
+    const unPickImage = async () => {
+      Alert.alert(
+    '¿Que quieres hacer con tu foto?',
+    '',
+    [    
+      {
+        text: 'Eliminar foto',
+        onPress: () => {
+          setImage(null);
+        },
+        style: 'default',
+      },
+      {
+        text: 'Hacer una foto', 
+        onPress: () => {
+          setImage(null);
+          pickImage();
+        }
+      },
+    ],
+    {cancelable: false},
+  );
+  }
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View 
+         style={{
+          flexDirection: "row",          
+          marginTop: 30
+        }}>
+          <Text style={styles.title}>Información Básica</Text>
+        {image && 
+        <TouchableOpacity style={{marginHorizontal: 100}} onPress={unPickImage}>
+          <Image style={styles.image} source={{ uri: image }} />
+        </TouchableOpacity>  }          
+        {!image && 
+        <TouchableOpacity style={[styles.notImage, {marginHorizontal: 50}]} onPress={pickImage}>
+          <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
+        </TouchableOpacity>  }
+
+        </View>
+      <View style={styles.container}>        
         <TextInput
           label="Nombre"
           style={styles.textInput}       
@@ -32,8 +88,18 @@ export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditU
           onChangeText={onChangeSecondSurname}
           value={secondSurname}
         />   
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+        <TextInput
+          label="Ubicacion"
+          style={styles.textInput}       
+          onChangeText={onChangeSecondSurname}
+          value={secondSurname}
+        />     
+        <TextInput
+          label="Correo Electronico"
+          style={styles.textInput}       
+          onChangeText={onChangeEmail}
+          value={email}
+        />           
       </View>
     </ScrollView>
   );
@@ -53,6 +119,31 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginLeft: 20
+  },
+  notImage: {           
+    marginHorizontal :5,    
+    width: 100,
+    height: 100 ,
+    borderRadius: 10,
+    borderColor: '#5e5c57',
+    borderWidth: 3,
+    backgroundColor: '#F0F0F0',    
+  },
+  cameraImage: {
+    width: 90, 
+    height: 90, 
+    marginTop: 1,
+    marginLeft :2, 
+    borderRadius: 3
+  },
+  image: {  
+    marginHorizontal :5,
+    width: 100,
+    height: 100 ,
+    borderRadius: 10,
+    borderColor: '#5e5c57',
+    borderWidth: 3,
   },
   separator: {
     marginVertical: 30,

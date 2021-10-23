@@ -67,6 +67,7 @@ function BottomTabNavigator() {
         component={ActualizarEstadoProducto}
         options={({ navigation }: RootTabScreenProps<'ActualizarEstadoProducto'>) => ({
           title: 'Tab One',
+
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable

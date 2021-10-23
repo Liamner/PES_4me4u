@@ -2,21 +2,27 @@ import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import EditScreenInfo from '../components/EditScreenInfo';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+import { resolvePlugin } from '@babel/core';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
-  const [name, onChangeName] = React.useState("Ya hay algo");  
-  const [description, onChangeDescription] = React.useState("Aqui tambien hay algo que nos dará la api xD");  
-  const [selectedCategory, setSelectedCategory] = React.useState("coche");
+  const [name, onChangeName] = React.useState("");  
+  const [description, onChangeDescription] = React.useState("");  
+  const [selectedCategory, setSelectedCategory] = React.useState();
+  const [checkedDonar, setCheckedDonar] = React.useState(false);
+  const [checkedIntercambiar, setCheckedIntercambiar] = React.useState(false);
+  const [checkedPrestar, setCheckedPrestar] = React.useState(false);
   const [image, setImage] = React.useState(null);
   const [image2, setImage2] = React.useState(null);
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);    
+  const [image6, setImage6] = React.useState(null);     
+  const imageArray = [image, image2, image3, image4, image5, image6] ;
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -69,27 +75,42 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 );  
     
   }
-  const pickImage = async (id?: Number) => {    
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+const pickImage = async (id?: Number) => {    
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
 
-    console.log(result);
+  console.log(result);
 
-    if (!result.cancelled ) {
-      if(!image || id == 1)setImage(result.uri);
-      else if(!image2 || id == 2)setImage2(result.uri);
-      else if(!image3 || id == 3)setImage3(result.uri);
-      else if(!image4 || id == 4)setImage4(result.uri);
-      else if(!image5 || id == 5)setImage5(result.uri);
-      else if(!image6 || id == 6)setImage6(result.uri);
-      
-    }
-  };
-
+  if (!result.cancelled ) {
+    if(!image || id == 1)setImage(result.uri);
+    else if(!image2 || id == 2)setImage2(result.uri);
+    else if(!image3 || id == 3)setImage3(result.uri);
+    else if(!image4 || id == 4)setImage4(result.uri);
+    else if(!image5 || id == 5)setImage5(result.uri);
+    else if(!image6 || id == 6)setImage6(result.uri);
+    
+  }
+};
+const sendApi = async () =>{
+  console.log("sending")
+  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    name : name,
+    categories : [selectedCategory],
+    description : description,
+    exchange :"present",
+    state :"available",
+    owner :"owner"
+  }).then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -113,14 +134,45 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         onValueChange={(itemValue, itemIndex) =>
           setSelectedCategory(itemValue)
         }>
-          <Picker.Item label="Selecciona un categoria" value="default" />
-          <Picker.Item label="Coches" value="coche" />
-          <Picker.Item label="Motos" value="moto" />
-        </Picker>                 
+          <Picker.Item label="Selecciona un categoria..." value="default" />
+          <Picker.Item label="Tecnologia" value="tech" />
+          <Picker.Item label="Casas" value="house" />
+        </Picker>        
+        <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedDonar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedDonar(!checkedDonar);
+          }}
+        />  
+        <Text >Donar</Text>
+        </View>    
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedPrestar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedPrestar(!checkedPrestar);
+          }}
+        />  
+        <Text >Prestar</Text>
+        </View> 
+        <View 
+         style={styles.checkbox}> 
+        <Checkbox
+          status={checkedIntercambiar ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setCheckedIntercambiar(!checkedIntercambiar);
+          }}
+        />  
+        <Text >Intercambiar</Text>
+        </View>          
         <View 
          style={{
           flexDirection: "row",          
-          marginTop: 20
+          marginTop: 30
         }}>
                   
           {image && 
@@ -177,8 +229,8 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           <TouchableOpacity style={styles.notImage} onPress={pickImage}>
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
-        </View>        
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}><Text> Editar Producto !</Text></Pressable>
+        </View>    
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={sendApi} ><Text> Subir Producto !</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
       </View>      
     </ScrollView>
@@ -201,6 +253,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: '90%',    
     backgroundColor: '#a2cff0',
+  },
+  checkbox:{
+    flexDirection: "row",           
+    marginTop: 10,
+    alignItems:'center',
+    width:'80%',  
   },
   image: {  
     marginHorizontal :5,

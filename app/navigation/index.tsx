@@ -24,6 +24,8 @@ import EditProduct from '../screens/EditProductScreen';
 import ViewProduct from '../screens/ViewProductScreen';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
+import CreateProduct from '../screens/CreateProductScreen';
+	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -117,6 +119,14 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
+      />
+      <BottomTab.Screen
+        name="CreateProduct"
+        component={CreateProduct}
+        options={{
+          title: 'Nuevo Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
       />
       <BottomTab.Screen
         name="EditProduct"

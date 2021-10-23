@@ -59,7 +59,8 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  //product.img = '/storage/imgs/' + req.file.filename;
+  const nameImage = '/storage/imgs/' + req.file.filename
+  product.img = nameImage;
   product.state = req.body.state;
   product.owner = req.body.owner;
 

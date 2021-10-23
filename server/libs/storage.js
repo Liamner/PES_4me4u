@@ -12,14 +12,17 @@ const storage = multer.diskStorage({
 
 
 
-const upload = multer({ storage: storage,
-                        fileFilter: (req, file, cb) => {
-                          const fileTypes = /jpeg|jpg|png/;
-                          const mimetype = fileTypes.test(file.mimetype);
-                          if (mimetype) {
-                            return cb(null, true);
-                          }
-                          cb("Error: File not an image");
-                        } });
+const upload = multer(
+  { storage: storage,
+    fileFilter: (req, file, cb) => {
+      const fileTypes = /jpeg|jpg|png/;
+      const mimetype = fileTypes.test(file.mimetype);
+      if (mimetype) {
+        return cb(null, true);
+      }
+      cb("Error: File not an image");
+    } 
+  }
+);
 
 module.exports = upload;

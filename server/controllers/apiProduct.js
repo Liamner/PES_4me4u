@@ -58,7 +58,10 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  product.img = '/storage/imgs/' + req.file.filename;
+  if (req.file != null) {
+    product.img = '/storage/imgs/' + req.file.filename;
+  } 
+ 
   product.state = req.body.state;
   product.owner = req.body.owner;
 
@@ -101,9 +104,9 @@ exports.updateProduct = async (req, res) => {
     if (ncategories != null) product.categories = ncategories;
     console.log(ncategories);
   
-    product.description = ndescription;
+    if (ndescription != null)product.description = ndescription;
     if (nexchange != null) product.exchange = nexchange;
-    product.img = nimg;
+    if (nimg != null) product.img = nimg;
   
     console.log(product);
   

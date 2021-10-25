@@ -15,9 +15,9 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
-          ActualizarEstadoProducto: {
+          TabOne: {
             screens: {
-              ActualizarEstadoProducto: 'one',
+              TabOneScreen: 'one',
             },
           },
           TabTwo: {

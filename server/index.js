@@ -14,9 +14,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Category = require('./category.js');
 var Schema = mongoose.Schema;
-
+/*
 const categoryType = {
     values: ['tech', 'house']
-}
+}*/
 
 const exchangeTypes = {
     values: ['present', 'exchange', 'provide']
@@ -21,13 +21,13 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     categories: {
-        type: ['String'],
+        /*type: ['String'],
         enum: categoryType,
         required: true
-        /*
+        */
         type: [Schema.ObjectId],
         ref: "Category",
-        required: true*/
+        required: true
     },
     description: {
         type: 'String'

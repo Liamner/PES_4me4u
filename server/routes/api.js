@@ -41,19 +41,19 @@ module.exports = function(app) {
     .post(validateCreateCategory, categoryController.createCategory);
 
   // Read category with id = id
-    router.route('category/:id')
+    router.route('/category/:id')
     .get(categoryController.readCategory);
   
   // Read all categories
   router.route('/category/')
-    .post(categoryController.readAllCategories);
+    .get(categoryController.readAllCategories);
   
   // Update category with id = id
   router.route('/category/update/:id')
     .put(categoryController.updateCategory);
   
   // Delete category with id = id
-  router.route('category/delete/:id')
+  router.route('/category/delete/:id')
     .delete(categoryController.deleteCategory);
 
   return router;

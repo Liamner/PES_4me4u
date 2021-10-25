@@ -10,14 +10,15 @@ export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'D
   //Datos
   const [data, setData] = React.useState([
     {
-      id: "6163458a586da8fbb9866e43"}
+    id: "616d6282bc69ccaa2163570e"
+    }
   ]);
 
 
   const APIDeleteProduct= (id: string) =>{
 
 //    https://app4me4u.herokuapp.com/api/product/delete/:id
-    const response = axios.delete('https://app4me4u.herokuapp.com/api/product/delete/' + id /*616332ec74346adb25a77b94*/)
+    const response = axios.delete('https://app4me4u.herokuapp.com/api/product/delete/' + id /*616d6282bc69ccaa2163570e*/)
       .then(res => {
         console.log(res);})
   }

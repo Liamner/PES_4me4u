@@ -1,18 +1,22 @@
 const express = require('express');
-
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
+const userController = require('../controllers/apiUser.js');
+
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
+const upload = require('../libs/storage.js');
 
 module.exports = function(app) {
   const router = express.Router();
 
-
   // Create new product
   router.route('/product/create/')
-    .post((validateCreateProduct), productController.createProduct);
-    
+    .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
+
+  router.route('/product/image/:id')
+    .get(productController.getImg)
+
   // Read Product with id = id
   router.route('/product/:id')
     .get(productController.readProduct);
@@ -55,6 +59,12 @@ module.exports = function(app) {
   // Delete category with id = id
   router.route('/category/delete/:id')
     .delete(categoryController.deleteCategory);
+
+  router.route('/register')
+    .post(userController.registerUser);
+
+  router.route('/login')
+    .post(userController.loginUser);
 
   return router;
 }

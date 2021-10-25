@@ -1,5 +1,4 @@
 const express = require('express');
-
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');

@@ -14,7 +14,7 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
   //Datos
   const [data, setData] = React.useState([
     {
-      id: '61718c3da444e7c4e76a77e5',
+      id: '61768a008b251b960db42a49',
       name: 'HarryPotter',
       state: 'available'
     }/*,
@@ -35,7 +35,7 @@ export default function ActualizarEstadoProducto({ navigation }: RootTabScreenPr
     // 'available', 'reserved', 'provide'
     // disponible , reservado,  prestado
 
-    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/' + id, { state: [new_state] } )
+    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/' + id, { state: new_state } )
       .then(response => {
         /*setData(response.data as {});*/
       })

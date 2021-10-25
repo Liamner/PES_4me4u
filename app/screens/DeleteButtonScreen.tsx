@@ -9,9 +9,7 @@ import axios from 'axios'
 export default function DeleteButtonScreen({ navigation }: RootTabScreenProps<'DeleteButton'>) {
   //Datos
   const [data, setData] = React.useState([
-    {
-    id: "616d6282bc69ccaa2163570e"
-    }
+    {id: "616d6282bc69ccaa2163570e"}
   ]);
 
 

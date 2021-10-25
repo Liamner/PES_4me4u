@@ -1,40 +1,70 @@
-import express from "express"
-import {validateCreateProduct} from '../validators/product.js';
-import {
-  readAllProducts,
-  createProduct,
-  readProduct,
-  readProductsFiltered,
-  updateProduct,
-  updateStateProduct,
-  deleteProduct,
-} from "../controllers/api.js";
-
 const express = require('express');
-const productController = require('../controllers/api.js');
-const router = express.Router();
+const productController = require('../controllers/apiProduct.js');
+const categoryController = require('../controllers/apiCategory.js');
+const userController = require('../controllers/apiUser.js');
 
-router.route('/register').post(productController.registerUser);
+const { validateCreateProduct } = require('../validators/product.js');
+const { validateCreateCategory } = require('../validators/category.js');
+const upload = require('../libs/storage.js');
 
-router.route('/login').post(productController.loginUser);
+module.exports = function(app) {
+  const router = express.Router();
 
+  // Create new product
+  router.route('/product/create/')
+    .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
 
-// http://localhost:5000/api/product/...
+  router.route('/product/image/:id')
+    .get(productController.getImg)
 
-// Create Product
-router.post("/product/create/", validateCreateProduct, createProduct);
+  // Read Product with id = id
+  router.route('/product/:id')
+    .get(productController.readProduct);
+  
+  // Read all products
+  router.route('/product/')
+    .get(productController.readAllProducts);
+ 
+  router.route('/ids/product/')
+    .get(productController.readProductsId);
 
-// Read Product
-router.get("/product/:id", readProduct);
-router.get("/product/", readAllProducts);
-router.get("/product/filter/:filter", readProductsFiltered);
+  // Update product with id = id
+  router.route('/product/update/:id')
+    .put(productController.updateProduct);
 
-// Update Product
-router.put("/product/update/:id", updateProduct);
-router.put("/product/updateState/:id", updateStateProduct);
+  // Update atribute state of product with id = id
+  router.route('/product/updateState/:id')
+    .put(productController.updateStateProduct);
 
+  // Delete product with id = id
+  router.route('/product/delete/:id')
+    .delete(productController.deleteProduct);
 
-// Delete Product
-router.delete("/product/delete/:id", deleteProduct);
+  // Create new category
+  router.route('/category/create/')
+    .post(validateCreateCategory, categoryController.createCategory);
 
-export default router;
+  // Read category with id = id
+    router.route('/category/:id')
+    .get(categoryController.readCategory);
+  
+  // Read all categories
+  router.route('/category/')
+    .get(categoryController.readAllCategories);
+  
+  // Update category with id = id
+  router.route('/category/update/:id')
+    .put(categoryController.updateCategory);
+  
+  // Delete category with id = id
+  router.route('/category/delete/:id')
+    .delete(categoryController.deleteCategory);
+
+  router.route('/register')
+    .post(userController.registerUser);
+
+  router.route('/login')
+    .post(userController.loginUser);
+
+  return router;
+}

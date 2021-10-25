@@ -15,6 +15,7 @@ export const validateCreateProduct = [
         .exists()
         .not()
         .isEmpty(),
+        
     check('exchange')
         .exists()
         .not()

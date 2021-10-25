@@ -3,10 +3,10 @@ import Category from './category.js';
 var Schema = mongoose.Schema;
 
 //var Category = mongoose.model('Category', CategorySchema);
-/*
+
 const categoryType = {
     values: ['tech', 'house']
-}*/
+}
 
 const exchangeTypes = {
     values: ['present', 'exchange', 'provide']
@@ -23,10 +23,11 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     categories: {
-        //type: ['String'],
-        type: Schema.ObjectId,
-        ref: "Category",
-        //enum: categoryType,
+        type: ['String'],
+        //type: [Schema.ObjectId],
+        //type: 'String',
+        //ref: "Category",
+        enum: categoryType,
         required: true
     },
     description: {

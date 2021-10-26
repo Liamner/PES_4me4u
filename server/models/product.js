@@ -43,13 +43,12 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     img: {
-        type: ['String'],
+        type: 'String',
         required: false
     },
     state: {
         type: 'String',
-        enum: stateTypes,
-        required: true
+        enum: stateTypes
     },
     owner: {
         type: 'String'

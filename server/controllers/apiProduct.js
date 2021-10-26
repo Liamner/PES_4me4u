@@ -52,18 +52,22 @@ exports.readProductsId = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  //const product = new Product();
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  product.img = '/storage/imgs/' + req.file.filename;
+  if (req.file != null) {
+    product.img = '/storage/imgs/' + req.file.filename;
+  } 
+ 
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  console.log(JSON.stringify(req.file));
+  //const image = req.file.filename;
+  //console.log(product.img);
+  //console.log(JSON.stringify(req.file));
 
   try {
     await product.save();
@@ -100,9 +104,9 @@ exports.updateProduct = async (req, res) => {
     if (ncategories != null) product.categories = ncategories;
     console.log(ncategories);
   
-    product.description = ndescription;
+    if (ndescription != null)product.description = ndescription;
     if (nexchange != null) product.exchange = nexchange;
-    product.img = nimg;
+    if (nimg != null) product.img = nimg;
   
     console.log(product);
   

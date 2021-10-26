@@ -13,10 +13,6 @@ exports.validateCreateProduct = [
         .exists()
         .not()
         .isEmpty(),
-    check('state')
-        .exists()
-        .not()
-        .isEmpty(),
     (req, res, next) => {
         try {
             validationResult(req).throw();

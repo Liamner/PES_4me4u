@@ -1,5 +1,4 @@
 const express = require('express');
-
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
@@ -10,7 +9,6 @@ const upload = require('../libs/storage.js');
 
 module.exports = function(app) {
   const router = express.Router();
-
 
   // Create new product
   router.route('/product/create/')
@@ -62,9 +60,11 @@ module.exports = function(app) {
   router.route('category/delete/:id')
     .delete(categoryController.deleteCategory);
 
+  router.route('/register')
+    .post(userController.registerUser);
 
-router.route('/register').post(userController.registerUser);
-router.route('/login').post(userController.loginUser);
+  router.route('/login')
+    .post(userController.loginUser);
 
   return router;
 }

@@ -1,5 +1,6 @@
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
+const cloudinary = require("../libs/cloudinary");
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -60,7 +61,7 @@ exports.createProduct = async (req, res) => {
   product.exchange = req.body.exchange;
   if (req.file != null) {
     console.log(req.file.path)
-    const result= await cloudinary.uploader.upload(req.file.path);
+    const result = await cloudinary.uploader.upload(req.file.path);
     //product.img = '/storage/imgs/' + req.file.filename;
     //console.log(result);
   } 

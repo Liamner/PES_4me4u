@@ -7,6 +7,7 @@ const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
 const upload = require('../libs/storage.js');
 
+
 module.exports = function(app) {
   const router = express.Router();
 

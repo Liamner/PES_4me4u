@@ -59,12 +59,16 @@ exports.createProduct = async (req, res) => {
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
   if (req.file != null) {
-    product.img = '/storage/imgs/' + req.file.filename;
+    console.log(req.file.path)
+    const result= await cloudinary.uploader.upload(req.file.path);
+    //product.img = '/storage/imgs/' + req.file.filename;
+    //console.log(result);
   } 
  
   product.state = req.body.state;
   product.owner = req.body.owner;
 
+  //console.log(req.file);
   //const image = req.file.filename;
   //console.log(product.img);
   //console.log(JSON.stringify(req.file));

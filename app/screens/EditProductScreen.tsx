@@ -29,14 +29,14 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     pexchange:[]
   });  
 
-  const url = 'https://app4me4u.herokuapp.com/api/product/6163482e4d9725b976c99c2e';
+  const pid = '617866d485f9b5c19fcafdbc';
 
   React.useEffect(() => {
     getInfo();
   }, []);  
 
   const getInfo = async () => {    
-    let response = await axios.get(url);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
     onChangeName(response.data.name)
     onChangeDescription(response.data.description)
     setSelectedCategory(response.data.categories[0])
@@ -95,7 +95,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       exchange: ex
     };
     await axios
-      .put('https://app4me4u.herokuapp.com/api/product/update/6163482e4d9725b976c99c2e', newInfo)
+      .put('https://app4me4u.herokuapp.com/api/product/update/' + pid, newInfo)
       .then(function(response) {
         const result = response.data
         console.log(result.name + ' edited')
@@ -186,22 +186,7 @@ const pickImage = async (id?: Number) => {
     
   }
 };
-const sendApi = async () =>{
-  console.log("sending")
-  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
-    name : name,
-    categories : [selectedCategory],
-    description : description,
-    exchange :"present",
-    state :"available",
-    owner :"owner"
-  }).then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -321,8 +306,8 @@ const sendApi = async () =>{
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }        
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={sendApi} ><Text> Subir Producto !</Text></Pressable>
-        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]}><Text> Cancelar </Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={editProduct} ><Text>¡Subir Producto!</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]} onPress ={reloadProduct}><Text>Cancelar</Text></Pressable>
       </View>      
     </ScrollView>
   );

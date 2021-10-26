@@ -89,16 +89,17 @@ exports.getImg = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try{
+    console.log('Hola');
+
+    const product = new Product({
+      _id: req.params.id,
+    });
+
     const nname = req.body.name;
     const ncategories = req.body.categories;
     const ndescription = req.body.description;
     const nexchange = req.body.exchange;
     const nimg = req.body.img;
-  
-    const id = req.params.id;
-    const product = await Product.findById(id)
-    console.log("Searching for product to update: " + req.params.id);
-    
 
     if (nname != null)  product.name = nname;
     if (ncategories != null) product.categories = ncategories;
@@ -107,18 +108,22 @@ exports.updateProduct = async (req, res) => {
     if (ndescription != null)product.description = ndescription;
     if (nexchange != null) product.exchange = nexchange;
     if (nimg != null) product.img = nimg;
-  
+
     console.log(product);
-  
-    try {
-      await product.save();
-    
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(409).json(error.message);
-    
-      console.log("Can not update the Product");
-    }
+
+    Product.updateOne({_id: req.params.id}, product).then(
+      () => {
+        res.status(201).json({
+          message: 'Update correcto!'
+        });
+      }
+    ).catch(
+      (error) => {
+        res.status(400).json({
+          error: error
+        });
+      }
+    );
     
   } catch (error) {
     res.status(404).json(error.message);

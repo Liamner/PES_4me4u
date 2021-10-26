@@ -63,7 +63,7 @@ exports.createProduct = async (req, res) => {
     console.log(req.file.path)
     const result = await cloudinary.uploader.upload(req.file.path);
     //product.img = '/storage/imgs/' + req.file.filename;
-    //console.log(result);
+    product.img = result.url;
   } 
  
   product.state = req.body.state;

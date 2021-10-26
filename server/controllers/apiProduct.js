@@ -1,6 +1,7 @@
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
 const cloudinary = require("../libs/cloudinary");
+const fs = require('fs-extra');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -64,6 +65,7 @@ exports.createProduct = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
     //product.img = '/storage/imgs/' + req.file.filename;
     product.img = result.url;
+
   } 
  
   product.state = req.body.state;
@@ -76,7 +78,8 @@ exports.createProduct = async (req, res) => {
 
   try {
     await product.save();
-
+    await fs.unlink(req.body.path);
+    // delete image from storage/imgs
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);

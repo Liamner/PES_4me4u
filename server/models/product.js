@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Category = require('./category.js');
+const Type = require('./type.js');
 var Schema = mongoose.Schema;
 
 const categoryType = {
@@ -21,13 +22,13 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     categories: {
-        type: ['String'],
-        enum: categoryType,
-        required: true
         
-        /*type: [Schema.ObjectId],
-        ref: "Category",
+        /*type: ['String'],
+        enum: categoryType,
         required: true*/
+        type: [Schema.ObjectId],
+        ref: "Category",
+        required: true
     },
     description: {
         type: 'String'
@@ -38,8 +39,12 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: {
-        type: ['String'],
+
+        /*type: ['String'],
         enum: exchangeTypes,
+        required: true*/
+        type: [Schema.ObjectId],
+        ref: "Type",
         required: true
     },
     img: {

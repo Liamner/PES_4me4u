@@ -175,7 +175,6 @@ exports.deleteProduct = async (req, res) => {
     let product = await Product.findById({_id: req.params.id})
     
     for (let i = 0; i < product.img.length; ++i) {  
-
       const res = await Image.findById({_id: product.img[i]});
 
 

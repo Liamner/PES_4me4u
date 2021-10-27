@@ -2,9 +2,11 @@ const express = require('express');
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
+const typeController = require('../controllers/apiType.js');
 
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
+const { validateCreateType } = require('../validators/type.js');
 const upload = require('../libs/storage.js');
 
 module.exports = function(app) {
@@ -60,7 +62,28 @@ module.exports = function(app) {
   router.route('/category/delete/:id')
     .delete(categoryController.deleteCategory);
 
-  router.route('/register')
+
+  // Create new type
+  router.route('/type/create/')
+    .post(validateCreateType, typeController.createType);
+
+  // Read type with id = id
+  router.route('/type/:id')
+    .get(typeController.readType);
+
+  // Read all types
+  router.route('/type/')
+    .get(typeController.readAllTypes);
+
+  // Update type with id = id
+  router.route('/type/update/:id')
+    .put(typeController.updateType);
+
+  // Delete type with id = id
+  router.route('/type/delete/:id')
+    .delete(typeController.deleteType);
+ 
+    router.route('/register')
     .post(userController.registerUser);
 
   router.route('/login')

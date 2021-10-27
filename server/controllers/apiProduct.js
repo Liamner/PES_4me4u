@@ -1,4 +1,5 @@
 const Product = require('../models/product.js');
+const Image = require('../models/image.js');
 const validateCreateProduct = require('../validators/product.js');
 const cloudinary = require("../libs/cloudinary");
 const fs = require('fs-extra');
@@ -60,25 +61,27 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  if (req.file != null) {
-    console.log(req.file.path)
-    const result = await cloudinary.uploader.upload(req.file.path);
-    //product.img = '/storage/imgs/' + req.file.filename;
-    product.img = result.url;
-
-  } 
- 
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  //console.log(req.file);
-  //const image = req.file.filename;
-  //console.log(product.img);
-  //console.log(JSON.stringify(req.file));
+  // SAVE IMAGE
+  if (req.file != null) {
+    console.log(req.file.path)
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const image = new Image();
+    image.public_id = result.public_id;
+    image.url = result.url;
+    image.save();
 
+    product.img = image._id;
+
+    console.log(image);
+    console.log(product);
+  } 
+ 
   try {
     await product.save();
-    await fs.unlink(req.body.path);
+    //await fs.unlink(req.body.path);
     // delete image from storage/imgs
     res.status(201).json(product);
   } catch (error) {
@@ -89,9 +92,8 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getImg = async (req, res) => {
-  const product = await Product.findById({_id: req.params.id});
-  console.log(product);
-  res.render('holaa');
+  const image = await Image.findById({_id: req.params.id});
+  console.log(image);
   //res.render({product});
 }
 

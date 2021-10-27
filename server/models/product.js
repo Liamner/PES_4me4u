@@ -42,9 +42,13 @@ const ProductSchema = new mongoose.Schema({
         enum: exchangeTypes,
         required: true
     },
-    img: {
+    /*img: {
         type: 'String',
         required: false
+    },*/
+    img: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Image'
     },
     state: {
         type: 'String',

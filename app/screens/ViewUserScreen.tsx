@@ -2,6 +2,7 @@ import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, TouchableOpacity, ScrollView, Alert, Button } from 'react-native';
+import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 
 import EditScreenInfo from '../components/EditScreenInfo';
@@ -29,11 +30,13 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
     ]);*/
     //Datos de un usuario
     const email = 'a@mail.algo'
-    const location = 'BARCELONA'
+    const location = 'Pyongyang'
     const level = '1'
     const postalCode = '08028'
     const ecoPoints = '10'
     const score = '5.0'
+    const latitude = 39.03385
+    const longitude = 125.75432
 
 
     const [products, setproducts] = React.useState([
@@ -88,17 +91,9 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
-      
-        <Text style={styles.text}>
-            Localización: <Text style={styles.text2}>{location}</Text>
-        </Text>
-
+    
         <Text style={styles.text}>
             Nivel: <Text style={styles.text2}>{level}</Text>
-        </Text>
-
-        <Text style={styles.text}>
-            Código postal: <Text style={styles.text2}>{postalCode}</Text>
         </Text>
 
         <Text style={styles.text}>
@@ -109,27 +104,73 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
             Puntuación: <Text style={styles.text2}>{score}</Text> ⭐
         </Text>
 
+        <Text style={styles.text}>
+            Localización: <Text style={styles.text2}>{location}</Text>
+        </Text>
+
+
+        <CustomMap
+          style={styles.mapview}
+          region={{
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+        >
+          <CustomMarker
+            coordinate={{
+              latitude: latitude,
+              longitude: longitude
+            }}
+          ></CustomMarker>
+        </CustomMap>
+
+        <Text style={styles.text}>
+            Código postal: <Text style={styles.text2}>{postalCode}</Text>
+        </Text>
+
+
+
+
         <Text style={styles.titleText}>Tus productos</Text>
-
-
-
 
         <FlatList
           numColumns = {1}
           data={products}
           renderItem={({ item }) => ( 
+
             <>
 
             <Text style={styles.productText}>
               <Text style={styles.deleteButton} onPress={() => Alert.alert(
-                    "Alerta",
+                    "BORRAR",
                     "id:"+ item.id ,
                     [{text: "Aceptar"}]
                   )}>Borrar
-                  </Text>  Estado: {item.state}   {item.name} </Text>
-
-    
+              </Text>
+              <Text>   </Text>
+              
+              <Text onPress={() => Alert.alert(
+                    "MODIFICAR ESTADO",
+                    "id:"+ item.id ,
+                    [{text: "Aceptar"}]
+                  )}>Estado: {item.state}</Text>
+              <Text>   </Text>
+              <Text onPress={() => Alert.alert(
+                    "NAVEGACION A VER PRODUCTO",
+                    "id:"+ item.id ,
+                    [{text: "Aceptar"}]
+                  )}
+              >{item.name}</Text>
+            </Text>
             </>
+
+
+
+
+
+
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
@@ -152,6 +193,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  container2: {
+    flex: 1,
+    padding: 20
+  },
   item: {
     padding: 20,
     marginVertical: 8,
@@ -159,7 +204,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontFamily: "Cochin",
+    //fontFamily: "Cochin",
     fontSize: 20,
     margin:10,
     fontStyle: 'italic'
@@ -177,14 +222,14 @@ const styles = StyleSheet.create({
   titleText: {
     padding: 10,
     textAlign: "center",
-    fontFamily: "Cochin",
+    //fontFamily: "Cochin",
     fontSize: 30,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
   productText: {
     textAlign: 'left',
-    fontFamily: "Cochin",
+    //fontFamily: "Cochin",
     fontSize: 20,
     margin:10,
   },
@@ -196,6 +241,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     color: "red"
   },
+  mapview: {
+    width: '80%',
+    height: Layout.width - 175,
+    alignSelf: 'center',
+    marginTop: 5,
+    marginBottom: 20,
+  }
 
 });
 

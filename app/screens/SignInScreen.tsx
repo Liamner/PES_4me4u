@@ -65,7 +65,7 @@ export default function SignInScreen({navigation}) {
                 pwd: inputData.password,
                 }
             axios
-            .post('http://localhost:5000/api/login', credentials)
+            .post('https://app4me4u.herokuapp.com/api/login', credentials)
             .then(function (response) {
                 const result = response.data;
                 if (result.ok) {

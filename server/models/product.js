@@ -3,6 +3,7 @@ const Category = require('./category.js');
 const Type = require('./type.js');
 var Schema = mongoose.Schema;
 
+/*
 const categoryType = {
     values: ['tech', 'house']
 }
@@ -10,6 +11,7 @@ const categoryType = {
 const exchangeTypes = {
     values: ['present', 'exchange', 'provide']
 }
+*/
 
 const stateTypes = {
     values: ['available', 'reserved', 'provide']
@@ -26,7 +28,7 @@ const ProductSchema = new mongoose.Schema({
         /*type: ['String'],
         enum: categoryType,
         required: true*/
-        type: [Schema.ObjectId],
+        type: [Schema.name],
         ref: "Category",
         required: true
     },
@@ -43,7 +45,8 @@ const ProductSchema = new mongoose.Schema({
         /*type: ['String'],
         enum: exchangeTypes,
         required: true*/
-        type: [Schema.ObjectId],
+        
+        type: [Schema.name],
         ref: "Type",
         required: true
     },

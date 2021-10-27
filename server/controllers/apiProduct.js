@@ -2,7 +2,6 @@ const Product = require('../models/product.js');
 const Image = require('../models/image.js');
 const validateCreateProduct = require('../validators/product.js');
 const cloudinary = require("../libs/cloudinary");
-const fs = require('fs-extra');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -19,7 +18,7 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.id });
+    const product = await (await Product.findById({ _id: req.params.id }));
 
     console.log("Reading product: " + req.params.id);
 
@@ -65,18 +64,25 @@ exports.createProduct = async (req, res) => {
   product.owner = req.body.owner;
 
   // SAVE IMAGE
-  if (req.file != null) {
-    console.log(req.file.path)
-    const result = await cloudinary.uploader.upload(req.file.path);
-    const image = new Image();
-    image.public_id = result.public_id;
-    image.url = result.url;
-    image.save();
+  if (req.files != null) {
+    console.log('aaaa');
+    for (let i = 0; i < req.files.length; ++i) {
+      console.log(req.files[i])
+      let file = req.files[i];
+      let result = await cloudinary.uploader.upload(file.path);
+      let image = new Image();
+      image.public_id = result.public_id;
+      image.url = result.url;
+      image.save();
+      product.img.push(image._id);
+    }
+    /*
+    
 
     product.img = image._id;
 
     console.log(image);
-    console.log(product);
+    console.log(product);*/
   } 
  
   try {
@@ -94,7 +100,6 @@ exports.createProduct = async (req, res) => {
 exports.getImg = async (req, res) => {
   const image = await Image.findById({_id: req.params.id});
   console.log(image);
-  //res.render({product});
 }
 
 exports.updateProduct = async (req, res) => {
@@ -165,8 +170,25 @@ exports.updateStateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findByIdAndDelete({ _id: req.params.id });
+  try {    
+    let images = [];
+    let product = await Product.findById({_id: req.params.id})
+    
+    for (let i = 0; i < product.img.length; ++i) {  
+
+      const res = await Image.findById({_id: product.img[i]});
+
+
+      //const public_id = product.img[0].populate("public_id").exec();
+      console.log(res.public_id)
+      //const img = Image.findByIdAndDelete({_id: product.img[i]._id});
+      //console.log(img)
+      //const public_id = img.public_id;
+      let result = await cloudinary.uploader.destroy(res.public_id);
+    }
+   
+    
+    //product = await Product.findByIdAndDelete({ _id: req.params.id });
 
     console.log("Deleted product: " + req.params.id);
 
@@ -176,3 +198,8 @@ exports.deleteProduct = async (req, res) => {
     console.log(error.message);
   }
 };
+/*
+ "6179647513551b4ae54b9efb",
+        "6179647713551b4ae54b9efd",
+        "6179647813551b4ae54b9eff"
+*/

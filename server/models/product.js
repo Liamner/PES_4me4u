@@ -46,10 +46,10 @@ const ProductSchema = new mongoose.Schema({
         type: 'String',
         required: false
     },*/
-    img: {
+    img: [{
         type: Schema.Types.ObjectId, 
         ref: 'Image'
-    },
+    }],
     state: {
         type: 'String',
         enum: stateTypes

@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
-require('./config/config.js');
 const cloudinary = require('cloudinary').v2;
+require('./config/config.js');
+require('dotenv').config()
  
 
 /*

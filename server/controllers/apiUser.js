@@ -74,9 +74,7 @@ exports.loginUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  let email = req.params.email;
-  //let body = req.body;
-    //User.findOne({ email: body.email }, 
+  let email = req.params.email; 
   try{
     User.findById(email, (err, product) =>{
       if(err) res.status(500).send({message: `The user does not exists ${err}`});

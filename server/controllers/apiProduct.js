@@ -181,8 +181,3 @@ exports.deleteProduct = async (req, res) => {
     console.log(error.message);
   }
 };
-/*
- "6179647513551b4ae54b9efb",
-        "6179647713551b4ae54b9efd",
-        "6179647813551b4ae54b9eff"
-*/

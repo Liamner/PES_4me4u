@@ -2,6 +2,7 @@ const express = require('express');
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
+const imageController = require('../controllers/apiImage.js');
 
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
@@ -66,6 +67,14 @@ module.exports = function(app) {
 
   router.route('/login')
     .post(userController.loginUser);
+
+
+  // ======================
+  // ---- Image Routes ----
+  // ======================
+
+  router.route('/image/:productId')
+    .post(upload.array('img',6), imageController.uploadImages)
 
   return router;
 }

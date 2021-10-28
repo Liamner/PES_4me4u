@@ -65,7 +65,6 @@ exports.createProduct = async (req, res) => {
 
   // SAVE IMAGE
   if (req.files != null) {
-    console.log('aaaa');
     for (let i = 0; i < req.files.length; ++i) {
       console.log(req.files[i])
       let file = req.files[i];

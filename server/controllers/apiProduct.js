@@ -161,10 +161,18 @@ exports.updateStateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   try {    
-    product = await Product.findByIdAndDelete({ _id: req.params.id });
+    let product = await Product.findById({_id: req.params.id})
+    const images = [];
+    images.push(product.img)    
+    for (let i = 0; i < product.img.length; ++i) {  
+      const res = await Image.findById({_id: product.img[i]});
+      console.log(res.public_id)
+      let result = await cloudinary.uploader.destroy(res.public_id);
+    }
 
+    product.delete();
+    
     console.log("Deleted product: " + req.params.id);
-
     res.status(200).json(product);
   } catch (error) {
     res.status(404).json(error.message);

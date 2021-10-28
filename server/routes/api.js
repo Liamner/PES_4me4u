@@ -76,5 +76,9 @@ module.exports = function(app) {
   router.route('/image/:productId')
     .post(upload.array('img',6), imageController.uploadImages)
 
+    .delete(imageController.deleteImages)
+
+    
+
   return router;
 }

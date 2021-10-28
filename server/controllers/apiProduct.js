@@ -76,19 +76,10 @@ exports.createProduct = async (req, res) => {
       image.save();
       product.img.push(image._id);
     }
-    /*
-    
-
-    product.img = image._id;
-
-    console.log(image);
-    console.log(product);*/
   } 
  
   try {
     await product.save();
-    //await fs.unlink(req.body.path);
-    // delete image from storage/imgs
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);

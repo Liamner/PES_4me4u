@@ -66,7 +66,7 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
-  router.route('/deleteUser')
+  router.route('/deleteUser/:id')
     .delete(userController.deleteUser);
 
   return router;

@@ -66,5 +66,9 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
+  // Update user with id = id
+  router.route('/user/update/:id')
+    .put(userController.updateUser);
+
   return router;
 }

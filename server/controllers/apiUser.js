@@ -71,3 +71,36 @@ exports.loginUser = async (req, res) => {
     console.log("Can not login the user");
   }
 }
+
+exports.updateUser = async (req, res) => {
+  try{
+    const level = req.body.level;
+    const ecoPoints = req.body.ecoPoints;
+    const score = req.body.score;
+  
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to update: " + req.params.id);
+
+    if (level != null)  user.level = level;
+    if (ecoPoints != null) user.ecoPoints = ecoPoints;
+    if (score != null) user.score = score;
+    console.log("entro en el try0");
+    console.log(user);
+    console.log("entro en el try1");
+    try {
+      console.log("entro en el try2");
+      await user.save();
+    
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the user");
+    }
+    
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};

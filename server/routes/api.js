@@ -66,8 +66,8 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
-  router.route('/resetPassword')
-    .post(userController.resetPassword);
+  router.route('/resetPassword/:id')
+    .put(userController.resetPassword);
 
   return router;
 }

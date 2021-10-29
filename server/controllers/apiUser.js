@@ -73,19 +73,22 @@ exports.loginUser = async (req, res) => {
 }
 
   exports.resetPassword = async (req, res) => {
-    const new_password = req.body.password;
-    const email = req.body.email;
-    const user = await User.findById(email)
-    console.log("Searching the user: " + email);
-    user.pwd = new_password;
-    console.log(user);
-
-    try {
-      await user.save();
-      res.status(201).json(user);
-    }
-    catch(err) {
-      res.status(409).json(error.message);
-      console.log("Can not update the password");
+    try{
+      const npassword = req.body.new_password;
+      const id = req.params.id;
+      const user = await User.findById(id)
+      console.log("Searching for user to update its password: " + req.params.id);
+      user.pwd = npassword;
+      console.log(user);
+      try {
+        await user.save();
+        res.status(201).json(user);
+      } catch (error) {
+        res.status(409).json(error.message);
+        console.log("Can not update the password");
+      }
+    } catch (error) {
+      res.status(404).json(error.message);
+      console.log(error.message);
     }
   }

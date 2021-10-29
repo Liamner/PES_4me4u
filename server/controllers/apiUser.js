@@ -71,3 +71,21 @@ exports.loginUser = async (req, res) => {
     console.log("Can not login the user");
   }
 }
+
+  exports.resetPassword = async (req, res) => {
+    const new_password = req.body.password;
+    const email = req.body.email;
+    const user = await User.findById(email)
+    console.log("Searching the user: " + email);
+    user.pwd = new_password;
+    console.log(user);
+
+    try {
+      await user.save();
+      res.status(201).json(user);
+    }
+    catch(err) {
+      res.status(409).json(error.message);
+      console.log("Can not update the password");
+    }
+  }

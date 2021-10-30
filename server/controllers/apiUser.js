@@ -78,7 +78,7 @@ exports.loginUser = async (req, res) => {
       const id = req.params.id;
       const user = await User.findById(id)
       console.log("Searching for user to update its password: " + req.params.id);
-      user.pwd = npassword;
+      user.pwd = bcrypt.hashSync(npassword, 10);
       console.log(user);
       try {
         await user.save();

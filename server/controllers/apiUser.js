@@ -75,11 +75,23 @@ exports.loginUser = async (req, res) => {
   exports.resetPassword = async (req, res) => {
     try{
       const npassword = req.body.new_password;
+      const config = req.body.confPassword;
+
+      if(npassword != config) {
+        return res.status(400).json({
+          ok: false,
+          err: {
+              message: "Les dues contrasenyes deben ser iguals"
+          }
+        });
+      }
+
       const id = req.params.id;
       const user = await User.findById(id)
       console.log("Searching for user to update its password: " + req.params.id);
       user.pwd = bcrypt.hashSync(npassword, 10);
       console.log(user);
+      
       try {
         await user.save();
         res.status(201).json(user);

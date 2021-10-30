@@ -120,17 +120,13 @@ exports.updateUser = async (req, res) => {
     const user = await User.findById(id)
     console.log("Searching for user to update: " + req.params.id);
 
-    //if (level != null)  
-    user.level = level;
-    //if (ecoPoints != null) 
-    user.ecoPoints = ecoPoints;
-    //if (score != null) 
-    user.score = score;
-    console.log("entro en el try0");
+    if (level != null)  user.level = level;
+    if (ecoPoints != null) user.ecoPoints = ecoPoints;
+    if (score != null) user.score = score;
+    
     console.log(user);
-    console.log("entro en el try1");
+    
     try {
-      console.log("entro en el try2");
       await user.save();
     
       res.status(201).json(user);

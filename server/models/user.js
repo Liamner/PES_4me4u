@@ -28,18 +28,18 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    location: {
+    latitude: {
         type: String,
-        default: 'BARCELONA',
+        default: '41.3879',
         //required: [true],
+    },
+    longitude: {
+        type: String,
+        default: '2.16992 41° 23′ 16″',
     },
     level: {
         type: String,
         default: '1',
-    },
-    postalCode: {
-        type: String,
-        default: '08028',
     },
     ecoPoints: {
         type: String,
@@ -60,7 +60,9 @@ usuarioSchema.methods.toJSON = function() {
  }
 
 //agregamos el plugin de validación única y exportamos el modelo recién creado
+/*
 usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
 })
+*/
 module.exports = mongoose.model('Usuario', usuarioSchema);

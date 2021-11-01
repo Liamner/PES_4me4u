@@ -73,10 +73,14 @@ module.exports = function(app) {
   // ---- Image Routes ----
   // ======================
 
-  router.route('/image/:productId')
-    .post(upload.array('img',6), imageController.uploadImages)
+  router.route('/image')
+    .get(imageController.getAllImages)
 
+  router.route('/image/:productId')
+    .get(imageController.getProductImages)
+    .post(upload.array('img',6), imageController.uploadImages)
     .delete(imageController.deleteImages)
+
 
     
 

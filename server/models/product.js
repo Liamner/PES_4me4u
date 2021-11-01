@@ -59,5 +59,10 @@ const ProductSchema = new mongoose.Schema({
     }
 });
 
+ProductSchema.pre('remove', (next) => {
+    console.log('LADJJKAFJKLAFDÑADÑKLDKLKFSDL')
+    //var product = this;
+    mongoose.model('Image').remove({ _id: image._id }, next);
+});
 
 module.exports = mongoose.model('Product', ProductSchema);

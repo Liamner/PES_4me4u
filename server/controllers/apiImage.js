@@ -32,10 +32,6 @@ exports.uploadImages = async (req, res) => {
   else {
     console.log("Too many products!");
   }
-  //(6 - (req.files.length + product.img.length)) 
-  //console.log(product.img.size)
-
-
 }
 
 

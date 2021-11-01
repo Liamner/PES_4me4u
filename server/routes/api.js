@@ -74,7 +74,9 @@ module.exports = function(app) {
   // ======================
 
   router.route('/image/:productId')
+    .get()
     .post(upload.array('img',6), imageController.uploadImages)
+    
 
   return router;
 }

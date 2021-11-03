@@ -1,26 +1,23 @@
 import 'react-native';
 import React from 'react';
-import Login from '../LoginScreen';
+import ViewProduct from '../ViewProductScreen';
 import renderer from 'react-test-renderer'
 import {render} from "@testing-library/react-native"
 
 let component
 
-
-describe('<Login/>', ()=> {
+describe('<ViewProduct/>', ()=> {
     beforeEach(() => {
-        component = render(<Login/>);
+        component = render(<ViewProduct/>);
     });
 
     it('ProductRead renders correctly', () =>{
         expect(component).toBeDefined();
-        
-        //expect(component.getByTestId('test2')).toBeDefined(); //se puede poner ids de test a los componentes
     });
 
-    it('landing snapshot test', ()=>{
+    it('ProductRead snapshot test', ()=>{
         const tree = renderer
-        .create(<Login/>)
+        .create(<ViewProduct/>)
         .toJSON();
         expect(tree).toMatchSnapshot();
     });

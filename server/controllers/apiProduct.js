@@ -165,9 +165,9 @@ exports.deleteProduct = async (req, res) => {
     const images = [];
     images.push(product.img)    
     for (let i = 0; i < product.img.length; ++i) {  
-      const res = await Image.findById({_id: product.img[i]});
+      const res = await Image.findByIdAndDelete({_id: product.img[i]});
       console.log(res.public_id)
-      let result = await cloudinary.uploader.destroy(res.public_id);
+      await cloudinary.uploader.destroy(res.public_id);
     }
 
     product.delete();

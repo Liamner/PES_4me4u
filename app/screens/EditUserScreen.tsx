@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Alert, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import GooglePlacesInput from '../components/GooglePlacesInput';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { RootTabScreenProps } from '../types';
 
 export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditUser'>) {
@@ -52,7 +54,9 @@ export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditU
   );
   }
   return (
-    <ScrollView>
+    <ScrollView 
+      keyboardShouldPersistTaps='always'
+    >
       <View 
          style={{
           flexDirection: "row",          
@@ -60,7 +64,7 @@ export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditU
         }}>
           <Text style={styles.title}>Información Básica</Text>
         {image && 
-        <TouchableOpacity style={{marginHorizontal: 100}} onPress={unPickImage}>
+        <TouchableOpacity style={{marginHorizontal: 50}} onPress={unPickImage}>
           <Image style={styles.image} source={{ uri: image }} />
         </TouchableOpacity>  }          
         {!image && 
@@ -88,12 +92,31 @@ export default function EditUserScreen({ navigation }: RootTabScreenProps<'EditU
           onChangeText={onChangeSecondSurname}
           value={secondSurname}
         />   
-        <TextInput
-          label="Ubicacion"
-          style={styles.textInput}       
-          onChangeText={onChangeSecondSurname}
-          value={secondSurname}
-        />     
+        <GooglePlacesAutocomplete
+          styles={{
+              container: {
+              width: '90%',
+              },
+              textInput: {
+              backgroundColor: '#FFFFFF',
+              marginVertical: 15,
+              height: 60,
+              fontSize: 15,
+              flex: 1,
+              },
+          }}
+          placeholder='Ubicación'
+          
+          onPress={(data, details = null) => {
+              // 'details' is provided when fetchDetails = true
+              console.log("data, details                ++++++++++++++++++++");
+              console.log(data, details)
+          }}
+          query={{
+              key: 'AIzaSyC7JAeKR-u7CBU9vmztBqz-BIuhA8qu270',
+              language: 'es',
+          }}
+        />
         <TextInput
           label="Correo Electronico"
           style={styles.textInput}       

@@ -98,4 +98,34 @@ exports.deleteImages = async (req, res) => {
 
 }
 
+exports.updateImages = async (req, res) => {
+  const product = await Product.findById({_id: req.params.productId});
+  try {
+    const imgs = [];
+    imgs.push(req.body.img)
+
+    for (let i = 0; i < imgs.length; ++i) {  
+
+      // DELETE IMAGE
+      const imageID = imgs[i];
+      console.log(ObjectId(imageID))
+
+      // Delete reference of the image
+      await product.img.pull({_id: ObjectId(imageID)});
+
+      // Delete mongoDB Image
+      const res = await Image.findByIdAndDelete({_id: imageID});
+      console.log(res.public_id)
+
+      // Delete Cloudinary Image
+      await cloudinary.uploader.destroy(res.public_id);
+
+      // CREATE NEW IMAGE
+    }
+    
+  } catch (error) {
+    
+  }
+}
+
 exports.updateProduct

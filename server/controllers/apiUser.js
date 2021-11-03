@@ -3,6 +3,7 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const user = require('../models/user.js');
 const app = express();
 
 exports.registerUser = async (req, res) => {
@@ -71,3 +72,33 @@ exports.loginUser = async (req, res) => {
     console.log("Can not login the user");
   }
 }
+/*
+exports.deleteUser = async (req, res) => {
+  let email = req.params.email; 
+  try{
+    User.findById(email, (err, product) =>{
+      if(err) res.status(500).send({message: `The user does not exists ${err}`});
+    })
+    User.remove(err =>{
+        if(err) res.status(500).send({message: `Can not delete the user ${err}`});
+        res.status(200).send({message: 'The user has been delete'});
+    })
+  }
+  catch(err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}
+*/
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete({ _id: req.params.id });
+
+    console.log("Deleted user: " + req.params.id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};

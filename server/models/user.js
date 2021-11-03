@@ -28,18 +28,18 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    location: {
+    latitude: {
         type: String,
         default: 'BARCELONA',
         //required: [true],
     },
+    longitude: {
+        type: String,
+        default: '08028',
+    },
     level: {
         type: String,
         default: '1',
-    },
-    postalCode: {
-        type: String,
-        default: '08028',
     },
     ecoPoints: {
         type: String,

@@ -66,5 +66,16 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
+  // Read Product with id = id
+  router.route('/user/:id')
+    .get(userController.readUser);
+  
+  // Read all products
+  router.route('/user/')
+    .get(userController.readAllUsers);
+ 
+  router.route('/ids/user/')
+    .get(userController.readUsersId);
+
   return router;
 }

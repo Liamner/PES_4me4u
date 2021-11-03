@@ -5,10 +5,4 @@ const imageSchema = new mongoose.Schema({
     url: {type: String}
 });
 
-imageSchema.pre('deleteMany', function(next) {
-    // Remove all the assignment docs that reference the removed person.
-    console.log(this._id)
-    this.model('Product').deleteOne({ product: this._id }, next);
-});
-
 module.exports = mongoose.model('Image', imageSchema);

@@ -1,5 +1,6 @@
-//import mongoose from 'mongoose';
 const mongoose = require('mongoose');
+const Category = require('./category.js');
+var Schema = mongoose.Schema;
 
 const categoryType = {
     values: ['tech', 'house']
@@ -23,10 +24,13 @@ const ProductSchema = new mongoose.Schema({
         type: ['String'],
         enum: categoryType,
         required: true
+        
+        /*type: [Schema.ObjectId],
+        ref: "Category",
+        required: true*/
     },
     description: {
-        type: 'String',
-        required: false
+        type: 'String'
     },
     publishingDate: {
         type: 'Date',
@@ -34,7 +38,7 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: {
-        type: 'String',
+        type: ['String'],
         enum: exchangeTypes,
         required: true
     },
@@ -44,14 +48,12 @@ const ProductSchema = new mongoose.Schema({
     },
     state: {
         type: 'String',
-        enum: stateTypes,
-        required: true
+        enum: stateTypes
     },
     owner: {
         type: 'String'
     }
 });
 
-const Product = mongoose.model('Product', ProductSchema);
 
-export default Product;
+module.exports = mongoose.model('Product', ProductSchema);

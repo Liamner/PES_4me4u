@@ -1,0 +1,28 @@
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './storage/imgs')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, `${file.fieldname}-${uniqueSuffix}.${file.mimetype.split('/')[1]}`);
+  }
+});
+
+
+
+const upload = multer(
+  { storage: storage,
+    fileFilter: (req, file, cb) => {
+      const fileTypes = /jpeg|jpg|png/;
+      const mimetype = fileTypes.test(file.mimetype);
+      if (mimetype) {
+        return cb(null, true);
+      }
+      cb("Error: File not an image");
+    } 
+  }
+);
+
+module.exports = upload;

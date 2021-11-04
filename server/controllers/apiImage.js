@@ -79,7 +79,7 @@ exports.deleteImages = async (req, res) => {
       console.log(ObjectId(imageID))
 
       // Delete reference of the image
-      await product.img.pull({_id: ObjectId(imageID)});
+      await product.img.pull({_id: imageID});
 
       // Delete mongoDB Image
       const res = await Image.findByIdAndDelete({_id: imageID});

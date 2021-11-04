@@ -36,7 +36,6 @@
     "react-native-elements": "^3.4.2",
     "react-native-fast-image": "^8.5.11",
     "react-native-file-upload": "^1.0.4",
-    "react-native-gesture-handler": "~1.10.2",
     "react-native-grid-image-viewer": "^1.2.2",
     "react-native-image-picker": "^4.1.1",
     "react-native-list-view-select": "^1.0.4",

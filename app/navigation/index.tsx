@@ -25,6 +25,7 @@ import ViewProduct from '../screens/ViewProductScreen';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/CreateProductScreen';
+import ProductCard from '../screens/ProductCardScreen';
 	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -125,6 +126,14 @@ function BottomTabNavigator() {
         component={CreateProduct}
         options={{
           title: 'Nuevo Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="ProductCard"
+        component={ProductCard}
+        options={{
+          title: 'Product Card',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

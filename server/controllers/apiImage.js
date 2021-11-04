@@ -88,8 +88,9 @@ exports.deleteImages = async (req, res) => {
       // Delete Cloudinary Image
       await cloudinary.uploader.destroy(res.public_id);
     }
+    product.save();
     console.log(product);
-    res.status(200).json(product);
+    res.status(204).json(product);
   } catch (error) {
     res.status(404).json(error.message);
   

@@ -80,7 +80,6 @@ module.exports = function(app) {
     .get(imageController.getProductImages)
     .post(upload.array('img',6), imageController.uploadImages)
     .delete(imageController.deleteImages)
-    .put(upload.array('img',6) imageController.updateImages)
 
     
 

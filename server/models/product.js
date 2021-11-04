@@ -42,10 +42,14 @@ const ProductSchema = new mongoose.Schema({
         enum: exchangeTypes,
         required: true
     },
-    img: {
+    /*img: {
         type: 'String',
         required: false
-    },
+    },*/
+    img: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Image'
+    }],
     state: {
         type: 'String',
         enum: stateTypes
@@ -54,6 +58,5 @@ const ProductSchema = new mongoose.Schema({
         type: 'String'
     }
 });
-
 
 module.exports = mongoose.model('Product', ProductSchema);

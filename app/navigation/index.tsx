@@ -14,8 +14,19 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
+
+import Login from '../screens/LoginScreen';
+import SignUp from '../screens/SignUpScreen';
+import SignIn from '../screens/SignInScreen'
+import Main from '../screens/MainScreen'
+import EditProduct from '../screens/EditProductScreen';
+import ViewProduct from '../screens/ViewProductScreen';
+import DeleteButton from '../screens/DeleteButtonScreen';
+import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
+import CreateProduct from '../screens/CreateProductScreen';
+	
+
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -23,8 +34,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    >
+     {/* </RootNavigator>*/}
+     <LoginNavigator/>
     </NavigationContainer>
   );
 }
@@ -47,6 +60,28 @@ function RootNavigator() {
   );
 }
 
+const LoginStack = createNativeStackNavigator();
+
+function LoginNavigator() {
+  return(
+    <LoginStack.Navigator screenOptions={{
+        headerStyle: {
+          backgroundColor: '#009387'
+        },
+        headerTintColor: '#fff', 
+        headerTitleStyle: {
+          fontWeight: 'bold'
+        }
+    }}>
+        <LoginStack.Screen name="Login" component = {Login} options={{headerShown: false}}/>
+        <LoginStack.Screen name="SignIn" component = {SignIn} options={{headerShown: false}}/>
+        <LoginStack.Screen name="SignUp" component = {SignUp} options={{title: 'SignUp', headerShown: false}}/>
+        <LoginStack.Screen name="Main" component = {Main} options={{headerShown: false}}/>
+        <LoginStack.Screen name="BottomTab" component = {RootNavigator} options={{headerShown: false}}/>
+    </LoginStack.Navigator>
+  );
+}
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -58,15 +93,16 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+
+      initialRouteName="ViewProduct"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
+        name="ViewProduct"
+        component={ViewProduct}
+        options={({ navigation }: RootTabScreenProps<'ViewProduct'>) => ({
+          title: 'Ver Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
@@ -85,10 +121,34 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
+        name="CreateProduct"
+        component={CreateProduct}
         options={{
-          title: 'Tab Two',
+          title: 'Nuevo Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="EditProduct"
+        component={EditProduct}
+        options={{
+          title: 'Editar Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="DeleteButton"
+        component={DeleteButton}
+        options={{
+          title: 'Borrar Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="ActualizarEstadoProducto"
+        component={ActualizarEstadoProducto}
+        options={{
+          title: 'Actualizar Estado',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

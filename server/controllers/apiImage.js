@@ -124,6 +124,7 @@ exports.updateImages = async (req, res) => {
     }
     
   } catch (error) {
+
     
   }
 }

@@ -1,5 +1,6 @@
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
+const jwt = require('jsonwebtoken')
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -52,6 +53,26 @@ exports.readProductsId = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
+  
+  const authorization = req.get('authorization');
+  let token = null;
+  console.log('Before')
+  //if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+  //  token = authorization.substring(7);
+  //}
+  //console.log('After')
+  //let decodedToken = {};
+  ////try {
+  //  decodedToken  = jwt.verify(token, process.env.SEED_AUTENTICACION);
+  //} catch (error) {
+    
+  //}
+ 
+/*
+  if (!token || decodedToken._id) {
+    res.status(404).json({error: "Not authorized"})
+  }*/
+
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;

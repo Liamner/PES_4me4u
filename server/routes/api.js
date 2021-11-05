@@ -2,17 +2,19 @@ const express = require('express');
 const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
+const imageController = require('../controllers/apiImage.js');
 
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
 const upload = require('../libs/storage.js');
+
 
 module.exports = function(app) {
   const router = express.Router();
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
+    .post(upload.array('img', 6), (validateCreateProduct), productController.createProduct);
 
   router.route('/product/image/:id')
     .get(productController.getImg)
@@ -65,6 +67,21 @@ module.exports = function(app) {
 
   router.route('/login')
     .post(userController.loginUser);
+
+
+  // ======================
+  // ---- Image Routes ----
+  // ======================
+
+  router.route('/image')
+    .get(imageController.getAllImages)
+
+  router.route('/image/:productId')
+    .get(imageController.getProductImages)
+    .post(upload.array('img',6), imageController.uploadImages)
+    .delete(imageController.deleteImages)
+
+    
 
   return router;
 }

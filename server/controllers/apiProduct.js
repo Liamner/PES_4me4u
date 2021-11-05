@@ -1,6 +1,7 @@
 const Product = require('../models/product.js');
+const Image = require('../models/image.js');
 const validateCreateProduct = require('../validators/product.js');
-const jwt = require('jsonwebtoken')
+const cloudinary = require("../libs/cloudinary");
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -17,7 +18,7 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.id });
+    const product = await (await Product.findById({ _id: req.params.id }));
 
     console.log("Reading product: " + req.params.id);
 
@@ -53,46 +54,31 @@ exports.readProductsId = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  
-  const authorization = req.get('authorization');
-  let token = null;
-  console.log('Before')
-  //if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-  //  token = authorization.substring(7);
-  //}
-  //console.log('After')
-  //let decodedToken = {};
-  ////try {
-  //  decodedToken  = jwt.verify(token, process.env.SEED_AUTENTICACION);
-  //} catch (error) {
-    
-  //}
- 
-/*
-  if (!token || decodedToken._id) {
-    res.status(404).json({error: "Not authorized"})
-  }*/
-
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  if (req.file != null) {
-    product.img = '/storage/imgs/' + req.file.filename;
-  } 
- 
   product.state = req.body.state;
   product.owner = req.body.owner;
 
-  //const image = req.file.filename;
-  //console.log(product.img);
-  //console.log(JSON.stringify(req.file));
-
+  // SAVE IMAGE
+  if (req.files != null) {
+    for (let i = 0; i < req.files.length; ++i) {
+      console.log(req.files[i])
+      let file = req.files[i];
+      let result = await cloudinary.uploader.upload(file.path);
+      let image = new Image();
+      image.public_id = result.public_id;
+      image.url = result.url;
+      image.save();
+      product.img.push(image._id);
+    }
+  } 
+ 
   try {
     await product.save();
-
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);
@@ -102,25 +88,22 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getImg = async (req, res) => {
-  const product = await Product.findById({_id: req.params.id});
-  console.log(product);
-  res.render('holaa');
-  //res.render({product});
+  const image = await Image.findById({_id: req.params.id});
+  console.log(image);
 }
 
 exports.updateProduct = async (req, res) => {
   try{
-    console.log('Hola');
-
-    const product = new Product({
-      _id: req.params.id,
-    });
-
     const nname = req.body.name;
     const ncategories = req.body.categories;
     const ndescription = req.body.description;
     const nexchange = req.body.exchange;
     const nimg = req.body.img;
+  
+    const id = req.params.id;
+    const product = await Product.findById(id)
+    console.log("Searching for product to update: " + req.params.id);
+    
 
     if (nname != null)  product.name = nname;
     if (ncategories != null) product.categories = ncategories;
@@ -129,22 +112,18 @@ exports.updateProduct = async (req, res) => {
     if (ndescription != null)product.description = ndescription;
     if (nexchange != null) product.exchange = nexchange;
     if (nimg != null) product.img = nimg;
-
+  
     console.log(product);
-
-    Product.updateOne({_id: req.params.id}, product).then(
-      () => {
-        res.status(201).json({
-          message: 'Update correcto!'
-        });
-      }
-    ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
-      }
-    );
+  
+    try {
+      await product.save();
+    
+      res.status(201).json(product);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the Product");
+    }
     
   } catch (error) {
     res.status(404).json(error.message);
@@ -181,11 +160,19 @@ exports.updateStateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findByIdAndDelete({ _id: req.params.id });
+  try {    
+    let product = await Product.findById({_id: req.params.id})
+    const images = [];
+    images.push(product.img)    
+    for (let i = 0; i < product.img.length; ++i) {  
+      const res = await Image.findByIdAndDelete({_id: product.img[i]});
+      console.log(res.public_id)
+      await cloudinary.uploader.destroy(res.public_id);
+    }
 
+    product.delete();
+    
     console.log("Deleted product: " + req.params.id);
-
     res.status(200).json(product);
   } catch (error) {
     res.status(404).json(error.message);

@@ -3,11 +3,12 @@ const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
 const imageController = require('../controllers/apiImage.js');
+const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
-const upload = require('../libs/storage.js');
-
+const upload = require('../config/storage.js');
+const authenticateJWT = require('../config/authorization.js')
 
 module.exports = function(app) {
   const router = express.Router();
@@ -18,7 +19,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), productController.createProduct);
+    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
 
   router.route('/product/image/:id')
     .get(productController.getImg)
@@ -36,15 +37,15 @@ module.exports = function(app) {
 
   // Update product with id = id
   router.route('/product/update/:id')
-    .put(productController.updateProduct);
+    .put(authenticateJWT, productController.updateProduct);
 
   // Update atribute state of product with id = id
   router.route('/product/updateState/:id')
-    .put(productController.updateStateProduct);
+    .put(authenticateJWT, productController.updateStateProduct);
 
   // Delete product with id = id
   router.route('/product/delete/:id')
-    .delete(productController.deleteProduct);
+    .delete(authenticateJWT, productController.deleteProduct);
 
   // Create new category
   router.route('/category/create/')

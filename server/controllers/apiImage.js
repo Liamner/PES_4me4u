@@ -1,6 +1,6 @@
 const Image = require('../models/image.js');
 const Product = require('../models/product.js');
-const cloudinary = require("../libs/cloudinary");
+const cloudinary = require("../config/cloudinary");
 const { ObjectId } = require('mongodb');
 
 exports.getAllImages = async (req, res) => {
@@ -129,5 +129,3 @@ exports.updateImages = async (req, res) => {
     
   }
 }
-
-exports.updateProduct

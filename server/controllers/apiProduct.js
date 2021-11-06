@@ -1,8 +1,7 @@
 const Product = require('../models/product.js');
 const Image = require('../models/image.js');
 const validateCreateProduct = require('../validators/product.js');
-const cloudinary = require("../libs/cloudinary");
-const jwt = require('jsonwebtoken');
+const cloudinary = require("../config/cloudinary");
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -55,26 +54,6 @@ exports.readProductsId = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const authorization = req.get('Authorization');
-  let token = '';
-
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    token = authorization.substring(7);
-  }
-  //console.log(token)
-  let decodedToken = '';
-  try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
-  } catch (error) {
-    console.log(error);
-  }
-  //console.log(decodedToken)
-
-  if (!token || !decodedToken.usuario._id) {
-    res.status(401).json({error: "Not authorized"});
-    return;
-  }
-
   const product = new Product();
   product.name = req.body.name;
   product.categories = req.body.categories;

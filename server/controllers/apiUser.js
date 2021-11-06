@@ -56,8 +56,8 @@ exports.loginUser = async (req, res) => {
         // Genera el token de autenticación
         let token = jwt.sign({
                 usuario: usuarioDB,
-            }, process.env.SEED_AUTENTICACION, {
-            expiresIn: process.env.CADUCIDAD_TOKEN
+            }, process.env.SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRES
         })
         res.json({
             ok: true,

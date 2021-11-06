@@ -64,7 +64,7 @@ exports.createProduct = async (req, res) => {
   //console.log(token)
   let decodedToken = '';
   try {
-    decodedToken = jwt.verify(token, process.env.SEED_AUTENTICACION);
+    decodedToken = jwt.verify(token, process.env.SECRET);
   } catch (error) {
     console.log(error);
   }

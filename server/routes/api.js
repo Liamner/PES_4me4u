@@ -12,6 +12,10 @@ const upload = require('../libs/storage.js');
 module.exports = function(app) {
   const router = express.Router();
 
+  // ========================
+  // ---- Product Routes ----
+  // ========================
+
   // Create new product
   router.route('/product/create/')
     .post(upload.array('img', 6), (validateCreateProduct), productController.createProduct);
@@ -61,6 +65,10 @@ module.exports = function(app) {
   // Delete category with id = id
   router.route('/category/delete/:id')
     .delete(categoryController.deleteCategory);
+
+  // ======================
+  // ---- USER  Routes ----
+  // ======================
 
   router.route('/register')
     .post(userController.registerUser);

@@ -18,7 +18,7 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await (await Product.findById({ _id: req.params.id }));
+    const product = await Product.findById({ _id: req.params.id }).populate("img");
 
     console.log("Reading product: " + req.params.id);
 

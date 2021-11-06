@@ -1,7 +1,10 @@
 const Product = require('../models/product.js');
 const Image = require('../models/image.js');
+const User = require('../models/user.js');
 const validateCreateProduct = require('../validators/product.js');
 const cloudinary = require("../config/cloudinary");
+const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -61,12 +64,19 @@ exports.createProduct = async (req, res) => {
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
   product.state = req.body.state;
-  product.owner = req.body.owner;
+  
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  
+  console.log(decodedToken)
+  // Assign the current user
+  product.userId = decodedToken.id;
+  product.username = decodedToken.username;
 
   // SAVE IMAGE
   if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
-      console.log(req.files[i])
       let file = req.files[i];
       let result = await cloudinary.uploader.upload(file.path);
       let image = new Image();
@@ -78,7 +88,17 @@ exports.createProduct = async (req, res) => {
   } 
  
   try {
-    await product.save();
+    const newProduct = await product.save();
+    const currentUser =  User.findById({ "_id": ObjectId(product.userId)});
+    console.log(currentUser)
+    currentUser.products.push(newProduct._id);
+
+    //console.log(user.populate(products))
+    //try {
+      await currentUser.save();
+    //} catch (error) {
+      //console.log(error)
+    //}
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);

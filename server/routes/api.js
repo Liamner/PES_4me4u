@@ -77,6 +77,9 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
+    router.route('/user/:id')
+    .get(userController.readUser);
+
 
   // ======================
   // ---- Image Routes ----

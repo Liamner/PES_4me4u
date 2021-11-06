@@ -54,8 +54,12 @@ const ProductSchema = new mongoose.Schema({
         type: 'String',
         enum: stateTypes
     },
-    owner: {
-        type: 'String'
+    userId: {
+        type: Schema.Types.ObjectId, 
+        ref: 'User'
+    },
+    username: {
+        type: String
     }
 });
 

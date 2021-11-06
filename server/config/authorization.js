@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -7,14 +8,14 @@ const authenticateJWT = (req, res, next) => {
 
         jwt.verify(token, process.env.SECRET, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.status(403).json({error: "Wrong Token"});
             }
 
             req.user = user;
             next();
         });
     } else {
-        res.sendStatus(401);
+        res.status(401).json({error: "Do not have permision"});
     }
 };
 

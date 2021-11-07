@@ -57,7 +57,7 @@ exports.loginUser = async (req, res) => {
         const userToken = {
           id: usuarioDB._id,
           username: usuarioDB.userId,
-          products: usuarioDB.products
+          //products: usuarioDB.products
         }
         let token = jwt.sign(userToken, process.env.SECRET, {
             expiresIn: process.env.TOKEN_EXPIRES
@@ -78,7 +78,7 @@ exports.loginUser = async (req, res) => {
 exports.readUser = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
-
+    console.log(user)
     console.log("Reading user: " + req.params.id);
 
     res.status(200).json(user);

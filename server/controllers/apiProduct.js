@@ -69,8 +69,7 @@ exports.createProduct = async (req, res) => {
   const token = authHeader.split(' ')[1];
   const decodedToken = jwt.verify(token, process.env.SECRET);
   
-  console.log(decodedToken)
-  // Assign the current user
+  // Assign the current user to the product
   product.userId = decodedToken.id;
   product.username = decodedToken.username;
 
@@ -89,16 +88,13 @@ exports.createProduct = async (req, res) => {
  
   try {
     const newProduct = await product.save();
-    const currentUser =  User.findById({ "_id": ObjectId(product.userId)});
-    console.log(currentUser)
-    currentUser.products.push(newProduct._id);
-
-    //console.log(user.populate(products))
-    //try {
-      await currentUser.save();
-    //} catch (error) {
-      //console.log(error)
-    //}
+    // Add the product to the user
+    const user = await User.findByIdAndUpdate(
+                            { _id: ObjectId(decodedToken.id) }, 
+                              {$push : {
+                                products: newProduct
+                              }
+                            });
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);
@@ -182,18 +178,36 @@ exports.updateStateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {    
     let product = await Product.findById({_id: req.params.id})
-    const images = [];
-    images.push(product.img)    
-    for (let i = 0; i < product.img.length; ++i) {  
-      const res = await Image.findByIdAndDelete({_id: product.img[i]});
-      console.log(res.public_id)
-      await cloudinary.uploader.destroy(res.public_id);
+    if (!product) {
+      res.status(404).json({error: "Product not find"})
     }
-
-    product.delete();
-    
-    console.log("Deleted product: " + req.params.id);
-    res.status(200).json(product);
+    else {
+      const authHeader = req.headers.authorization;
+      const token = authHeader.split(' ')[1];
+      const decodedToken = jwt.verify(token, process.env.SECRET); 
+  
+      if (product.userId == decodedToken.id) {
+        const images = [];
+        images.push(product.img)    
+        for (let i = 0; i < product.img.length; ++i) {  
+          const res = await Image.findByIdAndDelete({_id: product.img[i]});
+          await cloudinary.uploader.destroy(res.public_id);
+          console.log("Deleted product: " + req.params.id);
+        }
+        
+        await User.findByIdAndUpdate(
+                              { _id: ObjectId(decodedToken.id) }, 
+                                {$pull : {
+                                  products: product._id
+                                }
+                              });
+      } else {
+        res.status(401).json({error: "Do not have permission"})
+      }
+     
+      product.delete();
+      res.status(200).json(product);
+    }
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

@@ -18,12 +18,11 @@ exports.getAllImages = async (req, res) => {
 
 exports.getProductImages = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.productId});
+    const images = await Product.findById({ _id: req.params.productId}).populate('img');
 
     console.log("Reading product: " + req.params.productId);
-    
-
-    res.status(200).json(image);
+  
+    res.status(200).json(images.img);
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
@@ -68,29 +67,34 @@ exports.uploadImages = async (req, res) => {
 
 
 exports.deleteImages = async (req, res) => {
-  const product = await Product.findById({_id: req.params.productId});
-  // Buscar en el producto las imagenes correspondientes o se comprueba en pantalla
-  // Hay que pasarlo como array    
   try {
-    const imgs = [];
-    imgs.push(req.body.img)
-    for (let i = 0; i < imgs.length; ++i) {  
-      const imageID = imgs[i];
-      console.log(ObjectId(imageID))
-
-      // Delete reference of the image
-      await product.img.pull({_id: imageID});
-
-      // Delete mongoDB Image
-      const res = await Image.findByIdAndDelete({_id: imageID});
-      console.log(res.public_id)
-
-      // Delete Cloudinary Image
-      await cloudinary.uploader.destroy(res.public_id);
+    const product = await Product.findById({_id: req.params.productId});
+    
+    if (product.userId == req.user.id) {
+      const imgs = [];
+      imgs.push(req.body.img)
+      for (let i = 0; i < imgs.length; ++i) {  
+        const imageID = imgs[i];
+        console.log(ObjectId(imageID))
+  
+        // Delete reference of the image
+        await product.img.pull({_id: imageID});
+  
+        // Delete mongoDB Image
+        const res = await Image.findByIdAndDelete({_id: imageID});
+        console.log(res.public_id)
+  
+        // Delete Cloudinary Image
+        await cloudinary.uploader.destroy(res.public_id);
+      }
+      product.save();
+      console.log(product);
+      res.status(204).json(product);
     }
-    product.save();
-    console.log(product);
-    res.status(204).json(product);
+    else {
+      res.status(403).json({error: "Do not have permission"})
+      return;
+    }
   } catch (error) {
     res.status(404).json(error.message);
   
@@ -104,7 +108,6 @@ exports.updateImages = async (req, res) => {
   try {
     const imgs = [];
     imgs.push(req.body.img)
-
     for (let i = 0; i < imgs.length; ++i) {  
 
       // DELETE IMAGE
@@ -125,7 +128,7 @@ exports.updateImages = async (req, res) => {
     }
     
   } catch (error) {
-
-    
+    res.status(404).json(error.message);
+    console.log(error.message); 
   }
 }

@@ -77,8 +77,12 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
-    router.route('/user/:id')
+  router.route('/user/:id')
     .get(userController.readUser);
+  
+  router.route('/user/:id/products')
+    .get(userController.getUserProducts)
+    
 
 
   // ======================
@@ -93,7 +97,7 @@ module.exports = function(app) {
     .post(upload.array('img',6), imageController.uploadImages)
     .delete(imageController.deleteImages)
 
-    
+  
 
   return router;
 }

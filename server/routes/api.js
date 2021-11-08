@@ -14,6 +14,10 @@ module.exports = function(app) {
   router.route('/product/create/')
     .post(upload.single('img'), (validateCreateProduct), productController.createProduct);
 
+
+  router.route('/product/name/:name')
+    .get(productController.readProductsByName)
+
   router.route('/product/image/:id')
     .get(productController.getImg)
 

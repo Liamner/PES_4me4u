@@ -48,7 +48,11 @@ let usuarioSchema = new Schema({
     score: {
         type: String,
         default: '5.0',
-    }
+    },
+    products: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+    }]
 });
 
 // elimina la key password del objeto que retorna al momento de crear un usuario

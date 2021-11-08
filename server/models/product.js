@@ -42,16 +42,24 @@ const ProductSchema = new mongoose.Schema({
         enum: exchangeTypes,
         required: true
     },
-    img: {
+    /*img: {
         type: 'String',
         required: false
-    },
+    },*/
+    img: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Image'
+    }],
     state: {
         type: 'String',
         enum: stateTypes
     },
-    owner: {
-        type: 'String'
+    userId: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Usuario'
+    },
+    username: {
+        type: String
     }
 });
 

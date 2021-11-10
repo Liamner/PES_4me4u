@@ -1,7 +1,10 @@
 const Product = require('../models/product.js');
 const Image = require('../models/image.js');
+const User = require('../models/user.js');
 const validateCreateProduct = require('../validators/product.js');
-const cloudinary = require("../libs/cloudinary");
+const cloudinary = require("../config/cloudinary");
+const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -61,12 +64,14 @@ exports.createProduct = async (req, res) => {
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
   product.state = req.body.state;
-  product.owner = req.body.owner;
+  
+  // Assign the current user to the product
+  product.userId = req.user.id;
+  product.username = req.user.username;
 
   // SAVE IMAGE
   if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
-      console.log(req.files[i])
       let file = req.files[i];
       let result = await cloudinary.uploader.upload(file.path);
       let image = new Image();
@@ -78,7 +83,14 @@ exports.createProduct = async (req, res) => {
   } 
  
   try {
-    await product.save();
+    const newProduct = await product.save();
+    // Add the product to the user
+    const user = await User.findByIdAndUpdate(
+                            { _id: ObjectId(req.user.id) }, 
+                              {$push : {
+                                products: newProduct
+                              }
+                            });
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);
@@ -104,16 +116,23 @@ exports.updateProduct = async (req, res) => {
     const product = await Product.findById(id)
     console.log("Searching for product to update: " + req.params.id);
     
+    
 
-    if (nname != null)  product.name = nname;
-    if (ncategories != null) product.categories = ncategories;
-    console.log(ncategories);
-  
-    if (ndescription != null)product.description = ndescription;
-    if (nexchange != null) product.exchange = nexchange;
-    if (nimg != null) product.img = nimg;
-  
-    console.log(product);
+    if (product.userId == req.user.id) {
+      if (nname != null)  product.name = nname;
+      if (ncategories != null) product.categories = ncategories;
+      console.log(ncategories);
+    
+      if (ndescription != null)product.description = ndescription;
+      if (nexchange != null) product.exchange = nexchange;
+      if (nimg != null) product.img = nimg;
+    
+      console.log(product);
+    } else {
+      res.status(403).json({error: "Do not have permission"})
+      return;
+    }
+    
   
     try {
       await product.save();
@@ -137,16 +156,21 @@ exports.updateStateProduct = async (req, res) => {
   
     const id = req.params.id;
     const product = await Product.findById(id)
-    console.log("Searching for product to update its state: " + req.params.id);
-    
-    product.state = nstate;
-  
-    console.log(product);
-  
     try {
-      await product.save();
-    
-      res.status(201).json(product);
+      
+
+      if (product.userId == req.user.id) {
+        console.log("Searching for product to update its state: " + req.params.id);
+        product.state = nstate;
+        console.log(product);
+        await product.save();
+        res.status(201).json(product);
+      } else {
+        res.status(403).json({error: "Do not have permission"})
+        return;
+      }
+
+      
     } catch (error) {
       res.status(409).json(error.message);
     
@@ -162,18 +186,35 @@ exports.updateStateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   try {    
     let product = await Product.findById({_id: req.params.id})
-    const images = [];
-    images.push(product.img)    
-    for (let i = 0; i < product.img.length; ++i) {  
-      const res = await Image.findByIdAndDelete({_id: product.img[i]});
-      console.log(res.public_id)
-      await cloudinary.uploader.destroy(res.public_id);
-    }
-
-    product.delete();
-    
-    console.log("Deleted product: " + req.params.id);
-    res.status(200).json(product);
+    /*if (!product) {
+      res.status(404).json({error: "Product not find"})
+    }*/
+    //else {
+      
+      if (product.userId == req.user.id) {
+        console.log("before")
+        const images = [];
+        images.push(product.img)    
+        for (let i = 0; i < product.img.length; ++i) {  
+          const res = await Image.findByIdAndDelete({_id: product.img[i]});
+          await cloudinary.uploader.destroy(res.public_id);
+          console.log("Deleted product: " + req.params.id);
+        }
+        
+        await User.findByIdAndUpdate(
+                              { _id: ObjectId(req.user.id) }, 
+                                {$pull : {
+                                  products: product._id
+                                }
+                              });
+      } else {
+        res.status(403).json({error: "Do not have permission"})
+        return;
+      }
+     
+      product.delete();
+      res.status(200).json(product);
+   // }
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

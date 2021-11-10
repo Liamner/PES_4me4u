@@ -100,7 +100,6 @@ exports.deleteImages = async (req, res) => {
   
       console.log("Can not find the images");
   }
-
 }
 
 exports.updateImages = async (req, res) => {

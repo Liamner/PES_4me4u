@@ -47,12 +47,12 @@ exports.uploadImages = async (req, res) => {
         let image = new Image();
         image.public_id = result.public_id;
         image.url = result.url;
-        image.save();
+        await image.save();
 
         // Add reference to the product
         product.img.push(image._id);
       }
-      product.save();
+      await product.save();
       res.status(201).json(product);
     } catch (error) {
       res.status(409).json(error.message);
@@ -87,7 +87,7 @@ exports.deleteImages = async (req, res) => {
         // Delete Cloudinary Image
         await cloudinary.uploader.destroy(res.public_id);
       }
-      product.save();
+      await product.save();
       console.log(product);
       res.status(204).json(product);
     }
@@ -100,17 +100,51 @@ exports.deleteImages = async (req, res) => {
   
       console.log("Can not find the images");
   }
+
 }
 
 exports.updateImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
+  const deleteImgs = req.body.oldImgs;
+  //const newImgs = req.files.length;
   try {
     const imgs = [];
-    imgs.push(req.body.img)
-    for (let i = 0; i < imgs.length; ++i) {  
+    imgs.push(deleteImgs)
+    // DELETE IMGS
+    console.log(imgs)
+      for (let i = 0; i < imgs.length; ++i) {  
+        const imageID = imgs[i];
+        console.log(imgs[i])
+  
+        // Delete reference of the image
+        /*await product.img.pull({_id: imageID});
+  
+        // Delete mongoDB Image
+        const res = await Image.findByIdAndDelete({_id: imageID});
+        console.log(res.public_id)
+  
+        // Delete Cloudinary Image
+        await cloudinary.uploader.destroy(res.public_id);*/
+      }
+      /*for (let i = 0; i < newFiles; ++i) {
+        console.log(req.files[i])
+        let file = req.files[i];
 
+        // Save Image in Cloudinary
+        let result = await cloudinary.uploader.upload(file.path);
+        
+        // Save image in mongoDB
+        let image = new Image();
+        image.public_id = result.public_id;
+        image.url = result.url;
+        await image.save();
+
+        // Add reference to the product
+        product.img.push(image._id);
+      }*/
+      await product.save();
       // DELETE IMAGE
-      const imageID = imgs[i];
+     /* const imageID = imgs[i];
       console.log(ObjectId(imageID))
 
       // Delete reference of the image
@@ -124,9 +158,10 @@ exports.updateImages = async (req, res) => {
       await cloudinary.uploader.destroy(res.public_id);
 
       // CREATE NEW IMAGE
+      */
     }
     
-  } catch (error) {
+   catch (error) {
     res.status(404).json(error.message);
     console.log(error.message); 
   }

@@ -3,7 +3,6 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const app = express();
 
 exports.registerUser = async (req, res) => {
   let body = req.body;

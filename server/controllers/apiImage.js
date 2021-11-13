@@ -106,51 +106,36 @@ exports.deleteImages = async (req, res) => {
 exports.updateImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
   const deleteImgs = req.body.oldImgs;
-  //const newImgs = req.files.length;
   try {
     const imgs = [];
     imgs.push(deleteImgs)
-    // DELETE IMGS
+    
     console.log(imgs)
       for (let i = 0; i < imgs.length; ++i) {  
         const imageID = imgs[i];
         console.log(imageID)
-
-
   
-        // Delete reference of the image
+        // DELETE IMAGE
         await product.img.pull({_id: imageID});
-  
-        // Delete mongoDB Image
         const res = await Image.findByIdAndDelete({_id: imageID});
-        console.log(res)
-  
-        // Delete Cloudinary Image
         await cloudinary.uploader.destroy(res.public_id);
-      }
-      await product.save();
-      console.log(product);
-      for (let i = 0; i < req.files.length; ++i) {
-        let file = req.files[i];
 
-        // Save Image in Cloudinary
+        //  SAVE IMAGE
+        let file = req.files[i];
         let result = await cloudinary.uploader.upload(file.path);
-        
-        // Save image in mongoDB
         let image = new Image();
         image.public_id = result.public_id;
         image.url = result.url;
         await image.save();
-        // Add reference to the product
+
         product.img.push(image._id);
+        
       }
       await product.save();
       console.log(product);
       
       res.status(201).json(product);
-
     }
-    
    catch (error) {
     res.status(404).json(error.message);
     console.log(error.message); 

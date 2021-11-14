@@ -14,21 +14,21 @@ import axios from 'axios';
 
 
 export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<'ViewUserScreen'>) {
-  //Datos
-/*    const [data, setData] = React.useState([
-        {
-        userId: 'identificadorInedintificable',    
-        email: 'a@mail.algo',    
-        pwd: 'contraseña',//contraseña
-        role:'USER',
-        location: 'BARCELONA',
-        level: '1',
-        postalCode: '08028',
-        ecoPoints: '10',
-        score: '5.0'
-        }
-    ]);*/
+  
+  const [data, setData] = React.useState([ {id: 0 /* " AQUI-EL-ID-DEL-USUARIO-A-MOSTRAR " */ }]);
+
     //Datos de un usuario
+
+
+    const [email, setEmail] = useState('Cargando...');
+    const [location, setLocation] = useState('Cargando...');
+    const [level, setLevel] = useState('Cargando...');
+    const [postalCode, setPostalCode] = useState('Cargando...');
+    const [ecoPoints, setEcoPoints] = useState('Cargando...');
+    const [score, setScore] = useState('Cargando...');
+    const [latitude, setLatitude] = useState(39.03385);
+    const [longitude, setLongitude] = useState(125.75432);
+   /* 
     const email = 'a@mail.algo'
     const location = 'Pyongyang'
     const level = '1'
@@ -37,7 +37,7 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
     const score = '5.0'
     const latitude = 39.03385
     const longitude = 125.75432
-
+*/
 
     const [products, setproducts] = React.useState([
       {
@@ -73,7 +73,33 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
       };
 
 
+  const getUserInfo = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + id );
+    //Datos de usuario
 
+    setEmail(response.data.email);
+    setLocation(response.data.location);
+    setLevel(response.data.level);
+    setPostalCode(response.data.postalCode);
+    setEcoPoints(response.data.ecoPoints);
+    setScore(response.data.score);
+    setLatitude(response.data.latitude);
+    setLongitude(response.data.longitude);
+    
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+/*    
+   //en caso de tener datos desconocidos
+
+   if(response.data.XXX == null) setXXX('Desconocido');
+    else setXXX(response.data.XXX);
+    */
+
+
+
+  };
+  getUserInfo()
 
 
 

@@ -47,6 +47,9 @@ module.exports = function(app) {
   router.route('/product/delete/:id')
     .delete(authenticateJWT, productController.deleteProduct);
 
+  router.route('/product/name/:name')
+    .get(productController.readProductsByName)
+
   // Create new category
   router.route('/category/create/')
     .post(validateCreateCategory, categoryController.createCategory);

@@ -15,10 +15,10 @@ import axios from 'axios';
 
 export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<'ViewUserScreen'>) {
   
-  const [data, setData] = React.useState([ {id: 0 /* " AQUI-EL-ID-DEL-USUARIO-A-MOSTRAR " */ }]);
 
     //Datos de un usuario
 
+    const [id, setid] = useState('6186d4d5f501eb82cb4b2c13');
 
     const [email, setEmail] = useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
@@ -74,7 +74,8 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
 
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + id );
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
+//    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
 
     setEmail(response.data.email);
@@ -83,8 +84,12 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
     setPostalCode(response.data.postalCode);
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
-    setLatitude(response.data.latitude);
-    setLongitude(response.data.longitude);
+
+    if(response.data.latitude == null) setLatitude(39.03385);
+    else setLatitude(response.data.latitude);
+
+    if(response.data.longitude == null) setLongitude(125.75432);
+    else setLongitude(response.data.longitude);
     
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
@@ -99,6 +104,7 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
 
 
   };
+  
   getUserInfo()
 
 

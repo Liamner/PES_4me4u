@@ -7,7 +7,6 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 export default function SearchProduct({ navigation }: RootTabScreenProps<'SearchProduct'>) {
-	const [selectedValue, setSelectedValue] = useState("java");
 	
   return (
     <View style={styles.container}>
@@ -15,7 +14,7 @@ export default function SearchProduct({ navigation }: RootTabScreenProps<'Search
 				onChangeText={()=>console.log("Texto cambiado")}
 				placeholder="Buscar..."
 			/>
-			<View>
+			<View style={styles.row}>
 				<Button
 					onPress={()=>console.log("Buscar por categoria")}
 					title="Categoria"
@@ -24,14 +23,6 @@ export default function SearchProduct({ navigation }: RootTabScreenProps<'Search
 					onPress={()=>console.log("Buscar por tipo intercambio")}
 					title="Tipo intercambio"
 				/>
-				<Picker
-					selectedValue={selectedValue}
-					style={{ height: 50, width: 150 }}
-					onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-				>
-					<Picker.Item label="Java" value="java" />
-					<Picker.Item label="JavaScript" value="js" />
-      </Picker>
 			</View>
       <ScrollView>
         <Text>Resultados</Text>
@@ -44,7 +35,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-  }
+  },
+  row: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginHorizontal: '10%',
+    marginVertical: 5,
+  },
 });
 
 

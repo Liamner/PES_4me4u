@@ -1,4 +1,5 @@
 const {check, validationResult} = require('express-validator');
+const category = require('../models/category');
 
 exports.validateCreateProduct = [
     check('name')
@@ -8,7 +9,7 @@ exports.validateCreateProduct = [
     check('categories')
         .exists()
         .not()
-        .isEmpty(),
+        .isEmpty(),    
     check('exchange')
         .exists()
         .not()

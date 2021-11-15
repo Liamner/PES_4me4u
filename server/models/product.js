@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Category = require('./category.js');
 const Type = require('./type.js');
-var Schema = mongoose.Schema;
+//var Schema = mongoose.Schema;
+/* consulta aixoo!: https://cathow.dev/mangosos-con-modelado-de-datos-de-objetos-nodejs/*/
 
-/*
 const categoryType = {
     values: ['tech', 'house']
 }
@@ -11,7 +11,7 @@ const categoryType = {
 const exchangeTypes = {
     values: ['present', 'exchange', 'provide']
 }
-*/
+
 
 const stateTypes = {
     values: ['available', 'reserved', 'provide']
@@ -28,9 +28,11 @@ const ProductSchema = new mongoose.Schema({
         /*type: ['String'],
         enum: categoryType,
         required: true*/
-        type: [Schema.name],
+       /* type: [Schema.name],
         ref: "Category",
-        required: true
+        required: true*/
+        type: mongoose.Schema.Types.ObjectId, ref: 'Category',
+        
     },
     description: {
         type: 'String'
@@ -46,9 +48,10 @@ const ProductSchema = new mongoose.Schema({
         enum: exchangeTypes,
         required: true*/
         
-        type: [Schema.name],
+       /* type: [Schema.name],
         ref: "Type",
-        required: true
+        required: true*/
+        type: mongoose.Schema.Types.ObjectId, ref: 'Type' 
     },
     img: {
         type: 'String',

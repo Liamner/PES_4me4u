@@ -1,5 +1,7 @@
+const { response } = require('express');
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
+const { readCategory } = require('./apiCategory.js');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -53,6 +55,8 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
+  //const category = readCategory(req.body.categories);
+  //category.products.push(); 
   product.name = req.body.name;
   product.categories = req.body.categories;
   product.description = req.body.description;
@@ -61,10 +65,10 @@ exports.createProduct = async (req, res) => {
   if (req.file != null) {
     product.img = '/storage/imgs/' + req.file.filename;
   } 
- 
+  
   product.state = req.body.state;
   product.owner = req.body.owner;
-
+  
   //const image = req.file.filename;
   //console.log(product.img);
   //console.log(JSON.stringify(req.file));

@@ -6,7 +6,6 @@ const TypeSchema = new mongoose.Schema({
         required: true
     },
     products: {
-        //atencion falta linkear con productos
         type: ['String'],
         required: false
     }

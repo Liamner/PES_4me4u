@@ -30,6 +30,10 @@ module.exports = function(app) {
   router.route('/ids/product/')
     .get(productController.readProductsId);
 
+   // Read products filtered
+   router.route('/filtered/product/')
+   .get(productController.readProductsFiltered);
+
   // Update product with id = id
   router.route('/product/update/:id')
     .put(productController.updateProduct);

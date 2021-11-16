@@ -6,7 +6,7 @@ const CategorySchema = new mongoose.Schema({
         required: true
     },
     products: {
-        //atencio falta linkejar amb productes
+        
         type: ['String'],
         required: false
     }

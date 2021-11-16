@@ -1,6 +1,8 @@
 const { response } = require('express');
-const category = require('../models/category.js');
+const { check } = require('express-validator');
+const Category = require('../models/category.js');
 const Product = require('../models/product.js');
+const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
 const { readCategory } = require('./apiCategory.js');
 
@@ -32,9 +34,11 @@ exports.readProduct = async (req, res) => {
 
 exports.readProductsFiltered = async (req, res) => {
   try {
-    const product = await Product.find({ filter: req.params.filter });
-    console.log("Reading products with filter: " + req.paramas.filter);
-
+    console.log(req.body.name);
+    //const product = await Product.find({ name: req.body.name , categories: req.body.categories});
+    const product = await Product.find ({ categories: req.body.categories }) 
+    //const prod = Product.find ({ name: req.body.name });
+    console.log("Reading products with filter: " + req.body.name);
     res.status(200).json(product);
   } catch (error) {
     res.status(404).json(error.message);
@@ -56,24 +60,13 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  //const category = readCategory(req.body.categories);
-  //category.products.push(); 
+  
   product.name = req.body.name;
- 
-  
-  /*category.findById(req.body.categories, (req, categoria) => {console.log("hola")});
- //console.log(cat);
-  if (cat != null){ console.log(req.body.categories); product.categories = req.body.categories;}
-  else res.status(404).json({error:'category not found'})*/
-  
+  product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
- 
-  /*const exg = exchange.findById(req.body.exchange);
- 
-  if (exg != null){ console.log(req.body.exchange); product.exchange = req.body.exchange;}
-  else res.status(404).json({error:'exchange not found'})*/
+  
 
   if (req.file != null) {
     product.img = '/storage/imgs/' + req.file.filename;
@@ -85,13 +78,18 @@ exports.createProduct = async (req, res) => {
   //const image = req.file.filename;
   //console.log(product.img);
   //console.log(JSON.stringify(req.file));
-  
-  console.log(product);
-  try {
-    
-    await product.save();
    
-    res.status(201).json(product);
+  try {
+  const category = await Category.findById({_id:req.body.categories});
+  if (category == null) res.status(404).json({error:"category not found"});
+
+  const type = await Type.findById({_id:req.body.exchange});
+  if (type == null) res.status(404).json({error:"type not found"});
+
+  if (category != null && type != null) {
+    await product.save();
+    res.status(201).json(product);}
+
   } catch (error) {
     res.status(409).json(error.message);
 

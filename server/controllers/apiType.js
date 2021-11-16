@@ -27,17 +27,17 @@ exports.readAllTypes = async (req, res) => {
   }
   
   exports.createType = async (req, res) => {
-    // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
-    const { name, products} = req.body;
+
     const type = new Type();
-    type.name = name;
-    //falta vincular productes!
+    type.name = req.body.name;
+
     console.log(type);
   
     try {
       await type.save();
   
       res.status(201).json(type);
+
     } catch (error) {
       res.status(409).json(error.message);
       
@@ -46,7 +46,7 @@ exports.readAllTypes = async (req, res) => {
   }
   
   exports.updateType = async (req, res) => {
-  
+
   }
   
   exports.deleteType = async (req, res) => {

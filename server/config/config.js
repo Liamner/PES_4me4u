@@ -21,10 +21,10 @@ process.env.URLDB = urlDB;
 // CADUCIDAD DEL TOKEN
 // ======================
 
-process.env.CADUCIDAD_TOKEN = '48h';
+//process.env.CADUCIDAD_TOKEN = '48h';
 
 // ======================
 // SEED DE AUTENTICACIÓN
 // ======================
 
-process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION ||  'este-es-el-seed-desarrollo';
+//process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION ||  'este-es-el-seed-desarrollo';

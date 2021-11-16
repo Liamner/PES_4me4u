@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
+require('mongoose-double')(mongoose);
 
 let rolesValidos = {
     values: ["ADMIN", "USER"],
@@ -48,6 +49,18 @@ let usuarioSchema = new Schema({
     score: {
         type: String,
         default: '5.0',
+    },
+    products: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+    }],
+    latitude: {
+        type: mongoose.Schema.Types.Double,
+        default: 37.78825
+    },
+    longitude: {
+        type: mongoose.Schema.Types.Double,
+        default: -122.4324
     }
 });
 

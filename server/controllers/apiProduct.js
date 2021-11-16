@@ -1,5 +1,10 @@
 const Product = require('../models/product.js');
+const Image = require('../models/image.js');
+const User = require('../models/user.js');
 const validateCreateProduct = require('../validators/product.js');
+const cloudinary = require("../config/cloudinary");
+const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongodb');
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -16,7 +21,7 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.id });
+    const product = await Product.findById({ _id: req.params.id }).populate("img");
 
     console.log("Reading product: " + req.params.id);
 
@@ -58,20 +63,34 @@ exports.createProduct = async (req, res) => {
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
-  if (req.file != null) {
-    product.img = '/storage/imgs/' + req.file.filename;
+  product.state = req.body.state;
+  
+  // Assign the current user to the product
+  product.userId = req.user.id;
+  product.username = req.user.username;
+
+  // SAVE IMAGE
+  if (req.files != null) {
+    for (let i = 0; i < req.files.length; ++i) {
+      let file = req.files[i];
+      let result = await cloudinary.uploader.upload(file.path);
+      let image = new Image();
+      image.public_id = result.public_id;
+      image.url = result.url;
+      image.save();
+      product.img.push(image._id);
+    }
   } 
  
-  product.state = req.body.state;
-  product.owner = req.body.owner;
-
-  //const image = req.file.filename;
-  //console.log(product.img);
-  //console.log(JSON.stringify(req.file));
-
   try {
-    await product.save();
-
+    const newProduct = await product.save();
+    // Add the product to the user
+    const user = await User.findByIdAndUpdate(
+                            { _id: ObjectId(req.user.id) }, 
+                              {$push : {
+                                products: newProduct
+                              }
+                            });
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);
@@ -81,67 +100,39 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getImg = async (req, res) => {
-  const product = await Product.findById({_id: req.params.id});
-  console.log(product);
-  res.render('holaa');
-  //res.render({product});
+  const image = await Image.findById({_id: req.params.id});
+  console.log(image);
 }
 
 exports.updateProduct = async (req, res) => {
   try{
-    console.log('Hola');
-
-    const product = new Product({
-      _id: req.params.id,
-    });
-
     const nname = req.body.name;
     const ncategories = req.body.categories;
     const ndescription = req.body.description;
     const nexchange = req.body.exchange;
     const nimg = req.body.img;
-
-    if (nname != null)  product.name = nname;
-    if (ncategories != null) product.categories = ncategories;
-    console.log(ncategories);
-  
-    if (ndescription != null)product.description = ndescription;
-    if (nexchange != null) product.exchange = nexchange;
-    if (nimg != null) product.img = nimg;
-
-    console.log(product);
-
-    Product.updateOne({_id: req.params.id}, product).then(
-      () => {
-        res.status(201).json({
-          message: 'Update correcto!'
-        });
-      }
-    ).catch(
-      (error) => {
-        res.status(400).json({
-          error: error
-        });
-      }
-    );
-    
-  } catch (error) {
-    res.status(404).json(error.message);
-    console.log(error.message);
-  }
-};
-
-exports.updateStateProduct = async (req, res) => {
-  try{
-    const nstate = req.body.state;
   
     const id = req.params.id;
     const product = await Product.findById(id)
-    console.log("Searching for product to update its state: " + req.params.id);
+    console.log("Searching for product to update: " + req.params.id);
     
-    product.state = nstate;
-  
-    console.log(product);
+    
+
+    if (product.userId == req.user.id) {
+      if (nname != null)  product.name = nname;
+      if (ncategories != null) product.categories = ncategories;
+      console.log(ncategories);
+    
+      if (ndescription != null)product.description = ndescription;
+      if (nexchange != null) product.exchange = nexchange;
+      if (nimg != null) product.img = nimg;
+    
+      console.log(product);
+    } else {
+      res.status(403).json({error: "Do not have permission"})
+      return;
+    }
+    
   
     try {
       await product.save();
@@ -159,15 +150,86 @@ exports.updateStateProduct = async (req, res) => {
   }
 };
 
-exports.deleteProduct = async (req, res) => {
-  try {
-    const product = await Product.findByIdAndDelete({ _id: req.params.id });
+exports.updateStateProduct = async (req, res) => {
+  try{
+    const nstate = req.body.state;
+  
+    const id = req.params.id;
+    const product = await Product.findById(id)
+    try {
+      
 
-    console.log("Deleted product: " + req.params.id);
+      if (product.userId == req.user.id) {
+        console.log("Searching for product to update its state: " + req.params.id);
+        product.state = nstate;
+        console.log(product);
+        await product.save();
+        res.status(201).json(product);
+      } else {
+        res.status(403).json({error: "Do not have permission"})
+        return;
+      }
 
-    res.status(200).json(product);
+      
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the Product");
+    }
+    
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
 };
+
+exports.deleteProduct = async (req, res) => {
+  try {    
+    let product = await Product.findById({_id: req.params.id})
+    /*if (!product) {
+      res.status(404).json({error: "Product not find"})
+    }*/
+    //else {
+      
+      if (product.userId == req.user.id) {
+        console.log("before")
+        const images = [];
+        images.push(product.img)    
+        for (let i = 0; i < product.img.length; ++i) {  
+          const res = await Image.findByIdAndDelete({_id: product.img[i]});
+          await cloudinary.uploader.destroy(res.public_id);
+          console.log("Deleted product: " + req.params.id);
+        }
+        
+        await User.findByIdAndUpdate(
+                              { _id: ObjectId(req.user.id) }, 
+                                {$pull : {
+                                  products: product._id
+                                }
+                              });
+      } else {
+        res.status(403).json({error: "Do not have permission"})
+        return;
+      }
+     
+      product.delete();
+      res.status(200).json(product);
+   // }
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readProductsByName = async (req, res) => {
+  try {
+    const filter = req.params.name;
+    console.log(filter)
+    const product = await Product.find({name: {$regex : filter}})
+    console.log(product)
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+}

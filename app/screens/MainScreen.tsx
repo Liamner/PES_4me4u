@@ -1,8 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function MainScreen({ navigation, route, token }) {
-    const { Id, userId, email, pwd, role } = route.params;
+export default function MainScreen({navigation, route}) {
+    const {Id, userId, email, pwd, role} = route.params;
     return (
         <View style={styles.main}>
             <Text>Hola {userId} </Text>

@@ -27,7 +27,7 @@ const logoImage = require('../assets/images/logo.png')
         .then((result) => {
             const {type, user} = result;
             if (type === 'success') {
-                console.log(user.name);
+                console.log(result.accessToken);
                 let u = {
                     Id: result.user.id,
                     userId: result.user.name, 

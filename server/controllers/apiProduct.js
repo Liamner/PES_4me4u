@@ -1,4 +1,5 @@
 const { response } = require('express');
+const category = require('../models/category.js');
 const Product = require('../models/product.js');
 const validateCreateProduct = require('../validators/product.js');
 const { readCategory } = require('./apiCategory.js');
@@ -58,24 +59,38 @@ exports.createProduct = async (req, res) => {
   //const category = readCategory(req.body.categories);
   //category.products.push(); 
   product.name = req.body.name;
-  product.categories = req.body.categories;
+ 
+  
+  /*category.findById(req.body.categories, (req, categoria) => {console.log("hola")});
+ //console.log(cat);
+  if (cat != null){ console.log(req.body.categories); product.categories = req.body.categories;}
+  else res.status(404).json({error:'category not found'})*/
+  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
+ 
+  /*const exg = exchange.findById(req.body.exchange);
+ 
+  if (exg != null){ console.log(req.body.exchange); product.exchange = req.body.exchange;}
+  else res.status(404).json({error:'exchange not found'})*/
+
   if (req.file != null) {
     product.img = '/storage/imgs/' + req.file.filename;
   } 
-  
+
   product.state = req.body.state;
   product.owner = req.body.owner;
   
   //const image = req.file.filename;
   //console.log(product.img);
   //console.log(JSON.stringify(req.file));
-
+  
+  console.log(product);
   try {
+    
     await product.save();
-
+   
     res.status(201).json(product);
   } catch (error) {
     res.status(409).json(error.message);

@@ -44,14 +44,14 @@ const ProductSchema = new mongoose.Schema({
     },
     exchange: {
 
-        /*type: ['String'],
+        type: ['String'],
         enum: exchangeTypes,
-        required: true*/
+        required: true
         
-       /* type: [Schema.name],
+      /* type: [Schema.name],
         ref: "Type",
         required: true*/
-        type: mongoose.Schema.Types.ObjectId, ref: 'Type' 
+        //type: mongoose.Schema.Types.ObjectId, ref: 'Type' 
     },
     img: {
         type: 'String',

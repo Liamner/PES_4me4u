@@ -13,6 +13,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
+  const [latitude, setLatitude] = useState(0.0);
+  const [longitude, setLongitude] = useState(0.0);
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
@@ -113,6 +115,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid);
     //Required
     setUser(response.data.userId);
+    setLatitude(response.data.latitude);
+    setLongitude(response.data.longitude);
   };
 
   getProductInfo()
@@ -189,8 +193,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         <CustomMap
           style={styles.mapview}
           region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: latitude,
+            longitude: longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}

@@ -5,13 +5,47 @@ import {StyleSheet,
     TouchableOpacity,
     Image,
     Dimensions,
+    ActivityIndicator,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Google from "expo-google-app-auth";
 
 const logoImage = require('../assets/images/logo.png')
 
  export default function Login({navigation}) {
+
+    const googleSignIn = () => {
+        const config = {
+        iosClientId: `1060758600491-889umes3uujo3ufbh1gqm6h4mrqd39gq.apps.googleusercontent.com`,
+        androidClientId: `1060758600491-6fhgq3lg64qljt93gdgvs5ekp6ur5r83.apps.googleusercontent.com`,
+        scopes: ['profile', 'email']
+        };
+
+        Google
+        .logInAsync(config)
+        .then((result) => {
+            const {type, user} = result;
+            if (type === 'success') {
+                console.log(user.name);
+                let u = {
+                    Id: result.user.id,
+                    userId: result.user.name, 
+                    email: result.user.email,
+                    pwd: '',
+                    role: 'USER'
+                }
+                navigation.navigate("Main", u);
+            }
+            else {
+                console.log('error')
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })        
+    };
+
     return (
         <View style = {styles.container}>
             
@@ -23,6 +57,7 @@ const logoImage = require('../assets/images/logo.png')
             </View>
 
             <View style = {styles.footer}>
+
                 <TouchableOpacity 
                 onPress={()=>navigation.navigate("BottomTab") }
                 >
@@ -38,8 +73,9 @@ const logoImage = require('../assets/images/logo.png')
                             <Text style = {styles.whiteText}>  Continuar con Facebook</Text>
                         </LinearGradient>
                 </TouchableOpacity>
+
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("BottomTab")}
+                onPress={()=>googleSignIn()}
                 >
                     <LinearGradient
                         colors={['#ffffff', '#ffffff']}
@@ -53,6 +89,7 @@ const logoImage = require('../assets/images/logo.png')
                             <Text style = {styles.google}>  Continuar con Google</Text>
                         </LinearGradient>
                 </TouchableOpacity>
+
                 <TouchableOpacity 
                 onPress={()=>navigation.navigate("SignIn") }
                 >

@@ -1,19 +1,16 @@
 const {check, validationResult} = require('express-validator');
-const category = require('../models/category');
 
-exports.validateCreateProduct = [
+exports.validateCreateType = [
     check('name')
         .exists()
         .not()
-        .isEmpty(),
-    check('categories')
-        .exists()
-        .not()
-        .isEmpty(),    
-    check('exchange')
-        .exists()
-        .not()
-        .isEmpty(),
+        .isEmpty()
+        .custom((value, {req}) => {
+            if (value == null) {
+                throw new Error('Name is not specified');
+            }
+            return true;
+        }),
     (req, res, next) => {
         try {
             validationResult(req).throw();

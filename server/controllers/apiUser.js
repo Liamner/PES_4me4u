@@ -3,7 +3,6 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const app = express();
 
 exports.readAllUsers =  async (req, res) => {
   try {
@@ -92,10 +91,13 @@ exports.loginUser = async (req, res) => {
             });
         }
         // Genera el token de autenticación
-        let token = jwt.sign({
-                usuario: usuarioDB,
-            }, process.env.SEED_AUTENTICACION, {
-            expiresIn: process.env.CADUCIDAD_TOKEN
+        const userToken = {
+          id: usuarioDB._id,
+          username: usuarioDB.userId,
+          //products: usuarioDB.products
+        }
+        let token = jwt.sign(userToken, process.env.SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRES
         })
         res.json({
             ok: true,
@@ -136,8 +138,31 @@ exports.updateUser = async (req, res) => {
       console.log("Can not update the user");
     }
     
+
+exports.readUser = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    console.log(user)
+    console.log("Reading user: " + req.params.id);
+
+    res.status(200).json(user);
+
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
 };
+
+
+exports.getUserProducts = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("products");
+    
+    console.log(user)
+    res.status(200).json(user.products)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
+

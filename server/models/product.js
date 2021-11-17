@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
 const Category = require('./category.js');
+const Type = require('./type.js');
 var Schema = mongoose.Schema;
-
-const categoryType = {
-    values: ['tech', 'house']
-}
-
-const exchangeTypes = {
-    values: ['present', 'exchange', 'provide']
-}
+/* consulta aixoo!: https://cathow.dev/mangosos-con-modelado-de-datos-de-objetos-nodejs/*/
 
 const stateTypes = {
     values: ['available', 'reserved', 'provide']
@@ -20,14 +14,11 @@ const ProductSchema = new mongoose.Schema({
         type: 'String',
         required: true
     },
-    categories: {
-        type: ['String'],
-        enum: categoryType,
-        required: true
+    categories: {     
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Category',
+        required: true 
         
-        /*type: [Schema.ObjectId],
-        ref: "Category",
-        required: true*/
     },
     description: {
         type: 'String'
@@ -38,22 +29,27 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: {
-        type: ['String'],
-        enum: exchangeTypes,
-        required: true
+          
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Type",
+        required: true 
     },
-    img: {
-        type: 'String',
-        required: false
-    },
+    img: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Image'
+    }],
     state: {
         type: 'String',
-        enum: stateTypes
+        enum: stateTypes,
+        default: 'avaiable'
     },
-    owner: {
-        type: 'String'
+    userId: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Usuario'
+    },
+    username: {
+        type: String
     }
 });
-
 
 module.exports = mongoose.model('Product', ProductSchema);

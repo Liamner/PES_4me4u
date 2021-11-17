@@ -126,7 +126,7 @@ export default function SignUp({navigation}) {
                     pwd:inputData.password,
                     };
                 axios
-                .post('http://localhost:5000/api/register', credentials)
+                .post('https://app4me4u.herokuapp.com/api/register', credentials)
                 .then(function (response) {
                     const result = response.data
                     console.log(result.userId)

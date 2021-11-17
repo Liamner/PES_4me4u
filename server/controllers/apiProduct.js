@@ -32,15 +32,30 @@ exports.readProduct = async (req, res) => {
   }
 };
 
-exports.readProductsFiltered = async (req, res) => {
+exports.readProductsFilteredCategory = async (req, res) => {
   try {
-    console.log(req.body.name);
-    //const product = await Product.find({ name: req.body.name , categories: req.body.categories});
+
     const product = await Product.find ({ categories: req.body.categories }) 
-    //const prod = Product.find ({ name: req.body.name });
-    console.log("Reading products with filter: " + req.body.name);
+    console.log("Reading products with filter by Category: " + req.body.name);
     res.status(200).json(product);
+
   } catch (error) {
+
+    res.status(404).json(error.message);
+    console.log(error.message);
+
+  }
+};
+
+exports.readProductsFilteredType = async (req, res) => {
+  try {
+
+    const product = await Product.find ({ type: req.body.type}) 
+    console.log("Reading products with filter by Type: " + req.body.type);
+    res.status(200).json(product);
+
+  } catch (error) {
+
     res.status(404).json(error.message);
     console.log(error.message);
   }

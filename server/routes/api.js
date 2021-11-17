@@ -28,11 +28,15 @@ module.exports = function(app) {
     .get(productController.readAllProducts);
  
   router.route('/ids/product/')
-    .get(productController.readProductsId);
+  .get(productController.readProductsId);
 
    // Read products filtered
-   router.route('/filtered/product/')
-   .get(productController.readProductsFiltered);
+   router.route('/byCategory/product/')
+   .get(productController.readProductsFilteredCategory);
+
+  // Read products filtered
+  router.route('/byType/product/')
+  .get(productController.readProductsFilteredType);
 
   // Update product with id = id
   router.route('/product/update/:id')

@@ -74,15 +74,12 @@ exports.loginUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  let email = req.params.email; 
+  let usr = await User.findById({_id: req.params.id})
+  //let email = req.params.email; 
   try{
-    User.findById(email, (err, product) =>{
-      if(err) res.status(500).send({message: `The user does not exists ${err}`});
-    })
-    User.remove(err =>{
-        if(err) res.status(500).send({message: `Can not delete the user ${err}`});
-        res.status(200).send({message: 'The user has been delete'});
-    })
+    let usr = await User.findById({_id: req.params.id})
+    usr.delete();
+    res.status(200).json(usr);
   }
   catch(err) {
     res.status(400).json(err.message);

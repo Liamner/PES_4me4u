@@ -16,14 +16,20 @@ export default function ProductCard({ navigation }: RootTabScreenProps<'ProductC
   const [checkedDonar, setCheckedDonar] = React.useState(false);
   const [checkedIntercambiar, setCheckedIntercambiar] = React.useState(false);
   const [checkedPrestar, setCheckedPrestar] = React.useState(false);
-  const [image, setImage] = React.useState(null);
-  const [image2, setImage2] = React.useState(null);
-  const [image3, setImage3] = React.useState(null);
-  const [image4, setImage4] = React.useState(null);
-  const [image5, setImage5] = React.useState(null);
-  const [image6, setImage6] = React.useState(null);     
-  const imageArray = [image, image2, image3, image4, image5, image6] ;  
+  const [guardado, setGuardado] = React.useState(false);
+  console.log("guardado : " + guardado);
 
+  const guardarProducto = async () => {    
+    console.log("guardarProducto()");
+    setGuardado(true);
+      
+    }
+    const noGuardarProducto = async () => {    
+      console.log("noGuardarProduco()");
+      setGuardado(false);
+        
+      }
+  
   return (    
     <>
       <View style={styles.container}>            
@@ -39,20 +45,44 @@ export default function ProductCard({ navigation }: RootTabScreenProps<'ProductC
         }}>
           <View 
             style={{
-             // height: '10%',
-              //width: '50%',
               flexDirection: 'row',
               justifyContent: 'space-between',
               backgroundColor: 'white'
             
             }}>
-            <Image source={require('../images/reloj.png')}  style={styles.iconoReloj} />  
-            <Image source={require('../images/dar.png')}  style={styles.iconoDar} />  
-            <Image source={require('../images/intercambio.png')}  style={styles.icono} />  
+            <Image source={require('../images/reloj800.png')}  style={styles.icono} />  
+            <Image source={require('../images/dar.png')}  style={styles.icono} />  
+            <Image source={require('../images/intercambio.png')}  style={styles.icono} />      
 
+
+            {!guardado &&   <TouchableOpacity  style={{
+               width: '20%', 
+               height: '100%',             
+               
+            
+            }}
+             onPress={guardarProducto}>
+            <Image source={require('../images/noGuardado.png')}   style={{
+             width: '100%', 
+             height: '100%',        
+            
+            }} />  
+          </TouchableOpacity>  }      
+          {guardado &&   <TouchableOpacity  style={{
+               width: '20%', 
+               height: '100%',                             
+            
+            }} onPress={noGuardarProducto}>
+            <Image source={require('../images/guardado.png')}   style={{
+             width: '100%', 
+             height: '100%',               
+            
+            }}  />  
+          </TouchableOpacity>  }         
             </View>
-          <Image source={require('../images/corazon.png')}  style={styles.icono} />  
-      
+            
+         
+         
          </View>
         <Text style={styles.title}>Bicicleta Decatlon 26''</Text>
       </View>                    
@@ -75,7 +105,7 @@ const styles = StyleSheet.create({
   cameraImage: {
     width: '100%', 
     height: '75%', 
-    borderRadius: 10,
+    borderRadius: 7,
     alignItems: 'flex-start'
         
   },
@@ -85,14 +115,30 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'    
         
   },
+  touchable: {
+    width: '20%', 
+    height: '100%',     
+    borderRadius: 10,
+    borderColor: 'green',
+    //borderWidth: 3,
+    alignItems: 'flex-start'   
+        
+        
+  },
   iconoReloj: {
     width: '20%', 
     height: '100%',     
     alignItems: 'flex-start'    
         
   },
+  iconoIntercambio: {
+    width: '30%', 
+    height: '100%',     
+    alignItems: 'flex-start'    
+        
+  },
   iconoDar: {
-    width: '20%', 
+    width: '30%', 
     height: '100%',     
     alignItems: 'flex-start',
     backgroundColor: 'white',

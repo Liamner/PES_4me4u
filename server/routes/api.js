@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
+    .post(upload.array('img', 6), (validateCreateProduct), /*authenticateJWT, */productController.createProduct);
 
   router.route('/product/image/:id')
     .get(productController.getImg)
@@ -48,15 +48,15 @@ module.exports = function(app) {
 
   // Update product with id = id
   router.route('/product/update/:id')
-    .put(authenticateJWT, productController.updateProduct);
+    .put(/*authenticateJWT, */ productController.updateProduct);
 
   // Update atribute state of product with id = id
   router.route('/product/updateState/:id')
-    .put(authenticateJWT, productController.updateStateProduct);
+    .put(/*authenticateJWT, */productController.updateStateProduct);
 
   // Delete product with id = id
   router.route('/product/delete/:id')
-    .delete(authenticateJWT, productController.deleteProduct);
+    .delete(/*authenticateJWT, */productController.deleteProduct);
 
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
@@ -142,9 +142,9 @@ module.exports = function(app) {
 
   router.route('/image/:productId')
     .get(imageController.getProductImages)
-    .post(upload.array('img',6), authenticateJWT, imageController.uploadImages)
-    .delete(authenticateJWT, imageController.deleteImages)
-    .put(upload.array('img',6), authenticateJWT, imageController.updateImages)
+    .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
+    .delete(/*authenticateJWT, */ imageController.deleteImages)
+    .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
 
 
   return router;

@@ -90,8 +90,9 @@ exports.createProduct = async (req, res) => {
   product.state = req.body.state;
   // Assign the current user to the product
 
-  product.userId = req.user.id;
-  product.username = req.user.username;
+  //product.userId = req.user.id;
+  //product.username = req.user.username;
+
   // SAVE IMAGE
   if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
@@ -148,9 +149,12 @@ exports.updateProduct = async (req, res) => {
     const product = await Product.findById(id)
     console.log("Searching for product to update: " + req.params.id);
     
-    
+    /*authenticateJWT, */
 
-    if (product.userId == req.user.id) {
+    /*if (product.userId != req.user.id) {
+        res.status(401).json({error: "Do not have permission"})
+        return;
+    }*/
       if (nname != null)  product.name = nname;
       if (ncategories != null) product.categories = ncategories;
       console.log(ncategories);
@@ -160,10 +164,7 @@ exports.updateProduct = async (req, res) => {
       if (nimg != null) product.img = nimg;
     
       console.log(product);
-    } else {
-      res.status(401).json({error: "Do not have permission"})
-      return;
-    }
+    
     
   
     try {
@@ -192,15 +193,14 @@ exports.updateStateProduct = async (req, res) => {
       
 
       if (product.userId == req.user.id) {
+        res.status(401).json({error: "Do not have permission"})
+        return;
+      }
         console.log("Searching for product to update its state: " + req.params.id);
         product.state = nstate;
         console.log(product);
         await product.save();
         res.status(201).json(product);
-      } else {
-        res.status(401).json({error: "Do not have permission"})
-        return;
-      }
 
       
     } catch (error) {
@@ -222,8 +222,11 @@ exports.deleteProduct = async (req, res) => {
       res.status(404).json({error: "Product not find"})
     }*/
     //else {
-      
+      /*
       if (product.userId == req.user.id) {
+        res.status(401).json({error: "Do not have permission"})
+        return;
+      }*/
         console.log("before")
         const images = [];
         images.push(product.img)    
@@ -239,10 +242,6 @@ exports.deleteProduct = async (req, res) => {
                                   products: product._id
                                 }
                               });
-      } else {
-        res.status(401).json({error: "Do not have permission"})
-        return;
-      }
      
       product.delete();
       res.status(200).json(product);

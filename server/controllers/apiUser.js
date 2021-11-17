@@ -113,7 +113,7 @@ exports.loginUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  try{
+
     const level = req.body.level;
     const ecoPoints = req.body.ecoPoints;
     const score = req.body.score;
@@ -137,6 +137,8 @@ exports.updateUser = async (req, res) => {
     
       console.log("Can not update the user");
     }
+
+}
     
 
 exports.readUser = async (req, res) => {
@@ -164,5 +166,4 @@ exports.getUserProducts = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
-}
-
+};

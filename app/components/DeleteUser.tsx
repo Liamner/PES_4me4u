@@ -4,34 +4,30 @@ import {Alert, Button, StyleSheet, View } from "react-native";
 import axios from 'axios'
 import { not } from "react-native-reanimated";
 import navigation from "../navigation";
-import SignUp from '../screens/SignUpScreen';
 
 
-// import deleteUser from '../components/DeleteUser';
-// <deleteUser children=  "ID-DEL-USUARIO" />
+// import DeleteUser from '../components/DeleteUser';
+// <DeleteUser children=  "ID-DEL-USUARIO" />
 
-class deleteUser extends Component {
+class DeleteUser extends Component {
       state = { isHungry: true };
 
     //Datos
 
     APIDeleteUser= (id: {} | null | undefined) =>{
+        if(id != null){
 
-//    https://app4me4u.herokuapp.com/api/deleteUser/:id
-        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id /*61928e13b1d6953346cad476*/)
+            //    https://app4me4u.herokuapp.com/api/deleteUser/:id
+        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/6186d4d5f501eb82cb4b2c13' )
+        //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
+        
             .then(res => {
             console.log(res);})
     }
-
-    //función que se encarga de borrar el boton que se ha pulsado
-    removeUser = (id: {} | null | undefined) => {
-        if (id != null){
-            this.APIDeleteUser(id.toString)
-            //navigation.navigate("SignUp")
-            //AÑADIR TRATAMIENTO PARA UNA VEZ CERRADA LA CUENTA
         }
 
-    };
+
+
 
     //Alerta de confirmación de borrado
     deleteUserConfirmationAlert = (id: {} | null | undefined) =>
@@ -43,7 +39,7 @@ class deleteUser extends Component {
             text: "No",
 //          onPress: () => console.log("Cancel Pressed"),
         },
-        { text: "Sí", onPress: () => this.removeUser(id) }
+        { text: "Sí", onPress: () => this.APIDeleteUser(id) }
         ]
     );
 
@@ -88,4 +84,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default deleteUser;
+export default DeleteUser;

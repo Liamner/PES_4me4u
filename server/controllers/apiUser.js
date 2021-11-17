@@ -3,6 +3,8 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const user = require('../models/user.js');
+const app = express();
 
 exports.readAllUsers =  async (req, res) => {
   try {
@@ -112,6 +114,20 @@ exports.loginUser = async (req, res) => {
   }
 }
 
+exports.deleteUser = async (req, res) => {
+  let usr = await User.findById({_id: req.params.id})
+  //let email = req.params.email; 
+  try{
+    let usr = await User.findById({_id: req.params.id})
+    usr.delete();
+    res.status(200).json(usr);
+  }
+  catch(err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}
+
 exports.updateUser = async (req, res) => {
 
     const level = req.body.level;
@@ -139,22 +155,6 @@ exports.updateUser = async (req, res) => {
     }
 
 }
-    
-
-exports.readUser = async (req, res) => {
-  try {
-    const user = await User.findById({ _id: req.params.id });
-    console.log(user)
-    console.log("Reading user: " + req.params.id);
-
-    res.status(200).json(user);
-
-  } catch (error) {
-    res.status(404).json(error.message);
-    console.log(error.message);
-  }
-};
-
 
 exports.getUserProducts = async (req, res) => {
   try {

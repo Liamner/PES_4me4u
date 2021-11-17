@@ -114,6 +114,9 @@ module.exports = function(app) {
     .post(userController.loginUser);
 
 
+  router.route('/deleteUser/:id')
+    .delete(userController.deleteUser);
+
   // Update user with id = id
   router.route('/user/update/:id')
     .put(userController.updateUser);
@@ -145,7 +148,6 @@ module.exports = function(app) {
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
-
 
   return router;
 }

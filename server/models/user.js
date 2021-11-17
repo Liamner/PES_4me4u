@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
+require('mongoose-double')(mongoose);
 
 let rolesValidos = {
     values: ["ADMIN", "USER"],
@@ -28,18 +29,18 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    location: {
+    latitude: {
         type: String,
-        default: 'BARCELONA',
+        default: '41.3879',
         //required: [true],
+    },
+    longitude: {
+        type: String,
+        default: '2.16992 41° 23′ 16″',
     },
     level: {
         type: String,
         default: '1',
-    },
-    postalCode: {
-        type: String,
-        default: '08028',
     },
     ecoPoints: {
         type: String,
@@ -52,7 +53,15 @@ let usuarioSchema = new Schema({
     products: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
-    }]
+    }],
+    latitude: {
+        type: mongoose.Schema.Types.Double,
+        default: 37.78825
+    },
+    longitude: {
+        type: mongoose.Schema.Types.Double,
+        default: -122.4324
+    }
 });
 
 // elimina la key password del objeto que retorna al momento de crear un usuario
@@ -64,7 +73,9 @@ usuarioSchema.methods.toJSON = function() {
  }
 
 //agregamos el plugin de validación única y exportamos el modelo recién creado
+/*
 usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
 })
+*/
 module.exports = mongoose.model('Usuario', usuarioSchema);

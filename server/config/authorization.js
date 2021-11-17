@@ -6,15 +6,13 @@ const authenticateJWT = (req, res, next) => {
     if (authHeader) {
         const isCustomAuth = authHeader.startsWith('Bearer');
         const token = authHeader.split(' ')[1];
-        
         if (token && isCustomAuth) {
             jwt.verify(token, process.env.SECRET, (err, user) => {
                 if (err) {
-                    return res.status(403).json({error: "Wrong Token"});
+                    next( res.status(403).json({error: "Wrong Token"}));
                 }
                 // return the user
                 req.user = user;
-                
             });
         }
         else {

@@ -88,11 +88,10 @@ exports.createProduct = async (req, res) => {
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
   product.state = req.body.state;
-  
   // Assign the current user to the product
+
   product.userId = req.user.id;
   product.username = req.user.username;
-
   // SAVE IMAGE
   if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
@@ -122,7 +121,9 @@ exports.createProduct = async (req, res) => {
                                 products: newProduct
                               }
                             });
+
     res.status(201).json(product);}
+
   } catch (error) {
     res.status(409).json(error.message);
 
@@ -160,7 +161,7 @@ exports.updateProduct = async (req, res) => {
     
       console.log(product);
     } else {
-      res.status(403).json({error: "Do not have permission"})
+      res.status(401).json({error: "Do not have permission"})
       return;
     }
     
@@ -197,7 +198,7 @@ exports.updateStateProduct = async (req, res) => {
         await product.save();
         res.status(201).json(product);
       } else {
-        res.status(403).json({error: "Do not have permission"})
+        res.status(401).json({error: "Do not have permission"})
         return;
       }
 
@@ -239,7 +240,7 @@ exports.deleteProduct = async (req, res) => {
                                 }
                               });
       } else {
-        res.status(403).json({error: "Do not have permission"})
+        res.status(401).json({error: "Do not have permission"})
         return;
       }
      

@@ -72,7 +72,7 @@ exports.loginUser = async (req, res) => {
     console.log("Can not login the user");
   }
 }
-/*
+
 exports.deleteUser = async (req, res) => {
   let email = req.params.email; 
   try{
@@ -89,7 +89,8 @@ exports.deleteUser = async (req, res) => {
     console.log("Can not delete the user");
   }
 }
-*/
+
+/*
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete({ _id: req.params.id });
@@ -102,3 +103,4 @@ exports.deleteUser = async (req, res) => {
     console.log(error.message);
   }
 };
+*/

@@ -8,6 +8,11 @@ import navigation from "../navigation";
 
 // import DeleteUser from '../components/DeleteUser';
 // <DeleteUser children=  "ID-DEL-USUARIO" />
+/*
+ <View>
+    <DeleteUser children= "617c460aef55c17ade814365"></DeleteUser>
+</View>
+ */
 
 class DeleteUser extends Component {
       state = { isHungry: true };
@@ -18,7 +23,7 @@ class DeleteUser extends Component {
         if(id != null){
 
             //    https://app4me4u.herokuapp.com/api/deleteUser/:id
-        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/6186d4d5f501eb82cb4b2c13' )
+        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/61952cf8ad3b69daa6c98e70' )
         //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
         
             .then(res => {

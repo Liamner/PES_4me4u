@@ -103,7 +103,8 @@ const sendApi = async () =>{
     description : description,
     exchange :"present",
     state :"available",
-    owner :"owner"
+    owner :"owner",
+    image: [image]
   }).then(function (response) {
     console.log(response);
   })

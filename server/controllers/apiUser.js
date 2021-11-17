@@ -4,6 +4,44 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+exports.readAllUsers =  async (req, res) => {
+  try {
+    const user = await User.find();
+
+    res.status(200).json(user);
+
+    console.log(user);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readUser = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+
+    console.log("Reading user: " + req.params.id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readUsersId = async (req, res) => {
+  try {
+    const user = await User.find({}, {_id: 1 });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+
 exports.registerUser = async (req, res) => {
   let body = req.body;
   let { userId, email, pwd, role } = body;
@@ -74,6 +112,35 @@ exports.loginUser = async (req, res) => {
   }
 }
 
+exports.updateUser = async (req, res) => {
+
+    const level = req.body.level;
+    const ecoPoints = req.body.ecoPoints;
+    const score = req.body.score;
+  
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to update: " + req.params.id);
+
+    if (level != null)  user.level = level;
+    if (ecoPoints != null) user.ecoPoints = ecoPoints;
+    if (score != null) user.score = score;
+    
+    console.log(user);
+    
+    try {
+      await user.save();
+    
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the user");
+    }
+
+}
+    
+
 exports.readUser = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
@@ -81,11 +148,13 @@ exports.readUser = async (req, res) => {
     console.log("Reading user: " + req.params.id);
 
     res.status(200).json(user);
+
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
 };
+
 
 exports.getUserProducts = async (req, res) => {
   try {
@@ -97,4 +166,4 @@ exports.getUserProducts = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
-}
+};

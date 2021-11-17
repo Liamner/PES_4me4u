@@ -36,7 +36,6 @@
     "react-native-elements": "^3.4.2",
     "react-native-fast-image": "^8.5.11",
     "react-native-file-upload": "^1.0.4",
-    "react-native-gesture-handler": "~1.10.2",
     "react-native-grid-image-viewer": "^1.2.2",
     "react-native-image-picker": "^4.1.1",
     "react-native-list-view-select": "^1.0.4",
@@ -46,7 +45,8 @@
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
-    "react-native-web": "^0.17.5"
+    "react-native-web": "^0.17.5",
+    "expo-google-app-auth": "~8.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

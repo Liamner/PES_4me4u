@@ -6,6 +6,44 @@ const jwt = require('jsonwebtoken');
 const user = require('../models/user.js');
 const app = express();
 
+exports.readAllUsers =  async (req, res) => {
+  try {
+    const user = await User.find();
+
+    res.status(200).json(user);
+
+    console.log(user);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readUser = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+
+    console.log("Reading user: " + req.params.id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readUsersId = async (req, res) => {
+  try {
+    const user = await User.find({}, {_id: 1 });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+
 exports.registerUser = async (req, res) => {
   let body = req.body;
   let { userId, email, pwd, role } = body;
@@ -55,10 +93,13 @@ exports.loginUser = async (req, res) => {
             });
         }
         // Genera el token de autenticación
-        let token = jwt.sign({
-                usuario: usuarioDB,
-            }, process.env.SEED_AUTENTICACION, {
-            expiresIn: process.env.CADUCIDAD_TOKEN
+        const userToken = {
+          id: usuarioDB._id,
+          username: usuarioDB.userId,
+          //products: usuarioDB.products
+        }
+        let token = jwt.sign(userToken, process.env.SECRET, {
+            expiresIn: process.env.TOKEN_EXPIRES
         })
         res.json({
             ok: true,
@@ -87,17 +128,42 @@ exports.deleteUser = async (req, res) => {
   }
 }
 
-/*
-exports.deleteUser = async (req, res) => {
+exports.updateUser = async (req, res) => {
+
+    const level = req.body.level;
+    const ecoPoints = req.body.ecoPoints;
+    const score = req.body.score;
+  
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to update: " + req.params.id);
+
+    if (level != null)  user.level = level;
+    if (ecoPoints != null) user.ecoPoints = ecoPoints;
+    if (score != null) user.score = score;
+    
+    console.log(user);
+    
+    try {
+      await user.save();
+    
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the user");
+    }
+
+}
+
+exports.getUserProducts = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete({ _id: req.params.id });
-
-    console.log("Deleted user: " + req.params.id);
-
-    res.status(200).json(user);
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("products");
+    
+    console.log(user)
+    res.status(200).json(user.products)
   } catch (error) {
-    res.status(404).json(error.message);
-    console.log(error.message);
+    res.status(400).json(error)
   }
 };
-*/

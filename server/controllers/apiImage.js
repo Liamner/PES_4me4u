@@ -33,6 +33,10 @@ exports.uploadImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
   const newFiles = req.files.length;
   console.log(product.img.length)
+  if (product.userId != req.user.id) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
   if (product.img.length+newFiles <= 6) {
     console.log(product.img.length)
     try {
@@ -92,7 +96,7 @@ exports.deleteImages = async (req, res) => {
       res.status(204).json(product);
     }
     else {
-      res.status(403).json({error: "Do not have permission"})
+      res.status(401).json({error: "Do not have permission"})
       return;
     }
   } catch (error) {

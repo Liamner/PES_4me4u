@@ -97,9 +97,9 @@ module.exports = function(app) {
 
   router.route('/image/:productId')
     .get(imageController.getProductImages)
-    .post(upload.array('img',6), imageController.uploadImages)
-    .delete(imageController.deleteImages)
-    .put(upload.array('img',6), imageController.updateImages)
+    .post(upload.array('img',6), authenticateJWT, imageController.uploadImages)
+    .delete(authenticateJWT, imageController.deleteImages)
+    .put(upload.array('img',6), authenticateJWT, imageController.updateImages)
 
   
 

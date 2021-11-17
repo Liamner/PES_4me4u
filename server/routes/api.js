@@ -3,12 +3,15 @@ const productController = require('../controllers/apiProduct.js');
 const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
 const imageController = require('../controllers/apiImage.js');
+const typeController = require('../controllers/apiType.js');
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
 const { validateCreateCategory } = require('../validators/category.js');
+const { validateCreateType } = require('../validators/type.js');
 const upload = require('../config/storage.js');
 const authenticateJWT = require('../config/authorization.js')
+
 
 module.exports = function(app) {
   const router = express.Router();
@@ -33,7 +36,15 @@ module.exports = function(app) {
     .get(productController.readAllProducts);
  
   router.route('/ids/product/')
-    .get(productController.readProductsId);
+  .get(productController.readProductsId);
+
+   // Read products filtered
+   router.route('/byCategory/product/')
+   .get(productController.readProductsFilteredCategory);
+
+  // Read products filtered
+  router.route('/byType/product/')
+  .get(productController.readProductsFilteredType);
 
   // Update product with id = id
   router.route('/product/update/:id')
@@ -70,11 +81,33 @@ module.exports = function(app) {
   router.route('/category/delete/:id')
     .delete(categoryController.deleteCategory);
 
+  // Create new type
+  router.route('/type/create/')
+    .post(validateCreateType, typeController.createType);
+
+  // Read type with id = id
+  router.route('/type/:id')
+    .get(typeController.readType);
+
+  // Read all types
+  router.route('/type/')
+    .get(typeController.readAllTypes);
+
+  // Update type with id = id
+  router.route('/type/update/:id')
+    .put(typeController.updateType);
+
+  // Delete type with id = id
+  router.route('/type/delete/:id')
+    .delete(typeController.deleteType);
+
+    
   // ======================
   // ---- USER  Routes ----
   // ======================
 
   router.route('/register')
+
     .post(userController.registerUser);
 
   router.route('/login')

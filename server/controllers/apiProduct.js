@@ -1,10 +1,16 @@
+const { response } = require('express');
+const { check } = require('express-validator');
+const Category = require('../models/category.js');
 const Product = require('../models/product.js');
 const Image = require('../models/image.js');
 const User = require('../models/user.js');
+const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
+//const { readCategory } = require('./apiCategory.js');
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
+
 
 exports.readAllProducts =  async (req, res) => {
   try {
@@ -32,13 +38,30 @@ exports.readProduct = async (req, res) => {
   }
 };
 
-exports.readProductsFiltered = async (req, res) => {
+exports.readProductsFilteredCategory = async (req, res) => {
   try {
-    const product = await Product.find({ filter: req.params.filter });
-    console.log("Reading products with filter: " + req.paramas.filter);
 
+    const product = await Product.find ({ categories: req.body.categories }) 
+    console.log("Reading products with filter by Category: " + req.body.name);
     res.status(200).json(product);
+
   } catch (error) {
+
+    res.status(404).json(error.message);
+    console.log(error.message);
+
+  }
+};
+
+exports.readProductsFilteredType = async (req, res) => {
+  try {
+
+    const product = await Product.find ({ type: req.body.type}) 
+    console.log("Reading products with filter by Type: " + req.body.type);
+    res.status(200).json(product);
+
+  } catch (error) {
+
     res.status(404).json(error.message);
     console.log(error.message);
   }
@@ -58,8 +81,9 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
+  
   product.name = req.body.name;
-  product.categories = req.body.categories;
+  product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.exchange = req.body.exchange;
@@ -82,6 +106,13 @@ exports.createProduct = async (req, res) => {
   } 
  
   try {
+    const category = await Category.findById({_id:req.body.categories});
+  if (category == null) res.status(404).json({error:"category not found"});
+
+  const type = await Type.findById({_id:req.body.exchange});
+  if (type == null) res.status(404).json({error:"type not found"});
+
+  if (category != null && type != null) {
     const newProduct = await product.save();
     // Add the product to the user
     const user = await User.findByIdAndUpdate(
@@ -90,8 +121,9 @@ exports.createProduct = async (req, res) => {
                                 products: newProduct
                               }
                             });
-    console.log(product)
-    res.status(201).json(product);
+
+    res.status(201).json(product);}
+
   } catch (error) {
     res.status(409).json(error.message);
 

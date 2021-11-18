@@ -1,7 +1,7 @@
 import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList, TouchableHighlight, TouchableOpacity, ScrollView, Alert, Button } from 'react-native';
+import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView, Alert, Button } from 'react-native';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 
@@ -9,26 +9,28 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
+import DeleteUser from '../components/DeleteUser';
 
 import axios from 'axios';
 
 
-export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<'ViewUserScreen'>) {
-  //Datos
-/*    const [data, setData] = React.useState([
-        {
-        userId: 'identificadorInedintificable',    
-        email: 'a@mail.algo',    
-        pwd: 'contraseña',//contraseña
-        role:'USER',
-        location: 'BARCELONA',
-        level: '1',
-        postalCode: '08028',
-        ecoPoints: '10',
-        score: '5.0'
-        }
-    ]);*/
+export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
+  
+
     //Datos de un usuario
+
+    const [id, setid] = useState('61952ec8adeb9693da219fc2');
+    //const [id, setid] = useState(user_id);
+    
+    const [email, setEmail] = useState('Cargando...');
+    const [location, setLocation] = useState('Cargando...');
+    const [level, setLevel] = useState('Cargando...');
+    const [postalCode, setPostalCode] = useState('Cargando...');
+    const [ecoPoints, setEcoPoints] = useState('Cargando...');
+    const [score, setScore] = useState('Cargando...');
+    const [latitude, setLatitude] = useState(39.03385);
+    const [longitude, setLongitude] = useState(125.75432);
+   /* 
     const email = 'a@mail.algo'
     const location = 'Pyongyang'
     const level = '1'
@@ -37,7 +39,7 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
     const score = '5.0'
     const latitude = 39.03385
     const longitude = 125.75432
-
+*/
 
     const [products, setproducts] = React.useState([
       {
@@ -73,7 +75,46 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
       };
 
 
+  const getUserInfo = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
+//    6186d4d5f501eb82cb4b2c13
+    //Datos de usuario
 
+    setEmail(response.data.email);
+
+    if(response.data.location == null) setLocation('Desconocido');
+    else setLocation(response.data.location);
+
+    setLevel(response.data.level);
+
+    if(response.data.postalCode == null) setPostalCode('Desconocido');
+    else setPostalCode(response.data.postalCode);
+
+    setEcoPoints(response.data.ecoPoints);
+    setScore(response.data.score);
+
+    if(response.data.latitude == null) setLatitude(39.03385);
+    else setLatitude(response.data.latitude);
+
+    if(response.data.longitude == null) setLongitude(125.75432);
+    else setLongitude(response.data.longitude);
+    
+    
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+/*    
+   //en caso de tener datos desconocidos
+
+   if(response.data.XXX == null) setXXX('Desconocido');
+    else setXXX(response.data.XXX);
+    */
+
+
+
+  };
+  
+  getUserInfo()
 
 
 
@@ -177,8 +218,14 @@ export default function ViewUserScreenScreen({ navigation }: RootTabScreenProps<
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
-
-        <Text></Text>
+        
+        {/*
+        //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
+        <Text onPress={() => navigation.navigate('Login')}>     
+          <DeleteUser children= id></DeleteUser>>
+        </Text>
+        */}
+        
 
       </ScrollView>
     </View>
@@ -250,67 +297,3 @@ const styles = StyleSheet.create({
   }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-  const putUpdateStatus = async (id: string, new_state: string) => {
-    // 'available', 'reserved', 'provide'
-    // disponible , reservado,  prestado
-
-    axios.put('https://app4me4u.herokuapp.com/api/product/updateState/' + id, { state: new_state } )
-      .then(response => {
-        //setData(response.data as {});
-    })
-    .catch(function (error) {
-      console.log(error);
-  });
-
-
-
-
-};
-
-//En caso de recibir el id como variable      /${id}`,    en lugar de /61645afb7f09d55d235f9c83
-
-//Funcion que actualiza el estado de un producto en funcion del new_state pasado
-const updateStatus = (item: { id: string; name: string; state: string; }, new_state: string) => {
-  item.state = new_state
-  putUpdateStatus(item.id, new_state);
-  setData((prevData) => { 
-    return prevData.filter (data => data.id  != null); 
-  });
-};
-
-//Ventana que permite seleccionar el nuevo estado del objeto o volver a atras
-const updateStatusAlert = (item: { id: string; name: string; state: string; }) =>
-  Alert.alert(
-    "Introduce el nuevo estado",
-    "Estado actual: " + item.state,
-    [
-      { text: 'available', onPress: () => updateStatus(item, 'available') },
-      { text: 'reserved',   onPress: () => updateStatus(item, 'reserved') },
-      { text: 'provide',    onPress: () => updateStatus(item, 'provide') },
-      { text: 'Cancelar'}
-    ]
-  );
-
-*/

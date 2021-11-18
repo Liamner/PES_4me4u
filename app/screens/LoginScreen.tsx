@@ -10,10 +10,13 @@ import {StyleSheet,
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Google from "expo-google-app-auth";
+import { AuthContext } from '../components/context';
 
 const logoImage = require('../assets/images/logo.png')
 
  export default function Login({navigation}) {
+    
+    const { signIn } = React.useContext(AuthContext);
 
     const googleSignIn = () => {
         const config = {
@@ -59,7 +62,7 @@ const logoImage = require('../assets/images/logo.png')
             <View style = {styles.footer}>
 
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("BottomTab") }
+                onPress={()=>{signIn()} }
                 >
                     <LinearGradient
                         colors={['#4c669f', '#3b5998', '#192f6a']}

@@ -12,9 +12,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
 import axios from 'axios';
+import { AuthContext } from '../components/context';
 
 
 export default function SignInScreen({ navigation }) {
+    const { signIn } = React.useContext(AuthContext);
+
     const [inputData, setinputData] = React.useState({
         email: '',
         password: '',
@@ -69,8 +72,8 @@ export default function SignInScreen({ navigation }) {
                 .post('https://app4me4u.herokuapp.com/api/login', credentials)
                 .then(function (response) {
                     const result = response.data;
-
                     if (result.ok) {
+                        signIn(result.user, result.token);
                         navigation.navigate("Main", result.user, result.token);
                     }
                 })

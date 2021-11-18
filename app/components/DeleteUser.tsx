@@ -10,7 +10,7 @@ import navigation from "../navigation";
 // <DeleteUser children=  "ID-DEL-USUARIO" />
 /*
  <View>
-    <DeleteUser children= "617c460aef55c17ade814365"></DeleteUser>
+    <DeleteUser children= "61952ec8adeb9693da219fc2"></DeleteUser>
 </View>
  */
 
@@ -23,8 +23,8 @@ class DeleteUser extends Component {
         if(id != null){
 
             //    https://app4me4u.herokuapp.com/api/deleteUser/:id
-        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/61952cf8ad3b69daa6c98e70' )
-        //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
+        //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/61952ec8adeb9693da219fc2' )
+        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
         
             .then(res => {
             console.log(res);})
@@ -37,8 +37,8 @@ class DeleteUser extends Component {
     //Alerta de confirmación de borrado
     deleteUserConfirmationAlert = (id: {} | null | undefined) =>
     Alert.alert(
-        "Alerta",
-        "¿Está seguro de que desea borrar el producto seleccionado?",
+        "¡Importante!",
+        "¿Está seguro de que desea eliminar su cuenta de usuario?\nEsta acción es irreversible.",
         [
         {
             text: "No",

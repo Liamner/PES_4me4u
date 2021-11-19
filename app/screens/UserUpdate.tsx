@@ -13,25 +13,28 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
   const [name, onChangeName] = React.useState("");  
   const [email, onChangeEmail] = React.useState("");  
   const [image, setImage] = React.useState(null);
+  const [latlon, setlatlon] = React.useState();
 
   const url = 'https://app4me4u.herokuapp.com/api/user/61952ec8adeb9693da219fc2';
   const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2'
+
+  const ref = React.useRef();
 
   React.useEffect(() => {
     getInfo();
   }, []);  
 
   
-  const latlon = async () => {
-    let place = "Colosseum";
-    GeocoderOsm.getGeoAddress(place).then((res: any) => { 
-      console.log("getGeoAddress", res)
+  const getLatLon = async (place: string) => {
+    console.clear();
+    GeocoderOsm.getGeoAddress('Barcelona').then((res) => { 
+      //console.log("getGeoAddress", res);
+      setlatlon(res);
+      
     }).catch((e: any) => { 
-      console.log('getGeoAddress error', e)
-    },
+      console.log('getGeoAddress error', e);
+    });
   }
-
-  latlon();
 
   const pickImage = async () => {    
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -78,11 +81,13 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
   };
 
   const editUser = async () => {
+    let place = ref.current?.getAddressText();
+    getLatLon(place);
     const newInfo = {
       name: name,
       email: email,
-      latitude: 12,
-      longitude: 14,
+      latitude: latlon[1].lat,
+      longitude: latlon[1].lon,
     };
     await axios.put(url2, newInfo).then(
       function(response) {
@@ -137,13 +142,8 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
               marginLeft: '5%',
               },
           }}
+          ref={ref}
           placeholder='Ubicación'
-          
-          onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log("data, details                ++++++++++++++++++++");
-              console.log(data, details)
-          }}
           query={{
               key: 'AIzaSyC7JAeKR-u7CBU9vmztBqz-BIuhA8qu270',
               language: 'es',

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { Button, Platform,ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import EditScreenInfo from '../components/EditScreenInfo';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
+
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [name, onChangeName] = React.useState("");  
@@ -51,7 +52,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         if(id == 6) setImage6(null)
       }
   }
-  const unPickImage = async (id: Number) => {
+  const unPickImage = async (id: Number, url: string) => {
     Alert.alert(
   '¿Que quieres hacer con tu foto?',
   '',
@@ -66,7 +67,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     {
       text: 'Hacer una foto', 
       onPress: () => {
-        setImageById(id, '');
+        setImageById(id, url);
         pickImage(id);
       }
     },
@@ -95,23 +96,55 @@ const pickImage = async (id?: Number) => {
     
   }
 };
+
 const sendApi = async () =>{
   console.log("sending")
   let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
     name : name,
-    categories : [selectedCategory],
+    categories : selectedCategory,
     description : description,
-    exchange :"present",
-    state :"available",
-    owner :"owner",
-    image: [image]
+    exchange :"6193a583e47e769eeaa7a978",
+    files : [image]
+
   }).then(function (response) {
     console.log(response);
   })
   .catch(function (error) {
     console.log(error);
   });
+  
 }
+
+
+/*
+const sendApi = async () =>{
+  console.log("sending")
+  console.log(image)
+  console.log(image2)
+  console.log(image3)
+  console.log(image4)
+  console.log(image5)
+  console.log(image6)
+  
+  var dataAPI = new FormData();
+  dataAPI.append('name', name);
+  dataAPI.append('categories',selectedCategory);
+  dataAPI.append('description',description);
+  dataAPI.append('exchange',"6193a583e47e769eeaa7a978");
+  dataAPI.append('files', ['/Desktop/pika.png'])
+
+
+
+  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', dataAPI).then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+  
+}*/
+
+
   return (
     <ScrollView>
       <View style={styles.container}>     
@@ -136,9 +169,9 @@ const sendApi = async () =>{
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Tecnologia" value="tech" />
-          <Picker.Item label="Casas" value="house" />
-        </Picker>        
+          <Picker.Item label="Tecnologia" value="61797e24b4a4d195aa14be8d" />
+          <Picker.Item label="Juguetes" value="61940e6f0c77883d581cede8" />
+        </Picker>
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
         <View 
          style={styles.checkbox}> 
@@ -177,7 +210,7 @@ const sendApi = async () =>{
         }}>
                   
           {image && 
-          <TouchableOpacity  onPress={() => unPickImage(1)}>
+          <TouchableOpacity  onPress={() => unPickImage(1, image)}>
             <Image style={styles.image} source={{ uri: image }} />
           </TouchableOpacity>  }          
           {!image && 
@@ -185,7 +218,7 @@ const sendApi = async () =>{
             <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
           {image2 && 
-          <TouchableOpacity  onPress={() => unPickImage(2)}>
+          <TouchableOpacity  onPress={() => unPickImage(2, image2)}>
           <Image style={styles.image} source={{ uri: image2 }} />
           </TouchableOpacity>  }  
           {!image2 && 
@@ -193,7 +226,7 @@ const sendApi = async () =>{
             <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
           {image3 && 
-          <TouchableOpacity  onPress={() => unPickImage(3)}>
+          <TouchableOpacity  onPress={() => unPickImage(3, image3)}>
           <Image style={styles.image} source={{ uri: image3 }} />
           </TouchableOpacity>  }  
           {!image3 && 
@@ -207,7 +240,7 @@ const sendApi = async () =>{
            marginTop: 10
           }}>
           {image4 && 
-          <TouchableOpacity  onPress={() => unPickImage(4)}>
+          <TouchableOpacity  onPress={() => unPickImage(4, image4)}>
           <Image style={styles.image} source={{ uri: image4 }} />
           </TouchableOpacity>}
           {!image4 && 
@@ -215,7 +248,7 @@ const sendApi = async () =>{
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
           {image5 && 
-          <TouchableOpacity  onPress={() => unPickImage(5)}>
+          <TouchableOpacity  onPress={() => unPickImage(5, image5)}>
           <Image style={styles.image} source={{ uri: image5 }} />
           </TouchableOpacity>}
           {!image5 &&
@@ -223,7 +256,7 @@ const sendApi = async () =>{
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
           {image6 && 
-          <TouchableOpacity  onPress={() => unPickImage(6)}>
+          <TouchableOpacity  onPress={() => unPickImage(6, image6)}>
           <Image style={styles.image} source={{ uri: image6 }} />
           </TouchableOpacity>}
           {!image6 && 

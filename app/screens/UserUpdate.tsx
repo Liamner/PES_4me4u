@@ -1,19 +1,37 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, Image, Alert, Button } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
-import GooglePlacesInput from '../components/GooglePlacesInput';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { RootTabScreenProps } from '../types';
+import axios from 'axios';
+import GeocoderOsm from 'react-native-geocoder-osm';
 
 export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'UserUpdate'>) {
   const [name, onChangeName] = React.useState("");  
-  const [firstSurname, onChangeFirstSurname] = React.useState("");  
-  const [secondSurname, onChangeSecondSurname] = React.useState("");  
   const [email, onChangeEmail] = React.useState("");  
   const [image, setImage] = React.useState(null);
+
+  const url = 'https://app4me4u.herokuapp.com/api/user/61952ec8adeb9693da219fc2';
+  const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2'
+
+  React.useEffect(() => {
+    getInfo();
+  }, []);  
+
+  
+  const latlon = async () => {
+    let place = "Colosseum";
+    GeocoderOsm.getGeoAddress(place).then((res: any) => { 
+      console.log("getGeoAddress", res)
+    }).catch((e: any) => { 
+      console.log('getGeoAddress error', e)
+    },
+  }
+
+  latlon();
 
   const pickImage = async () => {    
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -52,6 +70,28 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
     {cancelable: false},
   );
   }
+
+  const getInfo = async () => {
+    let response = await axios.get(url);
+    onChangeName(response.data.userId);
+    onChangeEmail(response.data.email);
+  };
+
+  const editUser = async () => {
+    const newInfo = {
+      name: name,
+      email: email,
+      latitude: 12,
+      longitude: 14,
+    };
+    await axios.put(url2, newInfo).then(
+      function(response) {
+        console.log(response);
+      }
+    )
+    
+  };
+
   return (
     <View style={styles.container}>
         <ScrollView ScrollView keyboardShouldPersistTaps='always' >
@@ -69,7 +109,6 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
         <TouchableOpacity style={[styles.notImage, {marginHorizontal: 50}]} onPress={pickImage}>
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
         </TouchableOpacity>  }
-
         </View>
       <View style={styles.container}>        
         <TextInput
@@ -81,8 +120,8 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
         <TextInput
           label="Email"
           style={styles.textInput}       
-          onChangeText={onChangeFirstSurname}
-          value={firstSurname}
+          onChangeText={onChangeEmail}
+          value={email}
         />  
         <GooglePlacesAutocomplete
           styles={{
@@ -109,8 +148,11 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
               key: 'AIzaSyC7JAeKR-u7CBU9vmztBqz-BIuhA8qu270',
               language: 'es',
           }}
-        />
-        />           
+        /> 
+        <Button
+          onPress={editUser}
+          title={"Acceptar"}
+        />       
       </View>
       </ScrollView>
     </View>

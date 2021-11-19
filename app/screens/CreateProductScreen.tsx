@@ -23,7 +23,16 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);     
-  const imageArray = [image, image2, image3, image4, image5, image6] ;
+  const [imageArray, setImageArray] = React.useState([image, image2, image3, image4, image5, image6]) ;
+  const [url1, setUrl1] = React.useState(null);     
+  const [url2, setUrl2] = React.useState(null);     
+  const [url3, setUrl3] = React.useState(null);     
+  const [url4, setUrl4] = React.useState(null);     
+  const [url5, setUrl5] = React.useState(null);     
+  const [url6, setUrl6] = React.useState(null);     
+
+
+  
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -36,20 +45,38 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }, []);  
   const setImageById = (id: Number, uri: string) => {      
       if(uri != ''){
-        if(id == 1 ) setImage(uri)
-        if(id == 2) setImage2(uri)
-        if(id == 3) setImage3(uri)
-        if(id == 4) setImage4(uri)
-        if(id == 5) setImage5(uri)
-        if(id == 6) setImage6(uri)
+        if(id == 1 ) setImage(uri);
+        if(id == 2) setImage2(uri);
+        if(id == 3) setImage3(uri);
+        if(id == 4) setImage4(uri);
+        if(id == 5) setImage5(uri);
+        if(id == 6) setImage6(uri);
       }
       else{
-        if(id == 1 ) setImage(null)
-        if(id == 2) setImage2(null)
-        if(id == 3) setImage3(null)
-        if(id == 4) setImage4(null)
-        if(id == 5) setImage5(null)
-        if(id == 6) setImage6(null)
+        if(id == 1 ){
+          setImage(null);
+          setUrl1(null);
+        } 
+        if(id == 2){
+          setImage2(null);
+          setUrl2(null);
+        } 
+        if(id == 3){
+          setImage3(null);
+          setUrl3(null);
+        } 
+        if(id == 4){
+          setImage4(null);
+          setUrl4(null);
+        } 
+        if(id == 5){
+          setImage5(null);
+          setUrl5(null);
+        } 
+        if(id == 6){
+          setImage6(null);
+          setUrl6(null);
+        } 
       }
   }
   const unPickImage = async (id: Number, url: string) => {
@@ -80,20 +107,46 @@ const pickImage = async (id?: Number) => {
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.All,
     allowsEditing: true,
+    base64: true, //<-- boolean base64
     aspect: [4, 3],
     quality: 1,
   });
 
-  console.log(result);
+
+  //console.log(imageArray);
+//  setCosa(result.base64);
+
+//  console.log(cosa);
+
 
   if (!result.cancelled ) {
-    if(!image || id == 1)setImage(result.uri);
-    else if(!image2 || id == 2)setImage2(result.uri);
-    else if(!image3 || id == 3)setImage3(result.uri);
-    else if(!image4 || id == 4)setImage4(result.uri);
-    else if(!image5 || id == 5)setImage5(result.uri);
-    else if(!image6 || id == 6)setImage6(result.uri);
     
+    if(!image || id == 1){
+      setImage(result.uri);
+      setUrl1(result.base64);
+    }
+    else if(!image2 || id == 2){
+      setImage2(result.uri);
+      setUrl2(result.base64);
+    }
+    else if(!image3 || id == 3){
+      setImage3(result.uri);
+      setUrl3(result.base64);
+    }
+    else if(!image4 || id == 4){
+      setImage4(result.uri);
+      setUrl4(result.base64);
+    }
+    else if(!image5 || id == 5){
+      setImage5(result.uri);
+      setUrl5(result.base64);
+    }
+    else if(!image6 || id == 6){
+      setImage6(result.uri);
+      setUrl6(result.base64);
+    }
+
+    setImageArray([image, image2, image3, image4, image5, image6]);
   }
 };
 
@@ -102,10 +155,10 @@ const sendApi = async () =>{
   let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
     name : name,
     categories : selectedCategory,
-    description : description,
+    description: description,
     exchange :"6193a583e47e769eeaa7a978",
-    files : [image]
-
+//    files: [url1, url2, url3, url4, url5, url6]
+      files: ["Q"]
   }).then(function (response) {
     console.log(response);
   })
@@ -114,35 +167,6 @@ const sendApi = async () =>{
   });
   
 }
-
-
-/*
-const sendApi = async () =>{
-  console.log("sending")
-  console.log(image)
-  console.log(image2)
-  console.log(image3)
-  console.log(image4)
-  console.log(image5)
-  console.log(image6)
-  
-  var dataAPI = new FormData();
-  dataAPI.append('name', name);
-  dataAPI.append('categories',selectedCategory);
-  dataAPI.append('description',description);
-  dataAPI.append('exchange',"6193a583e47e769eeaa7a978");
-  dataAPI.append('files', ['/Desktop/pika.png'])
-
-
-
-  let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', dataAPI).then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-  
-}*/
 
 
   return (

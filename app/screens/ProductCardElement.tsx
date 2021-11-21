@@ -1,17 +1,9 @@
 import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import EditScreenInfo from '../components/EditScreenInfo';
-import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
-import { TextInput, Checkbox } from 'react-native-paper';
-import { RootTabScreenProps } from '../types';
-import { resolvePlugin } from '@babel/core';
 
-export default function ProductCard({ navigation }: RootTabScreenProps<'ProductCard'>) {
-
-  const [guardado, setGuardado] = React.useState(false);  
+const ProductCardElement = ( hola: boolean) => {
+  const [guardado, setGuardado] = React.useState(hola);  
   const [prestar, setPrestar] = React.useState(true);
   const [intercambiar, setIntercambiar] = React.useState(false);
   const [dar, setDar] = React.useState(true);
@@ -22,7 +14,6 @@ export default function ProductCard({ navigation }: RootTabScreenProps<'ProductC
   const noGuardarProducto = async () => {          
       setGuardado(false);
       }
-  
   return (    
     <>
       <View style={styles.container}>            
@@ -89,8 +80,7 @@ export default function ProductCard({ navigation }: RootTabScreenProps<'ProductC
       </View>                    
     </>
   );
-}
-
+};
 const styles = StyleSheet.create({
   container: {
     width: '50%',
@@ -136,3 +126,5 @@ const styles = StyleSheet.create({
     width: '90%',
   },  
 });
+
+export default ProductCardElement;

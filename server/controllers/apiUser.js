@@ -171,3 +171,15 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.getUserLevel = async (req, res) => {
+  try{
+    const user = await User.findById({ _id: req.params.id });
+    console.log("Level del usuario: " , user.level);
+    res.status(200).json(user.level);
+  }
+  catch(err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}

@@ -14,17 +14,17 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 // BASE DE DATOS
 // ======================
 let urlDB = "";
-urlDB = "mongodb+srv://Jefe:1234@4me4u.iyl4h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+urlDB = "mongodb+srv://admin:1234@4me4u.4lr2m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 process.env.URLDB = urlDB;
 
 // ======================
 // CADUCIDAD DEL TOKEN
 // ======================
 
-process.env.CADUCIDAD_TOKEN = '48h';
+//process.env.CADUCIDAD_TOKEN = '48h';
 
 // ======================
 // SEED DE AUTENTICACIÓN
 // ======================
 
-process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION ||  'este-es-el-seed-desarrollo';
+//process.env.SEED_AUTENTICACION = process.env.SEED_AUTENTICACION ||  'este-es-el-seed-desarrollo';

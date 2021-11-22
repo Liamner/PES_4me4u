@@ -171,3 +171,13 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.getUserPoints = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    console.log("Puntos del usuario: " , user.ecoPoints);
+    res.status(200).json(user.ecoPoints);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};

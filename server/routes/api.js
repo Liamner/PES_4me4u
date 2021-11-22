@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), /*authenticateJWT, */productController.createProduct);
+    .post(upload.array('img', 6), /*(validateCreateProduct), authenticateJWT, */productController.createProduct);
 
   router.route('/product/image/:id')
     .get(productController.getImg)
@@ -133,6 +133,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+
+    router.route('/user/:id/points')
+  .get(userController.getUserPoints)
     
 
 

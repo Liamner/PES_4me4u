@@ -149,5 +149,6 @@ module.exports = function(app) {
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
 
+
   return router;
 }

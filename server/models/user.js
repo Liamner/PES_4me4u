@@ -61,6 +61,18 @@ let usuarioSchema = new Schema({
     longitude: {
         type: mongoose.Schema.Types.Double,
         default: -122.4324
+    },
+    gift: {
+        type: Number,
+        default: '0',
+    },
+    loans: {
+        type: Number,
+        default: '0',
+    },
+    exchanges: {
+        type: Number,
+        default: '0',
     }
 });
 

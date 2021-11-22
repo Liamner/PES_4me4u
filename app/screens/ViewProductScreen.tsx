@@ -96,7 +96,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   const getProductInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61928e13b1d6953346cad476');
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);

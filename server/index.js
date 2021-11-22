@@ -18,9 +18,11 @@ app.use("/api", apiRoutes);
 
 //app.use(cors());
 
-//app.use(express.static(__dirname+'/public'));
 
-//let renderHTML = path.resolve(__dirname, '../public/index.html');
+const CONNECTION_URL =
+  "mongodb+srv://admin:1234@4me4u.4lr2m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
+
 
 app.get('/', function(req, res) {
   res.sendFile(renderHTML);

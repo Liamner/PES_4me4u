@@ -116,13 +116,13 @@ exports.createProduct = async (req, res) => {
   if (category != null && type != null) {
     const newProduct = await product.save();
     // Add the product to the user
-    const user = await User.findByIdAndUpdate(
+    /*const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
                                 products: newProduct
                               }
                             });
-
+*/
     res.status(201).json(product);}
 
   } catch (error) {

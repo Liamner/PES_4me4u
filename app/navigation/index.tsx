@@ -23,7 +23,6 @@ import Main from '../screens/MainScreen'
 import EditProduct from '../screens/ProductEdit';
 import ViewProduct from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
-import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
 

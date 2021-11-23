@@ -13,21 +13,18 @@ type CardProps = {
   guardado: boolean,
   imageUri?: string,
 }
-console.log("hola")
 const guardarProducto = async () => {        
-  //setGuardado(true);      
+  console.log("guardar")  
   }
 const noGuardarProducto = async () => {          
+  console.log("no guardar")  
     //setGuardado(false);
 }
 
 export const ProductCard = ({ name,  prestar, intercambiar, regalar, guardado, imageUri}: CardProps) =>
 <>
-{console.log("hola: " + imageUri)} 
 <View style={styles.container}>            
 <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
-{/* <Image source={require('../images/bicicleta.jpg')}  style={styles.cameraImage} />   */}
-
 <View
 style={{
   backgroundColor: "white",     

@@ -48,11 +48,10 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
             <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
       <View style = {{flexDirection: 'row'}}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  prestar ={true} intercambiar ={false} regalar ={false} guardado ={false} imageUri ="uri"/>
+      <ProductCard name ={"Bicicleta de Montaña"}  prestar ={true} intercambiar ={false} regalar ={false} guardado ={false} />
       <ProductCard name ={"Bicicleta de Montaña"}  prestar ={true} intercambiar ={false} regalar ={false} guardado ={false}/>
       </View>                    
-      <View style = {{flexDirection: 'row'}}>            
-      {/* <ProductCard name ={"Bicicleta de Montaña"}  prestar ={true} intercambiar ={false} regalar ={false} guardado ={false}/> */}
+      <View style = {{flexDirection: 'row'}}>                  
       </View>       
     </>
   );

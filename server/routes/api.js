@@ -150,6 +150,7 @@ module.exports = function(app) {
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
 
   router.route('/product/:category')
+    .get(producController.getProducCategory)
 
   return router;
 }

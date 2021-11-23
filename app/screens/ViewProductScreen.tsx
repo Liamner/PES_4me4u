@@ -92,19 +92,59 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   }
 
 
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar//TODO descomentar
+  //TODO descomentar
+  //TODO descomentar
   const getProductInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
-    //Required
-    setName(response.data.name);
-    getCorrectCategoriesType(response);
-    getCorrectExchangeType(response);
-    getCorrectStateType(response);
-    //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+    // let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
+    // //Required
+    // setName(response.data.name);
+    // getCorrectCategoriesType(response);
+    // getCorrectExchangeType(response);
+    // getCorrectStateType(response);
+    // //images
+    // //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
-    //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
+    // //Optional
+    // if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    // else setDescription(response.data.description);
   };
   getProductInfo()
   

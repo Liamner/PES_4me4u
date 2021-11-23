@@ -142,7 +142,7 @@ exports.updateUser = async (req, res) => {
     if (name != null) user.name = name;
     if (email != null) user.email = email;
     if (latitude != null) user.latitude = latitude;
-    if (longitude != null) user.latitude = latitude;
+    if (longitude != null) user.longitude = longitude;
     /*if (level != null)  user.level = level;
     if (ecoPoints != null) user.ecoPoints = ecoPoints;
     if (score != null) user.score = score;

@@ -25,7 +25,7 @@ import ViewProduct from '../screens/ViewProductScreen';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/CreateProductScreen';
-	
+import ViewUser from '../screens/ViewUserScreen';	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -152,6 +152,14 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+      <BottomTab.Screen
+        name="ViewUser"
+        component={ViewUser}
+        options={{
+          title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />      
     </BottomTab.Navigator>
   );
 }

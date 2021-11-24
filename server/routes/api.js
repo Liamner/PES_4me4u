@@ -134,8 +134,11 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
     
-    router.route('/user/:id/level')
+  router.route('/user/:id/level')
     .get(userController.getUserLevel)
+
+  router.route('/user/:id/levelManage')
+    .get(userController.levelManage)
 
   // ======================
   // ---- Image Routes ----

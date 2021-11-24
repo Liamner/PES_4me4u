@@ -162,6 +162,7 @@ exports.updateUser = async (req, res) => {
 
 exports.getUserProducts = async (req, res) => {
   try {
+
     const userId = req.params.id;
     const user = await User.findById({_id: userId}).populate("products");
     
@@ -170,4 +171,36 @@ exports.getUserProducts = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
+};
+
+exports.getUserRewards = async (req, res) => {
+  try {
+    const {type} = req.body;
+
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to get reward: " + req.params.id);
+    var points = user.ecoPoints;
+    if (type != 'gift') points += 50;
+    if (type != 'loan') points += 20;
+    if (type != 'exchange') points += 30;
+
+    user.ecoPoints = points;
+    await user.save();
+    
+    res.status(201).json(user);
+  } catch (error) {
+
+  }
+  /*
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("products");
+    
+    console.log(user)
+    res.status(200).json(user.products)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+  */
 };

@@ -178,6 +178,7 @@ exports.getRewards = async (req, res) => {
     var ngifts = user.gifts;
     var nloans = user.loans;
     var nexchanges = user.exchanges;
+    var points = user.ecoPoints;
     var rewards = 0;
     if(ngifts >= 3) {
       if(ngifts >=3) rewards += 10;
@@ -200,7 +201,9 @@ exports.getRewards = async (req, res) => {
       else if(nexchanges >= 10) rewards += 150;
     }
 
-    res.status(200).json(user.ecoPoints);
+    user.ecoPoints = points + rewards;
+    user.save();
+    res.status(200).json(user);
     
   } catch (error) {
     res.status(400).json(error)

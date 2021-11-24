@@ -30,6 +30,9 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   const [categories] = useState([{name: 'Cargando...', key: '10'}]);
   const [description, setDescription] = useState('Cargando...')
 
+  const [imagenDePrueba, setImagenDePrueba] = useState('https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg') 
+
+
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
     const contentOffset = event.nativeEvent.contentOffset.x;
@@ -93,7 +96,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   const getProductInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61645afb7f09d55d235f9c83');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/617beec47bf7d733c56f13a9');
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
@@ -106,13 +109,31 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
     else setDescription(response.data.description);
   };
+
+  const getProductImages = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/image/617beec47bf7d733c56f13a9');
+    //Required
+    setName(response.data.name);
+    setImagenDePrueba(response.data.img)
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+    //Optional
+    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(response.data.description);
+  };
+
+
+
+
   getProductInfo()
+  getProductImages()
   
   return (
     <View style={styles.container}>
       <ScrollView>
         <FlatList
-          data={images}
+          data={imagenDePrueba} //ZZZ
           renderItem={({ item }) => ( 
             <Image
               style={styles.image}
@@ -127,7 +148,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         <View style={styles.state}>
           <Text style={{color: 'white'}}>{`${state}`}</Text>
         </View>
-        <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+        <Text style={styles.smallText}>{`${currentPage} / ${imagenDePrueba.length}`} </Text>
         <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 

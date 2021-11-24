@@ -175,19 +175,17 @@ exports.getUserProducts = async (req, res) => {
 
 exports.getUserRewards = async (req, res) => {
   try {
-    const {type} = req.body;
+    const {type, estimatedPoints} = req.body;
 
     const id = req.params.id;
     const user = await User.findById(id)
-    console.log("Searching for user to get reward: " + req.params.id);
-    var points = user.ecoPoints;
-    if (type != 'gift') points += 50;
-    if (type != 'loan') points += 20;
-    if (type != 'exchange') points += 30;
-
-    user.ecoPoints = points;
-    await user.save();
+    console.log("Searching for user to get reward: " + user.name);
     
+    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
+    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
+    if (type != 'exchange') user.ecoPoints += 15;
+
+    await user.save();
     res.status(201).json(user);
   } catch (error) {
 

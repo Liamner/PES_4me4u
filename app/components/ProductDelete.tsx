@@ -6,11 +6,19 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import axios from 'axios'
 
+/*
+import ProductDelete from '../components/ProductDelete';
+
+<ProductDelete children= ID_DEL_PRODUCTO_A_BORRAR />
+*/
+
+
+
 class ProductDelete extends Component {
 
     APIDeleteProduct= (id: string) =>{
         axios
-        .delete('https://app4me4u.herokuapp.com/api/product/delete/' + id /*616d6282bc69ccaa2163570e*/)
+        .delete('https://app4me4u.herokuapp.com/api/product/delete/'+ id)
         .then(res => {
                 console.log(res);
             })
@@ -20,11 +28,27 @@ class ProductDelete extends Component {
     }
 
 
+
+
+    //Alerta de confirmación de borrado
+    deleteConfirmationAlert = (id: string) =>
+    Alert.alert(
+      "Alerta",
+      "¿Está seguro de que desea borrar el producto seleccionado?",
+      [
+        {
+          text: "No",
+//          onPress: () => console.log("Cancel Pressed"),
+        },
+        { text: "Sí", onPress: () => this.APIDeleteProduct(id) }
+      ]
+    );
+
     render() {
         return (
             <Button
-            onPress={() => deleteConfirmationAlert(item.id)}
-            title = "Borrar"
+            onPress={() => this.deleteConfirmationAlert(this.props.children)}
+            title = "YO" 
             color="#FF0000"//color de fondo rojo
             />
         )
@@ -32,3 +56,5 @@ class ProductDelete extends Component {
 }
 
 export default ProductDelete;
+
+

@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
       height: 310,
       borderRadius: 10,
       borderColor: '#5e5c57',
-      borderWidth: 3,
+      borderWidth: 1,
       backgroundColor: 'white',
     }, 
     cameraImage: {

@@ -42,7 +42,7 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
   };
   return (    
     <>
-    <ProductCard name ={"Bicicleta de "}  prestar ={true} intercambiar ={false} regalar ={false} guardado ={false} imageUri ={image}/>
+    <ProductCard name ={"Bicicleta de Mountain"}  prestar ={true} intercambiar ={true} regalar ={true} guardado ={true} imageUri ={image}/>
      {!false && 
           <TouchableOpacity style={styles.notImage} onPress={pickImage}>
             <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  

@@ -27,6 +27,7 @@ import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/CreateProductScreen';
 import ProductCard from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
+import FirstScreen from '../screens/FirstScreen';
 	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -130,19 +131,30 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
-      <BottomTab.Screen
+    
+{/*   TODO :  1descomentar */}
+      {/* <BottomTab.Screen
         name="ProductCard"
         component={ProductCard}
         options={{
           title: 'Product Card',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
-      />
-       <BottomTab.Screen
+      /> */}
+      {/*   TODO :  2descomentar */}
+       {/* <BottomTab.Screen
         name="TestScreen"
         component={TestScreen}
         options={{
           title: 'Test Screen',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> */}
+      <BottomTab.Screen
+        name="FirstScreen"
+        component={FirstScreen}
+        options={{
+          title: 'First Screen',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

@@ -108,13 +108,14 @@ exports.createProduct = async (req, res) => {
  
   try {
     const category = await Category.findById({_id:req.body.categories});
-  if (category == null) res.status(404).json({error:"category not found"});
+    if (category == null) res.status(404).json({error:"category not found"});
 
-  const type = await Type.findById({_id:req.body.exchange});
-  if (type == null) res.status(404).json({error:"type not found"});
+    const type = await Type.findById({_id:req.body.exchange});
+    if (type == null) res.status(404).json({error:"type not found"});
 
-  if (category != null && type != null) {
-    const newProduct = await product.save();
+    if (category != null && type != null) {
+      const newProduct = await product.save();
+    }
     // Add the product to the user
     /*const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
@@ -123,7 +124,7 @@ exports.createProduct = async (req, res) => {
                               }
                             });
 */
-    res.status(201).json(product);}
+    res.status(201).json(product);
 
   } catch (error) {
     res.status(409).json(error.message);

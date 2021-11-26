@@ -60,4 +60,18 @@ exports.readAllCategories = async (req, res) => {
         res.status(404).json(error.message);
         console.log(error.message);
       }
-    }
+}
+
+exports.getProductCategory = async (req, res) => {
+  console.log('Reading category: ' + req.params.category);
+  const category = req.params.category;
+
+  try {
+    const products = await Category.find({name: category},  {products: 1 });
+  
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+}

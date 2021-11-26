@@ -122,7 +122,6 @@ exports.createProduct = async (req, res) => {
                                 products: newProduct
                               }
                             });
-
     res.status(201).json(product);}
 
   } catch (error) {

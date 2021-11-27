@@ -1,5 +1,6 @@
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Comment = require('../models/comment.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -177,38 +178,64 @@ exports.rateUser = async (req, res) => {
   // Id usuario a valorar
   const userId = req.params.userId;
   const rateScore = req.body.rateScore;
+  const comment = req.body.comment;
 
-  console.log('User to rate: ' + userId);
-  console.log('With a score of ' + rateScore);
+  if (rateScore == null || rateScore < 0 || rateScore > 5) res.status(400).json({error: 'Invalid input'})
+  else {
+    await User.findById({_id: userId}, async (err, userRated) => {
+      if (userRated == null || err) {
+        res.status(404).json({error: 'User not found'})
+      }
+      // Calculate new user rate
+      let totalRateScore = parseFloat(userRated.totalRateScore)+parseFloat(rateScore);
+      let tradesRated = userRated.tradesRated +1;
+      let newRateScore = calculateUserScore(totalRateScore, tradesRated)
+      console.log(newRateScore)
 
-  await User.findById({_id: userId}, async (err, user) => {
-    if (user == null || err) {
-      res.status(404).json({error: 'User not found'})
-    }
-    //console.log(user)
-    let totalRateScore = parseFloat(user.totalRateScore)+parseFloat(rateScore);
-    let tradesRated = user.tradesRated +1;
-    let newRateScore = calculateUserScore(totalRateScore, tradesRated)
-    console.log(newRateScore)
+      // Create comment
+      let newComment = new Comment({
+        user:null,//req.user._id,
+        rateScore,
+        comment
+      });
+      await newComment.save();
+      console.log(newComment)
 
-    user.rateScore = newRateScore;
-    user.totalRateScore = totalRateScore;
-    user.tradesRated = tradesRated;
-    try {
-      await user.save();
-    
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(409).json(error.message);
-    
-      console.log("Can not update the user");
-    }
+  
+      // Update user
+      userRated.rateScore = newRateScore;
+      userRated.totalRateScore = totalRateScore;
+      userRated.tradesRated = tradesRated;
+      userRated.comments.push(newComment._id)
+      try {
+        await userRated.save();
+      
+        res.status(201).json(userRated);
+      } catch (error) {
+        res.status(409).json(error.message);
+      
+        console.log("Can not update the user");
+      }
+  
+    }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
+  }
 
-  }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
-
-
+  
 }
 
 function calculateUserScore(totalRateScore, tradesRated) {
   return totalRateScore/tradesRated;
+}
+
+exports.getAllComments = async (req, res) => {
+  try {
+    const comments = await Comment.find();
+
+    res.status(200).json(comments);
+
+    console.log(comments);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
 }

@@ -57,6 +57,11 @@ let usuarioSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
+    comments: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
     latitude: {
         type: mongoose.Schema.Types.Double,
         default: 37.78825

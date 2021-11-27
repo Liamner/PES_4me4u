@@ -158,7 +158,8 @@ module.exports = function(app) {
   //router.route('/product/:category')
   //  .get(productController.getProducCategory)
 
-
+router.route('/comments')
+  .get(userController.getAllComments)
   
   return router;
 }

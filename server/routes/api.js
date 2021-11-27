@@ -111,7 +111,6 @@ module.exports = function(app) {
   // ======================
 
   router.route('/register')
-
     .post(userController.registerUser);
 
   router.route('/login')
@@ -137,6 +136,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+
+  router.route('/user/:userId/rate')
+    .post(userController.rateUser);
     
 
 
@@ -156,5 +158,7 @@ module.exports = function(app) {
   //router.route('/product/:category')
   //  .get(productController.getProducCategory)
 
+
+  
   return router;
 }

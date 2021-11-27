@@ -47,6 +47,7 @@ exports.readUsersId = async (req, res) => {
 exports.registerUser = async (req, res) => {
   let body = req.body;
   let { name, email, pwd, role } = body;
+  console.log(body)
   let usuario = new User({
     name,
     email,
@@ -171,3 +172,43 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.rateUser = async (req, res) => {
+  // Id usuario a valorar
+  const userId = req.params.userId;
+  const rateScore = req.body.rateScore;
+
+  console.log('User to rate: ' + userId);
+  console.log('With a score of ' + rateScore);
+
+  await User.findById({_id: userId}, async (err, user) => {
+    if (user == null || err) {
+      res.status(404).json({error: 'User not found'})
+    }
+    //console.log(user)
+    let totalRateScore = parseFloat(user.totalRateScore)+parseFloat(rateScore);
+    let tradesRated = user.tradesRated +1;
+    let newRateScore = calculateUserScore(totalRateScore, tradesRated)
+    console.log(newRateScore)
+
+    user.rateScore = newRateScore;
+    user.totalRateScore = totalRateScore;
+    user.tradesRated = tradesRated;
+    try {
+      await user.save();
+    
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(409).json(error.message);
+    
+      console.log("Can not update the user");
+    }
+
+  }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
+
+
+}
+
+function calculateUserScore(totalRateScore, tradesRated) {
+  return totalRateScore/tradesRated;
+}

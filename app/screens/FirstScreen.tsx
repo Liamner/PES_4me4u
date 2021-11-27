@@ -28,6 +28,9 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Text style={styles.modalText}>Hello World!</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
@@ -46,41 +49,41 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
        <ScrollView style = {styles.scrollCategorias} horizontal= {true}>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/casa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> Bicicletas </Text>
+          <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Moda</Text>
           </View>
 
         </TouchableOpacity>
         <TouchableOpacity>
           <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/casa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> CocheeEEEs </Text>
+          <Image source={require('../images/informatica.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Informática</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/casa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> Barcos </Text>
+          <Image source={require('../images/mascotas.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Mascotas</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/casa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> Bicicletas </Text>
+          <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Hogar</Text>
           </View>
 
         </TouchableOpacity>  
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/casa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> Bicicletas </Text>
+          <Image source={require('../images/deporte.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Ocio</Text>
           </View>
 
         </TouchableOpacity>    
         <TouchableOpacity onPress={() => pickImage(1)}>
         <View style = {styles.elementoCategoria}>
-          <Image source={require('../images/reloj.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}> Otros </Text>
+          <Image source={require('../images/otros.png')} style={styles.iconoCategoria}/>  
+          <Text style = {styles.textoCategoria}>Otros</Text>
           </View>
 
         </TouchableOpacity>   
@@ -110,10 +113,10 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         <Image source={require('../images/add.png')} style={styles.icono}/>  
       </TouchableOpacity>    
       <TouchableOpacity>
-        <Image source={require('../images/casa.png')} style={styles.icono}/>  
+        <Image source={require('../images/chat.png')} style={styles.icono}/>  
       </TouchableOpacity>  
       <TouchableOpacity>
-        <Image source={require('../images/corazon.png')} style={styles.icono}/>  
+        <Image source={require('../images/profile.png')} style={styles.icono}/>  
       </TouchableOpacity>    
     </View>
     </>
@@ -133,7 +136,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     backgroundColor: 'white',
     width: '100%',
-    height: 110,
+    height: 120,
+    alignContent: 'space-between'
   }, 
   navigator: {    
     borderRadius: 5,
@@ -163,10 +167,12 @@ const styles = StyleSheet.create({
     marginBottom: 2,      
   },
   elementoCategoria: {
+    width: 80,
+    //height:  10,
     backgroundColor:'white',
     alignItems: 'center',    
     marginHorizontal: 5,
-    marginTop: 7,
+    marginTop: 8,
   },
   touchable: {
     width: '20%', 
@@ -243,6 +249,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
+    color: 'black'
   }
 });

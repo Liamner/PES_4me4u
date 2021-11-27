@@ -61,6 +61,14 @@ let usuarioSchema = new Schema({
     longitude: {
         type: mongoose.Schema.Types.Double,
         default: -122.4324
+    },
+    followers: {
+        type: ['String'],
+        required: false
+    },
+    followed: {
+        type: ['String'],
+        required: false
     }
 });
 

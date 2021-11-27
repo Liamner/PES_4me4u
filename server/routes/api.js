@@ -117,6 +117,8 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
+  router.route('/logout')
+    .get(userController.logoutUser);
 
   router.route('/deleteUser/:id')
     .delete(userController.deleteUser);

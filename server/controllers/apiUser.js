@@ -171,3 +171,27 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+
+exports.addUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.followed.push(usuarioDB);
+     ourUser.save();
+     res.status(200).json(ourUser.followed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};

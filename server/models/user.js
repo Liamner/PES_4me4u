@@ -63,11 +63,11 @@ let usuarioSchema = new Schema({
         default: -122.4324
     },
     followers: {
-        type: ['String'],
+        type: [mongoose.Schema.usuarioSchema],
         required: false
     },
     followed: {
-        type: ['String'],
+        type: [mongoose.Schema.usuarioSchema],
         required: false
     }
 });

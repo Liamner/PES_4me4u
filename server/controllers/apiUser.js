@@ -103,7 +103,7 @@ exports.loginUser = async (req, res) => {
         let token = jwt.sign(userToken, process.env.SECRET, {
             expiresIn: process.env.TOKEN_EXPIRES
         })
-        res.json({
+        res.status(200).json({
             ok: true,
             user: usuarioDB,
             token,
@@ -194,7 +194,7 @@ exports.rateUser = async (req, res) => {
 
       // Create comment
       let newComment = new Comment({
-        user:null,//req.user._id,
+        user:req.user._id,//null,
         rateScore,
         comment
       });

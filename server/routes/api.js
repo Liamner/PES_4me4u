@@ -138,7 +138,7 @@ module.exports = function(app) {
     .get(userController.getUserProducts)
 
   router.route('/user/:userId/rate')
-    .post(userController.rateUser);
+    .post(authenticateJWT, userController.rateUser);
     
 
 

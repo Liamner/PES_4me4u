@@ -172,6 +172,19 @@ exports.getUserProducts = async (req, res) => {
   }
 };
 
+
+exports.getUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followed");
+    
+    console.log(user)
+    res.status(200).json(user.followed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
 exports.getUserFollowers = async (req, res) => {
   try {
     const userId = req.params.id;

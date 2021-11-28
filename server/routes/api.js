@@ -140,6 +140,12 @@ module.exports = function(app) {
 
   router.route('/user/:id/AddFollower')
     .get(userController.addUserFollower)
+  
+  router.route('/user/:id/followed')
+    .get(userController.getUserFollowed)
+
+  router.route('/user/:id/followers')
+    .get(userController.getUserFollowers)
     
 
 

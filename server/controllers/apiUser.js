@@ -189,6 +189,30 @@ exports.addUserFollower = async (req, res) => {
      ourUser.save();
      res.status(200).json(ourUser);
     });
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followed");
+    
+    console.log(user)
+    res.status(200).json(user.followed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowers = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followers");
+    
+    console.log(user)
+    res.status(200).json(user.followers)
 
   } catch (error) {
     res.status(400).json(error)

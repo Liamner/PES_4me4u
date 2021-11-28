@@ -138,10 +138,17 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
 
-    router.route('/user/:id/AddFollowed')
+  router.route('/user/:id/AddFollowed')
     .get(userController.addUserFollowed)
-    
+  
+  router.route('/user/:id/AddFollower')
+    .get(userController.addUserFollower)
+  
+  router.route('/user/:id/followed')
+    .get(userController.getUserFollowed)
 
+  router.route('/user/:id/followers')
+    .get(userController.getUserFollowers)
 
   // ======================
   // ---- Image Routes ----

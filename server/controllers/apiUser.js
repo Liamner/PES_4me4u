@@ -175,7 +175,7 @@ exports.getUserProducts = async (req, res) => {
 exports.getUserFollowers = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("products");
+    const user = await User.findById({_id: userId}).populate("followers");
     
     console.log(user)
     res.status(200).json(user.followers)

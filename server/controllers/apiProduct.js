@@ -116,13 +116,13 @@ exports.createProduct = async (req, res) => {
   if (category != null && type != null) {
     const newProduct = await product.save();
     // Add the product to the user
-    const user = await User.findByIdAndUpdate(
+    /*const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
                                 products: newProduct
                               }
                             });
-
+*/
     res.status(201).json(product);}
 
   } catch (error) {
@@ -170,7 +170,7 @@ exports.updateProduct = async (req, res) => {
     try {
       await product.save();
     
-      res.status(201).json(product);
+      res.status(200).json(product);
     } catch (error) {
       res.status(409).json(error.message);
     
@@ -200,7 +200,7 @@ exports.updateStateProduct = async (req, res) => {
         product.state = nstate;
         console.log(product);
         await product.save();
-        res.status(201).json(product);
+        res.status(200).json(product);
 
       
     } catch (error) {
@@ -216,7 +216,9 @@ exports.updateStateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+  console.log("deleteProduct" + req.params.id)
   try {    
+    
     let product = await Product.findById({_id: req.params.id})
     /*if (!product) {
       res.status(404).json({error: "Product not find"})
@@ -236,12 +238,12 @@ exports.deleteProduct = async (req, res) => {
           console.log("Deleted product: " + req.params.id);
         }
         
-        await User.findByIdAndUpdate(
+       /* await User.findByIdAndUpdate(
                               { _id: ObjectId(req.user.id) }, 
                                 {$pull : {
                                   products: product._id
                                 }
-                              });
+                              });*/
      
       product.delete();
       res.status(200).json(product);

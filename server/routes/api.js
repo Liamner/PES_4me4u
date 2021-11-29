@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), /*authenticateJWT, */productController.createProduct);
+    .post(upload.array('img', 6), /*(validateCreateProduct), authenticateJWT, */productController.createProduct);
 
 
   router.route('/product/name/:name')
@@ -137,6 +137,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+
+  router.route('/user/:id/wishlist')
+    .get(userController.getUserWishlist)
     
 
 
@@ -153,6 +156,8 @@ module.exports = function(app) {
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
 
+  //router.route('/product/:category')
+  //  .get(productController.getProducCategory)
 
   return router;
 }

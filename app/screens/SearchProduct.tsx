@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
-export default function SearchProduct({ navigation }: RootTabScreenProps<'SearchProduct'>) {
+export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
 	
   return (
     <View style={styles.container}>

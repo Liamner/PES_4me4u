@@ -241,3 +241,37 @@ exports.getUserFollowers = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+
+exports.unfollow = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    console.log("nuestro ususario: ", ourUser.name);
+
+    let mail = req.body.email;
+    //const us = User.findById({_id: userId}).populate({path: 'followers', select({email: mail})});
+    User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
+    console.log("us: ", us);
+
+    ourUser.followed.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      console.log("entra dentro de la función");
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     console.log("usuario que queremos dejar de seguir: ",usuarioDB.name );
+
+     const res = ourUser.followed.findByIdAndDelete({_id: usuarioDB.id});
+     console.log("se ha borrado el followed");
+
+     ourUser.save();
+     res.status(200).json(ourUser.followed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};

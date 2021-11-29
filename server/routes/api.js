@@ -150,6 +150,9 @@ module.exports = function(app) {
   router.route('/user/:id/followers')
     .get(userController.getUserFollowers)
 
+  router.route('/user/:id/unfollow')
+    .get(userController.unfollow)
+
   // ======================
   // ---- Image Routes ----
   // ======================

@@ -182,4 +182,26 @@ exports.getUserWishlist = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
+};  
+    
+exports.addToWishlist = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    let idProduct = req.body.idProduct;
+    
+    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.wishlist.push(productDB);
+     ourUser.save();
+     res.status(200).json(ourUser.wishlist);
+    });
+  } catch (error) {
+    res.status(400).json(error)
+  }
 };

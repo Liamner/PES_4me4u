@@ -10,7 +10,7 @@ let rolesValidos = {
 let Schema = mongoose.Schema;
 
 let usuarioSchema = new Schema({
-    userId: {
+    name: {
         type: String,
         required: [true, 'El nombre es necesario'],
     },
@@ -29,7 +29,7 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    latitude: {
+    /*latitude: {
         type: String,
         default: '41.3879',
         //required: [true],
@@ -37,7 +37,7 @@ let usuarioSchema = new Schema({
     longitude: {
         type: String,
         default: '2.16992 41° 23′ 16″',
-    },
+    },*/
     level: {
         type: String,
         default: '1',

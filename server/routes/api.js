@@ -4,6 +4,7 @@ const categoryController = require('../controllers/apiCategory.js');
 const userController = require('../controllers/apiUser.js');
 const imageController = require('../controllers/apiImage.js');
 const typeController = require('../controllers/apiType.js');
+const tradeGiveController = require('../controllers/apiTradeGive.js');
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -138,7 +139,29 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
     
+  // ======================
+  // ---- Trade Routes ----
+  // ======================
 
+  // Create new tradeGive
+  router.route('/tradeGive/create/')
+    .post(tradeGiveController.createTradeGive);
+
+  // Read tradeGive with id = id
+    router.route('/tradeGive/:id')
+    .get(tradeGiveController.readTradeGive);
+  
+  // Read all tradeGive
+  router.route('/tradeGive/')
+    .get(tradeGiveController.readAllTradeGive);
+  
+  // Update tradeGive with id = id
+  router.route('/tradeGive/update/:id')
+    .put(tradeGiveController.updateTradeGive);
+  
+  // Delete tradeGive with id = id
+  router.route('/tradeGive/delete/:id')
+    .delete(tradeGiveController.deleteTradeGive);
 
   // ======================
   // ---- Image Routes ----

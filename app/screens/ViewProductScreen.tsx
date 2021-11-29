@@ -10,30 +10,26 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
 export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+  //const id = "619e6fd140d15287ffe42aca"
+  const id = "619e6fd140d15287ffe42aca"
   //Variables de las respuestas API
   const [user] = useState('@Usuario');
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
-  // const [images, setImages] = useState([{"_id": "619e6fd640d15287ffe42acf",
-  //       "public_id": "euwym4l6yabpe5zeocdk",
-  //       "url": "http://res.cloudinary.com/dcg9pwql1/image/upload/v1637773267/euwym4l6yabpe5zeocdk.png",
-  //       "__v": 0}]);
-
   const [images, setImages] = useState([{"_id": "errorerrorerrorerro",
   "public_id": "errorerrorerrorerror",
   "url": "https://www.nosolohacking.info/wp-content/uploads/2017/11/error2.jpg",
   "__v": 0}]);
+  const [hasImages, SetHasImages] = useState(false);
         
   
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('Cargando...') 
   //nombre usuario
   const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
-  const [categories, setCategories] = useState({name: 'Cargando...', key: '10'});
+  const [categories, setCategories] = useState([{name: 'Cargando...', key: '10'}]);
   const [description, setDescription] = useState('Cargando...')
-
-//  const [imagenDePrueba, setImagenDePrueba] = useState('https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg') 
 
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -46,27 +42,24 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
     let aux = response.data.categories;
-//    aux.forEach((element: any) => {
       element: 
       switch (aux) {
         case "61797e24b4a4d195aa14be8d":
-          setCategories({name: 'Tecnologia', key: '1'})
+          setCategories([{name: 'Tecnologia', key: '1'}])
           break;
         case "61940e6f0c77883d581cede8":
-          setCategories({name: 'Jugetes', key: '2'})
+          setCategories([{name: 'Jugetes', key: '2'}])
           break;
         default:
-          setCategories({name: 'GATITOS', key: '0'})
+          setCategories([{name: 'GATITOS', key: '0'}])
           break;
       }
-//    });
   }
 
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
     exchange.pop();
     let aux = response.data.exchange;
-//    aux.forEach((element: any) => {
       switch (aux) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
@@ -74,14 +67,14 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         case "provide":
           exchange.push({ name:'#prestamo', key: '2'})
           break;
-        case "present":
+          case "6193a583e47e769eeaa7a978":
+        //case "present":
           exchange.push({ name:'#regalo', key: '3'})
           break;
         default:
           exchange.push({ name:'Perritos frios', key: '0'})
           break;
       }
-//    });
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -103,7 +96,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   const getProductInfo = async () => {
     
-    let response = await axios.get("https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca");
+    let response = await axios.get("https://app4me4u.herokuapp.com/api/product/" + id);
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
@@ -114,23 +107,21 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     //Optional
     if(response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
     else setDescription("Descripción: " + response.data.description);
-
-    setImages(response.data.img)
-    //getProductImages();
+    
+    if (response.data.img == null){
+      SetHasImages(false);
+      setImages([{"_id": "",
+      "public_id": "",
+      "url": "",
+      "__v": -1 }]);
+    }
+    else {
+      SetHasImages(true);
+      setImages(response.data.img);
+    }
 
   };
 
-  const getProductImages = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/image/619e6fd140d15287ffe42aca');
-    //Required
-    setName(response.data.name);
-//    setImagenDePrueba(response.data.img)
-    //images
-
-    //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
-  };
 
 
 
@@ -142,6 +133,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   return (
     <View style={styles.container}>
       <ScrollView>
+      { hasImages ?
         <FlatList
           data={images} //ZZZ
           renderItem={({ item }) => ( 
@@ -155,10 +147,18 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
+        :
+        null
+      }
         <View style={styles.state}>
           <Text style={{color: 'white'}}>{`${state}`}</Text>
         </View>
-        <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+        { hasImages ?
+          <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+          :
+          null
+        }
+        
         <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 

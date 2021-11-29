@@ -3,8 +3,11 @@ import { useState } from 'react';
 import { StyleSheet, ScrollView, TextInput, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import axios from 'axios';
+import { FlatList } from 'react-native-gesture-handler';
+import ProductCard from '../components/ProductCard';
 
 export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
 
@@ -14,12 +17,14 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
   const getPNameInfo = async () => {
 
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/name/'+text);
+    setProducts(response.data);
+    console.log(response.data);
     
   };
 	
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
+      <View style={styles.row}>
         <TextInput
           onChangeText={onChangeText}
           value={text}
@@ -40,8 +45,14 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 					title="Tipo intercambio"
 				/>
 			</View>
-      <ScrollView>
-        <Text>Resultados</Text>
+      <ScrollView style={styles.flex}>
+        <FlatList
+          data={products}
+          renderItem={({ item }) => (
+            <ProductCard name={item.name} prestar={false} intercambiar={false} regalar={false} guardado={false} imageUri={item.img[0].url}/>
+          )}
+          keyExtractor={item => item.id}
+          />
       </ScrollView>
     </View>
   );
@@ -51,6 +62,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  flex: {
+    flex: 1,
   },
   row: {
     flexDirection: 'row',

@@ -173,54 +173,59 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
-
+const { ObjectId } = require('mongodb');
 exports.rateUser = async (req, res) => {
   // Id usuario a valorar
   const userId = req.params.userId;
   const rateScore = req.body.rateScore;
   const comment = req.body.comment;
 
-  if (rateScore == null || rateScore < 0 || rateScore > 5) res.status(400).json({error: 'Invalid input'})
+  if (rateScore == null || rateScore < 0 || rateScore > 5 || req.user.id == userId) res.status(400).json({error: 'Invalid input'})
   else {
     await User.findById({_id: userId}, async (err, userRated) => {
-      if (userRated == null || err) {
+      if (userRated == null || err || userRated == undefined) {
         res.status(404).json({error: 'User not found'})
       }
-      // Calculate new user rate
-      let totalRateScore = parseFloat(userRated.totalRateScore)+parseFloat(rateScore);
-      let tradesRated = userRated.tradesRated +1;
-      let newRateScore = calculateUserScore(totalRateScore, tradesRated)
-      console.log(newRateScore)
+      else {
+        // Calculate new user rate
+        let newTotalRateScore = 0;
+        console.log(userRated)
+        if (userRated.totalRateScore != null) newTotalRateScore = parseFloat(userRated.totalRateScore)+parseFloat(rateScore);
+        let tradesRated = userRated.tradesRated +1;
+        let newRateScore = calculateUserScore(newTotalRateScore, tradesRated)
+        console.log(newRateScore)
 
-      // Create comment
-      let newComment = new Comment({
-        user:req.user._id,//null,
-        rateScore,
-        comment
-      });
-      await newComment.save();
-      console.log(newComment)
+        // Create comment
+        let newComment = new Comment({
+          user: req.user.id,//null,
+          rateScore,
+          comment
+        });
+        await newComment.save();
+        console.log(newComment)
 
-  
-      // Update user
-      userRated.rateScore = newRateScore;
-      userRated.totalRateScore = totalRateScore;
-      userRated.tradesRated = tradesRated;
-      userRated.comments.push(newComment._id)
-      try {
-        await userRated.save();
-      
-        res.status(201).json(userRated);
-      } catch (error) {
-        res.status(409).json(error.message);
-      
-        console.log("Can not update the user");
-      }
-  
+
+        // Update user commented
+        userRated.rateScore = newRateScore;
+        userRated.totalRateScore = newTotalRateScore;
+        userRated.tradesRated = tradesRated;
+        userRated.commentsRecived.push(newComment)
+        const myUser = await User.findById({_id: req.user.id})
+        myUser.commentsDone.push(newComment)
+        console.log(myUser.id)
+        try {
+          await userRated.save();
+          await myUser.save();
+        
+          res.status(201).json(userRated);
+        } catch (error) {
+          res.status(409).json(error.message);
+        
+          console.log("Can not update the user");
+        }
+      }  
     }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
   }
-
-  
 }
 
 function calculateUserScore(totalRateScore, tradesRated) {
@@ -236,6 +241,27 @@ exports.getAllComments = async (req, res) => {
     console.log(comments);
   } catch (error) {
     res.status(400).json(error.message);
+    console.log(error.message);
+  }
+}
+
+exports.getMyCommentsDone = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsDone', populate:{path: 'user', select: { 'name': 1} }});
+    res.status(200).json(user.commentsDone);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+}
+
+exports.getMyCommentsRecived = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsRecived', populate:{path: 'user', select: { 'name': 1} }});
+    //const comments = user.commentsDone.populate(user)
+    res.status(200).json(user.commentsRecived);
+  } catch (error) {
+    res.status(404).json(error.message);
     console.log(error.message);
   }
 }

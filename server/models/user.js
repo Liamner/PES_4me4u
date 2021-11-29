@@ -57,7 +57,12 @@ let usuarioSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Product'
     }],
-    comments: [{
+    commentsRecived: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    commentsDone: [{
         // Comentarios recibidos
         type: Schema.Types.ObjectId, 
         ref: 'Comment'

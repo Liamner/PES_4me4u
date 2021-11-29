@@ -160,6 +160,12 @@ module.exports = function(app) {
 
 router.route('/comments')
   .get(userController.getAllComments)
+
+router.route('/comments/done')
+  .get(authenticateJWT, userController.getMyCommentsDone)
+
+router.route('/comments/recived')
+  .get(authenticateJWT, userController.getMyCommentsRecived)
   
   return router;
 }

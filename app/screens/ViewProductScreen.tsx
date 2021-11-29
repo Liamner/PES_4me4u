@@ -15,22 +15,25 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
-  const [images] = useState([
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '3' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '4' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
-  ]);
+  // const [images, setImages] = useState([{"_id": "619e6fd640d15287ffe42acf",
+  //       "public_id": "euwym4l6yabpe5zeocdk",
+  //       "url": "http://res.cloudinary.com/dcg9pwql1/image/upload/v1637773267/euwym4l6yabpe5zeocdk.png",
+  //       "__v": 0}]);
+
+  const [images, setImages] = useState([{"_id": "errorerrorerrorerro",
+  "public_id": "errorerrorerrorerror",
+  "url": "https://www.nosolohacking.info/wp-content/uploads/2017/11/error2.jpg",
+  "__v": 0}]);
+        
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('Cargando...') 
   //nombre usuario
   const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
-  const [categories] = useState([{name: 'Cargando...', key: '10'}]);
+  const [categories, setCategories] = useState({name: 'Cargando...', key: '10'});
   const [description, setDescription] = useState('Cargando...')
 
-  const [imagenDePrueba, setImagenDePrueba] = useState('https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg') 
+//  const [imagenDePrueba, setImagenDePrueba] = useState('https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg') 
 
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -42,27 +45,29 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    categories.pop();
     let aux = response.data.categories;
-    aux.forEach((element: any) => {
-      switch (element) {
-        case "tech":
-          categories.push({name: 'Tecnologia', key: '1'})
+//    aux.forEach((element: any) => {
+      element: 
+      switch (aux) {
+        case "61797e24b4a4d195aa14be8d":
+          setCategories({name: 'Tecnologia', key: '1'})
           break;
-        case "house":
-          categories.push({name: 'Cosas de casa', key: '2'})
+        case "61940e6f0c77883d581cede8":
+          setCategories({name: 'Jugetes', key: '2'})
           break;
         default:
+          setCategories({name: 'GATITOS', key: '0'})
           break;
       }
-    });
+//    });
   }
+
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
     exchange.pop();
     let aux = response.data.exchange;
-    aux.forEach((element: any) => {
-      switch (element) {
+//    aux.forEach((element: any) => {
+      switch (aux) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
           break;
@@ -73,9 +78,10 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           exchange.push({ name:'#regalo', key: '3'})
           break;
         default:
+          exchange.push({ name:'Perritos frios', key: '0'})
           break;
       }
-    });
+//    });
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -96,27 +102,30 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   const getProductInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/617beec47bf7d733c56f13a9');
+    
+    let response = await axios.get("https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca");
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
     getCorrectExchangeType(response);
     getCorrectStateType(response);
     //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
+    if(response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
+    else setDescription("Descripción: " + response.data.description);
+
+    setImages(response.data.img)
+    //getProductImages();
+
   };
 
   const getProductImages = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/image/617beec47bf7d733c56f13a9');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/image/619e6fd140d15287ffe42aca');
     //Required
     setName(response.data.name);
-    setImagenDePrueba(response.data.img)
+//    setImagenDePrueba(response.data.img)
     //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
     if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
@@ -127,17 +136,18 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   getProductInfo()
-  getProductImages()
+//  getProductImages()
+
   
   return (
     <View style={styles.container}>
       <ScrollView>
         <FlatList
-          data={imagenDePrueba} //ZZZ
+          data={images} //ZZZ
           renderItem={({ item }) => ( 
             <Image
               style={styles.image}
-              source={{uri: item.link}}
+              source={{uri: item.url}}
             />
           )}
           horizontal={true}
@@ -148,7 +158,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         <View style={styles.state}>
           <Text style={{color: 'white'}}>{`${state}`}</Text>
         </View>
-        <Text style={styles.smallText}>{`${currentPage} / ${imagenDePrueba.length}`} </Text>
+        <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
         <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 

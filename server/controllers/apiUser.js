@@ -172,6 +172,18 @@ exports.getUserProducts = async (req, res) => {
   }
 };
 
+exports.getUserWishlist = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("wishlist");
+    
+    console.log(user);
+    res.status(200).json(user.wishlist);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};  
+    
 exports.addToWishlist = async (req, res) => {
   try {
     const userId = req.params.id;

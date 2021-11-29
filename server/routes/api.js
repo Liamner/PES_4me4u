@@ -137,6 +137,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+
+  router.route('/user/:id/wishlist')
+    .get(userController.getUserWishlist)
     
   router.route('/user/:id/AddToWishlist')
     .get(userController.addToWishlist)

@@ -1,41 +1,42 @@
-const TradeGive = require('../models/tradeGive.js');
+const TradeLoan = require('../models/tradeLoan.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const { ObjectId } = require('mongodb');
 
-exports.readAllTradeGive = async (req, res) => {
+exports.readAllTradeLoan = async (req, res) => {
     try {
-      const tradeGive = await TradeGive.find();
+      const tradeLoan = await TradeLoan.find();
   
-      res.status(200).json(tradeGive);
+      res.status(200).json(tradeLoan);
       
-      console.log(tradeGive);
+      console.log(tradeLoan);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);
     }
 };
   
-  exports.readTradeGive = async (req, res) => {
+  exports.readTradeLoan = async (req, res) => {
     try {
-      const tradeGive = await TradeGive.findById({_id: req.params.id});
+      const tradeLoan = await TradeLoan.findById({_id: req.params.id});
   
-      console.log('Reading TradeGive: ' + req.params.id);
+      console.log('Reading TradeLoan: ' + req.params.id);
   
-      res.status(200).json(tradeGive);
+      res.status(200).json(tradeLoan);
     } catch (error) {
       res.status(404).json(error.message);
       console.log(error.message);
     }
 };
   
-  exports.createTradeGive = async (req, res) => {
-    const tradeGive = new TradeGive();
+  exports.createTradeLoan = async (req, res) => {
+    const tradeLoan = new TradeLoan();
 
-    tradeGive.userOfering = req.body.userOfering;
-    tradeGive.userTaking = req.body.userTaking;
-    tradeGive.product = req.body.product;
-   tradeGive.publishingDate = req.body.publishingDate;
+    tradeLoan.userOfering = req.body.userOfering;
+    tradeLoan.userTaking = req.body.userTaking;
+    tradeLoan.product = req.body.product;
+   tradeLoan.publishingDate = req.body.publishingDate;
+   tradeLoan.returnDate = req.body.returnDate;
      
     try {
         const userOfering = await User.findById({_id:req.body.userOfering});
@@ -49,7 +50,7 @@ exports.readAllTradeGive = async (req, res) => {
         const product = await Product.findById({_id:req.body.product});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        
+        if (publishingDate > returnDate) res.status(404).json({error:"returnDate invalid"});
 
       //caldrà comprovar que es tenen prous punts i que el producte pertany a ususari
      /* const userHasProduct = await User.hasProduct(_id:req.body.userOfering, product:req.body.product)
@@ -57,31 +58,33 @@ exports.readAllTradeGive = async (req, res) => {
       userHasEnoughtPoints --> check ---> error
       --> cal assignar points, que sigui obligatori i que al acabar el creat faci les sumes/restes corresponents als usuaris (sum_points i checkEnoguthPoints)
       */
+     //caldira afegir un vector de productes alquilats al usertaking i un de deixats al userofering? 
+     //caldria fer l'operacio per tornar un producte
   
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
-          const newProduct = await tradeGive.save();
-          res.status(201).json(tradeGive);  
+          const newProduct = await tradeLoan.save();
+          res.status(201).json(tradeLoan);  
      }
 
     } catch (error) {
       res.status(409).json(error.message);
       
-      console.log('Can not create the tradeGive');
+      console.log('Can not create the tradeLoan');
     }
 };
   
-  exports.updateTradeGive = async (req, res) => {
+  exports.updateTradeLoan = async (req, res) => {
   
 };
 
-  exports.deleteTradeGive = async (req, res) => {
+  exports.deleteTradeLoan = async (req, res) => {
   
       try {
-        const tradeGive = await TradeGive.findByIdAndDelete({_id: req.params.id});
+        const tradeLoan = await TradeLoan.findByIdAndDelete({_id: req.params.id});
     
-        console.log('Reading tradeGive: ' + req.params.id);
+        console.log('Reading tradeLoan: ' + req.params.id);
     
-        res.status(200).json(tradeGive);
+        res.status(200).json(tradeLoan);
       } catch (error) {
         res.status(404).json(error.message);
         console.log(error.message);

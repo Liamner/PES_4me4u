@@ -5,6 +5,8 @@ const userController = require('../controllers/apiUser.js');
 const imageController = require('../controllers/apiImage.js');
 const typeController = require('../controllers/apiType.js');
 const tradeGiveController = require('../controllers/apiTradeGive.js');
+const tradeExchangeController = require('../controllers/apiTradeExchange.js');
+const tradeLoanController = require('../controllers/apiTradeLoan.js');
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -162,6 +164,46 @@ module.exports = function(app) {
   // Delete tradeGive with id = id
   router.route('/tradeGive/delete/:id')
     .delete(tradeGiveController.deleteTradeGive);
+
+  // Create new tradeExchange
+  router.route('/tradeExchange/create/')
+    .post(tradeExchangeController.createTradeExchange);
+
+  // Read tradeExchange with id = id
+  router.route('/tradeExchange/:id')
+    .get(tradeExchangeController.readTradeExchange);
+
+  // Read all tradeExchange
+  router.route('/tradeExchange/')
+    .get(tradeExchangeController.readAllTradeExchange);
+
+  // Update tradeExchange with id = id
+  router.route('/tradeExchange/update/:id')
+    .put(tradeExchangeController.updateTradeExchange);
+
+  // Delete tradeExchange with id = id
+  router.route('/tradeExchange/delete/:id')
+    .delete(tradeExchangeController.deleteTradeExchange);
+
+  // Create new tradeLoan
+  router.route('/tradeLoan/create/')
+    .post(tradeLoanController.createTradeLoan);
+
+  // Read tradeLoan with id = id
+  router.route('/tradeLoan/:id')
+    .get(tradeLoanController.readTradeLoan);
+
+  // Read all tradeLoan
+  router.route('/tradeLoan/')
+    .get(tradeLoanController.readAllTradeLoan);
+
+  // Update tradeLoan with id = id
+  router.route('/tradeLoan/update/:id')
+    .put(tradeLoanController.updateTradeLoan);
+
+  // Delete tradeLoan with id = id
+  router.route('/tradeLoan/delete/:id')
+    .delete(tradeLoanController.deleteTradeLoan);
 
   // ======================
   // ---- Image Routes ----

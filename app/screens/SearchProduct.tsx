@@ -15,11 +15,8 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
   const [text, onChangeText] = useState("");
 
   const getPNameInfo = async () => {
-
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/name/'+text);
     setProducts(response.data);
-    console.log(response.data);
-    
   };
 	
   return (
@@ -47,9 +44,10 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 			</View>
       <ScrollView style={styles.flex}>
         <FlatList
+          numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard name={item.name} prestar={false} intercambiar={false} regalar={false} guardado={false} imageUri={item.img[0].url}/>
+            <ProductCard name={item.name} prestar={false} intercambiar={false} regalar={false} guardado={false} imageUri={'https://images-ext-1.discordapp.net/external/QF-9LK6l_n2asF8dAVZNK9IyVUUs909594HqaclVamQ/%3Fformat%3Djpg%26name%3D4096x4096/https/pbs.twimg.com/media/FFYhQHTWQAMh9or?width=416&height=624'}/>
           )}
           keyExtractor={item => item.id}
           />

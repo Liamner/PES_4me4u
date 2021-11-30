@@ -258,7 +258,7 @@ exports.readProductsByName = async (req, res) => {
   try {
     const filter = req.params.name;
     console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
+    const product = await Product.find({name: {$regex : filter}}).populate('img')
     console.log(product)
     res.status(200).json(product);
   } catch (error) {

@@ -81,20 +81,25 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
+  if (req.body.name == null || req.body.categories  == null || req.body.exchange  == null  || req.body.state  == null || req.files.length == 0) {
+    res.status(400).json({error: 'Invalid input'});
+    console.log('Invalid input')
+  }
+  else {
+    product.name = req.body.name;
+    product.categories = req.body.categories  
+    product.description = req.body.description;
+    product.publishingDate = req.body.publishingDate;
+    product.exchange = req.body.exchange;
+    product.state = req.body.state;
   
-  product.name = req.body.name;
-  product.categories = req.body.categories  
-  product.description = req.body.description;
-  product.publishingDate = req.body.publishingDate;
-  product.exchange = req.body.exchange;
-  product.state = req.body.state;
-  // Assign the current user to the product
-
-  //product.userId = req.user.id;
-  //product.username = req.user.username;
-
-  // SAVE IMAGE
-  if (req.files != null) {
+    // Assign the current user to the product
+  
+    //product.userId = req.user.id;
+    //product.username = req.user.username;
+  
+    // SAVE IMAGE
+    //if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
       let file = req.files[i];
       let result = await cloudinary.uploader.upload(file.path);
@@ -104,32 +109,33 @@ exports.createProduct = async (req, res) => {
       image.save();
       product.img.push(image._id);
     }
-  } 
- 
-  try {
-    const category = await Category.findById({_id:req.body.categories});
-  if (category == null) res.status(404).json({error:"category not found"});
-
-  const type = await Type.findById({_id:req.body.exchange});
-  if (type == null) res.status(404).json({error:"type not found"});
-
-  if (category != null && type != null) {
-    const newProduct = await product.save();
-    // Add the product to the user
-    /*const user = await User.findByIdAndUpdate(
-                            { _id: ObjectId(req.user.id) }, 
-                              {$push : {
-                                products: newProduct
-                              }
-                            });
-*/
-    res.status(201).json(product);}
-
-  } catch (error) {
-    res.status(409).json(error.message);
-
-    console.log("Can not create the Product");
-  }
+    //} 
+   
+    try {
+      const category = await Category.findById({_id:req.body.categories});
+    if (category == null) res.status(404).json({error:"category not found"});
+  
+    const type = await Type.findById({_id:req.body.exchange});
+    if (type == null) res.status(404).json({error:"type not found"});
+  
+    if (category != null && type != null) {
+      const newProduct = await product.save();
+      // Add the product to the user
+      /*const user = await User.findByIdAndUpdate(
+                              { _id: ObjectId(req.user.id) }, 
+                                {$push : {
+                                  products: newProduct
+                                }
+                              });
+  */
+      res.status(201).json(product);}
+  
+    } catch (error) {
+      res.status(409).json(error.message);
+  
+      console.log("Can not create the Product");
+    }
+  }  
 };
 
 exports.getImg = async (req, res) => {

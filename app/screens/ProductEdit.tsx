@@ -10,8 +10,8 @@ import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
 
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
-  const [name, onChangeName] = React.useState("");  
-  const [description, onChangeDescription] = React.useState("");  
+  const [name, onChangeName] = React.useState("");
+  const [description, onChangeDescription] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState();
   const [checkedDonar, setCheckedDonar] = React.useState(false);
   const [checkedIntercambiar, setCheckedIntercambiar] = React.useState(false);
@@ -22,33 +22,50 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null); 
+
+  const [imageAux, setImageAux] = React.useState(null);
+  const [image2Aux, setImage2Aux] = React.useState(null);
+  const [image3Aux, setImage3Aux] = React.useState(null);
+  const [image4Aux, setImage4Aux] = React.useState(null);
+  const [image5Aux, setImage5Aux] = React.useState(null);
+  const [image6Aux, setImage6Aux] = React.useState(null); 
+
   const [productInfo, setProductInfo] = React.useState ({
     pname:"",
-    pcategories:[],
+    pcategories:"",
     pdescription:"",
-    pexchange:[]
-  });  
+    pexchange:[],
+    pimage:"",
+    pimage2:"",
+    pimage3:"",
+    pimage4:"",
+    pimage5:"",
+    pimage6:""
+  });
 
-  const pid = '617866d485f9b5c19fcafdbc';
+  const pid = '619e6fd140d15287ffe42aca';
 
   React.useEffect(() => {
     getInfo();
   }, []);  
 
-  const getInfo = async () => {    
+  const getInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
     onChangeName(response.data.name)
     onChangeDescription(response.data.description)
-    setSelectedCategory(response.data.categories[0])
+    setSelectedCategory(response.data.categories)
     setCheckedDonar(false)
     setCheckedIntercambiar(false)
     setCheckedPrestar(false)
-    let exchange = response.data.exchange;
-    exchange.forEach(element => {      
-      if(element == "present") setCheckedDonar(true);
-      else if(element == "exchange") setCheckedIntercambiar(true);
-      else if(element == "provide") setCheckedPrestar(true);
+    let exchange = [response.data.exchange];
+    exchange.forEach(element => {
+//      if(element == "present") setCheckedDonar(true);
+//        else if(element == "exchange") setCheckedIntercambiar(true);
+//        else if(element == "provide") setCheckedPrestar(true);
+        if(element == "6193a583e47e769eeaa7a978") setCheckedDonar(true);//no se que es exactamente
+
     })
+    response.data.images
     setProductInfo({
       ...productInfo,
       pname: response.data.name,
@@ -56,20 +73,49 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       pdescription: response.data.description,
       pexchange: exchange
     });
+  //AÑADIR FOTOS
+    if((response.data.images).length >= 1){
+      setImage(response.data.images[0]);
+      setImageAux(response.data.images[0]);
+    }
+    else if( (response.data.images).length >= 2 ){
+      setImage2(response.data.images[1]);
+      setImage2Aux(response.data.images[1]);
+    }
+    else if( (response.data.images).length >= 3 ){
+      setImage3(response.data.images[2]);
+      setImage3Aux(response.data.images[2]);
+    }
+    else if( (response.data.images).length >= 4 ){
+      setImage4(response.data.images[3]);
+      setImage4Aux(response.data.images[3]);
+    }
+    else if( (response.data.images).length >= 5 ){
+      setImage5(response.data.images[4]);
+      setImage5Aux(response.data.images[4]);
+    }
+    else if( (response.data.images).length >= 6 ){
+      setImage6(response.data.images[5]);
+      setImage6Aux(response.data.images[5]);
+    }
+
+
   };
 
   function reloadProduct() {
     onChangeName(productInfo.pname)
     onChangeDescription(productInfo.pdescription)
-    setSelectedCategory(productInfo.pcategories[0])
+    setSelectedCategory(productInfo.pcategories)
     let exchange = productInfo.pexchange
     setCheckedDonar(false)
     setCheckedIntercambiar(false)
     setCheckedPrestar(false)
     exchange.forEach(element => {      
-      if(element == "present") setCheckedDonar(true);
-      else if(element == "exchange") setCheckedIntercambiar(true);
-      else if(element == "provide") setCheckedPrestar(true);
+      // if(element == "present") setCheckedDonar(true);
+      // else if(element == "exchange") setCheckedIntercambiar(true);
+      // else if(element == "provide") setCheckedPrestar(true);
+      if(element == "6193a583e47e769eeaa7a978") setCheckedDonar(true);
+
     })
 
     console.log(productInfo.pname + ' reloaded')
@@ -92,7 +138,8 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       name:name,
       categories: selectedCategory,
       description: description,
-      exchange: ex
+      exchange: ex,
+      img: [image, image2, image3, image4, image5, image6]
     };
     await axios
       .put('https://app4me4u.herokuapp.com/api/product/update/' + pid, newInfo)
@@ -211,8 +258,11 @@ const pickImage = async (id?: Number) => {
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />          
-          <Picker.Item label="Casas" value="house" />
-          <Picker.Item label="Tecnologia" value="tech" />          
+          <Picker.Item label="tecnologia" value="61940e6f0c77883d581cede8" />   
+          <Picker.Item label="home" value="61a51d0149b1a2167fe86d08" />
+          {//AÑADIR EL RESTO DE CATEGORIAS
+          }
+
         </Picker>        
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
         <View 
@@ -304,7 +354,7 @@ const pickImage = async (id?: Number) => {
           {!image6 && 
           <TouchableOpacity style={styles.notImage} onPress={pickImage}>
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
-          </TouchableOpacity>  }        
+          </TouchableOpacity>  }
         </View>    
         <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={editProduct} ><Text>¡Subir Producto!</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]} onPress ={reloadProduct}><Text>Cancelar</Text></Pressable>

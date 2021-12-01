@@ -144,6 +144,9 @@ module.exports = function(app) {
   router.route('/user/:id/AddToWishlist')
     .get(userController.addToWishlist)
 
+    router.route('/user/:id/DeleteFromWishlist')
+    .get(userController.deleteFromWishlist)
+
 
   // ======================
   // ---- Image Routes ----

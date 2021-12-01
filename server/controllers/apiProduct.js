@@ -86,7 +86,7 @@ exports.createProduct = async (req, res) => {
   product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
-  product.exchange = req.body.exchange;
+  product.exchange.push(req.body.exchange);         
   product.state = req.body.state;
   // Assign the current user to the product
 

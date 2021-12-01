@@ -250,11 +250,21 @@ exports.unfollow = async (req, res) => {
     console.log("nuestro ususario: ", ourUser.name);
 
     let mail = req.body.email;
+    console.log(mail)
     //const us = User.findById({_id: userId}).populate({path: 'followers', select({email: mail})});
-    User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
-    console.log("us: ", us);
+    //User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
+    User.findById({_id: userId},  {followers: 1}, (erro, usuarioDB) => {
+      if (!usuarioDB || erro) {
+        // No lo seguimos
+        console.log('User not followed')
+      }
+      else {
+        // Lo seguimos
+        console.log(usuarioDB)
+      }
+    }).populate('followers', {email: {$in: mail}});
 
-    ourUser.followed.findOne({ email: body.email }, (erro, usuarioDB)=>{
+    /*ourUser.followed.findOne({ email: body.email }, (erro, usuarioDB)=>{
       console.log("entra dentro de la función");
       if (erro) {
         return res.status(500).json({
@@ -270,7 +280,7 @@ exports.unfollow = async (req, res) => {
      ourUser.save();
      res.status(200).json(ourUser.followed);
     });
-
+*/
   } catch (error) {
     res.status(400).json(error)
   }

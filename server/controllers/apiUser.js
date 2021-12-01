@@ -253,14 +253,20 @@ exports.unfollow = async (req, res) => {
     console.log(mail)
     //const us = User.findById({_id: userId}).populate({path: 'followers', select({email: mail})});
     //User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
-    User.findById({_id: userId},  {followers: 1}, (erro, usuarioDB) => {
-      if (!usuarioDB || erro) {
+    User.findById({_id: userId},  {followers: 1}, (erro, userFollowers) => {
+      if (!userFollowers || erro) {
         // No lo seguimos
         console.log('User not followed')
       }
       else {
         // Lo seguimos
-        console.log(usuarioDB)
+        console.log(userFollowers.followers.length)
+        for (let i = 0; i < userFollowers.followers.length; i++) {
+          console.log(userFollowers.followers[i].email)
+        }
+        /*userFollowers.followers.findOne({email: mail}, (erro, userMail) => {
+          console.log(userMail)
+        })*/
       }
     }).populate('followers', {email: {$in: mail}});
 

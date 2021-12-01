@@ -81,7 +81,11 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  
+  if (req.body.name == null || req.body.categories  == null || req.body.exchange  == null  || req.body.state  == null || req.files.length == 0) {
+    res.status(400).json({error: 'Invalid input'});
+    console.log('Invalid input')
+  }                                                   
+  else {
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -94,7 +98,6 @@ exports.createProduct = async (req, res) => {
   //product.username = req.user.username;
 
   // SAVE IMAGE
-  if (req.files != null) {
     for (let i = 0; i < req.files.length; ++i) {
       let file = req.files[i];
       let result = await cloudinary.uploader.upload(file.path);
@@ -104,8 +107,7 @@ exports.createProduct = async (req, res) => {
       image.save();
       product.img.push(image._id);
     }
-  } 
- 
+
   try {
     const category = await Category.findById({_id:req.body.categories});
   if (category == null) res.status(404).json({error:"category not found"});
@@ -117,7 +119,6 @@ exports.createProduct = async (req, res) => {
     
     const newProduct = await product.save();
     // Add the product to the user 
-    //jo crec que aixo no funciona
     const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
@@ -138,7 +139,7 @@ exports.createProduct = async (req, res) => {
     res.status(409).json(error.message);
 
     console.log("Can not create the Product");
-  }
+  } 
 };
 
 exports.getImg = async (req, res) => {
@@ -179,7 +180,7 @@ exports.updateProduct = async (req, res) => {
     try {
       await product.save();
     
-      res.status(201).json(product);
+      res.status(200).json(product);
     } catch (error) {
       res.status(409).json(error.message);
     
@@ -209,7 +210,7 @@ exports.updateStateProduct = async (req, res) => {
         product.state = nstate;
         console.log(product);
         await product.save();
-        res.status(201).json(product);
+        res.status(200).json(product);
 
       
     } catch (error) {
@@ -225,7 +226,9 @@ exports.updateStateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+  console.log("deleteProduct" + req.params.id)
   try {    
+    
     let product = await Product.findById({_id: req.params.id})
     /*if (!product) {
       res.status(404).json({error: "Product not find"})
@@ -245,12 +248,12 @@ exports.deleteProduct = async (req, res) => {
           console.log("Deleted product: " + req.params.id);
         }
         
-        await User.findByIdAndUpdate(
+       /* await User.findByIdAndUpdate(
                               { _id: ObjectId(req.user.id) }, 
                                 {$pull : {
                                   products: product._id
                                 }
-                              });
+                              });*/
      
       product.delete();
       res.status(200).json(product);
@@ -265,7 +268,7 @@ exports.readProductsByName = async (req, res) => {
   try {
     const filter = req.params.name;
     console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
+    const product = await Product.find({name: {$regex : filter}}).populate('img')
     console.log(product)
     res.status(200).json(product);
   } catch (error) {
@@ -273,16 +276,3 @@ exports.readProductsByName = async (req, res) => {
     console.log(error.message);
   }
 };
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-}

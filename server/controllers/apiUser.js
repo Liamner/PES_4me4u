@@ -246,29 +246,41 @@ exports.getUserFollowers = async (req, res) => {
 exports.unfollow = async (req, res) => {
   try {
     const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
-    console.log("nuestro ususario: ", ourUser.name);
+    //const ourUser = await User.findById({_id: userId});
+    //console.log("nuestro ususario: ", ourUser.name);
 
     let mail = req.body.email;
-    console.log(mail)
     //const us = User.findById({_id: userId}).populate({path: 'followers', select({email: mail})});
     //User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
-    User.findById({_id: userId},  {followers: 1}, (erro, userFollowers) => {
-      if (!userFollowers || erro) {
-        // No lo seguimos
-        console.log('User not followed')
-      }
-      else {
+    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
+        console.log(usersFollowed)
         // Lo seguimos
-        console.log(userFollowers.followers.length)
-        for (let i = 0; i < userFollowers.followers.length; i++) {
-          console.log(userFollowers.followers[i].email)
+        //console.log(userFolloweds.followed[0].email)
+        let contains = [];
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
+          console.log(usersFollowed.followed[i].email)
+          if (mail == usersFollowed.followed[i].email ) {find = 1;}
         }
-        /*userFollowers.followers.findOne({email: mail}, (erro, userMail) => {
-          console.log(userMail)
-        })*/
-      }
-    }).populate('followers', {email: {$in: mail}});
+        if (find == 0) {
+          res.status(400).json({error: 'User not followed'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowed.followed[i]._id;
+          console.log(usersFollowed.followed[i].email)
+          // Eliminar usuario de la lista de followed
+          usersFollowed.followed.splice(i, 1);
+          usersFollowed.save();
+
+          const user = await User.findById({_id: idUser});
+          // Eliminar en la lista de followers el user de userId
+          console.log(user.followers)
+          res.status(200).json(usersFollowed);
+
+        }
+    }).populate('followed');
 
     /*ourUser.followed.findOne({ email: body.email }, (erro, usuarioDB)=>{
       console.log("entra dentro de la función");

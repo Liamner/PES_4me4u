@@ -147,7 +147,7 @@ const sendApi = async () =>{
             setCheckedDonar(!checkedDonar);
           }}
         />  
-        <Text >Donar</Text>
+        <Text style={{color:'black'}}>Donar</Text>
         </View>    
         <View 
          style={styles.checkbox}> 
@@ -157,7 +157,7 @@ const sendApi = async () =>{
             setCheckedPrestar(!checkedPrestar);
           }}
         />  
-        <Text >Prestar</Text>
+        <Text style={{color:'black'}}>Prestar</Text>
         </View> 
         <View 
          style={styles.checkbox}> 
@@ -167,12 +167,13 @@ const sendApi = async () =>{
             setCheckedIntercambiar(!checkedIntercambiar);
           }}
         />  
-        <Text >Intercambiar</Text>
+        <Text style={{color:'black'}}>Intercambiar</Text>
         </View>          
         <View 
          style={{
           flexDirection: "row",          
-          marginTop: 30
+          marginTop: 30,
+          backgroundColor: 'white'
         }}>
                   
           {image && 
@@ -203,7 +204,8 @@ const sendApi = async () =>{
         <View 
          style={{
            flexDirection: "row",           
-           marginTop: 10
+           marginTop: 10,
+           backgroundColor: 'white'
           }}>
           {image4 && 
           <TouchableOpacity  onPress={() => unPickImage(4)}>
@@ -242,6 +244,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   button: {
     alignItems: 'center',
@@ -259,6 +262,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems:'center',
     width:'80%',  
+    backgroundColor: 'white'
   },
   image: {  
     marginHorizontal :5,
@@ -267,13 +271,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#5e5c57',
     borderWidth: 3,
+    
   },
   cameraImage: {
     width: 90, 
     height: 90, 
     marginTop: 1,
     marginLeft :2, 
-    borderRadius: 3
+    borderRadius: 3,
+    
   },
   notImage: {           
     marginHorizontal :5,    
@@ -289,6 +295,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 15,
     width: '90%',
+    color: 'black'
   },
   picker:{
     marginVertical: 10,

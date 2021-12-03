@@ -10,7 +10,7 @@ let rolesValidos = {
 let Schema = mongoose.Schema;
 
 let usuarioSchema = new Schema({
-    name: {
+    userId: {
         type: String,
         required: [true, 'El nombre es necesario'],
     },
@@ -29,6 +29,15 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
+    latitude: {
+        type: String,
+        default: '41.3879',
+        //required: [true],
+    },
+    longitude: {
+        type: String,
+        default: '2.16992 41° 23′ 16″',
+    },
     level: {
         type: String,
         default: '1',
@@ -38,34 +47,12 @@ let usuarioSchema = new Schema({
         default: '10',
     },
     score: {
-        type: mongoose.Schema.Types.Double,
-        default: 0,
-    },
-    rateScore: {
-        type: Number,
-        default: 0
-    },
-    totalRateScore: {
-        type: Number,
-        default: 0
-    },
-    tradesRated: {
-        type: Number,
-        default: 0
+        type: String,
+        default: '5.0',
     },
     products: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
-    }],
-    commentsRecived: [{
-        // Comentarios recibidos
-        type: Schema.Types.ObjectId, 
-        ref: 'Comment'
-    }],
-    commentsDone: [{
-        // Comentarios recibidos
-        type: Schema.Types.ObjectId, 
-        ref: 'Comment'
     }],
     latitude: {
         type: mongoose.Schema.Types.Double,

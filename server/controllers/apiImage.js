@@ -71,53 +71,38 @@ exports.uploadImages = async (req, res) => {
 
 
 exports.deleteImages = async (req, res) => {
-  let imgs = [];
-  let size;
-  
-  if (req.body.img.length == 24) {
-    size = 1;
-  }
-  else {
-    size = req.body.img.length;
-  }
-  imgs = req.body.img;
-
   try {
     const product = await Product.findById({_id: req.params.productId});
-    if (product.img.length <= size) {
-      
-      res.status(400).json({error: 'Invalid Input'});
-      return;
-    }
-    else {
-      /*
-      if (product.userId == req.user.id) {
-          res.status(401).json({error: "Do not have permission"})
-          return;
-      }*/
-      for (let i = 0; i <  size; ++i) {  
-        
+    /*
+    if (product.userId == req.user.id) {
+        res.status(401).json({error: "Do not have permission"})
+        return;
+    }*/
+      const imgs = [];
+      imgs.push(req.body.img)
+      for (let i = 0; i < imgs.length; ++i) {  
         const imageID = imgs[i];
         console.log(ObjectId(imageID))
-        console.log(imageID)
+  
         // Delete reference of the image
         await product.img.pull({_id: imageID});
-
+  
         // Delete mongoDB Image
         const res = await Image.findByIdAndDelete({_id: imageID});
         console.log(res.public_id)
-
+  
         // Delete Cloudinary Image
         await cloudinary.uploader.destroy(res.public_id);
       }
       await product.save();
       console.log(product);
       res.status(204).json(product);
-    }
+    
+    
   } catch (error) {
     res.status(404).json(error.message);
   
-    console.log("Can not find the product");
+      console.log("Can not find the images");
   }
 
 }

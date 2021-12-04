@@ -24,7 +24,7 @@ exports.readAllCategories = async (req, res) => {
       res.status(404).json(error.message);
       console.log(error.message);
     }
-  }
+  }                                  
   
   exports.createCategory = async (req, res) => {
 
@@ -68,9 +68,17 @@ exports.getProductCategory = async (req, res) => {
   const category = req.body.category;
 
   try {
-    const products = await Category.find({name: category},  {products: 1 }).populate('products');
-  
-    res.status(200).json(products);
+    //const products = await Category.find({name: category},  {products: 1 }).populate('products').populate('exchange');
+    //const products = await Category.find({name: category},  {products: 1 })//.populate('products');
+    if (category != null) {
+      Category.find({name: category}, {products: 1}, async (erro, products) => {
+        console.log(products[0]._id)
+        res.status(200).json(products);
+      }).populate('products')
+    }
+    
+   
+    
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

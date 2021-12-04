@@ -63,11 +63,12 @@ exports.readAllCategories = async (req, res) => {
 }
 
 exports.getProductCategory = async (req, res) => {
-  console.log('Reading category: ' + req.params.category);
-  const category = req.params.category;
+  
+  console.log('Reading category: ' + req.body.category);
+  const category = req.body.category;
 
   try {
-    const products = await Category.find({name: category},  {products: 1 });
+    const products = await Category.find({name: category},  {products: 1 }).populate('products');
   
     res.status(200).json(products);
   } catch (error) {

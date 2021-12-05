@@ -142,7 +142,7 @@ module.exports = function(app) {
     .get(userController.getUserWishlist)
     
   router.route('/user/:id/AddToWishlist')
-    .get(userController.addToWishlist)
+    .post(userController.addToWishlist)
 
 
   // ======================

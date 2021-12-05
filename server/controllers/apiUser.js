@@ -3,7 +3,7 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const user = require('../models/user.js');
+//const user = require('../models/user.js');
 const app = express();
 
 exports.readAllUsers =  async (req, res) => {
@@ -237,6 +237,39 @@ exports.getUserFollowers = async (req, res) => {
     
     console.log(user)
     res.status(200).json(user.followers)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+
+exports.unfollow = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
+          if (mail == usersFollowed.followed[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not followed'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowed.followed[i]._id;
+          usersFollowed.followed.splice(i, 1);
+          usersFollowed.save();
+
+          const user = await User.findById({_id: idUser});
+          console.log(user.followed)
+          res.status(200).json(usersFollowed);
+
+        }
+    }).populate('followed');
+
   } catch (error) {
     res.status(400).json(error)
   }

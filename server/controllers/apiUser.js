@@ -210,7 +210,7 @@ exports.addUserFollower = async (req, res) => {
      }
      ourUser.followers.push(usuarioDB);
      ourUser.save();
-     res.status(200).json(ourUser);
+     res.status(200).json(ourUser.followers);
     });
 
   } catch (error) {
@@ -223,7 +223,6 @@ exports.getUserFollowed = async (req, res) => {
     const userId = req.params.id;
     const user = await User.findById({_id: userId}).populate("followed");
     
-    console.log(user)
     res.status(200).json(user.followed)
   } catch (error) {
     res.status(400).json(error)
@@ -235,7 +234,6 @@ exports.getUserFollowers = async (req, res) => {
     const userId = req.params.id;
     const user = await User.findById({_id: userId}).populate("followers");
     
-    console.log(user)
     res.status(200).json(user.followers)
   } catch (error) {
     res.status(400).json(error)
@@ -264,7 +262,6 @@ exports.unfollow = async (req, res) => {
           usersFollowed.save();
 
           const user = await User.findById({_id: idUser});
-          console.log(user.followed)
           res.status(200).json(usersFollowed);
 
         }

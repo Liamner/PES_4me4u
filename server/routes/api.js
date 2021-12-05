@@ -139,10 +139,10 @@ module.exports = function(app) {
     .get(userController.getUserProducts)
 
   router.route('/user/:id/AddFollowed')
-    .get(userController.addUserFollowed)
+    .post(userController.addUserFollowed)
   
   router.route('/user/:id/AddFollower')
-    .get(userController.addUserFollower)
+    .post(userController.addUserFollower)
   
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)

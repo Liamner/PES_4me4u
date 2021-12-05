@@ -274,3 +274,34 @@ exports.unfollow = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.loseFollower = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
+          if (mail == usersFollowers.followers[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not follower'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowers.followers[i]._id;
+          usersFollowers.followers.splice(i, 1);
+          usersFollowers.save();
+
+          const user = await User.findById({_id: idUser});
+          res.status(200).json(usersFollowers);
+
+        }
+    }).populate('followers');
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};

@@ -3,7 +3,7 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const user = require('../models/user.js');
+//const user = require('../models/user.js');
 const app = express();
 
 exports.readAllUsers =  async (req, res) => {
@@ -246,21 +246,12 @@ exports.getUserFollowers = async (req, res) => {
 exports.unfollow = async (req, res) => {
   try {
     const userId = req.params.id;
-    //const ourUser = await User.findById({_id: userId});
-    //console.log("nuestro ususario: ", ourUser.name);
-
     let mail = req.body.email;
-    //const us = User.findById({_id: userId}).populate({path: 'followers', select({email: mail})});
-    //User.findById({_id: userId}).populate({path: 'followers', select: {email: mail}});
+
     User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
-        console.log(usersFollowed)
-        // Lo seguimos
-        //console.log(userFolloweds.followed[0].email)
-        let contains = [];
         let find = 0;
         let i;
         for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
-          console.log(usersFollowed.followed[i].email)
           if (mail == usersFollowed.followed[i].email ) {find = 1;}
         }
         if (find == 0) {
@@ -269,36 +260,16 @@ exports.unfollow = async (req, res) => {
         else {
           i = i-1;
           const idUser = usersFollowed.followed[i]._id;
-          console.log(usersFollowed.followed[i].email)
-          // Eliminar usuario de la lista de followed
           usersFollowed.followed.splice(i, 1);
           usersFollowed.save();
 
           const user = await User.findById({_id: idUser});
-          // Eliminar en la lista de followers el user de userId
-          console.log(user.followers)
+          console.log(user.followed)
           res.status(200).json(usersFollowed);
 
         }
     }).populate('followed');
 
-    /*ourUser.followed.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      console.log("entra dentro de la función");
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     console.log("usuario que queremos dejar de seguir: ",usuarioDB.name );
-
-     const res = ourUser.followed.findByIdAndDelete({_id: usuarioDB.id});
-     console.log("se ha borrado el followed");
-
-     ourUser.save();
-     res.status(200).json(ourUser.followed);
-    });
-*/
   } catch (error) {
     res.status(400).json(error)
   }

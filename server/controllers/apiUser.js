@@ -3,7 +3,7 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const user = require('../models/user.js');
+//const user = require('../models/user.js');
 const app = express();
 
 exports.readAllUsers =  async (req, res) => {
@@ -163,6 +163,200 @@ exports.getUserProducts = async (req, res) => {
     
     console.log(user)
     res.status(200).json(user.products)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+
+exports.getUserWishlist = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("wishlist");
+    
+    console.log(user);
+    res.status(200).json(user.wishlist);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};  
+    
+exports.addToWishlist = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    let idProduct = req.body.idProduct;
+    
+    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.wishlist.push(productDB);
+     ourUser.save();
+     res.status(200).json(ourUser.wishlist);
+    });
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.deleteFromWishlist = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let idProduct = req.body.idProduct;
+    User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersProducts.wishlist.length) ; i++) {
+          if (idProduct == usersProducts.wishlist[i]._id) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not wishlist'})
+        }
+        else {
+          i = i-1;
+          usersProducts.wishlist.splice(i, 1);
+          usersProducts.save();
+          const user = await User.findById({_id: userId});
+          console.log(user.wishlist)
+          res.status(200).json(usersProducts);
+
+        }
+    }).populate('wishlist');
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followed");
+    
+    res.status(200).json(user.followed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowers = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followers");
+    
+    res.status(200).json(user.followers)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.addUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.followed.push(usuarioDB);
+     ourUser.save();
+     res.status(200).json(ourUser.followed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.addUserFollower = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.followers.push(usuarioDB);
+     ourUser.save();
+     res.status(200).json(ourUser.followers);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.unfollow = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
+          if (mail == usersFollowed.followed[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not followed'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowed.followed[i]._id;
+          usersFollowed.followed.splice(i, 1);
+          usersFollowed.save();
+
+          const user = await User.findById({_id: idUser});
+          res.status(200).json(usersFollowed);
+
+        }
+    }).populate('followed');
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.loseFollower = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
+          if (mail == usersFollowers.followers[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not follower'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowers.followers[i]._id;
+          usersFollowers.followers.splice(i, 1);
+          usersFollowers.save();
+
+          const user = await User.findById({_id: idUser});
+          res.status(200).json(usersFollowers);
+
+        }
+    }).populate('followers');
+
   } catch (error) {
     res.status(400).json(error)
   }

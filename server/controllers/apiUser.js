@@ -188,17 +188,6 @@ exports.getUserRewards = async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (error) {
-
-  }
-  /*
-  try {
-    const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("products");
-    
-    console.log(user)
-    res.status(200).json(user.products)
-  } catch (error) {
     res.status(400).json(error)
   }
-  */
 };

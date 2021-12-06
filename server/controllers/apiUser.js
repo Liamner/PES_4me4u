@@ -3,7 +3,7 @@ const User = require('../models/user.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const user = require('../models/user.js');
+//const user = require('../models/user.js');
 const app = express();
 
 exports.readAllUsers =  async (req, res) => {
@@ -46,9 +46,9 @@ exports.readUsersId = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
   let body = req.body;
-  let { name, email, pwd, role } = body;
+  let { userId, email, pwd, role } = body;
   let usuario = new User({
-    name,
+    userId,
     email,
     pwd: bcrypt.hashSync(pwd, 10),
     role,
@@ -129,24 +129,19 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-    /*const level = req.body.level;
-    const ecoPoints = req.body.ecoPoints;
-    const score = req.body.score;*/
 
-    const {name, email, latitude, longitude} = req.body;
+    const level = req.body.level;
+    const ecoPoints = req.body.ecoPoints;
+    const score = req.body.score;
   
     const id = req.params.id;
     const user = await User.findById(id)
     console.log("Searching for user to update: " + req.params.id);
 
-    if (name != null) user.name = name;
-    if (email != null) user.email = email;
-    if (latitude != null) user.latitude = latitude;
-    if (longitude != null) user.longitude = longitude;
-    /*if (level != null)  user.level = level;
+    if (level != null)  user.level = level;
     if (ecoPoints != null) user.ecoPoints = ecoPoints;
     if (score != null) user.score = score;
-    */
+    
     console.log(user);
     
     try {
@@ -158,6 +153,7 @@ exports.updateUser = async (req, res) => {
     
       console.log("Can not update the user");
     }
+
 }
 
 exports.getUserProducts = async (req, res) => {
@@ -171,6 +167,7 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
 
 exports.getUserWishlist = async (req, res) => {
   try {
@@ -206,7 +203,6 @@ exports.addToWishlist = async (req, res) => {
   }
 };
 
-
 exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -230,6 +226,136 @@ exports.deleteFromWishlist = async (req, res) => {
 
         }
     }).populate('wishlist');
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followed");
+    
+    res.status(200).json(user.followed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserFollowers = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("followers");
+    
+    res.status(200).json(user.followers)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.addUserFollowed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.followed.push(usuarioDB);
+     ourUser.save();
+     res.status(200).json(ourUser.followed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.addUserFollower = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const ourUser = await User.findById({_id: userId});
+    
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+     ourUser.followers.push(usuarioDB);
+     ourUser.save();
+     res.status(200).json(ourUser.followers);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.unfollow = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
+          if (mail == usersFollowed.followed[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not followed'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowed.followed[i]._id;
+          usersFollowed.followed.splice(i, 1);
+          usersFollowed.save();
+
+          const user = await User.findById({_id: idUser});
+          res.status(200).json(usersFollowed);
+
+        }
+    }).populate('followed');
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.loseFollower = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let mail = req.body.email;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
+          if (mail == usersFollowers.followers[i].email ) {find = 1;}
+        }
+        if (find == 0) {
+          res.status(400).json({error: 'User not follower'})
+        }
+        else {
+          i = i-1;
+          const idUser = usersFollowers.followers[i]._id;
+          usersFollowers.followers.splice(i, 1);
+          usersFollowers.save();
+
+          const user = await User.findById({_id: idUser});
+          res.status(200).json(usersFollowers);
+
+        }
+    }).populate('followers');
 
   } catch (error) {
     res.status(400).json(error)

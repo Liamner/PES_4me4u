@@ -81,12 +81,12 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  
+  console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
-  product.exchange = req.body.exchange;
+  product.exchange.push(req.body.exchange);         
   product.state = req.body.state;
   // Assign the current user to the product
 
@@ -112,17 +112,26 @@ exports.createProduct = async (req, res) => {
 
   const type = await Type.findById({_id:req.body.exchange});
   if (type == null) res.status(404).json({error:"type not found"});
-
+    
   if (category != null && type != null) {
+    
     const newProduct = await product.save();
-    // Add the product to the user
+    // Add the product to the user 
+    //jo crec que aixo no funciona
     /*const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
                                 products: newProduct
                               }
-                            });
-*/
+                            });*/
+
+    const categories = await Category.findByIdAndUpdate(
+                            { _id: ObjectId(req.body.categories) }, 
+                                {$push : {
+                                  products: newProduct
+                                }
+                              });
+                              
     res.status(201).json(product);}
 
   } catch (error) {
@@ -248,6 +257,45 @@ exports.deleteProduct = async (req, res) => {
    // }
   } catch (error) {
     res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readProductsByName = async (req, res) => {
+  try {
+    const filter = req.params.name;
+    console.log(filter)
+    const product = await Product.find({name: {$regex : filter}})
+    console.log(product)
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readProductsByName = async (req, res) => {
+  try {
+    const filter = req.params.name;
+    console.log(filter)
+    const product = await Product.find({name: {$regex : filter}})
+    console.log(product)
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readProductsByName = async (req, res) => {
+  try {
+    const filter = req.params.name;
+    console.log(filter)
+    const product = await Product.find({name: {$regex : filter}})
+    console.log(product)
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
     console.log(error.message);
   }
 };

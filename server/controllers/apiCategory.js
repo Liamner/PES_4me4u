@@ -24,7 +24,7 @@ exports.readAllCategories = async (req, res) => {
       res.status(404).json(error.message);
       console.log(error.message);
     }
-  }
+  }                                  
   
   exports.createCategory = async (req, res) => {
 

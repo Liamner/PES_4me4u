@@ -169,6 +169,44 @@ exports.getUserProducts = async (req, res) => {
   }
 };
 
+exports.getRewards = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    var ngifts = user.gifts;
+    var nloans = user.loans;
+    var nexchanges = user.exchanges;
+    var points = user.ecoPoints;
+    var rewards = 0;
+    if(ngifts >= 3) {
+      if(ngifts >=3) rewards += 10;
+      if(ngifts >= 5) rewards += 50;
+      else if (ngifts >= 7) rewards += 100;
+      else if(ngifts >= 10) rewards += 150;
+    }
+
+    else if(nloans >= 3) {
+      if(nloans >=3) rewards += 10;
+      if(nloans >= 5) rewards += 50;
+      else if (nloans >= 7) rewards += 100;
+      else if(nloans >= 10) rewards += 150;
+    }
+
+    else if(nexchanges >= 3) {
+      if(nexchanges >=3) rewards += 10;
+      if(nexchanges >= 5) rewards += 50;
+      else if (nexchanges >= 7) rewards += 100;
+      else if(nexchanges >= 10) rewards += 150;
+    }
+
+    user.ecoPoints = points + rewards;
+    user.save();
+    res.status(200).json(user);
+    
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
 exports.getUserLevel = async (req, res) => {
   try{
     const user = await User.findById({ _id: req.params.id });

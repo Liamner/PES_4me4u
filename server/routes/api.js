@@ -149,6 +149,9 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
 
+  router.route('/user/:id/products')
+    .get(userController.getRewards)
+
   router.route('/user/:id/points')
     .get(userController.getUserPoints)
 

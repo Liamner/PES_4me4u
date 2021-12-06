@@ -31,6 +31,10 @@ module.exports = function(app) {
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
 
+
+  router.route('/product/name/:name')
+    .get(productController.readProductsByName)
+
   router.route('/product/image/:id')
     .get(productController.getImg)
 
@@ -140,6 +144,24 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+
+  router.route('/user/:id/AddFollowed')
+    .post(userController.addUserFollowed)
+  
+  router.route('/user/:id/AddFollower')
+    .post(userController.addUserFollower)
+  
+  router.route('/user/:id/followed')
+    .get(userController.getUserFollowed)
+
+  router.route('/user/:id/followers')
+    .get(userController.getUserFollowers)
+
+  router.route('/user/:id/unfollow')
+    .post(userController.unfollow)
+
+  router.route('/user/:id/loseFollower')
+    .post(userController.loseFollower)
     
   // ======================
   // ---- Trade Routes ----

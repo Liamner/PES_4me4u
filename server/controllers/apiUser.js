@@ -46,9 +46,9 @@ exports.readUsersId = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
   let body = req.body;
-  let { name, email, pwd, role } = body;
+  let { userId, email, pwd, role } = body;
   let usuario = new User({
-    name,
+    userId,
     email,
     pwd: bcrypt.hashSync(pwd, 10),
     role,
@@ -129,24 +129,19 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-    /*const level = req.body.level;
-    const ecoPoints = req.body.ecoPoints;
-    const score = req.body.score;*/
 
-    const {name, email, latitude, longitude} = req.body;
+    const level = req.body.level;
+    const ecoPoints = req.body.ecoPoints;
+    const score = req.body.score;
   
     const id = req.params.id;
     const user = await User.findById(id)
     console.log("Searching for user to update: " + req.params.id);
 
-    if (name != null) user.name = name;
-    if (email != null) user.email = email;
-    if (latitude != null) user.latitude = latitude;
-    if (longitude != null) user.longitude = longitude;
-    /*if (level != null)  user.level = level;
+    if (level != null)  user.level = level;
     if (ecoPoints != null) user.ecoPoints = ecoPoints;
     if (score != null) user.score = score;
-    */
+    
     console.log(user);
     
     try {
@@ -158,6 +153,7 @@ exports.updateUser = async (req, res) => {
     
       console.log("Can not update the user");
     }
+
 }
 
 exports.getUserProducts = async (req, res) => {

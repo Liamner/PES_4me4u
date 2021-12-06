@@ -28,12 +28,12 @@ const ProductSchema = new mongoose.Schema({
         default: Date.now(),
         required: false
     },
-    exchange: {
+    exchange: [{
           
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Type",
         required: true 
-    },
+    }], 
     img: [{
         type: Schema.Types.ObjectId, 
         ref: 'Image'

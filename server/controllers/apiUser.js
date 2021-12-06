@@ -158,6 +158,7 @@ exports.updateUser = async (req, res) => {
 
 exports.getUserProducts = async (req, res) => {
   try {
+
     const userId = req.params.id;
     const user = await User.findById({_id: userId}).populate("products");
     
@@ -168,6 +169,24 @@ exports.getUserProducts = async (req, res) => {
   }
 };
 
+exports.getUserRewards = async (req, res) => {
+  try {
+    const {type, estimatedPoints} = req.body;
+
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to get reward: " + user.name);
+    
+    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
+    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
+    if (type != 'exchange') user.ecoPoints += 15;
+
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
 
 exports.getUserWishlist = async (req, res) => {
   try {
@@ -294,11 +313,6 @@ exports.addUserFollower = async (req, res) => {
      ourUser.save();
      res.status(200).json(ourUser.followers);
     });
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
 
 exports.unfollow = async (req, res) => {
   try {

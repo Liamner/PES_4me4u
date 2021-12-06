@@ -152,6 +152,9 @@ module.exports = function(app) {
   router.route('/user/:id/wishlist')
     .get(userController.getUserWishlist)
     
+  router.route('/user/:id/rewards')
+    .get(userController.getUserRewards)
+
   router.route('/user/:id/AddToWishlist')
     .post(userController.addToWishlist)
 

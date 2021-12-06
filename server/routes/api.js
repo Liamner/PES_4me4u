@@ -252,7 +252,17 @@ module.exports = function(app) {
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+    router.route('/filter/product')
+    .get(categoryController.getProductCategory)
 
+  router.route('/filter/product')
+    .get(categoryController.getProductCategory)
 
+ /*router.route('/comments')
+    .get(userController.getAllComments)
+  router.route('/comments/done')
+    .get(authenticateJWT, userController.getMyCommentsDone)
+  router.route('/comments/recived')
+    .get(authenticateJWT, userController.getMyCommentsRecived)*/
   return router;
 }

@@ -117,7 +117,6 @@ exports.createProduct = async (req, res) => {
     
     const newProduct = await product.save();
     // Add the product to the user 
-    //jo crec que aixo no funciona
     /*const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {

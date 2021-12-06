@@ -298,4 +298,17 @@ exports.readProductsByName = async (req, res) => {
     res.status(400).json(error.message);
     console.log(error.message);
   }
+};
+
+exports.readProductsByName = async (req, res) => {
+  try {
+    const filter = req.params.name;
+    console.log(filter)
+    const product = await Product.find({name: {$regex : filter}})
+    console.log(product)
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
 }

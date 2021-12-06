@@ -69,6 +69,10 @@ let usuarioSchema = new Schema({
     followed: {
         type: [mongoose.Schema.usuarioSchema],
         required: false
+    },
+    wishlist: {
+        type: [mongoose.Schema.ProductSchema],
+        required: false
     }
 });
 

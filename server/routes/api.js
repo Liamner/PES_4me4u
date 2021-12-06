@@ -35,6 +35,10 @@ module.exports = function(app) {
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
 
+
+  router.route('/product/name/:name')
+    .get(productController.readProductsByName)
+
   router.route('/product/image/:id')
     .get(productController.getImg)
 
@@ -145,6 +149,15 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
 
+  router.route('/user/:id/wishlist')
+    .get(userController.getUserWishlist)
+    
+  router.route('/user/:id/AddToWishlist')
+    .post(userController.addToWishlist)
+
+    router.route('/user/:id/DeleteFromWishlist')
+    .post(userController.deleteFromWishlist)
+  
   router.route('/user/:id/AddFollowed')
     .post(userController.addUserFollowed)
   

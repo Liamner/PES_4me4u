@@ -44,6 +44,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   });
 
   const pid = '619e6fd140d15287ffe42aca';
+  
 
   React.useEffect(() => {
     getInfo();
@@ -59,13 +60,15 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     setCheckedPrestar(false)
     let exchange = [response.data.exchange];
     exchange.forEach(element => {
+      //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR
+      //cosa de códigos de exchange
 //      if(element == "present") setCheckedDonar(true);
 //        else if(element == "exchange") setCheckedIntercambiar(true);
 //        else if(element == "provide") setCheckedPrestar(true);
         if(element == "6193a583e47e769eeaa7a978") setCheckedDonar(true);//no se que es exactamente
 
     })
-    response.data.images
+    //response.data.img
     setProductInfo({
       ...productInfo,
       pname: response.data.name,
@@ -74,32 +77,55 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       pexchange: exchange
     });
   //AÑADIR FOTOS
-    if((response.data.images).length >= 1){
-      setImage(response.data.images[0]);
-      setImageAux(response.data.images[0]);
-    }
-    else if( (response.data.images).length >= 2 ){
-      setImage2(response.data.images[1]);
-      setImage2Aux(response.data.images[1]);
-    }
-    else if( (response.data.images).length >= 3 ){
-      setImage3(response.data.images[2]);
-      setImage3Aux(response.data.images[2]);
-    }
-    else if( (response.data.images).length >= 4 ){
-      setImage4(response.data.images[3]);
-      setImage4Aux(response.data.images[3]);
-    }
-    else if( (response.data.images).length >= 5 ){
-      setImage5(response.data.images[4]);
-      setImage5Aux(response.data.images[4]);
-    }
-    else if( (response.data.images).length >= 6 ){
-      setImage6(response.data.images[5]);
-      setImage6Aux(response.data.images[5]);
-    }
 
 
+  setProductInfo({
+    ...productInfo,
+    pimage: response.data.img[0].url });
+
+
+    if((response.data.img).length >= 1){
+      setImage(response.data.img[0].url);
+      setImageAux(response.data.img[0].url);
+      setProductInfo({
+        ...productInfo,
+        pimage: response.data.img[0].url });
+    }
+    if((response.data.img).length >= 2){
+      setImage2(response.data.img[1].url);
+      setImage2Aux(response.data.img[1].url);
+      setProductInfo({
+        ...productInfo,
+        pimage2: response.data.img[1].url });
+    }
+    if((response.data.img).length >= 3){
+      setImage3(response.data.img[2].url);
+      setImage3Aux(response.data.img[2].url);
+      setProductInfo({
+        ...productInfo,
+        pimage3: response.data.img[2].url });
+    }
+    if((response.data.img).length >= 4){
+      setImage4(response.data.img[3].url);
+      setImage4Aux(response.data.img[3].url);
+      setProductInfo({
+        ...productInfo,
+        pimage4: response.data.img[3].url });
+    }
+    if((response.data.img).length >= 5){
+      setImage5(response.data.img[4].url);
+      setImage5Aux(response.data.img[4].url);
+      setProductInfo({
+        ...productInfo,
+        pimage5: response.data.img[4].url });
+    }
+    if((response.data.img).length >= 6){
+      setImage6(response.data.img[5].url);
+      setImage6Aux(response.data.img[5].url);
+      setProductInfo({
+        ...productInfo,
+        pimage6: response.data.img[5].url });
+    }
   };
 
   function reloadProduct() {
@@ -110,7 +136,8 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     setCheckedDonar(false)
     setCheckedIntercambiar(false)
     setCheckedPrestar(false)
-    exchange.forEach(element => {      
+    exchange.forEach(element => {
+      //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR
       // if(element == "present") setCheckedDonar(true);
       // else if(element == "exchange") setCheckedIntercambiar(true);
       // else if(element == "provide") setCheckedPrestar(true);
@@ -123,6 +150,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     console.log(productInfo.pexchange[0] + ' reloaded')
   }
 
+  
   const editProduct = async () => {
     let ex = [];
     if (checkedDonar) {
@@ -152,7 +180,13 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
           pname: result.name,
           pcategories: result.categories,
           pdescription: result.description,
-          pexchange: result.exchange
+          pexchange: result.exchange,
+          pimage:  result.img[0].url,
+          pimage2: result.img[1].url,
+          pimage3: result.img[2].url,
+          pimage4: result.img[3].url,
+          pimage5: result.img[4].url,
+          pimage6: result.img[5].url
         });
         
       })

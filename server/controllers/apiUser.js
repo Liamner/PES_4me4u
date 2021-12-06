@@ -46,9 +46,9 @@ exports.readUsersId = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
   let body = req.body;
-  let { userId, email, pwd, role } = body;
+  let { name, email, pwd, role } = body;
   let usuario = new User({
-    userId,
+    name,
     email,
     pwd: bcrypt.hashSync(pwd, 10),
     role,
@@ -129,19 +129,24 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-
-    const level = req.body.level;
+    /*const level = req.body.level;
     const ecoPoints = req.body.ecoPoints;
-    const score = req.body.score;
+    const score = req.body.score;*/
+
+    const {name, email, latitude, longitude} = req.body;
   
     const id = req.params.id;
     const user = await User.findById(id)
     console.log("Searching for user to update: " + req.params.id);
 
-    if (level != null)  user.level = level;
+    if (name != null) user.name = name;
+    if (email != null) user.email = email;
+    if (latitude != null) user.latitude = latitude;
+    if (longitude != null) user.longitude = longitude;
+    /*if (level != null)  user.level = level;
     if (ecoPoints != null) user.ecoPoints = ecoPoints;
     if (score != null) user.score = score;
-    
+    */
     console.log(user);
     
     try {
@@ -153,7 +158,6 @@ exports.updateUser = async (req, res) => {
     
       console.log("Can not update the user");
     }
-
 }
 
 exports.getUserProducts = async (req, res) => {
@@ -163,6 +167,44 @@ exports.getUserProducts = async (req, res) => {
     
     console.log(user)
     res.status(200).json(user.products)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getRewards = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    var ngifts = user.gifts;
+    var nloans = user.loans;
+    var nexchanges = user.exchanges;
+    var points = user.ecoPoints;
+    var rewards = 0;
+    if(ngifts >= 3) {
+      if(ngifts >=3) rewards += 10;
+      if(ngifts >= 5) rewards += 50;
+      else if (ngifts >= 7) rewards += 100;
+      else if(ngifts >= 10) rewards += 150;
+    }
+
+    else if(nloans >= 3) {
+      if(nloans >=3) rewards += 10;
+      if(nloans >= 5) rewards += 50;
+      else if (nloans >= 7) rewards += 100;
+      else if(nloans >= 10) rewards += 150;
+    }
+
+    else if(nexchanges >= 3) {
+      if(nexchanges >=3) rewards += 10;
+      if(nexchanges >= 5) rewards += 50;
+      else if (nexchanges >= 7) rewards += 100;
+      else if(nexchanges >= 10) rewards += 150;
+    }
+
+    user.ecoPoints = points + rewards;
+    user.save();
+    res.status(200).json(user);
+    
   } catch (error) {
     res.status(400).json(error)
   }

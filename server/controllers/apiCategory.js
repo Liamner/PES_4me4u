@@ -121,9 +121,11 @@ exports.getProductCategory = async (req, res) => {
       if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
       else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
 
-      await Product.find({exchange: exchangeType} ,(error, products) => {   
+      
+      await Product.find({exchange: exchangeType} ,(error, products) => { 
+        console.log(products)  
         res.status(200).json(products);
-      }).populate({path: 'exchange'} ,{ populate: {path: 'img', select: { 'url': 1}}} ).clone()
+      }).populate({path: 'exchange' }).populate({path: 'img', select: { 'url': 1}}).clone()
     }   
   } catch (error) {
     res.status(404).json(error.message);

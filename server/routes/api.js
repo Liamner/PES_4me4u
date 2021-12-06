@@ -155,6 +155,12 @@ module.exports = function(app) {
   router.route('/user/:id/wishlist')
     .get(userController.getUserWishlist)
     
+  router.route('/user/:id/level')
+    .get(userController.getUserLevel)
+
+  router.route('/user/:id/levelManage')
+    .get(userController.levelManage)
+
   router.route('/user/:id/rewards')
     .get(userController.getUserRewards)
 

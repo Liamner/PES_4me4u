@@ -183,3 +183,39 @@ exports.getUserLevel = async (req, res) => {
     console.log("Can not delete the user");
   }
 }
+
+exports.levelManage = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    console.log("Level del usuario: " , user.name);
+
+    var nivelAntiguo = user.level;
+    var nivelNuevo, reward;
+    var points = user.ecoPoints;
+
+    if(points < 50) nivelNuevo = '1'; // seed semilla
+    else if (points >= 50 && points < 150) nivelNuevo = '2'; //brote outbreak
+    else if (points >= 150 && points < 300) nivelNuevo = '3'; // plant
+    else if (points >= 300 && points < 500) nivelNuevo = '4'; // tree
+    else if(points >= 500 && points < 750) nivelNuevo = '5'; // roble oak
+    else if (points >= 750) nivelNuevo = '6'; //ecologista ecologist
+
+    //si ha subido de nivel gana una recompensa
+    if(nivelAntiguo != nivelNuevo) {
+      if(nivelNuevo == '2') reward = 20;
+      else if (nivelNuevo == '3') reward = 40;
+      else if (nivelNuevo == '4') reward = 60;
+      else if (nivelNuevo == '5') reward = 80;
+      else if (nivelNuevo == '6') reward = 100;
+    }
+
+    user.ecoPoints = points + reward;
+    user.level = nivelNuevo;
+
+    await user.save();
+    res.status(200).json(user);
+    
+  } catch (error) {
+
+  }
+}

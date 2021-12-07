@@ -29,7 +29,7 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    latitude: {
+    /*latitude: {
         type: String,
         default: '41.3879',
         //required: [true],
@@ -37,7 +37,7 @@ let usuarioSchema = new Schema({
     longitude: {
         type: String,
         default: '2.16992 41° 23′ 16″',
-    },
+    },*/
     level: {
         type: String,
         default: '1',
@@ -72,7 +72,8 @@ let usuarioSchema = new Schema({
     },
     exchanges: {
         type: Number,
-        default: '0',
+        default: '0'
+    },
     followers: {
         type: [mongoose.Schema.usuarioSchema],
         required: false
@@ -84,9 +85,10 @@ let usuarioSchema = new Schema({
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false
-
     }
 });
+    
+
 
 // elimina la key password del objeto que retorna al momento de crear un usuario
 usuarioSchema.methods.toJSON = function() {

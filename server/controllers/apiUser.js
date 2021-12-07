@@ -409,6 +409,10 @@ exports.addUserFollower = async (req, res) => {
      ourUser.save();
      res.status(200).json(ourUser.followers);
     });
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}
 
 exports.unfollow = async (req, res) => {
   try {
@@ -471,4 +475,3 @@ exports.loseFollower = async (req, res) => {
     res.status(400).json(error)
   }
 };
-

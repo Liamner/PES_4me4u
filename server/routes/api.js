@@ -31,14 +31,6 @@ module.exports = function(app) {
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
 
-
-  router.route('/product/name/:name')
-    .get(productController.readProductsByName)
-
-
-  router.route('/product/name/:name')
-    .get(productController.readProductsByName)
-
   router.route('/product/image/:id')
     .get(productController.getImg)
 
@@ -72,9 +64,6 @@ module.exports = function(app) {
   // Delete product with id = id
   router.route('/product/delete/:id')
     .delete(/*authenticateJWT, */productController.deleteProduct);
-
-  router.route('/product/name/:name')
-    .get(productController.readProductsByName)
 
   // Create new category
   router.route('/category/create/')

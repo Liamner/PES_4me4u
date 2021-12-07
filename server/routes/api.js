@@ -138,9 +138,24 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
 
+  router.route('/user/:id/products')
+    .get(userController.getRewards)
+
+  router.route('/user/:id/points')
+    .get(userController.getUserPoints)
+
   router.route('/user/:id/wishlist')
     .get(userController.getUserWishlist)
     
+  router.route('/user/:id/level')
+    .get(userController.getUserLevel)
+
+  router.route('/user/:id/levelManage')
+    .get(userController.levelManage)
+
+  router.route('/user/:id/rewards')
+    .get(userController.getUserRewards)
+
   router.route('/user/:id/AddToWishlist')
     .post(userController.addToWishlist)
 

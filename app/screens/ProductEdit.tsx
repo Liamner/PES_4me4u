@@ -13,15 +13,22 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState();
+
   const [checkedDonar, setCheckedDonar] = React.useState(false);
   const [checkedIntercambiar, setCheckedIntercambiar] = React.useState(false);
   const [checkedPrestar, setCheckedPrestar] = React.useState(false);
+
   const [image, setImage] = React.useState(null);
   const [image2, setImage2] = React.useState(null);
   const [image3, setImage3] = React.useState(null);
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null); 
+
+  //copias auxiliares en caso de recargar el producto inicial
+  const [checkedDonarAux, setCheckedDonarAux] = React.useState(false);
+  const [checkedIntercambiarAux, setCheckedIntercambiarAux] = React.useState(false);
+  const [checkedPrestarAux, setCheckedPrestarAux] = React.useState(false);
 
   const [imageAux, setImageAux] = React.useState(null);
   const [image2Aux, setImage2Aux] = React.useState(null);
@@ -34,13 +41,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     pname:"",
     pcategories:"",
     pdescription:"",
-    pexchange:[],
-    pimage:"",
-    pimage2:"",
-    pimage3:"",
-    pimage4:"",
-    pimage5:"",
-    pimage6:""
+    pexchange:[]
   });
 
   const pid = '619e6fd140d15287ffe42aca';
@@ -58,14 +59,20 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     setCheckedDonar(false)
     setCheckedIntercambiar(false)
     setCheckedPrestar(false)
+    setCheckedDonarAux(false)
+    setCheckedIntercambiarAux(false)
+    setCheckedPrestarAux(false)
     let exchange = [response.data.exchange];
     exchange.forEach(element => {
-      //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR
-      //cosa de códigos de exchange
-//      if(element == "present") setCheckedDonar(true);
+      //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR de exchange
+
+      //      if(element == "present") setCheckedDonar(true);
 //        else if(element == "exchange") setCheckedIntercambiar(true);
 //        else if(element == "provide") setCheckedPrestar(true);
-        if(element == "6193a583e47e769eeaa7a978") setCheckedDonar(true);//no se que es exactamente
+    if (element == "6193a583e47e769eeaa7a978"){
+          setCheckedDonar(true);//no se que es exactamente
+          setCheckedDonarAux(true);
+    }
 
     })
     //response.data.img
@@ -76,9 +83,9 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       pdescription: response.data.description,
       pexchange: exchange
     });
+
+
   //AÑADIR FOTOS
-
-
   setProductInfo({
     ...productInfo,
     pimage: response.data.img[0].url });
@@ -87,63 +94,45 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     if((response.data.img).length >= 1){
       setImage(response.data.img[0].url);
       setImageAux(response.data.img[0].url);
-      setProductInfo({
-        ...productInfo,
-        pimage: response.data.img[0].url });
     }
     if((response.data.img).length >= 2){
       setImage2(response.data.img[1].url);
       setImage2Aux(response.data.img[1].url);
-      setProductInfo({
-        ...productInfo,
-        pimage2: response.data.img[1].url });
     }
     if((response.data.img).length >= 3){
       setImage3(response.data.img[2].url);
       setImage3Aux(response.data.img[2].url);
-      setProductInfo({
-        ...productInfo,
-        pimage3: response.data.img[2].url });
     }
     if((response.data.img).length >= 4){
       setImage4(response.data.img[3].url);
       setImage4Aux(response.data.img[3].url);
-      setProductInfo({
-        ...productInfo,
-        pimage4: response.data.img[3].url });
     }
     if((response.data.img).length >= 5){
       setImage5(response.data.img[4].url);
       setImage5Aux(response.data.img[4].url);
-      setProductInfo({
-        ...productInfo,
-        pimage5: response.data.img[4].url });
     }
     if((response.data.img).length >= 6){
       setImage6(response.data.img[5].url);
       setImage6Aux(response.data.img[5].url);
-      setProductInfo({
-        ...productInfo,
-        pimage6: response.data.img[5].url });
     }
   };
 
+  //recargar el producto sin editar
   function reloadProduct() {
     onChangeName(productInfo.pname)
     onChangeDescription(productInfo.pdescription)
     setSelectedCategory(productInfo.pcategories)
     let exchange = productInfo.pexchange
-    setCheckedDonar(false)
-    setCheckedIntercambiar(false)
-    setCheckedPrestar(false)
-    exchange.forEach(element => {
-      //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR
-      // if(element == "present") setCheckedDonar(true);
-      // else if(element == "exchange") setCheckedIntercambiar(true);
-      // else if(element == "provide") setCheckedPrestar(true);
-      if(element == "6193a583e47e769eeaa7a978") setCheckedDonar(true);
+    setCheckedDonar(checkedDonarAux)
+    setCheckedIntercambiar(checkedIntercambiarAux)
+    setCheckedPrestar(checkedPrestarAux)
 
-    })
+    setImage(imageAux)
+    setImage2(image2Aux)
+    setImage3(image3Aux)
+    setImage4(image4Aux)
+    setImage5(image5Aux)
+    setImage6(image6Aux)
 
     console.log(productInfo.pname + ' reloaded')
     console.log(productInfo.pdescription + ' reloaded')
@@ -292,8 +281,27 @@ const pickImage = async (id?: Number) => {
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />          
-          <Picker.Item label="tecnologia" value="61940e6f0c77883d581cede8" />   
-          <Picker.Item label="home" value="61a51d0149b1a2167fe86d08" />
+          <Picker.Item label="tecnologia" value="61797e24b4a4d195aa14be8d" />
+          <Picker.Item label="juguetes" value="61940e6f0c77883d581cede8" />
+          <Picker.Item label="fashion" value="61a51c1649b1a2167fe86cfe" />
+          <Picker.Item label="computer" value="61a51cc449b1a2167fe86d00" />
+          <Picker.Item label="homeApplicances" value="61a51cd949b1a2167fe86d02" />
+          <Picker.Item label="sports" value="61a51ceb49b1a2167fe86d04" />
+          <Picker.Item label="home" value="61a51cf549b1a2167fe86d06" />
+          <Picker.Item label="games" value="61a51d0149b1a2167fe86d08" />
+          <Picker.Item label="movies" value="61a51d0b49b1a2167fe86d0a" />
+          <Picker.Item label="children" value="61a51d1849b1a2167fe86d0c" />
+          <Picker.Item label="construction" value="61a51d2349b1a2167fe86d0e" />
+          <Picker.Item label="other" value="61a51d4649b1a2167fe86d12" />
+{//          <Picker.Item label="games" value="61a51d5049b1a2167fe86d14" />
+}
+          <Picker.Item label="pets" value="61a51dbc49b1a2167fe86d1b" />
+
+
+
+
+
+
           {//AÑADIR EL RESTO DE CATEGORIAS
           }
 

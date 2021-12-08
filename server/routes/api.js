@@ -26,8 +26,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), /*authenticateJWT, */productController.createProduct);
-
+    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
 
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
@@ -255,8 +254,8 @@ module.exports = function(app) {
   router.route('/image/:productId')
     .get(imageController.getProductImages)
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
-    .delete(/*authenticateJWT, */ imageController.deleteImages)
-    .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+    .delete(upload.array('img',6),/*authenticateJWT, */ imageController.deleteImages)
+    //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 

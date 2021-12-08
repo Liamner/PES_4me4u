@@ -66,6 +66,7 @@ exports.uploadImages = async (req, res) => {
   }
   else {
     console.log("Too many products!");
+    res.status(400).json({error: 'Too many products'});
   }
 }
 
@@ -78,27 +79,43 @@ exports.deleteImages = async (req, res) => {
         res.status(401).json({error: "Do not have permission"})
         return;
     }*/
-      const imgs = [];
-      imgs.push(req.body.img)
-      for (let i = 0; i < imgs.length; ++i) {  
-        const imageID = imgs[i];
-        console.log(ObjectId(imageID))
+    let length = 1;
+    if (req.body.img.length != 24) length = req.body.img.length;
+    if (length >= product.img.length) {
+      res.status(400).json({error: 'Can not delete all images'})
+    }
+    else {
+      for (let i = 0; i < length; ++i) {  
+        let imageID;
+        if (length > 1) {
+          console.log(req.body.img[i])
+          await product.img.pull({_id: req.body.img[i]});
   
-        // Delete reference of the image
-        await product.img.pull({_id: imageID});
-  
-        // Delete mongoDB Image
-        const res = await Image.findByIdAndDelete({_id: imageID});
-        console.log(res.public_id)
-  
-        // Delete Cloudinary Image
-        await cloudinary.uploader.destroy(res.public_id);
+          // Delete mongoDB Image
+          const res = await Image.findByIdAndDelete({_id: req.body.img[i]});
+          console.log(res.public_id)
+    
+          // Delete Cloudinary Image
+          await cloudinary.uploader.destroy(res.public_id);
+        }
+        else {
+          imageID = req.body.img; 
+          // Delete reference of the image
+          console.log(imageID)
+          await product.img.pull({_id: imageID});
+    
+          // Delete mongoDB Image
+          const res = await Image.findByIdAndDelete({_id: imageID});
+          console.log(res.public_id)
+    
+          // Delete Cloudinary Image
+          await cloudinary.uploader.destroy(res.public_id);
+        }
       }
       await product.save();
       console.log(product);
       res.status(204).json(product);
-    
-    
+    }    
   } catch (error) {
     res.status(404).json(error.message);
   
@@ -106,21 +123,34 @@ exports.deleteImages = async (req, res) => {
   }
 
 }
-
+/*
 exports.updateImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
   const deleteImgs = req.body.oldImgs;
+ 
   try {
-    const imgs = [];
-    imgs.push(deleteImgs)
+    //const imgs = [];
+
+    //imgs.push(deleteImgs)
     
-    console.log(imgs)
-      for (let i = 0; i < imgs.length; ++i) {  
-        const imageID = imgs[i];
-        console.log(imageID)
+   //console.log(imgs)
+   let length = 1;
+   if (deleteImgs.length != 24) length = deleteImgs.length;
+   console.log(length)
+      for (let i = 0; i < length; ++i) {
+        let imageID;
+        if (length > 1) {
+          imageId = deleteImgs[i];  
+          console.log('MAS DE UNA ' +imageId)  
+        }
+        else {
+          imageID = deleteImgs;
+          console.log(imageID)  
+        }
+
   
         // DELETE IMAGE
-        await product.img.pull({_id: imageID});
+        await product.img.pull({_id: ObjectId(imageID)});
         const res = await Image.findByIdAndDelete({_id: imageID});
         await cloudinary.uploader.destroy(res.public_id);
 
@@ -130,13 +160,13 @@ exports.updateImages = async (req, res) => {
         let image = new Image();
         image.public_id = result.public_id;
         image.url = result.url;
-        await image.save();
+        //await image.save();
 
         product.img.push(image._id);
         
       }
-      await product.save();
-      console.log(product);
+      //await product.save();
+      //console.log(product);
       
       res.status(201).json(product);
     }
@@ -145,3 +175,4 @@ exports.updateImages = async (req, res) => {
     console.log(error.message); 
   }
 }
+*/

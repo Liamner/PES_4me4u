@@ -85,6 +85,10 @@ let usuarioSchema = new Schema({
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false
+    },
+    recentlyViewed: {
+        type: [mongoose.Schema.ProductSchema],
+        required: false
     }
 });
     

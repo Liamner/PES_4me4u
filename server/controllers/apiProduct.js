@@ -14,7 +14,7 @@ const { ObjectId } = require('mongodb');
 
 exports.readAllProducts =  async (req, res) => {
   try {
-    const product = await Product.find();
+    const product = await Product.find().populate('img');
 
     res.status(200).json(product);
 
@@ -261,53 +261,15 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.readProductsByName = async (req, res) => {
+  const filter = req.params.name;
+  console.log(filter)
   try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}}).populate('img')
+    const product = await Product.find({name: {$regex : filter}}).populate({path:'img'})
     console.log(product)
     res.status(200).json(product);
+    
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
   }
 };
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-};
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-};
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-}

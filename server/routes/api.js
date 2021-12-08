@@ -179,6 +179,9 @@ module.exports = function(app) {
 
   router.route('/user/:id/loseFollower')
     .post(userController.loseFollower)
+
+  router.route('/user/:id/productsRecentlyViewed')
+    .get(userController.getRecentlyViewed)
     
   // ======================
   // ---- Trade Routes ----

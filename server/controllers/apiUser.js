@@ -475,3 +475,14 @@ exports.loseFollower = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.getRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("recentlyViewed");
+    
+    res.status(200).json(user.recentlyViewed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};

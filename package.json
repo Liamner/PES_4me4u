@@ -24,6 +24,7 @@
         "mongoose": "^6.0.13",
         "mongoose-double": "0.0.1",
         "mongoose-unique-validator": "^3.0.0",
-        "multer": "^1.4.3"
+        "multer": "^1.4.3",
+        "socket.io": "^4.4.0"
     }
 }

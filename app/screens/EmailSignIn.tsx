@@ -70,17 +70,14 @@ export default function SignInScreen({ navigation }) {
                 .post('https://app4me4u.herokuapp.com/api/login', credentials)
                 .then(function (response) {
                     const result = response.data;
-
                     if (result.ok) {
-                        //storeData(result.token)
                         const session = {
                             "id": result.user._id,
                             "user": result.user.userId,
                             "token": result.token
                         }
                         storeData(session)
-                        navigation.navigate("Main", result.user);
-                       // navigation.navigate("BottomTab");
+                       navigation.navigate("BottomTab");
                     }
                 })
                 .catch(function (error) {

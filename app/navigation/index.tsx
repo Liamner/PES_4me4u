@@ -129,22 +129,6 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
-        options={{
-          title: 'Product Card',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-       <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{
-          title: 'Test Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
         name="EditProduct"
         component={EditProduct}
         options={{

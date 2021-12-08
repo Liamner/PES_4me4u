@@ -81,7 +81,7 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  console.log(req.body.categories)
+  //console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -110,7 +110,8 @@ exports.createProduct = async (req, res) => {
     const category = await Category.findById({_id:req.body.categories});
   if (category == null) res.status(404).json({error:"category not found"});
 
-  const type = await Type.findById({_id:req.body.exchange});
+  const type = await Type.findOne({name: req.body.exchange});
+  console.log(type);
   if (type == null) res.status(404).json({error:"type not found"});
     
   if (category != null && type != null) {
@@ -130,6 +131,13 @@ exports.createProduct = async (req, res) => {
                                   products: newProduct
                                 }
                               });
+
+    const types = await Type.findOneAndUpdate(
+                                { name: req.body.exchange }, 
+                                    {$push : {
+                                      products: newProduct
+                                    }
+                                  });
                               
     res.status(201).json(product);}
 

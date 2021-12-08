@@ -182,6 +182,9 @@ module.exports = function(app) {
 
   router.route('/user/:id/productsRecentlyViewed')
     .get(userController.getRecentlyViewed)
+
+  router.route('/user/:id/addProductsRecentlyViewed')
+    .post(userController.updateRecentlyViewed)
     
   // ======================
   // ---- Trade Routes ----

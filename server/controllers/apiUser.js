@@ -486,3 +486,34 @@ exports.getRecentlyViewed = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.updateRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let idProduct = req.body.idProduct;
+    let ourUser;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersRecentViewed) => {
+      if (usersRecentViewed.recentlyViewed.length == 5) {
+        usersRecentViewed.followers.splice(1,1);
+        usersRecentViewed.save();
+      }
+      ourUser = usersRecentViewed;
+    }).populate('recentlyViewed');
+    
+    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+      ourUser.recentlyViewed.push(productDB);
+      ourUser.save();
+      res.status(200).json(ourUser.recentlyViewed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}

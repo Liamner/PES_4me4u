@@ -87,9 +87,10 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
     //Datos de usuario
     setEmail(response.data.email);
 
+    setFollowers(response.data.followers);
+    setFollowed(response.data.followed);
 
     setFollowersSize(response.data.followers.length);
-
     setFollowedSize(response.data.followed.length);
 
     setLevel(response.data.level);
@@ -312,6 +313,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
+    
   }
 
 });

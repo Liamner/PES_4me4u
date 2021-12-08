@@ -7,6 +7,7 @@ const typeController = require('../controllers/apiType.js');
 const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
+const conversationController = require ('../controllers/apiConvesration.js')
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -265,5 +266,13 @@ module.exports = function(app) {
     .get(authenticateJWT, userController.getMyCommentsDone)
   router.route('/comments/recived')
     .get(authenticateJWT, userController.getMyCommentsRecived)*/
+
+    // CONVERSATION
+  router.route('/conversation')
+    .get(conversationController.getConversations)
+    .post(authenticateJWT, conversationController.newConversation)
+
+  router.route('/conversation/user')
+    .get(authenticateJWT, conversationController.getConversations)
   return router;
 }

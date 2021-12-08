@@ -8,7 +8,8 @@ require('dotenv').config()
 
 const app = express()
 var server = require('http').createServer(app);
-var io = require("socket.io").listen(server);
+//var io = require("socket.io").listen(server);
+var io = require("socket.io");
 var nicknames = {};
  
 //const app = express()
@@ -49,11 +50,11 @@ mongoose.connect(process.env.URLDB, {
   )
 ).catch((err) => console.log(err.message)); 
 
-server.listen(process.env.PORT, process.env.IP);
+//server.listen(process.env.PORT, process.env.IP);
 
-io.sockets.on('connection', function(socket) {
+io.Socket.on('connection', function(socket) {
   socket.on('send message', function(data) {
-      io.sockets.emit('new message', {msg: data, nick: socket.nickname});
+      io.Socket.emit('new message', {msg: data, nick: socket.nickname});
   });
   
   socket.on('new user', function(data, callback) {
@@ -74,6 +75,6 @@ io.sockets.on('connection', function(socket) {
   });
   
   function updateNickNames() {
-      io.sockets.emit('usernames', nicknames);
+      io.Socket.emit('usernames', nicknames);
   }
 });

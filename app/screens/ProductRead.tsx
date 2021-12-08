@@ -9,7 +9,7 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
-export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRead'>) {
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -97,7 +97,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   const getProductInfo = async () => {
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);

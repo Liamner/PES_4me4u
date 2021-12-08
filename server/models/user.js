@@ -73,6 +73,7 @@ let usuarioSchema = new Schema({
     exchanges: {
         type: Number,
         default: '0',
+    },
     followers: {
         type: [mongoose.Schema.usuarioSchema],
         required: false

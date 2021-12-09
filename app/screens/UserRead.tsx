@@ -15,13 +15,16 @@ import axios from 'axios';
 
 
 export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
-  
 
     //Datos de un usuario
 
-    const [id, setid] = useState('61b109e710b12937fee3ebcd');
-    //const [id, setid] = useState(user_id);
-    
+    const [id, setId] = useState('61b109e710b12937fee3ebcd');
+   
+    if (user_id != null){
+      setId(user_id);
+    }
+
+
     const [email, setEmail] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
     const [ecoPoints, setEcoPoints] = useState('Cargando...');
@@ -37,15 +40,9 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
-   /* 
-    const email = 'a@mail.algo'
-    const level = '1'
 
-    const ecoPoints = '10'
-    const score = '5.0'
-    const latitude = 39.03385
-    const longitude = 125.75432
-*/
+    
+
 
     const [products, setproducts] = React.useState([
       {
@@ -121,7 +118,47 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
   };
   
+  const onPressFollowers = () => {
+    if (followersSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no tine ningún seguidor",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+        //window.location.href = 'details.html';
+//        navigation.navigate("Followers");
+        navigation.navigate("EditProduct");
+    }
+  };
+
+
+
+  const onPressFollowed = () => {
+    if (followedSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no es seguido por nadie",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+        //window.location.href = 'details.html';
+//        navigation.navigate("Followers");
+        navigation.navigate("EditProduct");
+    }
+  };
+
+
+
+
+
   getUserInfo()
+
+
+
+
 
 
 
@@ -142,11 +179,11 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
 
           <View style={styles.container2}>
-          <Text style={styles.text}>
+          <Text style={styles.text} onPress={onPressFollowers}>
               Followers: <Text style={styles.text2}>{followersSize}</Text>
           </Text>
           <Text>        </Text>
-          <Text style={styles.text}>
+          <Text style={styles.text} onPress={onPressFollowed}>
               Followed: <Text style={styles.text2}>{followedSize}</Text>
           </Text>   
         </View>

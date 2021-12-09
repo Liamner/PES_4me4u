@@ -30,29 +30,20 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
 
   const [oldIds, setOldIds] = React.useState([]);   //necesarios para borrar, imagenes, elegir cual de ellos borrar  
 
-//para controlar si se cambia o no
-  const [imageMod, setImageMod] = React.useState("no");
-  const [image2Mod, setImage2Mod] = React.useState("no");
-  const [image3Mod, setImage3Mod] = React.useState("no");
-  const [image4Mod, setImage4Mod] = React.useState("no");
-  const [image5Mod, setImage5Mod] = React.useState("no");
-  const [image6Mod, setImage6Mod] = React.useState("no"); 
-
-
   //copias auxiliares en caso de recargar el producto inicial
   const [checkedDonarAux, setCheckedDonarAux] = React.useState(false);
   const [checkedIntercambiarAux, setCheckedIntercambiarAux] = React.useState(false);
   const [checkedPrestarAux, setCheckedPrestarAux] = React.useState(false);
 
   const [numImagesAux, setNumImagesAux] = React.useState();     //número de imagenes inicial
-
-
   const [imageAux, setImageAux] = React.useState(null);
   const [image2Aux, setImage2Aux] = React.useState(null);
   const [image3Aux, setImage3Aux] = React.useState(null);
   const [image4Aux, setImage4Aux] = React.useState(null);
   const [image5Aux, setImage5Aux] = React.useState(null);
-  const [image6Aux, setImage6Aux] = React.useState(null); 
+  const [image6Aux, setImage6Aux] = React.useState(null);
+  
+  const [deleteIds, setDeleteIds] = React.useState([]);
 
   const [productInfo, setProductInfo] = React.useState ({
     pname:"",
@@ -176,21 +167,19 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   }
 
   const editImages = async () => {
-
-
     //DELETE pasar vector de ids
     //NOTA: no se pueden borrar todas las fotos, pasa cuando numImages == numImagesAux o 
-    let oldId = [];
+    /*let oldId = [];
     //let oldId: string | never[] | AxiosRequestConfig<any> | undefined = [];
     if ((image  == null && image  != null) || image != imageAux  ) oldId = oldId + image;
     if ((image2 == null && image2 != null) || image2 != image2Aux) oldId = oldId + image2;
     if ((image3 == null && image3 != null) || image3 != image3Aux) oldId = oldId + image3;
     if ((image4 == null && image4 != null) || image4 != image4Aux) oldId = oldId + image4;
     if ((image5 == null && image5 != null) || image5 != image5Aux) oldId = oldId + image5;
-    if ((image6 == null && image6 != null) || image6 != image6Aux) oldId = oldId + image6;
-
+    if ((image6 == null && image6 != null) || image6 != image6Aux) oldId = oldId + image6;*/
+    console.log('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + deleteIds);
     await axios
-      .delete('https://app4me4u.herokuapp.com/api/image/' + pid, oldId)
+      .delete('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + deleteIds)
       .then(function(response) {
         console.log("Old images deleted")
       })
@@ -211,9 +200,6 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     });
 
   }
-
-
-
 
   const editProduct = async () => {
     let ex = [];
@@ -252,10 +238,10 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
         console.log(error);
 
     });
-
-
     editImages();
   }
+
+  
    
   React.useEffect(() => {
     (async () => {
@@ -266,7 +252,8 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
         }
       }
     })();
-  }, []);  
+  }, []);
+
   const setImageById = (id: Number, uri: string) => {
       if(uri != ''){
         if(id == 1 ) setImage(uri)
@@ -303,6 +290,9 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
         else{
           setNumImages(numImages -1);
           setImageById(id, '');
+          if(undefined == deleteIds.find(element => element == oldIds[id])) {
+            deleteIds.push(oldIds[id]);
+          }
         }
       },
       style: 'default',
@@ -341,7 +331,7 @@ const pickImage = async (id?: Number, change?: Boolean) => {
     setImageById(id, '');
 
     if (id == 1){
-        setImage(result.uri);
+      setImage(result.uri);
     } 
     else if(id == 2){
       setImage2(result.uri);
@@ -501,7 +491,7 @@ const pickImage = async (id?: Number, change?: Boolean) => {
           <Image source={require('../images/camara2.png')}  style={styles.cameraImage} />  
           </TouchableOpacity>  }
         </View>    
-        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={editProduct} ><Text>¡Subir Producto!</Text></Pressable>
+        <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={editImages} ><Text>¡Actualizar!</Text></Pressable>
         <Pressable style={[styles.button, {backgroundColor: '#dcf9fc'}]} onPress ={reloadProduct}><Text>Cancelar</Text></Pressable>
       </View>      
     </ScrollView>

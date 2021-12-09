@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import EditScreenInfo from '../components/EditScreenInfo';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
-import { resolvePlugin } from '@babel/core';
-import { State } from 'react-native-gesture-handler';
 
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");
@@ -190,14 +187,14 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     //POST pasar url nuevas
     let newUrls = [image, image2, image3, image4, image5, image6];
 
-    await axios
+    /*await axios
       .post('https://app4me4u.herokuapp.com/api/image/' + pid, newUrls)
       .then(function(response) {
         console.log("New images posted")
       })
       .catch(function(error) {
         console.log(error);
-    });
+    });*/
 
   }
 
@@ -291,7 +288,8 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
           setNumImages(numImages -1);
           setImageById(id, '');
           if(undefined == deleteIds.find(element => element == oldIds[id])) {
-            deleteIds.push(oldIds[id]);
+            deleteIds.push(oldIds[id-1]);
+            console.log(deleteIds);
           }
         }
       },

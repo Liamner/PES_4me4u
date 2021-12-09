@@ -39,6 +39,13 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [image4Aux, setImage4Aux] = React.useState(null);
   const [image5Aux, setImage5Aux] = React.useState(null);
   const [image6Aux, setImage6Aux] = React.useState(null);
+
+  const [url1, setUrl1] = React.useState(null);     
+  const [url2, setUrl2] = React.useState(null);     
+  const [url3, setUrl3] = React.useState(null);     
+  const [url4, setUrl4] = React.useState(null);     
+  const [url5, setUrl5] = React.useState(null);     
+  const [url6, setUrl6] = React.useState(null); 
   
   const [deleteIds, setDeleteIds] = React.useState([]);
 
@@ -174,27 +181,36 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     if ((image4 == null && image4 != null) || image4 != image4Aux) oldId = oldId + image4;
     if ((image5 == null && image5 != null) || image5 != image5Aux) oldId = oldId + image5;
     if ((image6 == null && image6 != null) || image6 != image6Aux) oldId = oldId + image6;*/
-    console.log('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + deleteIds);
-    await axios
+
+    //FUNCIONASKDJKASF
+    /*await axios
       .delete('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + deleteIds)
       .then(function(response) {
         console.log("Old images deleted")
       })
       .catch(function(error) {
         console.log(error);
-    });
+    });*/
 
     //POST pasar url nuevas
-    let newUrls = [image, image2, image3, image4, image5, image6];
+    let newUrls = [image];
+    var formData = new FormData();
+    formData.append("path", image);
 
-    /*await axios
-      .post('https://app4me4u.herokuapp.com/api/image/' + pid, newUrls)
+    console.log(formData);
+
+    await axios
+      .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }})
       .then(function(response) {
         console.log("New images posted")
+        console.log(response)
       })
       .catch(function(error) {
         console.log(error);
-    });*/
+    });
 
   }
 

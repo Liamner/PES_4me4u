@@ -12,6 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { color } from 'react-native-reanimated';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function SignInScreen({ navigation }) {
@@ -69,15 +70,30 @@ export default function SignInScreen({ navigation }) {
                 .post('https://app4me4u.herokuapp.com/api/login', credentials)
                 .then(function (response) {
                     const result = response.data;
-
                     if (result.ok) {
-                        navigation.navigate("Main", result.user, result.token);
+                        const session = {
+                            "id": result.user._id,
+                            "user": result.user.userId,
+                            "token": result.token
+                        }
+                        storeData(session)
+                       navigation.navigate("BottomTab");
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                     setErrorLogin(true)
                 });
+        }
+    }
+
+    const storeData = async (value) => {
+        try {
+            const jsonValue = JSON.stringify(value)
+            //console.log(value + " guardo token")
+            await AsyncStorage.setItem('userSession', jsonValue)
+        } catch (e) {
+            console.log(e)
         }
     }
 

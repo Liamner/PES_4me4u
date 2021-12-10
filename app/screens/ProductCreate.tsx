@@ -8,6 +8,7 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [name, onChangeName] = React.useState("");
@@ -23,7 +24,29 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);
   const imageArray = [image, image2, image3, image4, image5, image6];
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+})
+
+const getData = async () => {
+    try {
+        const value = await AsyncStorage.getItem('userSession')
+        if(value !== null) {
+            setSession(JSON.parse(value))
+            console.log(value)
+        }
+        else {
+            console.log("empty")
+        }
+    } catch(e) {
+        console.log(e)
+    }
+  }
+
   React.useEffect(() => {
+    getData();
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,7 +122,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     console.log("sending")
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${session.token}`
       }
     }
     let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {

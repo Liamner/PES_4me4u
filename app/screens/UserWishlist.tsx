@@ -1,29 +1,34 @@
+import axios from 'axios';
 import * as React from 'react';
-import { StyleSheet, ScrollView, TextInput, Button } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, ScrollView, FlatList } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import ProductCard from './ProductCardScreen';
 
-export default function SearchProduct({ navigation }: RootTabScreenProps<'SearchProduct'>) {
-	
+export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
+  const [products, setProducts] = useState();
+
+  const uid = '61a3855a5cd77458b48896ed';
+
+  const getWishlist = async () => {
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ uid);
+      setProducts(response.data.wishlist);
+   };
+
+   getWishlist();
   return (
     <View style={styles.container}>
-      <TextInput
-				onChangeText={()=>console.log("Texto cambiado")}
-				placeholder="Buscar..."
-			/>
-			<View style={styles.row}>
-				<Button
-					onPress={()=>console.log("Buscar por categoria")}
-					title="Categoria"
-				/>
-				<Button
-					onPress={()=>console.log("Buscar por tipo intercambio")}
-					title="Tipo intercambio"
-				/>
-			</View>
-      <ScrollView>
-        <Text>Resultados</Text>
+      <ScrollView style={styles.flex}>
+        <FlatList
+          numColumns={2}
+          data={products}
+          renderItem={({ item }) => (
+            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+          )}
+          keyExtractor={item => item.id}
+          />
       </ScrollView>
     </View>
   );
@@ -33,6 +38,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+  },
+  flex: {
+    flex: 1,
   },
   row: {
     flexDirection: 'row',

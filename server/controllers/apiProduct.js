@@ -107,11 +107,13 @@ exports.createProduct = async (req, res) => {
   } 
  
   try {
-    const category = await Category.findById({_id:req.body.categories});
+    console.log("pinche");
+    const category = await Category.findOne({name: req.body.categories});
+    console.log(category);
+    console.log("hola");
   if (category == null) res.status(404).json({error:"category not found"});
 
   const type = await Type.findOne({name: req.body.exchange});
-  console.log(type);
   if (type == null) res.status(404).json({error:"type not found"});
     
   if (category != null && type != null) {
@@ -125,8 +127,8 @@ exports.createProduct = async (req, res) => {
                               }
                             });*/
 
-    const categories = await Category.findByIdAndUpdate(
-                            { _id: ObjectId(req.body.categories) }, 
+    const categories = await Category.findOneAndUpdate(
+                            { name: req.body.categories }, 
                                 {$push : {
                                   products: newProduct
                                 }

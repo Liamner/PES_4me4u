@@ -31,31 +31,44 @@ exports.getProductImages = async (req, res) => {
 
 exports.uploadImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
-  const newFiles = req.files.length;
+  //const newFiles = req.files.length;
   console.log(product.img.length)
+  const newFiles = req.body.img;
+  let length = 1;
+  if (newFiles.length < 6) length = newFiles.length;
+  console.log(length)
+
   /*if (product.userId != req.user.id) {
     res.status(401).json({error: "Do not have permission"})
     return;
   }*/
-  if (product.img.length+newFiles <= 6) {
-    console.log(product.img.length)
+  if (product.img.length+length <= 6) {
     try {
-      for (let i = 0; i < newFiles; ++i) {
-        console.log(req.files[i])
-        let file = req.files[i];
-
+      for (let i = 0; i < length; ++i) {
+        //console.log(req.files[i])
+        //let file = req.files[i];
+        let file;
+        if (length == 1) file = newFiles;
+        else file = newFiles[i];
+        console.log(file)
         // Save Image in Cloudinary
-        let result = await cloudinary.uploader.upload(file.path);
+        let result = await cloudinary.uploader.upload(file);
+        
         
         // Save image in mongoDB
         let image = new Image();
+        
         image.public_id = result.public_id;
         image.url = result.url;
+       
         await image.save();
-
+        
         // Add reference to the product
-        product.img.push(image._id);
+        product.img.push(image._id)
+        
       }
+
+      //product.img.push(imagesIds)
       await product.save();
       res.status(201).json(product);
     } catch (error) {

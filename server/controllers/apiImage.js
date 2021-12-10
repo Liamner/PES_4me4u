@@ -32,6 +32,40 @@ exports.getProductImages = async (req, res) => {
 
 exports.uploadImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
+ // const newFiles = req.files;
+  console.log(req.files.length)
+
+  if (product.img.length < 6) {
+    try {
+      let result = await cloudinary.uploader.upload(req.files[0].path);
+
+      let image = new Image();
+          
+      
+      image.public_id = result.public_id;
+      image.url = result.url;
+    
+      await image.save();
+      
+      // Add reference to the product
+      product.img.push(image._id)
+
+      await product.save();
+      console.log(product)
+      res.status(201).json(product);
+
+    } catch (error) {
+      res.status(409).json(error.message);
+      console.log("Can not upload the images");
+    }
+  }
+  else {
+    console.log("Too many products!");
+    res.status(400).json({error: 'Too many products'});
+  }
+  /*
+  // FUNCIONA EN LOCAL
+  const product = await Product.findById({_id: req.params.productId});
   const newFiles = req.body.img;
   console.log(newFiles)
 
@@ -60,7 +94,7 @@ exports.uploadImages = async (req, res) => {
   else {
     console.log("Too many products!");
     res.status(400).json({error: 'Too many products'});
-  }
+  }*/
 }
 
 /*

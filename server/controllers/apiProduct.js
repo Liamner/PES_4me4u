@@ -90,8 +90,8 @@ exports.createProduct = async (req, res) => {
   product.state = req.body.state;
   // Assign the current user to the product
 
-  //product.userId = req.user.id;
-  //product.username = req.user.username;
+  product.userId = req.user.id;
+  product.username = req.user.username;
 
   // SAVE IMAGE
   if (req.files != null) {
@@ -120,12 +120,12 @@ exports.createProduct = async (req, res) => {
     
     const newProduct = await product.save();
     // Add the product to the user 
-    /*const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
                                 products: newProduct
                               }
-                            });*/
+                            });
 
     const categories = await Category.findOneAndUpdate(
                             { name: req.body.categories }, 

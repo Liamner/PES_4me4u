@@ -74,20 +74,34 @@ exports.uploadImages = async (req, res) => {
 exports.deleteImages = async (req, res) => {
   try {
     const product = await Product.findById({_id: req.params.productId});
+    let deleteImages = req.params.imageId;
+    deleteImages = deleteImages.split(',');
+
+    console.log(deleteImages)
     /*
     if (product.userId == req.user.id) {
         res.status(401).json({error: "Do not have permission"})
         return;
     }*/
-    let length = 1;
-    if (req.body.img.length != 24) length = req.body.img.length;
-    if (length >= product.img.length) {
+    let length = deleteImages.length;
+   // if (req.body.img.length != 24) length = req.body.img.length;
+    console.log(deleteImages.length)
+    /*if (length >= product.img.length) {
       res.status(400).json({error: 'Can not delete all images'})
     }
-    else {
+    else {*/
       for (let i = 0; i < length; ++i) {  
-        let imageID;
-        if (length > 1) {
+        let imageID = deleteImages[i];
+        console.log(imageID)
+        await product.img.pull({_id: imageID});
+  
+        // Delete mongoDB Image
+        const res = await Image.findByIdAndDelete({_id: imageID});
+        console.log(res.public_id)
+  
+        // Delete Cloudinary Image
+        await cloudinary.uploader.destroy(res.public_id);
+        /*if (length > 1) {
           console.log(req.body.img[i])
           await product.img.pull({_id: req.body.img[i]});
   
@@ -110,12 +124,12 @@ exports.deleteImages = async (req, res) => {
     
           // Delete Cloudinary Image
           await cloudinary.uploader.destroy(res.public_id);
-        }
+        }*/
       }
       await product.save();
       console.log(product);
       res.status(204).json(product);
-    }    
+   // }   
   } catch (error) {
     res.status(404).json(error.message);
   

@@ -29,20 +29,56 @@ exports.getProductImages = async (req, res) => {
   }
 }
 
+
+exports.uploadImages = async (req, res) => {
+  const product = await Product.findById({_id: req.params.productId});
+  const newFiles = req.body.img;
+  console.log(newFiles)
+
+  if (product.img.length+1 <= 6) {
+    try {
+      let result = await cloudinary.uploader.upload(newFiles);
+      let image = new Image();
+          
+      image.public_id = result.public_id;
+      image.url = result.url;
+    
+      await image.save();
+      
+      // Add reference to the product
+      product.img.push(image._id)
+
+      await product.save();
+      console.log(product)
+      res.status(201).json(product);
+
+    } catch (error) {
+      res.status(409).json(error.message);
+      console.log("Can not upload the images");
+    }
+  }
+  else {
+    console.log("Too many products!");
+    res.status(400).json({error: 'Too many products'});
+  }
+  
+}
+
+/*
 exports.uploadImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
   const newFiles = req.files.length;
   console.log(newFiles)
-  /*console.log(product.img.length)
-  const newFiles = req.body.img;*/
-  /*let length = 1;
+  console.log(product.img.length)
+  const newFiles = req.body.img;
+  let length = 1;
   if (newFiles.length < 6) length = newFiles.length;
-  console.log(length)*/
+  console.log(length)
 
-  /*if (product.userId != req.user.id) {
+  if (product.userId != req.user.id) {
     res.status(401).json({error: "Do not have permission"})
     return;
-  }*/
+  }
   if (product.img.length+req.files.length <= 6) {
     try {
       for (let i = 0; i < req.files.length; ++i) {
@@ -52,7 +88,7 @@ exports.uploadImages = async (req, res) => {
         
         /*if (length == 1) file = newFiles;
         else file = newFiles[i];
-        console.log(file)*/
+        console.log(file)
         // Save Image in Cloudinary
         let result = await cloudinary.uploader.upload(req.files[i].path);
         console.log(result)
@@ -85,7 +121,7 @@ exports.uploadImages = async (req, res) => {
   }
 }
 
-
+*/
 exports.deleteImages = async (req, res) => {
   try {
     const product = await Product.findById({_id: req.params.productId});

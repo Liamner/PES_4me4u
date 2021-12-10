@@ -35,7 +35,7 @@ exports.uploadImages = async (req, res) => {
   const newFiles = req.body.img;
   console.log(newFiles)
 
-  if (product.img.length+1 <= 6) {
+  if (product.img.length < 6) {
     try {
       let result = await cloudinary.uploader.upload(newFiles);
       let image = new Image();
@@ -61,7 +61,6 @@ exports.uploadImages = async (req, res) => {
     console.log("Too many products!");
     res.status(400).json({error: 'Too many products'});
   }
-  
 }
 
 /*

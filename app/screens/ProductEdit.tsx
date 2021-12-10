@@ -7,6 +7,8 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 
+
+
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
@@ -56,7 +58,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     pexchange:[]
   });
 
-  const pid = '619e6fd140d15287ffe42aca';
+  const pid = '61b3796f8287c4eefa999303';
   
 
   React.useEffect(() => {
@@ -77,14 +79,9 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     let exchange = [response.data.exchange];
     exchange.forEach(element => {
       //AÑADIR CODIGOS DE DONAR INTERCAMBIAR Y PRESTAR de exchange
-
-      //      if(element == "present") setCheckedDonar(true);
-//        else if(element == "exchange") setCheckedIntercambiar(true);
-//        else if(element == "provide") setCheckedPrestar(true);
-    if (element == "6193a583e47e769eeaa7a978"){
-          setCheckedDonar(true);//no se que es exactamente
-          setCheckedDonarAux(true);
-    }
+        if(element == "present") setCheckedDonar(true);
+        else if(element == "exchange") setCheckedIntercambiar(true);
+        else if(element == "provide") setCheckedPrestar(true);
 
     })
     //response.data.img
@@ -195,8 +192,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     //POST pasar url nuevas
     let newUrls = [image];
     var formData = new FormData();
-    formData.append("path", image);
-
+    formData.append("img", image);
     console.log(formData);
 
     await axios
@@ -221,6 +217,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     }
     if (checkedIntercambiar) {
       ex.push('exchange')
+      
     }
     if (checkedPrestar) {
       ex.push('provide')
@@ -393,25 +390,18 @@ const pickImage = async (id?: Number, change?: Boolean) => {
           setSelectedCategory(itemValue)
         }>
           <Picker.Item label="Selecciona un categoria..." value="default" />          
-          <Picker.Item label="tecnologia" value="61797e24b4a4d195aa14be8d" />
-          <Picker.Item label="juguetes" value="61940e6f0c77883d581cede8" />
-          <Picker.Item label="fashion" value="61a51c1649b1a2167fe86cfe" />
-          <Picker.Item label="computer" value="61a51cc449b1a2167fe86d00" />
-          <Picker.Item label="homeApplicances" value="61a51cd949b1a2167fe86d02" />
-          <Picker.Item label="sports" value="61a51ceb49b1a2167fe86d04" />
-          <Picker.Item label="home" value="61a51cf549b1a2167fe86d06" />
-          <Picker.Item label="games" value="61a51d0149b1a2167fe86d08" />
-          <Picker.Item label="movies" value="61a51d0b49b1a2167fe86d0a" />
-          <Picker.Item label="children" value="61a51d1849b1a2167fe86d0c" />
-          <Picker.Item label="construction" value="61a51d2349b1a2167fe86d0e" />
-          <Picker.Item label="other" value="61a51d4649b1a2167fe86d12" />
-{//          <Picker.Item label="games" value="61a51d5049b1a2167fe86d14" />
-}
-          <Picker.Item label="pets" value="61a51dbc49b1a2167fe86d1b" />
-
-
-
-
+          <Picker.Item label="fashion" value="fashion" />
+          <Picker.Item label="computer" value="computer" />
+          <Picker.Item label="homeApplicances" value="homeApplicances" />
+          <Picker.Item label="sports" value="sports" />
+          <Picker.Item label="home" value="home" />
+          <Picker.Item label="videogames" value="videogames" />
+          <Picker.Item label="movies" value="movies" />
+          <Picker.Item label="children" value="children" />
+          <Picker.Item label="construction" value="construction" />
+          <Picker.Item label="pets" value="pets" />
+          <Picker.Item label="games" value="games" />
+          <Picker.Item label="other" value="other" />
         </Picker>        
         <Text style={[styles.title, {marginTop:20}]}> ¿Que quieres hacer con tu producto?</Text>        
         <View 

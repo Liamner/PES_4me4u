@@ -142,14 +142,14 @@ function BottomTabNavigator() {
         }}
       /> */}
       {/*   TODO :  2descomentar */}
-       {/* <BottomTab.Screen
+       <BottomTab.Screen
         name="TestScreen"
         component={TestScreen}
         options={{
           title: 'Test Screen',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
-      /> */}
+      />
       <BottomTab.Screen
         name="FirstScreen"
         component={FirstScreen}

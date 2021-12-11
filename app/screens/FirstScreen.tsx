@@ -7,13 +7,35 @@ import ProductCardElement from './ProductCardElement'
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+
+interface ProductImage{
+  __v: number;
+  __id: string;
+  public_id: string;
+  url: string;
+}
+interface Product {
+  __v: number;
+  __id: string;
+  description: string;
+  img: ProductImage[];
+  name: string;
+  publishingDate: string;
+  state: string;
+  exchange: string[]
+}
 export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScreen'>) {
 
-  const getProducts = () => {    
-    console.log("response")
-    //let response = await axios.get('https://app4me4u.herokuapp.com//product/');
-    return <Text> hellou</Text>
+  const [products, setProducts] = React.useState();
+
+  const getProducts = async () => {    
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
+    setProducts(response.data);
   };
+  
+  React.useEffect(() => {
+    getProducts();
+  }, []);  
 
   const DATA = [
     {
@@ -60,10 +82,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const renderItem = ({ item }) => (
     <Item title={item.title} />
   );
-
+  function renderItem2(item:any) {
+    console.log(item)
+  //console.log(item.img[0].url)
+  if(item.img === undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
+  else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+  }
   return (    
     <>
-    {getProducts()}
      <Modal
         animationType="slide"
         transparent={true}
@@ -121,7 +147,6 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>Hogar</Text>
           </View>
-
         </TouchableOpacity>  
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
@@ -136,22 +161,17 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           <Text style = {styles.textoCategoria}>Otros</Text>
           </View>
 
-        </TouchableOpacity>   
-       </ScrollView>
-    <ScrollView>
-    <View style = {styles.fila}>                  
-      <ProductCard name ={"Olla a presion"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "regalar", "prestar"]}/>
-      <ProductCard name ={"paraguas de viento"}  guardado ={false} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["exchange", "loan", "prestar"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "give", "loan"]}/>
-      </View>  
-    </ScrollView>    
+        </TouchableOpacity>  
+
+       </ScrollView>     
+       <FlatList
+          numColumns={2}
+          data={products}
+          renderItem={renderItem2}
+          keyExtractor={item => item.id}
+         />
+       <Text>Adios</Text>  
+             
     <View style = {styles.navigator}>
       <TouchableOpacity>
         <Image source={require('../images/casa.png')} style={styles.icono}/>  

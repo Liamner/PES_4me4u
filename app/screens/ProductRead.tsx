@@ -8,6 +8,7 @@ import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRead'>) {
   //Variables de las respuestas API
@@ -42,7 +43,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    categories.pop();
+    /*categories.pop();
     let aux = response.data.categories;
     aux.forEach((element: any) => {
       switch (element) {
@@ -55,11 +56,11 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
         default:
           break;
       }
-    });
+    });*/
   }
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
-    exchange.pop();
+  /*  exchange.pop();
     let aux = response.data.exchange;
     aux.forEach((element: any) => {
       switch (element) {
@@ -75,7 +76,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
         default:
           break;
       }
-    });
+    });*/
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -97,13 +98,14 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
 
   const getProductInfo = async () => {
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61b37f48110467c46f4eb6ce');
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
     getCorrectExchangeType(response);
     getCorrectStateType(response);
     setUserID(response.data.userId);
+    setUser(response.data.username);
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
@@ -113,11 +115,12 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
   };
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ userid);
     //Required
-    setUser(response.data.userId);
+    //setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
+    console.log(userid)
   };
 
   getProductInfo()
@@ -144,7 +147,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
         </View>
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText}  onPress={() => navigation.navigate("ViewUser", userid)}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}

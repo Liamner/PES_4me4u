@@ -52,9 +52,10 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -129,22 +130,6 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
-        options={{
-          title: 'Product Card',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-       <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{
-          title: 'Test Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
         name="EditProduct"
         component={EditProduct}
         options={{
@@ -174,8 +159,8 @@ function BottomTabNavigator() {
         options={{
           title: 'Ver Usuario',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />      
+        }} 
+      />     
     </BottomTab.Navigator>
   );
 }

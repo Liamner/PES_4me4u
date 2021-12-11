@@ -14,12 +14,11 @@ import DeleteUser from '../components/DeleteUser';
 import axios from 'axios';
 
 
-export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
-  
-
+//export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
+  export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
+    const userid = route.params;
     //Datos de un usuario
 
-    const [id, setid] = useState('61952ec8adeb9693da219fc2');
     //const [id, setid] = useState(user_id);
     
     const [email, setEmail] = useState('Cargando...');
@@ -76,7 +75,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid );
 //    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
 

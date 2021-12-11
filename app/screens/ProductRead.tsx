@@ -147,7 +147,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
         </View>
         <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}  onPress={() => navigation.navigate("ViewUser", userid)}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText}  onPress={() => navigation.navigate("UserRead", userid)}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}

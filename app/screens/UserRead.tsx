@@ -10,13 +10,13 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
-
+import retrieveSession from '../hooks/retrieveSession'
 import axios from 'axios';
 
 
 //export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
-    const userid = route.params;
+    var userid = route.params;
     //Datos de un usuario
 
     //const [id, setid] = useState(user_id);
@@ -29,6 +29,23 @@ import axios from 'axios';
     const [score, setScore] = useState('Cargando...');
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
+    const [session, setSession] = React.useState({
+      id: "",
+      user:"",
+      token:""
+    })
+    const [uid, setUid] = useState("")
+
+  const getData = async () => {
+    const sess = await retrieveSession();
+    console.log(sess)
+      setSession(sess);
+    }
+
+    React.useEffect(() => {
+      getData();
+    }, []);  
+
    /* 
     const email = 'a@mail.algo'
     const location = 'Pyongyang'
@@ -75,10 +92,17 @@ import axios from 'axios';
 
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid );
+    let aux
+    if (userid != null || userid == "") {
+      aux = userid
+    }
+    else {
+      aux = session.id
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux );
 //    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
-
+    userid = "";
     setEmail(response.data.email);
 
     if(response.data.location == null) setLocation('Desconocido');
@@ -108,7 +132,6 @@ import axios from 'axios';
    if(response.data.XXX == null) setXXX('Desconocido');
     else setXXX(response.data.XXX);
     */
-
 
 
   };

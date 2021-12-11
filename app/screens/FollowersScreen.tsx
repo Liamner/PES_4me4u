@@ -9,38 +9,38 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import DeleteUser from '../components/DeleteUser';
+import ViewUser from '../screens/UserRead';	
 
 import axios from 'axios';
 
 
-export default function FollowersScreen({ navigation, user_id, list }: RootTabScreenProps<'FollowersScreen'>) {
+//export default function FollowersScreen({ navigation, id }: RootTabScreenProps<'FollowersScreen'>) {
+  export default function FollowersScreen({ route, navigation }: RootTabScreenProps<'FollowersScreen'>) {
+    const {list} = route.params;
 
-    const list2= [
-        { email:'a@mail.algo',
-        level: '1',
-        ecoPoints: '10',
-        score: '5.0',
-        latitude: 39.03385,
-        longitude: 125.75432}
-    ];
-        
+
+    
 
     const onPressUser = (id) => {
-
-            navigation.navigate("UserRead", id);
+       navigation.navigate("ViewUser", {id});
       };
+
+
+
+
+ 
 
     return(
         
       <View style ={styles.container}>
+
         <FlatList
           contentContainerStyle={styles.container}
           keyExtractor={(item) => item.email}
-          data = {list2}
+          data = {list}
           renderItem={({ item }) => (
 
-              <Text style={styles.item}   onPress={() => onPressUser(item.email)}>
+              <Text style={styles.item}   onPress={() => onPressUser(item.id)}>
                 {item.email}
               </Text>
           )}
@@ -52,11 +52,19 @@ export default function FollowersScreen({ navigation, user_id, list }: RootTabSc
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    separator: {
+      marginVertical: 30,
+      height: 1,
+      width: '80%',
     },
     item: {
-      padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
     }

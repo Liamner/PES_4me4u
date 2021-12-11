@@ -10,20 +10,24 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
+import FollowersScreen from '../screens/FollowersScreen';
 
 import axios from 'axios';
 
 
-export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
+
+
+export default function ViewUserScreenScreen({ route, navigation }: RootTabScreenProps<'ViewUserScreen'>) {
 
     //Datos de un usuario
 
-    const [id, setId] = useState('61b109e710b12937fee3ebcd');
+/*
+  //llamada para cuando se pase el parametro en la funcion
+    const {user_id} = route.params;  
+    const [id, setId] = useState(user_id);
+*/
+    const [id, setId] = useState('61b109e710b12937fee3ebcd'); //eliminar en la versión final
    
-    if (user_id != null){
-      setId(user_id);
-    }
-
 
     const [email, setEmail] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
@@ -77,6 +81,9 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
         setCurrentPage(currentNumber);
       };
 
+      React.useEffect(() => {
+        getUserInfo();
+      }, []);
 
   const getUserInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
@@ -127,9 +134,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
       )
     }
     else{
-        //window.location.href = 'details.html';
-//        navigation.navigate("Followers");
-        navigation.navigate("EditProduct");
+      navigation.navigate('FollowersScreen', {list: followers} );
     }
   };
 
@@ -144,9 +149,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
       )
     }
     else{
-        //window.location.href = 'details.html';
-//        navigation.navigate("Followers");
-        navigation.navigate("EditProduct");
+      navigation.navigate('FollowedScreen', {list: followed} );
     }
   };
 
@@ -154,11 +157,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
 
 
-  getUserInfo()
-
-
-
-
+  
 
 
 
@@ -232,9 +231,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
           numColumns = {1}
           data={products}
           renderItem={({ item }) => ( 
-
             <>
-
             <Text style={styles.productText}>
               <Text style={styles.deleteButton} onPress={() => Alert.alert(
                     "BORRAR",
@@ -258,12 +255,6 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
               >{item.name}</Text>
             </Text>
             </>
-
-
-
-
-
-
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}

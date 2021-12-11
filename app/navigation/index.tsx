@@ -26,6 +26,8 @@ import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
+import FollowersScreen from '../screens/FollowersScreen';	
+import FollowedScreen from '../screens/FollowedScreen';	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -157,6 +159,22 @@ function BottomTabNavigator() {
         component={ViewUser}
         options={{
           title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> 
+      <BottomTab.Screen
+        name="FollowersScreen"
+        component={FollowersScreen}
+        options={{
+          title: 'Followers',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="FollowedScreen"
+        component={FollowedScreen}
+        options={{
+          title: 'Followed',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />      

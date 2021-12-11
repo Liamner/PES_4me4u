@@ -190,22 +190,16 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     });*/
 
     //POST pasar url nuevas
-    const newUrl = image.replace('///', '//');
-    console.log(newUrl);
-
+    let newUrls = [image];
     var formData = new FormData();
-    formData.append("image", {
-       uri: newUrl,
-       name:'productImage.jpg',
-       type:'image/jpg'
-    });
+    formData.append("img", image);
     console.log(formData);
 
     await axios
-      .post('https://app4me4u.herokuapp.com/api/image/' + pid,
-      {
-        img: newUrl,
-       })
+      .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }})
       .then(function(response) {
         console.log("New images posted")
         console.log(response)

@@ -10,11 +10,12 @@ import ProductCard from './ProductCardScreen';
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
   const [products, setProducts] = useState();
 
-  const uid = '61a3855a5cd77458b48896ed';
+  const uid = '61b48cfd6dac17ee8ff33050';
 
   const getWishlist = async () => {
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ uid);
-      setProducts(response.data.wishlist);
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
+      setProducts(response.data);
+      console.log(products);
    };
 
    getWishlist();
@@ -25,7 +26,7 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>
           )}
           keyExtractor={item => item.id}
           />

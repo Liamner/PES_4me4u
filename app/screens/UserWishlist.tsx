@@ -12,15 +12,15 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
 
   const uid = '61b48cfd6dac17ee8ff33050';
 
-  React.useEffect(() => {
-    getWishlist();
-  }, []);
-
   const getWishlist = async () => {
       let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
       setProducts(response.data);
-      console.log(products);
-   };
+  };
+
+  React.useEffect(() => {
+    getWishlist();
+  }, []);
+  
   return (
     <View style={styles.container}>
       <ScrollView style={styles.flex}>

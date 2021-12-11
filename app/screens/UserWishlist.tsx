@@ -3,22 +3,24 @@ import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, ScrollView, FlatList } from 'react-native';
 
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import ProductCard from './ProductCardScreen';
+import ProductCard from '../components/ProductCard'
 
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
   const [products, setProducts] = useState();
 
   const uid = '61b48cfd6dac17ee8ff33050';
 
+  React.useEffect(() => {
+    getWishlist();
+  }, []);
+
   const getWishlist = async () => {
       let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
       setProducts(response.data);
       console.log(products);
    };
-
-   getWishlist();
   return (
     <View style={styles.container}>
       <ScrollView style={styles.flex}>

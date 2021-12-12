@@ -29,6 +29,8 @@ import ViewUser from '../screens/UserRead';
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import ProductCard from '../screens/ProductCardScreen';
+import TestScreen from '../screens/TestScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (

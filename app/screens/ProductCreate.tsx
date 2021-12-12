@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { Button, Platform, ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import EditScreenInfo from '../components/EditScreenInfo';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
-import { resolvePlugin } from '@babel/core';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [name, onChangeName] = React.useState("");
@@ -22,7 +20,8 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image4, setImage4] = React.useState(null);
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);
-  const imageArray = [image, image2, image3, image4, image5, image6];
+  const [newImages, setNewImages] = React.useState([]);
+
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -33,6 +32,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       }
     })();
   }, []);
+
   const setImageById = (id: Number, uri: string) => {
     if (uri != '') {
       if (id == 1) setImage(uri)
@@ -51,6 +51,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       if (id == 6) setImage6(null)
     }
   }
+
   const unPickImage = async (id: Number) => {
     Alert.alert(
       '¿Que quieres hacer con tu foto?',
@@ -75,6 +76,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     );
 
   }
+
   const pickImage = async (id?: Number) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -86,23 +88,43 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     console.log(result);
 
     if (!result.cancelled) {
-      if (!image || id == 1) setImage(result.uri);
-      else if (!image2 || id == 2) setImage2(result.uri);
-      else if (!image3 || id == 3) setImage3(result.uri);
-      else if (!image4 || id == 4) setImage4(result.uri);
-      else if (!image5 || id == 5) setImage5(result.uri);
-      else if (!image6 || id == 6) setImage6(result.uri);
+      if (id == 1){
+        setImage(result.uri);
+        newImages.push(result.uri);
+      } 
+      else if(id == 2){
+        setImage2(result.uri);
+        newImages.push(result.uri);
+      }
+      else if(id == 3){
+        setImage3(result.uri);
+        newImages.push(result.uri);
+      }
+      else if(id == 4){
+        setImage4(result.uri);
+        newImages.push(result.uri);
+      }
+      else if(id == 5){
+        setImage5(result.uri);
+        newImages.push(result.uri);
+      }
+      else if(id == 6){
+        setImage6(result.uri);
+        newImages.push(result.uri);
+      }
 
     }
   };
+
   const sendApi = async () => {
+    let pid: string;
     console.log("sending")
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }
-    let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
       name: name,
       categories: [selectedCategory],
       description: description,
@@ -111,10 +133,40 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       owner: "owner"
     }, config).then(function (response) {
       console.log(response);
+      pid = response.data.id;
     })
       .catch(function (error) {
         console.log(error);
       });
+
+      newImages.forEach( async (element) => {
+        console.log('Empieza post de ' + element);
+        const uri = element;
+        const uriParts = uri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        const formData = new FormData();
+        formData.append('img', {
+          uri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+        console.log(formData);
+  
+        await axios
+          .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            }})
+          .then(function(response) {
+            console.log("New images posted")
+            console.log(response)
+          })
+          .catch(function(error) {
+            console.log(error);
+        });
+      });
+
   }
   return (
     <ScrollView>
@@ -139,9 +191,19 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           onValueChange={(itemValue, itemIndex) =>
             setSelectedCategory(itemValue)
           }>
-          <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Tecnologia" value="tech" />
-          <Picker.Item label="Casas" value="house" />
+          <Picker.Item label="Selecciona un categoria..." value="default" />          
+          <Picker.Item label="fashion" value="fashion" />
+          <Picker.Item label="computer" value="computer" />
+          <Picker.Item label="homeApplicances" value="homeApplicances" />
+          <Picker.Item label="sports" value="sports" />
+          <Picker.Item label="home" value="home" />
+          <Picker.Item label="videogames" value="videogames" />
+          <Picker.Item label="movies" value="movies" />
+          <Picker.Item label="children" value="children" />
+          <Picker.Item label="construction" value="construction" />
+          <Picker.Item label="pets" value="pets" />
+          <Picker.Item label="games" value="games" />
+          <Picker.Item label="other" value="other" />
         </Picker>
         <Text style={[styles.title, { marginTop: 20 }]}> ¿Que quieres hacer con tu producto?</Text>
         <View

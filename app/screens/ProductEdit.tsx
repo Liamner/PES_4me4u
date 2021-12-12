@@ -3,11 +3,10 @@ import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatL
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system'
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
-
-
 
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");
@@ -190,22 +189,21 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     });*/
 
     //POST pasar url nuevas
-    const newUrl = image.replace('///', '//');
-    console.log(newUrl);
+    let options = { encoding: FileSystem.EncodingType.UTF8 };
+    FileSystem.readAsStringAsync(image, options).then(data => {
+      setUrl1(data);
+    });
 
     var formData = new FormData();
-    formData.append("image", {
-       uri: newUrl,
-       name:'productImage.jpg',
-       type:'image/jpg'
+    formData.append("img", {
+      path: image,
+      name: 'test.jpg',
+      type: 'image/jpg'
     });
     console.log(formData);
 
     await axios
-      .post('https://app4me4u.herokuapp.com/api/image/' + pid,
-      {
-        img: newUrl,
-       })
+      .post('http://app4me4u.herokuapp.com/api/image/' + pid, formData, {headers: {'Content-Type': 'multipart/form-data' }})
       .then(function(response) {
         console.log("New images posted")
         console.log(response)
@@ -349,6 +347,8 @@ const pickImage = async (id?: Number, change?: Boolean) => {
 
     if (id == 1){
       setImage(result.uri);
+      result.path = result.uri;
+      setUrl1(result);
     } 
     else if(id == 2){
       setImage2(result.uri);

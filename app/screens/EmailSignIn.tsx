@@ -1,6 +1,7 @@
 import React from 'react'
-import { Platform, StyleSheet, 
-    Text, 
+import {
+    Platform, StyleSheet,
+    Text,
     View,
     TextInput,
     Alert,
@@ -13,17 +14,17 @@ import { color } from 'react-native-reanimated';
 import axios from 'axios';
 
 
-export default function SignInScreen({navigation}) {
+export default function SignInScreen({ navigation }) {
     const [inputData, setinputData] = React.useState({
-        email:'',
-        password:'',
+        email: '',
+        password: '',
         check_textInputChange: false,
         secureTextEntry: true,
     });
     const [errorLogin, setErrorLogin] = React.useState(false)
 
     const textInputChange = (val) => {
-        if(val.length !== 0) {
+        if (val.length !== 0) {
             setinputData({
                 ...inputData,
                 email: val,
@@ -55,27 +56,28 @@ export default function SignInScreen({navigation}) {
 
     const handleLogin = async () => {
         if (inputData.email === '' || inputData.password === '') {
-            Alert.alert("Error","Por favor, rellene todos los campos.")
+            Alert.alert("Error", "Por favor, rellene todos los campos.")
             console.log("Error. Por favor, rellene todos los campos.")
             setErrorLogin(true)
         }
-        else  {
+        else {
             const credentials = {
                 email: inputData.email,
                 pwd: inputData.password,
-                }
+            }
             axios
-            .post('http://localhost:5000/api/login', credentials)
-            .then(function (response) {
-                const result = response.data;
-                if (result.ok) {
-                    navigation.navigate("Main", result.user);
-                }    
-            })
-            .catch(function (error) {
-                console.log(error);
-                setErrorLogin(true)
-            });
+                .post('https://app4me4u.herokuapp.com/api/login', credentials)
+                .then(function (response) {
+                    const result = response.data;
+
+                    if (result.ok) {
+                        navigation.navigate("Main", result.user, result.token);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    setErrorLogin(true)
+                });
         }
     }
 
@@ -93,7 +95,7 @@ export default function SignInScreen({navigation}) {
                     <FontAwesome
                         name="user-o"
                         size={20}
-                    /> 
+                    />
                     <TextInput
                         placeholder="Tu Email"
                         style={styles.textInput}
@@ -101,16 +103,16 @@ export default function SignInScreen({navigation}) {
                         onChangeText={(val) => textInputChange(val)}
                     />
                     {inputData.check_textInputChange ?
-                    <Animatable.View
-                        animation="bounceIn"
-                    >
-                        <Feather 
-                            name="check-circle"
-                            size={20}
-                            color="green" 
-                        />
-                    </Animatable.View>
-                    : null}
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                size={20}
+                                color="green"
+                            />
+                        </Animatable.View>
+                        : null}
                 </View>
 
                 <Text style={[styles.text_footer, {
@@ -132,16 +134,16 @@ export default function SignInScreen({navigation}) {
                     />
                     <TouchableOpacity onPress={updateSecureTextEntry}>
                         {inputData.secureTextEntry ?
-                            <Feather 
-                            name="eye-off"
-                            size={20}
-                            color="grey" 
+                            <Feather
+                                name="eye-off"
+                                size={20}
+                                color="grey"
                             />
                             :
-                            <Feather 
-                            name="eye"
-                            size={20}
-                            color="grey" 
+                            <Feather
+                                name="eye"
+                                size={20}
+                                color="grey"
                             />
                         }
                     </TouchableOpacity>
@@ -149,35 +151,35 @@ export default function SignInScreen({navigation}) {
 
                 <View style={styles.button}>
                     <TouchableOpacity
-                            onPress={()=> {
-                                handleLogin();
-                            }}
-                            style={{width: 250}}
+                        onPress={() => {
+                            handleLogin();
+                        }}
+                        style={{ width: 250 }}
                     >
                         <LinearGradient
-                            colors = {['#a2cff0','#ADE8F4']}
+                            colors={['#a2cff0', '#ADE8F4']}
                             style={styles.signIn}
                         >
-                            <Text style={[styles.textSign, 
-                                {color: '#fff'}]}>
-                                    Iniciar sesión
+                            <Text style={[styles.textSign,
+                            { color: '#fff' }]}>
+                                Iniciar sesión
                             </Text>
                         </LinearGradient>
                     </TouchableOpacity>
-                    
-                    {errorLogin ? 
+
+                    {errorLogin ?
                         <Animatable.View animation="fadeInLeft" duration={500}>
-                            <Text 
+                            <Text
                                 style={styles.msgError}
-                             >Email o contraseña incorrecta.
+                            >Email o contraseña incorrecta.
                             </Text>
-                         </Animatable.View>
-                      :
-                      null
+                        </Animatable.View>
+                        :
+                        null
                     }
 
                     <TouchableOpacity
-                        onPress={()=>navigation.navigate("SignUp")}
+                        onPress={() => navigation.navigate("SignUp")}
                         style={[styles.signIn, {
                             borderColor: '#a2cff0',
                             borderWidth: 1,
@@ -186,7 +188,7 @@ export default function SignInScreen({navigation}) {
                         }]}
                     >
                         <Text style={[styles.textSign,
-                             {color: '#a2cff0'}]}
+                        { color: '#a2cff0' }]}
                         >Registrarse
                         </Text>
                     </TouchableOpacity>
@@ -198,69 +200,69 @@ export default function SignInScreen({navigation}) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, 
+        flex: 1,
         backgroundColor: '#a2cff0'
-      },
-      header: {
-          flex: 1,
-          justifyContent: 'flex-end',
-          paddingHorizontal: 20,
-          paddingBottom: 50
-      },
-      footer: {
-          flex: Platform.OS === 'ios' ? 3 : 5,
-          backgroundColor: '#fff',
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          paddingHorizontal: 20,
-          paddingVertical: 30
-      },
-      text_header: {
-          color: '#fff',
-          fontWeight: 'bold',
-          fontSize: 30
-      },
-      text_footer: {
-          color: '#05375a',
-          fontSize: 18
-      },
-      action: {
-          flexDirection: 'row',
-          marginTop: 10,
-          borderBottomWidth: 1,
-          borderBottomColor: '#f2f2f2',
-          paddingBottom: 5
-      },
-      textInput: {
-          flex: 1,
-          marginTop: Platform.OS === 'ios' ? 0 : -12,
-          paddingLeft: 10,
-          color: '#05375a',
-      },
-      button: {
-          alignItems: 'center',
-          marginTop: 50
-      },
-      signIn: {
-          width: '100%',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 10
-      },
-      textSign: {
-          fontSize: 18,
-          fontWeight: 'bold'
-      },
-      textPrivate: {
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginTop: 20
-      },
-      color_textPrivate: {
-          color: 'grey'
-      },
-      msgError: {
+    },
+    header: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        paddingBottom: 50
+    },
+    footer: {
+        flex: Platform.OS === 'ios' ? 3 : 5,
+        backgroundColor: '#fff',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 30
+    },
+    text_header: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 30
+    },
+    text_footer: {
+        color: '#05375a',
+        fontSize: 18
+    },
+    action: {
+        flexDirection: 'row',
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 5
+    },
+    textInput: {
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        paddingLeft: 10,
+        color: '#05375a',
+    },
+    button: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    signIn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    textSign: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    textPrivate: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 20
+    },
+    color_textPrivate: {
+        color: 'grey'
+    },
+    msgError: {
         color: 'red'
     },
 });

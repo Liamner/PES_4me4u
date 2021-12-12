@@ -27,11 +27,10 @@ exports.readAllCategories = async (req, res) => {
   }
   
   exports.createCategory = async (req, res) => {
-    // REVISAR CODIGOS ERROR SI FALTA ALGUN CAMPO OBLIGATORIO
-    const { name, products} = req.body;
+
     const category = new Category();
-    category.name = name;
-    //falta vincular productes!
+    category.name = req.body.name;
+   
     console.log(category);
   
     try {
@@ -48,7 +47,7 @@ exports.readAllCategories = async (req, res) => {
   exports.updateCategory = async (req, res) => {
   
   }
-  
+
   exports.deleteCategory = async (req, res) => {
   
       try {

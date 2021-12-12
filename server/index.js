@@ -6,14 +6,6 @@ const cloudinary = require('cloudinary').v2;
 require('./config/config.js');
 require('dotenv').config()
  
-
-/*
-cloudinary.config({
-  cloud_name: '',
-  api_key: '',
-  api_secret: ''
-});
-*/
 const app = express()
 const path = require('path');
 
@@ -26,18 +18,16 @@ app.use("/api", apiRoutes);
 
 //app.use(cors());
 
+
 const CONNECTION_URL =
   "mongodb+srv://admin:1234@4me4u.4lr2m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-app.use(express.static(__dirname+'/public'));
 
-let renderHTML = path.resolve(__dirname, '../public/index.html');
 
 app.get('/', function(req, res) {
   res.sendFile(renderHTML);
 })
 
-const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 
 mongoose.connect(process.env.URLDB, {

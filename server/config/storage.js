@@ -2,19 +2,20 @@ const multer = require('multer');
 const path = require('path');
 
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, 'storage/imgs') /*function (req, file, cb) {
-    cb(null, './storage/imgs')
-  }*/,
+  destination: path.join(__dirname, 'storage/imgs'),
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    const uniqueSuffix = Date.now()// + '-' + Math.round(Math.random() * 1E9)
     cb(null, `${file.fieldname}-${uniqueSuffix}.${file.mimetype.split('/')[1]}`);
   }
 });
 
 
 
-const upload = multer(
-  { storage: storage,
+const upload = multer({ 
+    storage: storage,
+    limits: {
+      fileSize: 8000000 // Compliant: 8MB
+    }, 
     fileFilter: (req, file, cb) => {
       const fileTypes = /jpeg|jpg|png/;
       const mimetype = fileTypes.test(file.mimetype);
@@ -23,7 +24,6 @@ const upload = multer(
       }
       cb("Error: File not an image");
     } 
-  }
-);
+  });
 
 module.exports = upload;

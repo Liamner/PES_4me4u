@@ -16,19 +16,21 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 
-import Login from '../screens/LoginScreen';
-import SignUp from '../screens/SignUpScreen';
-import SignIn from '../screens/SignInScreen'
+import Login from '../screens/LandingPage';
+import SignUp from '../screens/EmailSignUp';
+import SignIn from '../screens/EmailSignIn'
 import Main from '../screens/MainScreen'
-import EditProduct from '../screens/EditProductScreen';
-import ViewProduct from '../screens/ViewProductScreen';
+import EditProduct from '../screens/ProductEdit';
+import ViewProduct from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
-import CreateProduct from '../screens/CreateProductScreen';
-	
+import CreateProduct from '../screens/ProductCreate';
+import ViewUser from '../screens/UserRead';	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import ProductCard from '../screens/ProductCardScreen';
+import TestScreen from '../screens/TestScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -129,6 +131,22 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
+        name="ProductCard"
+        component={ProductCard}
+        options={{
+          title: 'Product Card',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+       <BottomTab.Screen
+        name="TestScreen"
+        component={TestScreen}
+        options={{
+          title: 'Test Screen',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
         name="EditProduct"
         component={EditProduct}
         options={{
@@ -152,6 +170,14 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+      <BottomTab.Screen
+        name="ViewUser"
+        component={ViewUser}
+        options={{
+          title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />      
     </BottomTab.Navigator>
   );
 }

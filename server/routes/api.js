@@ -137,6 +137,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+  
+  router.route('/user/:userId/rate')
+    .post(authenticateJWT, userController.rateUser);
 
   router.route('/user/:id/products')
     .get(userController.getRewards)

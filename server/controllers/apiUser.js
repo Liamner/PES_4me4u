@@ -1,5 +1,6 @@
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Comment = require('../models/comment.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -188,7 +189,6 @@ exports.rateUser = async (req, res) => {
         if (userRated.totalRateScore != null) newTotalRateScore = parseFloat(userRated.totalRateScore)+parseFloat(rateScore);
         let tradesRated = userRated.tradesRated +1;
         let newRateScore = calculateUserScore(newTotalRateScore, tradesRated)
-        console.log(newRateScore)
 
         // Create comment
         let newComment = new Comment({
@@ -222,6 +222,10 @@ exports.rateUser = async (req, res) => {
     }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
   }
 }
+function calculateUserScore(totalRateScore, tradesRated) {
+  return totalRateScore/tradesRated;
+}
+
 
 exports.getRewards = async (req, res) => {
   try {

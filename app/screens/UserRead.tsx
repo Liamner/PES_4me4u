@@ -11,6 +11,8 @@ import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
 import retrieveSession from '../hooks/retrieveSession'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 
 
@@ -33,8 +35,8 @@ import axios from 'axios';
       id: "",
       user:"",
       token:""
-    })
-    const [uid, setUid] = useState("")
+    });
+    const [ownProfile, setOwnProfile] = useState(true);
 
   const getData = async () => {
     const sess = await retrieveSession();
@@ -102,9 +104,10 @@ import axios from 'axios';
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux );
 //    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
-    userid = "";
     setEmail(response.data.email);
-
+    if(aux !== session.id)
+      setOwnProfile(false);
+    console.log(ownProfile);
     if(response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
 
@@ -150,7 +153,26 @@ import axios from 'axios';
                 uri: userImage,
             }}
         />
-        
+        {ownProfile? 
+          <Text style={styles.text2}> Mi perfil</Text>
+          :
+          <TouchableOpacity
+            onPress={() => {
+                console.log("seguir");
+            }}
+            style={{ width: 250 }}
+          >
+            <LinearGradient
+                colors={['#a2cff0', '#ADE8F4']}
+                style={styles.followButon}
+            >
+                <Text style={[styles.textFollow,
+                { color: '#fff' }]}>
+                    Seguir
+                </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        }
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
@@ -316,6 +338,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-  }
+  },
+  followButon: {
+    width: '100%',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+},
+textFollow: {
+  fontSize: 18,
+  fontWeight: 'bold'
+},
 
 });

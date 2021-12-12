@@ -33,12 +33,14 @@ exports.getProductImages = async (req, res) => {
 exports.uploadImages = async (req, res) => {
   const product = await Product.findById({_id: req.params.productId});
  // const newFiles = req.files;
-  console.log(req.files.length)
+  //console.log(req.files.length)
 
   if (product.img.length < 6) {
+    
     try {
+      console.log(req.files[0].path)
       let result = await cloudinary.uploader.upload(req.files[0].path);
-
+      
       let image = new Image();
           
       

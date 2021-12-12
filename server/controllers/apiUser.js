@@ -287,10 +287,13 @@ exports.getUserRewards = async (req, res) => {
 exports.getUserWishlist = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("wishlist");
+    User.findOne({_id: userId}, (erro, user) => {
+      console.log(user.wishlist)
+      console.log(user);
+     res.status(200).json(user.wishlist);
+    }).populate({path:"wishlist", populate: { path: 'img'}});
     
-    console.log(user);
-    res.status(200).json(user.wishlist);
+    
   } catch (error) {
     res.status(400).json(error)
   }

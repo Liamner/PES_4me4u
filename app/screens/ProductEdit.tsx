@@ -7,8 +7,6 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 
-
-
 export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
@@ -35,21 +33,15 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [checkedPrestarAux, setCheckedPrestarAux] = React.useState(false);
 
   const [numImagesAux, setNumImagesAux] = React.useState();     //número de imagenes inicial
-  const [imageAux, setImageAux] = React.useState(null);
-  const [image2Aux, setImage2Aux] = React.useState(null);
-  const [image3Aux, setImage3Aux] = React.useState(null);
-  const [image4Aux, setImage4Aux] = React.useState(null);
-  const [image5Aux, setImage5Aux] = React.useState(null);
-  const [image6Aux, setImage6Aux] = React.useState(null);
-
-  const [url1, setUrl1] = React.useState(null);     
-  const [url2, setUrl2] = React.useState(null);     
-  const [url3, setUrl3] = React.useState(null);     
-  const [url4, setUrl4] = React.useState(null);     
-  const [url5, setUrl5] = React.useState(null);     
-  const [url6, setUrl6] = React.useState(null); 
+  const [imageAux, setImageAux] = React.useState('');
+  const [image2Aux, setImage2Aux] = React.useState('');
+  const [image3Aux, setImage3Aux] = React.useState('');
+  const [image4Aux, setImage4Aux] = React.useState('');
+  const [image5Aux, setImage5Aux] = React.useState('');
+  const [image6Aux, setImage6Aux] = React.useState('');
   
   const [deleteIds, setDeleteIds] = React.useState([]);
+  const [newImages, setNewImages] = React.useState([]);
 
   const [productInfo, setProductInfo] = React.useState ({
     pname:"",
@@ -139,7 +131,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       oldIds.push(response.data.img[5]._id);
 
     }
-    console.log(oldIds);
+    console.log('oldIds: '+oldIds);
   };
 
   //recargar el producto sin editar
@@ -168,44 +160,47 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   }
 
   const editImages = async () => {
-    //DELETE pasar vector de ids
-    //NOTA: no se pueden borrar todas las fotos, pasa cuando numImages == numImagesAux o 
-    /*let oldId = [];
-    //let oldId: string | never[] | AxiosRequestConfig<any> | undefined = [];
-    if ((image  == null && image  != null) || image != imageAux  ) oldId = oldId + image;
-    if ((image2 == null && image2 != null) || image2 != image2Aux) oldId = oldId + image2;
-    if ((image3 == null && image3 != null) || image3 != image3Aux) oldId = oldId + image3;
-    if ((image4 == null && image4 != null) || image4 != image4Aux) oldId = oldId + image4;
-    if ((image5 == null && image5 != null) || image5 != image5Aux) oldId = oldId + image5;
-    if ((image6 == null && image6 != null) || image6 != image6Aux) oldId = oldId + image6;*/
-
-    //FUNCIONASKDJKASF
-    /*await axios
-      .delete('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + deleteIds)
-      .then(function(response) {
-        console.log("Old images deleted")
-      })
-      .catch(function(error) {
-        console.log(error);
-    });*/
+    console.log('deleteIds: '+deleteIds)
+    deleteIds.forEach( async (element) => {
+      console.log('Empieza delete de' + element);
+      const imgID = [element];
+      await axios
+        .delete('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + imgID)
+        .then(function(response) {
+          console.log("Old images deleted")
+        })
+        .catch(function(error) {
+          console.log(error);
+      });
+    });
 
     //POST pasar url nuevas
-    let newUrls = [image];
-    var formData = new FormData();
-    formData.append("img", image);
-    console.log(formData);
+    newImages.forEach( async (element) => {
+      console.log('Empieza post de' + element);
+      const uri = element;
+      const uriParts = uri.split('.');
+      const fileType = uriParts[uriParts.length - 1];
+      const formData = new FormData();
+      formData.append('img', {
+        uri,
+        name: `photo.${fileType}`,
+        type: `image/${fileType}`,
+      });
+      console.log(formData);
 
-    await axios
-      .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }})
-      .then(function(response) {
-        console.log("New images posted")
-        console.log(response)
-      })
-      .catch(function(error) {
-        console.log(error);
+      await axios
+        .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          }})
+        .then(function(response) {
+          console.log("New images posted")
+          console.log(response)
+        })
+        .catch(function(error) {
+          console.log(error);
+      });
     });
 
   }
@@ -300,9 +295,8 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
         else{
           setNumImages(numImages -1);
           setImageById(id, '');
-          if(undefined == deleteIds.find(element => element == oldIds[id])) {
+          if(undefined == deleteIds.find(element => element == oldIds[id-1])) {
             deleteIds.push(oldIds[id-1]);
-            console.log(deleteIds);
           }
         }
       },
@@ -312,7 +306,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       text: 'Hacer una foto', 
       onPress: () => {
 
-        //setImageById(id, '');
+
         pickImage(id, true);
       }
     },
@@ -337,27 +331,38 @@ const pickImage = async (id?: Number, change?: Boolean) => {
     quality: 1,
   });
 
-  console.log(result);
   if (!result.cancelled ) {
     setImageById(id, '');
 
     if (id == 1){
       setImage(result.uri);
+      if(image != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     } 
     else if(id == 2){
       setImage2(result.uri);
+      if(image2 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     }
     else if(id == 3){
       setImage3(result.uri);
+      if(image3 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     }
     else if(id == 4){
       setImage4(result.uri);
+      if(image4 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     }
     else if(id == 5){
       setImage5(result.uri);
+      if(image5 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     }
     else if(id == 6){
       setImage6(result.uri);
+      if(image6 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      newImages.push(result.uri);
     }  
   }
   else {

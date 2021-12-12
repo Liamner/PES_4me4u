@@ -10,36 +10,43 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
+import FollowersScreen from '../screens/FollowersScreen';
 
 import axios from 'axios';
 
 
-export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
-  
+
+
+export default function ViewUserScreenScreen({ route, navigation }: RootTabScreenProps<'ViewUserScreen'>) {
 
     //Datos de un usuario
 
-    const [id, setid] = useState('61952ec8adeb9693da219fc2');
-    //const [id, setid] = useState(user_id);
-    
+/*
+  //llamada para cuando se pase el parametro en la funcion
+    const {user_id} = route.params;  
+    const [id, setId] = useState(user_id);
+*/
+    const [id, setId] = useState('61b109e710b12937fee3ebcd'); //eliminar en la versión final
+   
+
     const [email, setEmail] = useState('Cargando...');
-    const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
-    const [postalCode, setPostalCode] = useState('Cargando...');
     const [ecoPoints, setEcoPoints] = useState('Cargando...');
     const [score, setScore] = useState('Cargando...');
+
+    const [followers, setFollowers] = useState([]);
+    const [followed, setFollowed] = useState([]);
+
+    const [followersSize, setFollowersSize] = useState(0);
+    const [followedSize, setFollowedSize] = useState(0);
+
+    
+
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
-   /* 
-    const email = 'a@mail.algo'
-    const location = 'Pyongyang'
-    const level = '1'
-    const postalCode = '08028'
-    const ecoPoints = '10'
-    const score = '5.0'
-    const latitude = 39.03385
-    const longitude = 125.75432
-*/
+
+    
+
 
     const [products, setproducts] = React.useState([
       {
@@ -74,21 +81,25 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
         setCurrentPage(currentNumber);
       };
 
+      React.useEffect(() => {
+        getUserInfo();
+      }, []);
 
   const getUserInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
-//    6186d4d5f501eb82cb4b2c13
+    
     //Datos de usuario
-
     setEmail(response.data.email);
 
-    if(response.data.location == null) setLocation('Desconocido');
-    else setLocation(response.data.location);
+    setFollowers(response.data.followers);
+    setFollowed(response.data.followed);
+
+    setFollowersSize(response.data.followers.length);
+    setFollowedSize(response.data.followed.length);
 
     setLevel(response.data.level);
 
-    if(response.data.postalCode == null) setPostalCode('Desconocido');
-    else setPostalCode(response.data.postalCode);
+
 
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
@@ -114,7 +125,39 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
   };
   
-  getUserInfo()
+  const onPressFollowers = () => {
+    if (followersSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no tine ningún seguidor",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+      navigation.navigate('FollowersScreen', {list: followers} );
+    }
+  };
+
+
+
+  const onPressFollowed = () => {
+    if (followedSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no es seguido por nadie",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+      navigation.navigate('FollowedScreen', {list: followed} );
+    }
+  };
+
+
+
+
+
+  
 
 
 
@@ -132,7 +175,19 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
-    
+
+
+          <View style={styles.container2}>
+          <Text style={styles.text} onPress={onPressFollowers}>
+              Followers: <Text style={styles.text2}>{followersSize}</Text>
+          </Text>
+          <Text>        </Text>
+          <Text style={styles.text} onPress={onPressFollowed}>
+              Followed: <Text style={styles.text2}>{followedSize}</Text>
+          </Text>   
+        </View>
+
+
         <Text style={styles.text}>
             Nivel: <Text style={styles.text2}>{level}</Text>
         </Text>
@@ -145,9 +200,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
             Puntuación: <Text style={styles.text2}>{score}</Text> ⭐
         </Text>
 
-        <Text style={styles.text}>
-            Localización: <Text style={styles.text2}>{location}</Text>
-        </Text>
+
 
 
         <CustomMap
@@ -167,9 +220,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
           ></CustomMarker>
         </CustomMap>
 
-        <Text style={styles.text}>
-            Código postal: <Text style={styles.text2}>{postalCode}</Text>
-        </Text>
+
 
 
 
@@ -180,9 +231,7 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
           numColumns = {1}
           data={products}
           renderItem={({ item }) => ( 
-
             <>
-
             <Text style={styles.productText}>
               <Text style={styles.deleteButton} onPress={() => Alert.alert(
                     "BORRAR",
@@ -206,12 +255,6 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
               >{item.name}</Text>
             </Text>
             </>
-
-
-
-
-
-
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
@@ -242,7 +285,11 @@ const styles = StyleSheet.create({
   },
   container2: {
     flex: 1,
-    padding: 20
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: "row",
+    padding: 0
+    
   },
   item: {
     padding: 20,
@@ -294,6 +341,26 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
+    
   }
 
 });
+
+
+
+
+
+
+/*
+{"gift":0,"loans":0,"exchanges":0,"_id":"61b109e710b12937fee3ebcd","userId":"Paul","email":"paul@gmail.com",
+"pwd":"$2b$10$UErVQlOWUkduGiIUfiRYxuud/Z3aFJmCDSzcBTu3Laks8S38fMJI6","role":"USER","latitude":37.78825,"longitude":-122.4324,
+"level":"1","ecoPoints":"10","score":"5.0","products":[],
+"followers":[],
+"followed":[
+      {"wishlist":[],"_id":"61a39004e1e02fe6d177692b","name":"Jose","email":"jose@gmail.com","pwd":"$2b$10$04GfyVk4N062cwm6oQP07e8Cyka12FpYWGOEmM32A/Yrv/hUiX4qK","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0},
+      {"wishlist":[],"_id":"61a3855a5cd77458b48896ed","name":"Daniel","email":"dani@gmail.com","pwd":"$2b$10$Ssae08HTU.c51d.zfnhbS.d2AeqFiudfrouNXIIFYC6Va6P/vj54e","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0},
+      {"wishlist":[],"_id":"61a37fb87cdb71a69b9dd3d5","name":"Maria","email":"maria@gmail.com","pwd":"$2b$10$8Al7CcQvOKLTvGZBMQBM0.P41lojxYTX0.mZm1nXipdtrpNwQXLV6","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0},
+      {"_id":"61a3624f0790a82b35224d4b","name":"Ana","email":"ana@gmail.com","pwd":"$2b$10$Kz7BnPmS1LKL7qRWvsw9H.wWDN6KiL/aZp4HfHqqWF4DnP85V6WHK","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[{"_id":"61a39004e1e02fe6d177692b","name":"Jose","email":"jose@gmail.com","pwd":"$2b$10$04GfyVk4N062cwm6oQP07e8Cyka12FpYWGOEmM32A/Yrv/hUiX4qK","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0}],"followed":[{"_id":"61a37fb87cdb71a69b9dd3d5","name":"Maria","email":"maria@gmail.com","pwd":"$2b$10$8Al7CcQvOKLTvGZBMQBM0.P41lojxYTX0.mZm1nXipdtrpNwQXLV6","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0},{"_id":"61a3855a5cd77458b48896ed","name":"Daniel","email":"dani@gmail.com","pwd":"$2b$10$Ssae08HTU.c51d.zfnhbS.d2AeqFiudfrouNXIIFYC6Va6P/vj54e","role":"USER","level":"1","ecoPoints":"10","score":"5.0","products":[],"latitude":37.78825,"longitude":-122.4324,"followers":[],"followed":[],"__v":0}],"__v":16,"wishlist":[{"publishingDate":"2021-11-29T20:22:18.166Z","_id":"619e6fd140d15287ffe42aca","img":["619e6fd340d15287ffe42acb","619e6fd440d15287ffe42acd","619e6fd640d15287ffe42acf"],"state":"available","name":"nombre","categories":"61797e24b4a4d195aa14be8d","description":"A","exchange":"6193a583e47e769eeaa7a978","__v":0}]}
+    ],
+"wishlist":[],"__v":4}
+*/

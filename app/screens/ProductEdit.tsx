@@ -33,12 +33,12 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const [checkedPrestarAux, setCheckedPrestarAux] = React.useState(false);
 
   const [numImagesAux, setNumImagesAux] = React.useState();     //número de imagenes inicial
-  const [imageAux, setImageAux] = React.useState('');
-  const [image2Aux, setImage2Aux] = React.useState('');
-  const [image3Aux, setImage3Aux] = React.useState('');
-  const [image4Aux, setImage4Aux] = React.useState('');
-  const [image5Aux, setImage5Aux] = React.useState('');
-  const [image6Aux, setImage6Aux] = React.useState('');
+  const [imageAux, setImageAux] = React.useState(null);
+  const [image2Aux, setImage2Aux] = React.useState(null);
+  const [image3Aux, setImage3Aux] = React.useState(null);
+  const [image4Aux, setImage4Aux] = React.useState(null);
+  const [image5Aux, setImage5Aux] = React.useState(null);
+  const [image6Aux, setImage6Aux] = React.useState(null);
   
   const [deleteIds, setDeleteIds] = React.useState([]);
   const [newImages, setNewImages] = React.useState([]);
@@ -50,7 +50,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     pexchange:[]
   });
 
-  const pid = '61b3796f8287c4eefa999303';
+  const pid = '61b64a52d4851901d035ed57';
   
 
   React.useEffect(() => {
@@ -162,7 +162,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
   const editImages = async () => {
     console.log('deleteIds: '+deleteIds)
     deleteIds.forEach( async (element) => {
-      console.log('Empieza delete de' + element);
+      console.log('Empieza delete de ' + element);
       const imgID = [element];
       await axios
         .delete('https://app4me4u.herokuapp.com/api/product/'+ pid + "/image/" + imgID)
@@ -176,7 +176,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
 
     //POST pasar url nuevas
     newImages.forEach( async (element) => {
-      console.log('Empieza post de' + element);
+      console.log('Empieza post de ' + element);
       const uri = element;
       const uriParts = uri.split('.');
       const fileType = uriParts[uriParts.length - 1];
@@ -336,32 +336,34 @@ const pickImage = async (id?: Number, change?: Boolean) => {
 
     if (id == 1){
       setImage(result.uri);
-      if(image != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      if(image != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     } 
     else if(id == 2){
+      console.log(image2);
       setImage2(result.uri);
-      if(image2 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      console.log(image2);
+      if(image2 != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     }
     else if(id == 3){
       setImage3(result.uri);
-      if(image3 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      if(image3 != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     }
     else if(id == 4){
       setImage4(result.uri);
-      if(image4 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      if(image4 != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     }
     else if(id == 5){
       setImage5(result.uri);
-      if(image5 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      if(image5 != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     }
     else if(id == 6){
       setImage6(result.uri);
-      if(image6 != '' && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]);}
+      if(image6 != null && undefined == deleteIds.find(element => element == oldIds[id-1])) {deleteIds.push(oldIds[id-1]); console.log('deleteIds: '+deleteIds);}
       newImages.push(result.uri);
     }  
   }

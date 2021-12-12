@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+var cors = require('cors')
 require('./config/config.js');
 require('dotenv').config()
  
@@ -16,7 +17,7 @@ app.use(bodyParser.json())
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
-//app.use(cors());
+app.use(cors());
 
 
 const CONNECTION_URL =

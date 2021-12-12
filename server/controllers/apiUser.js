@@ -226,6 +226,40 @@ function calculateUserScore(totalRateScore, tradesRated) {
   return totalRateScore/tradesRated;
 }
 
+exports.getAllComments = async (req, res) => {
+  try {
+    const comments = await Comment.find();
+
+    res.status(200).json(comments);
+
+    console.log(comments);
+  } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+}
+
+exports.getMyCommentsDone = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsDone', populate:{path: 'user', select: { 'name': 1} }});
+    res.status(200).json(user.commentsDone);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+}
+
+exports.getMyCommentsRecived = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsRecived', populate:{path: 'user', select: { 'name': 1} }});
+    //const comments = user.commentsDone.populate(user)
+    res.status(200).json(user.commentsRecived);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+}
+
 
 exports.getRewards = async (req, res) => {
   try {

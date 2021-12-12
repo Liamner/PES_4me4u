@@ -264,12 +264,12 @@ module.exports = function(app) {
     .get(categoryController.getProductCategory)
 
 
- /*router.route('/comments')
+  router.route('/comments')
     .get(userController.getAllComments)
   router.route('/comments/done')
     .get(authenticateJWT, userController.getMyCommentsDone)
   router.route('/comments/recived')
-    .get(authenticateJWT, userController.getMyCommentsRecived)*/
+    .get(authenticateJWT, userController.getMyCommentsRecived)
 
     // CONVERSATION
   router.route('/conversation')

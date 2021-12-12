@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import {Alert, Button, StyleSheet, View , Text, Image, TouchableOpacity, Pressable} from "react-native";
-import { Platform, ScrollView, Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList } from 'react-native';
+import React from "react";
+import {StyleSheet, View , Text, TouchableOpacity, Pressable, Alert} from "react-native";
+import {Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
 import navigation from "../navigation";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -42,16 +42,34 @@ export function LoanButton  () {
   const [dateSelected, setDateSelected] = React.useState(false);
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState('date');
-  const selectDate = (event: any, selectedDate: Date) => {
-    console.log(dateSelected)
+  const selectDate = async(event: any, selectedDate: Date) => {
+  console.log(selectedDate)
     if(selectedDate != null){
       //usar selected date, si selected date es null, pasamos
       //llamada a api
+     if(selectedDate < new Date()){
+      Alert.alert("La fecha seleccionada no es valida");
+      setDateSelected(false)
+      return;
+     } 
+
+      let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeLoan/create', {
+      userOfering  : "61a2500c9b1c6cb5e2e0aa90",
+      userTaking: "61a3855a5cd77458b48896ed",
+      product  :"61a68d86d32c5e541ab70a14",
+      returnDate : selectedDate,
+    }).then(function (response) {
+      console.log("response: " + response.status);
+    })
+    .catch(function (error) {
+      console.log("error" + error);
+    });
+    console.log("second respones" + response)
       //TODO borrar set product  i set date
       setProductSelected(false);
       setDateSelected(false)
       setModalVisible(false);
-      console.log("null")
+      console.log("date not null")
     }
     else setDateSelected(false)
     const currentDate = selectedDate || date;
@@ -65,20 +83,7 @@ export function LoanButton  () {
   };
   const selectProduct = async (product: String) => {    
     console.log(product)
-    
-    // let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeLoan/create', {
-    //   userOfering  : "61a2500c9b1c6cb5e2e0aa90",
-    //   userTaking: "61a3855a5cd77458b48896ed",
-    //   product  :"61a68d86d32c5e541ab70a14",
-    //   returnDate : Date.parse('01 Jan 2024 00:00:00 GMT'),
-    // }).then(function (response) {
-    //   console.log("respnese abajo")
-    //   console.log("response: " + response.statusText);
-    // })
-    // .catch(function (error) {
-    //   console.log("error" + error);
-    // });
-    // console.log("second respones" + response)
+  
     setProductSelected(true)
   };
   
@@ -105,7 +110,7 @@ export function LoanButton  () {
         }}
       >        
         {!productSelected &&  <View style={styles.modalView}>
-            <Text style={styles.question}> ¿Que quieres prestar?</Text>
+            <Text style={styles.question}>¿Que quieres prestar?</Text>
             <SafeAreaView>
               <FlatList
                 data={DATA}
@@ -121,7 +126,7 @@ export function LoanButton  () {
             </Pressable>
           </View>}
           {productSelected &&  <View style={styles.modalView}>
-            <Text style={styles.question}> ¿Hasta cuando quieres prestar?</Text>
+            <Text style={styles.question}>¿Hasta cuando quieres prestar?</Text>
             <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}  onPress = {() => setDateSelected(true)} ><Text>Seleccionar fecha</Text></Pressable>
             { dateSelected && <DateTimePicker
               value={date}

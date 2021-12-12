@@ -8,15 +8,16 @@ import ProductCard from '../components/ProductCard';
 import GiveButton from '../components/GiveButton';
 import LoanButton from '../components/LoanButton';
 import ExchangeButton from '../components/ExchangeButton';
+import LogOutButton from '../components/LogOutButton';
 export default function TestScreen({ navigation }: RootTabScreenProps<'TestScreen'>) {
   const gatitos = { hola: "hola", adios: "adios"}
 
   return (    
     <>
-    <Text>Test Screen</Text>      
-    <GiveButton></GiveButton>
-    <LoanButton></LoanButton>
-    <ExchangeButton></ExchangeButton>
+    <GiveButton/>
+    <LoanButton/>
+    <ExchangeButton/>
+    <LogOutButton/>
     </>
   );
 }

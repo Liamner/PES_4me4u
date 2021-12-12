@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import {Alert, Button, StyleSheet, View , Text, Image, TouchableOpacity, Pressable} from "react-native";
-import { Platform, ScrollView, Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList } from 'react-native';
+import {StyleSheet, View , Text, TouchableOpacity, Pressable} from "react-native";
+import { Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
 
 
@@ -74,7 +74,7 @@ export function GiveButton  () {
         }}
       >
           <View style={styles.modalView}>
-            <Text style={styles.question}> ¿Que quieres regalar?</Text>
+            <Text style={styles.question}>¿Que quieres regalar?</Text>
             <SafeAreaView>
               <FlatList
                 data={DATA}

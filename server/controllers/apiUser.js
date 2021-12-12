@@ -173,7 +173,7 @@ exports.getUserProducts = async (req, res) => {
     res.status(400).json(error)
   }
 };
-const { ObjectId } = require('mongodb');
+
 exports.rateUser = async (req, res) => {
   // Id usuario a valorar
   const userId = req.params.userId;
@@ -202,7 +202,7 @@ exports.rateUser = async (req, res) => {
           comment
         });
         await newComment.save();
-        console.log(newComment)
+        //console.log(newComment)
 
 
         // Update user commented
@@ -210,9 +210,9 @@ exports.rateUser = async (req, res) => {
         userRated.totalRateScore = newTotalRateScore;
         userRated.tradesRated = tradesRated;
         userRated.commentsRecived.push(newComment)
+        console.log(userRated)
         const myUser = await User.findById({_id: req.user.id})
         myUser.commentsDone.push(newComment)
-        console.log(myUser.id)
         try {
           await userRated.save();
           await myUser.save();

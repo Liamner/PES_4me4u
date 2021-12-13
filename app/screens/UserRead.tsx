@@ -37,6 +37,7 @@ import axios from 'axios';
       token:""
     });
     const [ownProfile, setOwnProfile] = useState(true);
+    const [following, setFollowing] = useState(false);
 
   const getData = async () => {
     const sess = await retrieveSession();
@@ -138,6 +139,36 @@ import axios from 'axios';
 
 
   };
+
+  async function followUser() {
+    // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/AddFollowed", body1)
+    .then(function (response){
+      console.log("siguiendo a " + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(true);
+    // añadir follower, usuario del perfil es seguido por el usuario logueado
+  }
+
+  function unfollowUser() {
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/unfollow", body1)
+    .then(function (response){
+      console.log("dejando de seguir a" + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(false);
+  }
   
   getUserInfo()
 
@@ -156,22 +187,45 @@ import axios from 'axios';
         {ownProfile? 
           <Text style={styles.text2}> Mi perfil</Text>
           :
-          <TouchableOpacity
-            onPress={() => {
-                console.log("seguir");
-            }}
-            style={{ width: 250 }}
-          >
-            <LinearGradient
-                colors={['#a2cff0', '#ADE8F4']}
-                style={styles.followButon}
-            >
-                <Text style={[styles.textFollow,
-                { color: '#fff' }]}>
-                    Seguir
-                </Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <View style={{ alignItems: 'center',
+           justifyContent: 'center'}}>
+             {following? 
+              <TouchableOpacity
+                onPress={() => {
+                    unfollowUser();
+                }}
+                style={{width: 150 }}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Dejar de seguir
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+             :
+             <TouchableOpacity
+             onPress={() => {
+                 followUser();
+             }}
+             style={{width: 150 }}
+           >
+             <LinearGradient
+                 colors={['#a2cff0', '#ADE8F4']}
+                 style={styles.followButon}
+             >
+                 <Text style={[styles.textFollow,
+                 { color: '#fff' }]}>
+                     Seguir
+                 </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+            } 
+          </View>
+          
         }
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
@@ -341,7 +395,7 @@ const styles = StyleSheet.create({
   },
   followButon: {
     width: '100%',
-    height: 50,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10

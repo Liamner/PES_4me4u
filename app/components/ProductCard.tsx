@@ -7,19 +7,16 @@ import navigation from "../navigation";
 import { functionExpression } from "@babel/types";
 
 type CardProps = {
+  id: string,
+  uid: string,
   name: string,
   guardado: boolean,
   imageUri?: string,
   arrayTratos: string[],
 }
 
-const guardarProducto = async () => {        
-  console.log("guardar")
-  }
-const noGuardarProducto = async () => {          
-  console.log("no guardar")  
-}
-export function ProductCard  ({ name, guardado, imageUri, arrayTratos}: CardProps) {  
+
+export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
   var prestar = false;
   var intercambiar = true;
   var dar = false;
@@ -27,7 +24,28 @@ export function ProductCard  ({ name, guardado, imageUri, arrayTratos}: CardProp
     if(element == "exchange") intercambiar = true;
     if(element == "present") dar = true;
     if(element == "loan") prestar = true
-});
+  });
+  const guardarProducto = async () => {   
+    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
+        idProduct: id
+      }).then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+  
+  const noGuardarProducto = async () => {          
+    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
+        idProduct: id
+      }).then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      }); 
+  }
   return (
     <>
   <View style={styles.container}>            

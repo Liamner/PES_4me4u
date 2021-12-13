@@ -24,16 +24,11 @@ import EditProduct from '../screens/ProductEdit';
 import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
-<<<<<<< HEAD
 import CreateProduct from '../screens/CreateProductScreen';
 import ProductCard from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
-	
-=======
-import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
->>>>>>> develop
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -138,14 +133,14 @@ function BottomTabNavigator() {
       />
     
 {/*   TODO :  1descomentar */}
-      {/* <BottomTab.Screen
+      <BottomTab.Screen
         name="ProductCard"
         component={ProductCard}
         options={{
           title: 'Product Card',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
-      /> */}
+      />
       {/*   TODO :  2descomentar */}
        <BottomTab.Screen
         name="TestScreen"

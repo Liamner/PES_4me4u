@@ -9,6 +9,7 @@ import GiveButton from '../components/GiveButton';
 import LoanButton from '../components/LoanButton';
 import ExchangeButton from '../components/ExchangeButton';
 import LogOutButton from '../components/LogOutButton';
+
 export default function TestScreen({ navigation }: RootTabScreenProps<'TestScreen'>) {
   const gatitos = { hola: "hola", adios: "adios"}
 
@@ -17,11 +18,10 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
     <GiveButton/>
     <LoanButton/>
     <ExchangeButton/>
-    <LogOutButton/>
+    <LogOutButton navigation={navigation}/>
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     width: '50%',

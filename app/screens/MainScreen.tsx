@@ -31,7 +31,7 @@ export default function MainScreen({ navigation, route}) {
 
     return (
         <View style={styles.main}>
-            <Text>Hola {userId} </Text>
+            <Text style = {{color: 'white'}}>Hola {userId} </Text>
             <Text>token: {session.id}</Text>
             <Text>token: {session.token}</Text>
             <Text>token: {session.user}</Text>

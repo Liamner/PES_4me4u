@@ -2,11 +2,28 @@ import React, { Component } from "react";
 import {StyleSheet, View , Text, TouchableOpacity, Pressable} from "react-native";
 import { Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RootTabScreenProps } from "../types";
 
-export function LogOutButton  () {  
+export function LogOutButton({ navigation }){  
   const [modalVisible, setModalVisible] = React.useState(false);
-  const logOut = async () => {    
-    console.log("logOut")
+  const logOut = async () => {  
+    const session = {
+      "id": "",
+      "user": "",
+      "token": "",
+  }  
+  const jsonValue = JSON.stringify(session)
+  //TODO to refactor
+  //console.log(value + " guardo token")
+  await AsyncStorage.setItem('userSession', jsonValue)
+  let keys = await AsyncStorage.getAllKeys();
+  console.log("keys : " + keys)
+  console.log("logOut")
+  await AsyncStorage.removeItem('userSession');
+  keys = await AsyncStorage.getAllKeys();
+  console.log("keys : " + keys)
+  navigation.navigate('Login');
   };
 
   return (

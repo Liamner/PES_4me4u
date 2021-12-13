@@ -70,49 +70,28 @@ exports.getProductCategory = async (req, res) => {
   let exchangeType;
   if (req.body.exchange != null) exchangeType = req.body.exchange;
   else exchangeType = null;
+  let title;
+  if (req.body.name != null) title = req.body.name;
+  else title = null;
 
   console.log(exchangeType)
   try {
-    let result = [];
     if (category != null && exchangeType != null) {
       if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
       else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
       await Category.find({name: category, exchange : exchangeType}, {products: 1}, async (erro, products) => {
         console.log(products[0].products[0])
-       
-        /*if (exchangeType != null) {
-          for (let i = 0; i < products[0].products.length; i++) {
-            if (products[0].products[i].exchange[0].name == exchangeType) {
-              console.log('igual')
-              result.push(products[0].products[i])
-            }
-            //console.log(products[0].products[i].exchange[0].name)
-          }
-          res.status(200).json(result);
-        }
-        else {
-          res.status(200).json(products);
-        }*/
         res.status(200).json(products[0]);
       }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
+    }
+    else if (title != null) {
+        const product = await Product.find({name: {$regex : title}})
+        console.log(product)
+        res.status(200).json(product);
     }
     else if (category != null) {
       await Category.find({name: category}, {products: 1}, async (erro, products) => {
         console.log(products[0].products)
-       
-        /*if (exchangeType != null) {
-          for (let i = 0; i < products[0].products.length; i++) {
-            if (products[0].products[i].exchange[0].name == exchangeType) {
-              console.log('igual')
-              result.push(products[0].products[i])
-            }
-            //console.log(products[0].products[i].exchange[0].name)
-          }
-          res.status(200).json(result);
-        }
-        else {
-          res.status(200).json(products);
-        }*/
         res.status(200).json(products[0]);
       }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
     }

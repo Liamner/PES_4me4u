@@ -9,9 +9,12 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
-export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRead'>) {
   //Variables de las respuestas API
-  const [user] = useState('@Usuario');
+  const [user, setUser] = useState('@Usuario');
+  const [userid, setUserID] = useState('');
+  const [latitude, setLatitude] = useState(0.0);
+  const [longitude, setLongitude] = useState(0.0);
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
@@ -133,20 +136,32 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   //TODO descomentar
   //TODO descomentar
   const getProductInfo = async () => {
-    // let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
-    // //Required
-    // setName(response.data.name);
-    // getCorrectCategoriesType(response);
-    // getCorrectExchangeType(response);
-    // getCorrectStateType(response);
-    // //images
-    // //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
+    //Required
+    setName(response.data.name);
+    getCorrectCategoriesType(response);
+    getCorrectExchangeType(response);
+    getCorrectStateType(response);
+    setUserID(response.data.userId);
+    //images
+    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     // //Optional
     // if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
     // else setDescription(response.data.description);
   };
+
+  const getUserInfo = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid);
+    //Required
+    setUser(response.data.userId);
+    setLatitude(response.data.latitude);
+    setLongitude(response.data.longitude);
+  };
+
   getProductInfo()
+  getUserInfo()
   
   return (
     <View style={styles.container}>
@@ -219,8 +234,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         <CustomMap
           style={styles.mapview}
           region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+            latitude: latitude,
+            longitude: longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}

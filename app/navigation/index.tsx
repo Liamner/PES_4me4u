@@ -16,19 +16,24 @@ import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 
-import Login from '../screens/LoginScreen';
-import SignUp from '../screens/SignUpScreen';
-import SignIn from '../screens/SignInScreen'
+import Login from '../screens/LandingPage';
+import SignUp from '../screens/EmailSignUp';
+import SignIn from '../screens/EmailSignIn'
 import Main from '../screens/MainScreen'
-import EditProduct from '../screens/EditProductScreen';
-import ViewProduct from '../screens/ViewProductScreen';
+import EditProduct from '../screens/ProductEdit';
+import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
+<<<<<<< HEAD
 import CreateProduct from '../screens/CreateProductScreen';
 import ProductCard from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
 	
+=======
+import CreateProduct from '../screens/ProductCreate';
+import ViewUser from '../screens/UserRead';	
+>>>>>>> develop
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -97,14 +102,14 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
 
-      initialRouteName="ViewProduct"
+      initialRouteName="ProductRead"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="ViewProduct"
-        component={ViewProduct}
-        options={({ navigation }: RootTabScreenProps<'ViewProduct'>) => ({
+        name="ProductRead"
+        component={ProductRead}
+        options={({ navigation }: RootTabScreenProps<'ProductRead'>) => ({
           title: 'Ver Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
@@ -182,6 +187,14 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+      <BottomTab.Screen
+        name="ViewUser"
+        component={ViewUser}
+        options={{
+          title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />      
     </BottomTab.Navigator>
   );
 }

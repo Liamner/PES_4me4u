@@ -11,42 +11,43 @@ import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
 import FollowersScreen from '../screens/FollowersScreen';
-
+import retrieveSession from '../hooks/retrieveSession'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 
 
-
-
-export default function ViewUserScreenScreen({ route, navigation }: RootTabScreenProps<'ViewUserScreen'>) {
-
+  export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
+    var userid = route.params;
     //Datos de un usuario
-
-/*
-  //llamada para cuando se pase el parametro en la funcion
-    const {user_id} = route.params;  
-    const [id, setId] = useState(user_id);
-*/
-    const [id, setId] = useState('61b109e710b12937fee3ebcd'); //eliminar en la versión final
-   
-
+    //const [id, setid] = useState(user_id);
     const [email, setEmail] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
     const [ecoPoints, setEcoPoints] = useState('Cargando...');
     const [score, setScore] = useState('Cargando...');
-
     const [followers, setFollowers] = useState([]);
     const [followed, setFollowed] = useState([]);
-
     const [followersSize, setFollowersSize] = useState(0);
     const [followedSize, setFollowedSize] = useState(0);
-
-    
-
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
+    const [session, setSession] = React.useState({
+      id: "",
+      user:"",
+      token:""
+    });
+    const [ownProfile, setOwnProfile] = useState(true);
+    const [following, setFollowing] = useState(false);
 
-    
+  const getData = async () => {
+    const sess = await retrieveSession();
+    console.log(sess)
+      setSession(sess);
+    }
 
+    React.useEffect(() => {
+      getData();
+    }, []);  
 
     const [products, setproducts] = React.useState([
       {
@@ -66,8 +67,6 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
       }
     ]);
 
-
-
     const userImage: string = 'https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png'
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -81,21 +80,29 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
         setCurrentPage(currentNumber);
       };
 
-      React.useEffect(() => {
-        getUserInfo();
-      }, []);
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
-    
+    /*let aux
+    if (userid != null || userid == "") {
+      aux = userid
+    }
+    else {
+      aux = session.id
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux );
+//    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
     setEmail(response.data.email);
-
     setFollowers(response.data.followers);
     setFollowed(response.data.followed);
 
     setFollowersSize(response.data.followers.length);
     setFollowedSize(response.data.followed.length);
+    if(aux !== session.id)
+      setOwnProfile(false);
+    console.log(ownProfile);
+    if(response.data.location == null) setLocation('Desconocido');
+    else setLocation(response.data.location);
 
     setLevel(response.data.level);
 
@@ -108,7 +115,7 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
     else setLatitude(response.data.latitude);
 
     if(response.data.longitude == null) setLongitude(125.75432);
-    else setLongitude(response.data.longitude);
+    else setLongitude(response.data.longitude);*/
     
     
     //images
@@ -120,10 +127,70 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
    if(response.data.XXX == null) setXXX('Desconocido');
     else setXXX(response.data.XXX);
     */
+    let aux
+    if (userid != null || userid == "") {
+      aux = userid
+    }
+    else {
+      aux = session.id
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux );
+//    6186d4d5f501eb82cb4b2c13
+    //Datos de usuario
+    console.log(response.data.level)
+    setEmail(response.data.email);
+    if(aux !== session.id)
+      setOwnProfile(false);
+    console.log(ownProfile);
+    if(response.data.location == null) setLocation('Desconocido');
+    else setLocation(response.data.location);
 
+    setLevel(response.data.level);
 
+    if(response.data.postalCode == null) setPostalCode('Desconocido');
+    else setPostalCode(response.data.postalCode);
+
+    setEcoPoints(response.data.ecoPoints);
+    setScore(response.data.score);
+
+    if(response.data.latitude == null) setLatitude(39.03385);
+    else setLatitude(response.data.latitude);
+
+    if(response.data.longitude == null) setLongitude(125.75432);
+    else setLongitude(response.data.longitude);
+    
 
   };
+
+  async function followUser() {
+    // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/AddFollowed", body1)
+    .then(function (response){
+      console.log("siguiendo a " + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(true);
+    // añadir follower, usuario del perfil es seguido por el usuario logueado
+  }
+
+  function unfollowUser() {
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/unfollow", body1)
+    .then(function (response){
+      console.log("dejando de seguir a" + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(false);
+  }
   
   const onPressFollowers = () => {
     if (followersSize == 0){
@@ -153,13 +220,7 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
     }
   };
 
-
-
-
-
-  
-
-
+getUserInfo()
 
   return(
     <View style ={styles.container}>
@@ -171,7 +232,49 @@ export default function ViewUserScreenScreen({ route, navigation }: RootTabScree
                 uri: userImage,
             }}
         />
-        
+        {ownProfile? 
+          <Text style={styles.text2}> Mi perfil</Text>
+          :
+          <View style={{ alignItems: 'center',
+           justifyContent: 'center'}}>
+             {following? 
+              <TouchableOpacity
+                onPress={() => {
+                    unfollowUser();
+                }}
+                style={{width: 150 }}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Dejar de seguir
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+             :
+             <TouchableOpacity
+             onPress={() => {
+                 followUser();
+             }}
+             style={{width: 150 }}
+           >
+             <LinearGradient
+                 colors={['#a2cff0', '#ADE8F4']}
+                 style={styles.followButon}
+             >
+                 <Text style={[styles.textFollow,
+                 { color: '#fff' }]}>
+                     Seguir
+                 </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+            } 
+          </View>
+          
+        }
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
@@ -341,9 +444,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-    
-  }
-
+  },
+  followButon: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+},
+textFollow: {
+  fontSize: 18,
+  fontWeight: 'bold'
+},
 });
 
 

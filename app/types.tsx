@@ -17,6 +17,8 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  UserRead: undefined;
+  ViewUser: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -34,6 +36,8 @@ export type RootTabParamList = {
   ViewUserScreen: undefined;
   FollowersScreen: undefined;
   FollowedScreen: undefined;
+  ViewUser: undefined;
+  ProductRead: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

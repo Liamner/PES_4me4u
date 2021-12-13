@@ -21,7 +21,7 @@ import SignUp from '../screens/EmailSignUp';
 import SignIn from '../screens/EmailSignIn'
 import Main from '../screens/MainScreen'
 import EditProduct from '../screens/ProductEdit';
-import ViewProduct from '../screens/ProductRead';
+import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/ProductCreate';
@@ -54,9 +54,10 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -96,14 +97,14 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
 
-      initialRouteName="ViewProduct"
+      initialRouteName="ProductRead"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="ViewProduct"
-        component={ViewProduct}
-        options={({ navigation }: RootTabScreenProps<'ViewProduct'>) => ({
+        name="ProductRead"
+        component={ProductRead}
+        options={({ navigation }: RootTabScreenProps<'ProductRead'>) => ({
           title: 'Ver Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (

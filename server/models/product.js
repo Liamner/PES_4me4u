@@ -15,8 +15,8 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     categories: {     
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category',
+        type: mongoose.Schema.Types.String, 
+        ref: 'Category.name',
         required: true 
         
     },
@@ -28,12 +28,12 @@ const ProductSchema = new mongoose.Schema({
         default: Date.now(),
         required: false
     },
-    exchange: {
+    exchange: [{
           
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Type",
+        type: mongoose.Schema.Types.String, 
+        ref: "Type.name",
         required: true 
-    },
+    }], 
     img: [{
         type: Schema.Types.ObjectId, 
         ref: 'Image'

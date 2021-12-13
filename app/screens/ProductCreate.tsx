@@ -67,7 +67,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         {
           text: 'Hacer una foto',
           onPress: () => {
-            setImageById(id, '');
+            //setImageById(id, '');
             pickImage(id);
           }
         },
@@ -78,6 +78,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }
 
   const pickImage = async (id?: Number) => {
+    console.log('id: '+id);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -87,33 +88,35 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 
     console.log(result);
 
-    if (!result.cancelled) {
-      if (id == 1){
-        setImage(result.uri);
-        newImages.push(result.uri);
-      } 
-      else if(id == 2){
-        setImage2(result.uri);
-        newImages.push(result.uri);
-      }
-      else if(id == 3){
-        setImage3(result.uri);
-        newImages.push(result.uri);
-      }
-      else if(id == 4){
-        setImage4(result.uri);
-        newImages.push(result.uri);
-      }
-      else if(id == 5){
-        setImage5(result.uri);
-        newImages.push(result.uri);
-      }
-      else if(id == 6){
-        setImage6(result.uri);
-        newImages.push(result.uri);
-      }
-
+    if (!result.cancelled ) {
+      console.log('hola')
+    setImageById(id, '');
+      
+    if (id == 1){
+      setImage(result.uri);
+      newImages.push(result.uri);
+    } 
+    else if(id == 2){
+      setImage2(result.uri);
+      newImages.push(result.uri);
     }
+    else if(id == 3){
+      setImage3(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 4){
+      setImage4(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 5){
+      setImage5(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 6){
+      setImage6(result.uri);
+      newImages.push(result.uri);
+    }  
+  }
   };
 
   const sendApi = async () => {
@@ -121,12 +124,13 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     console.log("sending")
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjY2ZjZkNGRmYzIwMGFlNjdhM2ViYyIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2MzkzNDYwNTcsImV4cCI6MTYzOTUxODg1N30.1wE3W7pGyxuIFYng1IE-d1lDUytKdOLTOscSGfDq5wQ
+        `
       }
     }
     await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
       name: name,
-      categories: [selectedCategory],
+      categories: selectedCategory,
       description: description,
       exchange: "present",
       state: "available",
@@ -138,7 +142,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       .catch(function (error) {
         console.log(error);
       });
-
+      console.log(newImages);
       newImages.forEach( async (element) => {
         console.log('Empieza post de ' + element);
         const uri = element;
@@ -151,6 +155,8 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           type: `image/${fileType}`,
         });
         console.log(formData);
+
+        console.log(pid);
   
         await axios
           .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
@@ -247,7 +253,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image }} />
             </TouchableOpacity>}
           {!image &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(1)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image2 &&
@@ -255,7 +261,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image2 }} />
             </TouchableOpacity>}
           {!image2 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(2)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image3 &&
@@ -263,7 +269,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image3 }} />
             </TouchableOpacity>}
           {!image3 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(3)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </ View>
@@ -277,7 +283,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image4 }} />
             </TouchableOpacity>}
           {!image4 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(4)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image5 &&
@@ -285,7 +291,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image5 }} />
             </TouchableOpacity>}
           {!image5 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(5)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image6 &&
@@ -293,7 +299,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image6 }} />
             </TouchableOpacity>}
           {!image6 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(6)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </View>

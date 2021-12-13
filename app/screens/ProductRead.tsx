@@ -1,7 +1,7 @@
 import { Entypo, Ionicons } from '@expo/vector-icons'; 
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
+import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView, GestureResponderEvent } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -9,7 +9,9 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
-export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRead'>) {
+export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+  const uid = '61b09c0f9482049de40b74f3';
+  const pid = '61b64a52d4851901d035ed57';
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -42,7 +44,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    categories.pop();
+    /*categories.pop();
     let aux = response.data.categories;
     aux.forEach((element: any) => {
       switch (element) {
@@ -55,7 +57,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
         default:
           break;
       }
-    });
+    });*/
   }
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
@@ -94,10 +96,22 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
     }
   }
 
+  const saveProduct = async () => {
+    await axios.post('https://app4me4u.herokuapp.com/api/user/'+uid+'/AddToWishlist', {
+      idProduct: pid
+    }).then(function(response) {
+      console.log(response);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+    
+  }
+
 
   const getProductInfo = async () => {
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/'+pid);
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
@@ -173,7 +187,7 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
             <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton guardar pulsado")}>
+        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
           <View style={styles.row}>
             <Entypo
               name="save"

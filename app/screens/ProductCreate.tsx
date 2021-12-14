@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Button, Platform, ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
+  const [pid, setProductID] = React.useState('');
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState();
@@ -78,7 +79,6 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }
 
   const pickImage = async (id?: Number) => {
-    console.log('id: '+id);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -86,10 +86,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled ) {
-      console.log('hola')
     setImageById(id, '');
       
     if (id == 1){
@@ -119,30 +116,9 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   }
   };
 
-  const sendApi = async () => {
-    let pid: string;
-    console.log("sending")
-    const config = {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjY2ZjZkNGRmYzIwMGFlNjdhM2ViYyIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2MzkzNDYwNTcsImV4cCI6MTYzOTUxODg1N30.1wE3W7pGyxuIFYng1IE-d1lDUytKdOLTOscSGfDq5wQ
-        `
-      }
-    }
-    await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
-      name: name,
-      categories: selectedCategory,
-      description: description,
-      exchange: "present",
-      state: "available",
-      owner: "owner"
-    }, config).then(function (response) {
-      console.log(response);
-      pid = response.data.id;
-    })
-      .catch(function (error) {
-        console.log(error);
-      });
-      console.log(newImages);
+  const setImages = async (response: AxiosResponse<unknown, any>) => {
+    console.log(newImages);
+
       newImages.forEach( async (element) => {
         console.log('Empieza post de ' + element);
         const uri = element;
@@ -156,22 +132,47 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         });
         console.log(formData);
 
-        console.log(pid);
+        console.log('pid: ' + response.data._id);
   
         await axios
-          .post('https://app4me4u.herokuapp.com/api/image/' + pid, formData, {
+          .post('https://app4me4u.herokuapp.com/api/image/' + response.data._id, formData, {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'multipart/form-data',
             }})
           .then(function(response) {
             console.log("New images posted")
-            console.log(response)
+            //console.log(response)
           })
           .catch(function(error) {
             console.log(error);
         });
       });
+  }
+
+  const sendApi = async () => {
+    
+    console.log("sending product")
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+      name: name,
+      categories: selectedCategory,
+      description: description,
+      exchange: "present",
+      state: "available",
+      }, config)
+      .then(function (response) {
+        setImages(response);
+      })
+        .catch(function (error) {
+          console.log(error);
+      });
+
+      
 
   }
   return (

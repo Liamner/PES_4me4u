@@ -14,7 +14,7 @@ const { ObjectId } = require('mongodb');
 
 exports.readAllProducts =  async (req, res) => {
   try {
-    const product = await Product.find();
+    const product = await Product.find().populate('img');
 
     res.status(200).json(product);
 
@@ -81,7 +81,7 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  console.log(req.body.categories)
+  //console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -90,8 +90,8 @@ exports.createProduct = async (req, res) => {
   product.state = req.body.state;
   // Assign the current user to the product
 
-  //product.userId = req.user.id;
-  //product.username = req.user.username;
+  product.userId = req.user.id;
+  product.username = req.user.username;
 
   // SAVE IMAGE
   if (req.files != null) {
@@ -107,30 +107,39 @@ exports.createProduct = async (req, res) => {
   } 
  
   try {
-    const category = await Category.findById({_id:req.body.categories});
+    console.log("pinche");
+    const category = await Category.findOne({name: req.body.categories});
+    console.log(category);
+    console.log("hola");
   if (category == null) res.status(404).json({error:"category not found"});
 
-  const type = await Type.findById({_id:req.body.exchange});
+  const type = await Type.findOne({name: req.body.exchange});
   if (type == null) res.status(404).json({error:"type not found"});
     
   if (category != null && type != null) {
     
     const newProduct = await product.save();
     // Add the product to the user 
-    //jo crec que aixo no funciona
-    /*const user = await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
                             { _id: ObjectId(req.user.id) }, 
                               {$push : {
                                 products: newProduct
                               }
-                            });*/
+                            });
 
-    const categories = await Category.findByIdAndUpdate(
-                            { _id: ObjectId(req.body.categories) }, 
+    const categories = await Category.findOneAndUpdate(
+                            { name: req.body.categories }, 
                                 {$push : {
                                   products: newProduct
                                 }
                               });
+
+    const types = await Type.findOneAndUpdate(
+                                { name: req.body.exchange }, 
+                                    {$push : {
+                                      products: newProduct
+                                    }
+                                  });
                               
     res.status(201).json(product);}
 
@@ -262,40 +271,15 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.readProductsByName = async (req, res) => {
+  const filter = req.params.name;
+  console.log(filter)
   try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
+    const product = await Product.find({name: {$regex : filter}}).populate({path:'img'})
     console.log(product)
     res.status(200).json(product);
+    
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
   }
 };
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-};
-
-exports.readProductsByName = async (req, res) => {
-  try {
-    const filter = req.params.name;
-    console.log(filter)
-    const product = await Product.find({name: {$regex : filter}})
-    console.log(product)
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json(error.message);
-    console.log(error.message);
-  }
-}

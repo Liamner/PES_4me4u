@@ -7,6 +7,7 @@ const typeController = require('../controllers/apiType.js');
 const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
+const conversationController = require ('../controllers/apiConvesration.js')
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -25,12 +26,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), /*authenticateJWT, */productController.createProduct);
-
-
-  router.route('/product/name/:name')
-    .get(productController.readProductsByName)
-
+    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
 
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
@@ -68,9 +64,6 @@ module.exports = function(app) {
   // Delete product with id = id
   router.route('/product/delete/:id')
     .delete(/*authenticateJWT, */productController.deleteProduct);
-
-  router.route('/product/name/:name')
-    .get(productController.readProductsByName)
 
   // Create new category
   router.route('/category/create/')
@@ -144,7 +137,34 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+  
+  router.route('/user/:userId/rate')
+    .post(authenticateJWT, userController.rateUser);
 
+  router.route('/user/:id/products')
+    .get(userController.getRewards)
+
+  router.route('/user/:id/points')
+    .get(userController.getUserPoints)
+
+  router.route('/user/:id/wishlist')
+    .get(userController.getUserWishlist)
+    
+  router.route('/user/:id/level')
+    .get(userController.getUserLevel)
+
+  router.route('/user/:id/levelManage')
+    .get(userController.levelManage)
+
+  router.route('/user/:id/rewards')
+    .get(userController.getUserRewards)
+
+  router.route('/user/:id/AddToWishlist')
+    .post(userController.addToWishlist)
+
+    router.route('/user/:id/DeleteFromWishlist')
+    .post(userController.deleteFromWishlist)
+  
   router.route('/user/:id/AddFollowed')
     .post(userController.addUserFollowed)
   
@@ -237,9 +257,26 @@ module.exports = function(app) {
   router.route('/image/:productId')
     .get(imageController.getProductImages)
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
+  router.route('/product/:productId/image/:imageId')
     .delete(/*authenticateJWT, */ imageController.deleteImages)
-    .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+    //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+  router.route('/filter/product')
+    .get(categoryController.getProductCategory)
 
 
+  router.route('/comments')
+    .get(userController.getAllComments)
+  router.route('/comments/done')
+    .get(authenticateJWT, userController.getMyCommentsDone)
+  router.route('/comments/recived')
+    .get(authenticateJWT, userController.getMyCommentsRecived)
+
+    // CONVERSATION
+  router.route('/conversation')
+    .get(conversationController.getConversations)
+    .post(authenticateJWT, conversationController.newConversation)
+
+  router.route('/conversation/user')
+    .get(authenticateJWT, conversationController.getConversations)
   return router;
 }

@@ -29,7 +29,7 @@ let usuarioSchema = new Schema({
         //required: [true],
         enum: rolesValidos,
     },
-    latitude: {
+    /*latitude: {
         type: String,
         default: '41.3879',
         //required: [true],
@@ -37,7 +37,7 @@ let usuarioSchema = new Schema({
     longitude: {
         type: String,
         default: '2.16992 41° 23′ 16″',
-    },
+    },*/
     level: {
         type: String,
         default: '1',
@@ -62,6 +62,18 @@ let usuarioSchema = new Schema({
         type: mongoose.Schema.Types.Double,
         default: -122.4324
     },
+    gift: {
+        type: Number,
+        default: '0',
+    },
+    loans: {
+        type: Number,
+        default: '0',
+    },
+    exchanges: {
+        type: Number,
+        default: '0'
+    },
     followers: {
         type: [mongoose.Schema.usuarioSchema],
         required: false
@@ -69,8 +81,36 @@ let usuarioSchema = new Schema({
     followed: {
         type: [mongoose.Schema.usuarioSchema],
         required: false
-    }
+    },
+    wishlist: {
+        type: [mongoose.Schema.ProductSchema],
+        required: false
+    },
+    commentsRecived: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    commentsDone: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    rateScore: {
+        type: Number,
+        default: 0
+    },
+    totalRateScore: {
+        type: Number,
+        default: 0
+    },
+    tradesRated: {
+        type: Number,
+        default: 0
+    },
 });
+    
+
 
 // elimina la key password del objeto que retorna al momento de crear un usuario
 usuarioSchema.methods.toJSON = function() {

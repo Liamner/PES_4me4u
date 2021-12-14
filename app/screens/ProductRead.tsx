@@ -10,6 +10,8 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 
 export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+  //const id = "619e6fd140d15287ffe42aca"
+  const id = "619e6fd140d15287ffe42aca"
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -18,20 +20,20 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
-  const [images] = useState([
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '3' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '4' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
-  ]);
+  const [images, setImages] = useState([{"_id": "errorerrorerrorerro",
+  "public_id": "errorerrorerrorerror",
+  "url": "https://www.nosolohacking.info/wp-content/uploads/2017/11/error2.jpg",
+  "__v": 0}]);
+  const [hasImages, SetHasImages] = useState(false);
+        
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('Cargando...') 
   //nombre usuario
   const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
-  const [categories] = useState([{name: 'Cargando...', key: '10'}]);
+  const [categories, setCategories] = useState([{name: 'Cargando...', key: '10'}]);
   const [description, setDescription] = useState('Cargando...')
+
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -42,40 +44,40 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    categories.pop();
     let aux = response.data.categories;
-    aux.forEach((element: any) => {
-      switch (element) {
-        case "tech":
-          categories.push({name: 'Tecnologia', key: '1'})
+      element: 
+      switch (aux) {
+        case "61797e24b4a4d195aa14be8d":
+          setCategories([{name: 'Tecnologia', key: '1'}])
           break;
-        case "house":
-          categories.push({name: 'Cosas de casa', key: '2'})
+        case "61940e6f0c77883d581cede8":
+          setCategories([{name: 'Jugetes', key: '2'}])
           break;
         default:
+          setCategories([{name: 'GATITOS', key: '0'}])
           break;
       }
-    });
   }
+
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
     exchange.pop();
     let aux = response.data.exchange;
-    aux.forEach((element: any) => {
-      switch (element) {
+      switch (aux) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
           break;
         case "provide":
           exchange.push({ name:'#prestamo', key: '2'})
           break;
-        case "present":
+          case "6193a583e47e769eeaa7a978":
+        //case "present":
           exchange.push({ name:'#regalo', key: '3'})
           break;
         default:
+          exchange.push({ name:'Perritos frios', key: '0'})
           break;
       }
-    });
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -96,8 +98,8 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   const getProductInfo = async () => {
-
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
+    
+    let response = await axios.get("https://app4me4u.herokuapp.com/api/product/" + id);
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
@@ -105,11 +107,23 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     getCorrectStateType(response);
     setUserID(response.data.userId);
     //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
     //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
+    if(response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
+    else setDescription("Descripción: " + response.data.description);
+    
+    if (response.data.img == null){
+      SetHasImages(false);
+      setImages([{"_id": "",
+      "public_id": "",
+      "url": "",
+      "__v": -1 }]);
+    }
+    else {
+      SetHasImages(true);
+      setImages(response.data.img);
+    }
+
   };
 
   const getUserInfo = async () => {
@@ -126,12 +140,13 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   return (
     <View style={styles.container}>
       <ScrollView>
+      { hasImages ?
         <FlatList
-          data={images}
+          data={images} //ZZZ
           renderItem={({ item }) => ( 
             <Image
               style={styles.image}
-              source={{uri: item.link}}
+              source={{uri: item.url}}
             />
           )}
           horizontal={true}
@@ -139,10 +154,18 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
+        :
+        null
+      }
         <View style={styles.state}>
           <Text style={{color: 'white'}}>{`${state}`}</Text>
         </View>
-        <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+        { hasImages ?
+          <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+          :
+          null
+        }
+        
         <Text style={styles.title}>{`${name}`}</Text>
         <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
         <FlatList 

@@ -43,7 +43,7 @@ export function LoanButton  () {
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState('date');
   const selectDate = async(event: any, selectedDate: Date) => {
-  console.log(selectedDate)
+  console.log("selected:" + selectedDate)
     if(selectedDate != null){
       //usar selected date, si selected date es null, pasamos
       //llamada a api
@@ -69,7 +69,6 @@ export function LoanButton  () {
       setProductSelected(false);
       setDateSelected(false)
       setModalVisible(false);
-      console.log("date not null")
     }
     else setDateSelected(false)
     const currentDate = selectedDate || date;
@@ -81,14 +80,10 @@ export function LoanButton  () {
     setProductSelected(false);
     setModalVisible(false);
   };
-  const selectProduct = async (product: String) => {    
-    console.log(product)
-  
-    setProductSelected(true)
-  };
+
   
   const Item = ({ title }) => (
-    <TouchableOpacity onPress = {() => selectProduct(title)}>
+    <TouchableOpacity onPress = {() =>  setProductSelected(true)}>
       <View style={styles.item}>      
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>

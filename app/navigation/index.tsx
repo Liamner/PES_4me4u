@@ -24,10 +24,10 @@ import EditProduct from '../screens/ProductEdit';
 import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
-import CreateProduct from '../screens/CreateProductScreen';
 import ProductCard from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
+import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';

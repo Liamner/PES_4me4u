@@ -122,6 +122,9 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     setUserID(response.data.userId);
     //images
 
+    // //Optional
+    // if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    // else setDescription(response.data.description);
     //Optional
     if(response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
     else setDescription("Descripción: " + response.data.description);

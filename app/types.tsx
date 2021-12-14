@@ -31,7 +31,11 @@ export type RootTabParamList = {
   ViewProduct: undefined;
   DeleteButton: undefined;
   CreateProduct: undefined;
+  ProductCard: undefined;
+  TestScreen: undefined;
+  FirstScreen: undefined;
   ViewUserScreen: undefined;
+  ProductRead: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

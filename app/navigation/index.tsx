@@ -27,6 +27,9 @@ import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
 
+import ProductCard from '../screens/ProductCardScreen';
+import RewardScreen from '../screens/RewardScreen';
+
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -137,10 +140,10 @@ function BottomTabNavigator() {
         }}
       />
        <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
+        name="RewardScreen"
+        component={RewardScreen}
         options={{
-          title: 'Test Screen',
+          title: 'Reward Screen',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

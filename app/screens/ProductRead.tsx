@@ -94,47 +94,6 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
     }
   }
 
-
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar//TODO descomentar
-  //TODO descomentar
-  //TODO descomentar
   const getProductInfo = async () => {
 
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');

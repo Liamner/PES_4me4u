@@ -31,6 +31,9 @@ export type RootTabParamList = {
   ViewProduct: undefined;
   DeleteButton: undefined;
   CreateProduct: undefined;
+  ProductCard: undefined;
+  TestScreen: undefined;
+  FirstScreen: undefined;
   ViewUserScreen: undefined;
   ProductRead: undefined;
 };

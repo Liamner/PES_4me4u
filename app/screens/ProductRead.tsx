@@ -94,7 +94,6 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
     }
   }
 
-
   const getProductInfo = async () => {
 
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
@@ -107,9 +106,9 @@ export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRe
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
-    //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
+    // //Optional
+    // if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    // else setDescription(response.data.description);
   };
 
   const getUserInfo = async () => {

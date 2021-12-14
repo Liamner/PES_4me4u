@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage,
     /*limits: {
-      fileSize: 80000000000 // Compliant: 8MB
+      fileSize: 8000000 // Compliant: 8MB
     }, */
     fileFilter: (req, file, cb) => {
       const fileTypes = /jpeg|jpg|png/;
@@ -26,4 +26,4 @@ const upload = multer({
     } 
   });
 
-module.exports = upload;  
+module.exports = upload;

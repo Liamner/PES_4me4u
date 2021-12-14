@@ -3,12 +3,14 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -29,11 +31,12 @@ import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
+import RateUser from '../screens/UserRate';
+
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import ProductCard from '../screens/ProductCardScreen';
-import TestScreen from '../screens/TestScreen';
+
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -65,6 +68,7 @@ function RootNavigator() {
   );
 }
 
+
 const LoginStack = createNativeStackNavigator();
 
 function LoginNavigator() {
@@ -86,6 +90,7 @@ function LoginNavigator() {
     </LoginStack.Navigator>
   );
 }
+
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
@@ -192,16 +197,26 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />      
-    </BottomTab.Navigator>
-  );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+       <BottomTab.Screen
+         name="RateUser"
+         component={RateUser}
+         options={{
+           title: 'Valorar usuario',
+           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+         }}
+        />
+   
+     </BottomTab.Navigator>
+   );
+ }
+ 
+ /**
+  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+  */
+ function TabBarIcon(props: {
+   name: React.ComponentProps<typeof FontAwesome>['name'];
+   color: string;
+ }) {
+   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+ }
+ 

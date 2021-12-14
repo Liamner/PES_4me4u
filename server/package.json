@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@app-masters/react-cloudinary-uploader": "^0.1.42",
-    "bcrypt-nodejs": "^0.0.3",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.27.1",
     "cors": "^2.8.5",
@@ -22,7 +23,7 @@
     "express-validator": "^6.13.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.8",
-    "mongoose-double": "^0.0.1",
+    "mongoose-double": "0.0.1",
     "mongoose-unique-validator": "^3.0.0",
     "nodemon": "^2.0.13",
     "realm": "^10.9.1"

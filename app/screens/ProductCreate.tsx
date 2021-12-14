@@ -155,7 +155,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     console.log("sending product")
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${session.token}`
       }
     }
     await axios.post('https://app4me4u.herokuapp.com/api/product/create', {

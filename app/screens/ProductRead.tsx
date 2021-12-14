@@ -8,6 +8,7 @@ import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
   const uid = '61b09c0f9482049de40b74f3';
@@ -63,7 +64,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
-    exchange.pop();
+  /*  exchange.pop();
     let aux = response.data.exchange;
       switch (aux) {
         case "exchange":
@@ -80,6 +81,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           exchange.push({ name:'Perritos frios', key: '0'})
           break;
       }
+    });*/
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -120,6 +122,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     getCorrectExchangeType(response);
     getCorrectStateType(response);
     setUserID(response.data.userId);
+    setUser(response.data.username);
     //images
 
     // //Optional
@@ -144,11 +147,12 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   };
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ userid);
     //Required
-    setUser(response.data.userId);
+    //setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
+    console.log(userid)
   };
 
   getProductInfo()
@@ -184,7 +188,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         }
         
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText}  onPress={() => navigation.navigate("UserRead", userid)}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}

@@ -26,6 +26,8 @@
         "mongoose-double": "0.0.1",
         "mongoose-unique-validator": "^3.0.0",
         "multer": "^1.4.3",
+        "react-native-safe-area-context": "^3.3.2",
+        "react-native-screens": "^3.10.1",
         "realm": "^10.9.1"
     }
 }

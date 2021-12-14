@@ -31,6 +31,8 @@ import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
+import FollowersScreen from '../screens/FollowersScreen';	
+import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
 
 
@@ -60,9 +62,10 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -194,6 +197,22 @@ function BottomTabNavigator() {
         component={ViewUser}
         options={{
           title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> 
+      <BottomTab.Screen
+        name="FollowersScreen"
+        component={FollowersScreen}
+        options={{
+          title: 'Followers',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="FollowedScreen"
+        component={FollowedScreen}
+        options={{
+          title: 'Followed',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />      

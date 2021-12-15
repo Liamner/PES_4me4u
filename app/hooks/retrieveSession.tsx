@@ -6,7 +6,7 @@ export default async function retrieveSession () {
     try {
         const value = await AsyncStorage.getItem('userSession')
         if(value !== null) {
-            console.log("hello")
+            //console.log("hello")
             return (JSON.parse(value));
         }
         else {

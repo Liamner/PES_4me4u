@@ -217,7 +217,8 @@ module.exports = function(app) {
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     .put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
-    router.route('/filter/product')
+    
+  router.route('/filter/product')
     .get(categoryController.getProductCategory)
 
   router.route('/filter/product')

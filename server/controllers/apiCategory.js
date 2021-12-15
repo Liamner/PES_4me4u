@@ -64,28 +64,32 @@ exports.readAllCategories = async (req, res) => {
 }
 
 exports.getProductCategory = async (req, res) => {
-  
-  console.log('Reading category: ' + req.body.category);
   const category = req.body.category;
-  let exchangeType;
+  let exchangeType = null;
   if (req.body.exchange != null) exchangeType = req.body.exchange;
-  else exchangeType = null;
-  let title;
-  if (req.body.name != null) title = req.body.name;
-  else title = null;
+
+  let productName = null;
+  if (req.body.productName != null) productName = req.body.productName;
 
   console.log(exchangeType)
   try {
+    if (productName != null && exchangeType != null && category != null) {
+      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
+      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
+
+      await Product.find({exchange : exchangeType}, (error, products) => {
+        console.log(products.exc)
+      }).clone()
+    }
     if (category != null && exchangeType != null) {
       if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
       else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
       await Category.find({name: category, exchange : exchangeType}, {products: 1}, async (erro, products) => {
-        console.log(products[0].products[0])
         res.status(200).json(products[0]);
       }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
     }
-    else if (title != null) {
-        const product = await Product.find({name: {$regex : title}})
+    else if (productName != null) {
+        const product = await Product.find({name: {$regex : productName}})
         console.log(product)
         res.status(200).json(product);
     }
@@ -104,6 +108,10 @@ exports.getProductCategory = async (req, res) => {
         res.status(200).json(products);
       }).populate({path: 'exchange'} ,{ populate: {path: 'img', select: { 'url': 1}}} ).clone()
     }   
+    else {
+      const product = await Product.find({name: {$regex : filter}})
+      res.status(200).json(product);
+    }
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

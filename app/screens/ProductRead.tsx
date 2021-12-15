@@ -158,8 +158,10 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   
   React.useEffect(() => {
     getProductInfo();
-    getUserInfo();
   }, []);  
+
+  
+  getUserInfo();
 
 
   return (

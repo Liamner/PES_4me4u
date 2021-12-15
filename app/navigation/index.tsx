@@ -34,6 +34,7 @@ import ViewUser from '../screens/UserRead';
 import FollowersScreen from '../screens/FollowersScreen';	
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
+import SearchProduct from '../screens/SearchProduct';
 
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -177,26 +178,18 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="DeleteButton"
-        component={DeleteButton}
-        options={{
-          title: 'Borrar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="ActualizarEstadoProducto"
-        component={ActualizarEstadoProducto}
-        options={{
-          title: 'Actualizar Estado',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
         name="ViewUser"
         component={ViewUser}
         options={{
           title: 'Ver Usuario',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> 
+      <BottomTab.Screen
+        name="SearchProduct"
+        component={SearchProduct}
+        options={{
+          title: 'Buscar Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       /> 

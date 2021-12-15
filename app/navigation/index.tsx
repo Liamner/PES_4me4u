@@ -35,7 +35,9 @@ import FollowersScreen from '../screens/FollowersScreen';
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
 
-
+//to incorporar
+import SearchProduct from '../screens/SearchProduct';
+import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -138,6 +140,22 @@ function BottomTabNavigator() {
         component={CreateProduct}
         options={{
           title: 'Nuevo Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+       <BottomTab.Screen
+        name="UserUpdate"
+        component={UserUpdateScreen}
+        options={{
+          title: 'UserUpdate',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+       <BottomTab.Screen
+        name="SearchProduct"
+        component={SearchProduct}
+        options={{
+          title: 'SearchProduct',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

@@ -152,7 +152,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     //setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
-    console.log(userid)
+    //console.log(userid)
   };
 
   getProductInfo()

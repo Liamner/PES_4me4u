@@ -10,18 +10,18 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
-
+import retrieveSession from '../hooks/retrieveSession'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 
 
-export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
-  
-
+//export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
+  export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
+    var userid = route.params;
     //Datos de un usuario
 
-    const [id, setid] = useState('61952ec8adeb9693da219fc2');
     //const [id, setid] = useState(user_id);
-    
     const [email, setEmail] = useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
@@ -30,6 +30,26 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
     const [score, setScore] = useState('Cargando...');
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
+    const [session, setSession] = React.useState({
+      id: "",
+      user:"",
+      token:""
+    });
+    const [ownProfile, setOwnProfile] = useState(true);
+    const [following, setFollowing] = useState(false);
+    const [followers, setFollowers] = useState([]);
+    const [followed, setFollowed] = useState([]);
+
+    const [followersSize, setFollowersSize] = useState(0);
+    const [followedSize, setFollowedSize] = useState(0);
+
+  const getData = async () => {
+    const sess = await retrieveSession();
+    console.log(sess)
+      setSession(sess);
+    }
+
+  
    /* 
     const email = 'a@mail.algo'
     const location = 'Pyongyang'
@@ -76,12 +96,20 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
+    let aux
+    if (userid != null || userid == "") {
+      aux = userid
+    }
+    else {
+      aux = session.id
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
 //    6186d4d5f501eb82cb4b2c13
     //Datos de usuario
-
     setEmail(response.data.email);
-
+    if(aux !== session.id)
+      setOwnProfile(false);
+    console.log(ownProfile);
     if(response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
 
@@ -99,24 +127,86 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
     if(response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
     
-    
+   setFollowers(response.data.followers);
+    setFollowed(response.data.followed);
+
+    setFollowersSize(response.data.followers.length);
+    setFollowedSize(response.data.followed.length);
     //images
     //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
 /*    
    //en caso de tener datos desconocidos
-
    if(response.data.XXX == null) setXXX('Desconocido');
     else setXXX(response.data.XXX);
     */
 
 
+  };
 
+  async function followUser() {
+    // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/AddFollowed", body1)
+    .then(function (response){
+      console.log("siguiendo a " + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(true);
+    // añadir follower, usuario del perfil es seguido por el usuario logueado
+  }
+
+  function unfollowUser() {
+    const body1 = {email: email}
+    let response = axios
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/unfollow", body1)
+    .then(function (response){
+      console.log("dejando de seguir a" + response.data.userID)
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+
+    setFollowing(false);
+  }
+
+  const onPressFollowers = () => {
+    if (followersSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no tine ningún seguidor",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+      navigation.navigate('FollowersScreen', {list: followers} );
+    }
+  };
+
+
+
+  const onPressFollowed = () => {
+    if (followedSize == 0){
+      Alert.alert(
+      "Error" ,
+      "Este usuario no es seguido por nadie",
+      [{text: "Aceptar"}]
+      )
+    }
+    else{
+      navigation.navigate('FollowedScreen', {list: followed} );
+    }
   };
   
-  getUserInfo()
-
-
+  React.useEffect(() => {
+    getData();
+    
+  }, []);  
+  getUserInfo();
 
   return(
     <View style ={styles.container}>
@@ -128,10 +218,65 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
                 uri: userImage,
             }}
         />
-        
+        {ownProfile? 
+          <View style={{ alignItems: 'center',
+          justifyContent: 'center'}}>
+            <Text style={styles.text2}> Mi perfil</Text>
+          </View>
+          :
+          <View style={{ alignItems: 'center',
+           justifyContent: 'center'}}>
+             {following? 
+              <TouchableOpacity
+                onPress={() => {
+                    unfollowUser();
+                }}
+                style={{width: 150 }}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Dejar de seguir
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+             :
+             <TouchableOpacity
+             onPress={() => {
+                 followUser();
+             }}
+             style={{width: 150 }}
+           >
+             <LinearGradient
+                 colors={['#a2cff0', '#ADE8F4']}
+                 style={styles.followButon}
+             >
+                 <Text style={[styles.textFollow,
+                 { color: '#fff' }]}>
+                     Seguir
+                 </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+            } 
+          </View>
+          
+        }
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
+
+        <View style={styles.container2}>
+          <Text style={styles.text} onPress={onPressFollowers}>
+              Followers: <Text style={styles.text2}>{followersSize}</Text>
+          </Text>
+          <Text>        </Text>
+          <Text style={styles.text} onPress={onPressFollowed}>
+              Followed: <Text style={styles.text2}>{followedSize}</Text>
+          </Text>   
+        </View>
     
         <Text style={styles.text}>
             Nivel: <Text style={styles.text2}>{level}</Text>
@@ -242,7 +387,11 @@ const styles = StyleSheet.create({
   },
   container2: {
     flex: 1,
-    padding: 20
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: "row",
+    padding: 0
+    
   },
   item: {
     padding: 20,
@@ -294,6 +443,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-  }
+    
+  },
+  followButon: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+},
+textFollow: {
+  fontSize: 18,
+  fontWeight: 'bold'
+},
 
 });

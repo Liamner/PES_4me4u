@@ -22,8 +22,8 @@ exports.readAllUsers =  async (req, res) => {
 
 exports.readUser = async (req, res) => {
   try {
+    //const user = await User.findById({ _id: req.params.id }, {uderId: 1, followed : {userId: 1},  followers : {userId: 1}});
     const user = await User.findById({ _id: req.params.id });
-
     console.log("Reading user: " + req.params.id);
 
     res.status(200).json(user);

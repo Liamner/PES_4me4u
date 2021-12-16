@@ -71,48 +71,55 @@ exports.getProductCategory = async (req, res) => {
   let productName = null;
   if (req.body.productName != null) productName = req.body.productName;
 
-  console.log(exchangeType)
   try {
     if (productName != null && exchangeType != null && category != null) {
-      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
-
-      await Product.find({exchange : exchangeType}, (error, products) => {
-        console.log(products.exc)
-      }).clone()
+      await Product.find({name: {$regex : productName}, categories: category, exchange : exchangeType}, (error, products) => {
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
     }
-    if (category != null && exchangeType != null) {
-      //if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      //else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
-      await Category.find({name: category, exchange : exchangeType}, {products: 1}, async (erro, products) => {
-        res.status(200).json(products[0]);
-      }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
+    else if (category != null && exchangeType != null) {
+      await Product.find({exchange : exchangeType, categories: category}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (productName != null && category != null) {
+      await Product.find({name: {$regex : productName}, categories: category}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (productName != null && exchangeType != null) {
+      await Product.find({name: {$regex : productName}, exchange : exchangeType}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
     }
     else if (productName != null) {
-        const product = await Product.find({name: {$regex : productName}})
-        console.log(product)
-        res.status(200).json(product);
+        const products = await Product.find({name: {$regex : productName}})
+        res.status(200).json(products);
     }
     else if (category != null) {
-      await Category.find({name: category}, {products: 1}, async (erro, products) => {
-        console.log(products[0].products)
-        res.status(200).json(products[0]);
-      }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
+      await Category.find({name: category}, {products: 1}, async (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products[0].products);
+      }).populate({path: 'products', populate: {path: 'img', select: { 'url': 1}} }).clone()
     }
-    else if (exchangeType != null) {
-      // Traducir exchange por facilidad
-      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
-
-      
+    else if (exchangeType != null) {      
       await Product.find({exchange: exchangeType} ,(error, products) => { 
-        console.log(products)  
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
         res.status(200).json(products);
-      }).populate({path: 'exchange' }).populate({path: 'img', select: { 'url': 1}}).clone()
-    }   
-    else {
-      const product = await Product.find({name: {$regex : filter}})
-      res.status(200).json(product);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
     }
   } catch (error) {
     res.status(404).json(error.message);

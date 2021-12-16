@@ -82,8 +82,8 @@ exports.getProductCategory = async (req, res) => {
       }).clone()
     }
     if (category != null && exchangeType != null) {
-      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
+      //if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
+      //else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
       await Category.find({name: category, exchange : exchangeType}, {products: 1}, async (erro, products) => {
         res.status(200).json(products[0]);
       }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()

@@ -416,6 +416,69 @@ exports.addUserFollower = async (req, res) => {
     res.status(400).json(error)
   }
 }
+exports.follow = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let body = req.body;
+    console.log(userId);
+    const ourUser = await User.findById({_id: userId});
+    const userFollowed = await User.findOne ({email: body.email});
+    console.log(userFollowed);
+        let find = 0;
+        let i;
+        for (i = 0;(find == 0) && (i < ourUser.followed.length) ; i++) {
+          console.log(ourUser.followed[i]);
+          console.log(userFollowed._id);
+          let aux1 = ourUser.followed[i].toString();
+          let aux2 = userFollowed._id.toString();
+          console.log(aux1);
+          console.log(aux2);
+          if (aux1 == aux2) {find = 1;}
+        }
+        console.log(find);
+        if (find == 0) {
+          console.log("hola");
+          ourUser.followed.push(userFollowed._id);
+          await ourUser.save();
+          userFollowed.followers.push(ourUser._id);
+          await userFollowed.save();
+           res.status(200).json(ourUser.followered);
+          //})
+         // User.findByIdandUpdate({_id: userId}, {followed: push(userFollowed._id)});
+         // User.findByIdandUpdate({_id: userFollowed}, followers.push(ourUser._id));
+          /*ourUser.followed.push(userFollowed);
+          console.log("a" + ourUser.followed);
+          userFollowed.followers.push(ourUser);
+          console.log("b" + userFollowed.followers.length);
+          await ourUser.save();
+          await userFollowed.save();*/
+        }
+        else {
+          console.log("estem dins");
+          i = i-1;
+          console.log(ourUser.followed[i]);
+          ourUser.followed.splice(i, 1);
+          await ourUser.save();
+          find = 0;
+          for (i = 0;(find == 0) && (i < userFollowed.followers.length) ; i++) {
+            console.log("entra al bucle");
+            aux1 = userFollowed.followers[i].toString();
+            aux2 = ourUser._id.toString();
+            if(aux1 == aux2){
+              find = 1;
+            }
+          }
+          console.log("surt del bucle");
+          console.log(find);
+          i = i - 1; 
+          userFollowed.followers.splice(i,1);
+          await userFollowed.save();
+         res.status(200).json(ourUser.followered);
+        }
+    } catch (error) {
+    res.status(400).json(error)
+  }
+};
 
 exports.unfollow = async (req, res) => {
   try {

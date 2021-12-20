@@ -269,30 +269,49 @@ exports.getRewards = async (req, res) => {
     var points = user.ecoPoints;
     var rewards = 0;
     if(ngifts >= 3) {
-      if(ngifts >=3) rewards += 10;
-      if(ngifts >= 5) rewards += 50;
-      else if (ngifts >= 7) rewards += 100;
-      else if(ngifts >= 10) rewards += 150;
+      if(ngifts >=3) rewards = rewards + 10;
+      if(ngifts >= 5) rewards = rewards + 50;
+      else if (ngifts >= 7) rewards = rewards + 100;
+      else if(ngifts >= 10) rewards = rewards + 150;
     }
 
     else if(nloans >= 3) {
-      if(nloans >=3) rewards += 10;
-      if(nloans >= 5) rewards += 50;
-      else if (nloans >= 7) rewards += 100;
-      else if(nloans >= 10) rewards += 150;
+      if(nloans >=3) rewards = rewards + 10;
+      if(nloans >= 5) rewards = rewards + 50;
+      else if (nloans >= 7) rewards = rewards + 100;
+      else if(nloans >= 10) rewards = rewards + 150;
     }
 
     else if(nexchanges >= 3) {
-      if(nexchanges >=3) rewards += 10;
-      if(nexchanges >= 5) rewards += 50;
-      else if (nexchanges >= 7) rewards += 100;
-      else if(nexchanges >= 10) rewards += 150;
+      if(nexchanges >=3) rewards = rewards + 10;
+      if(nexchanges >= 5) rewards = rewards + 50;
+      else if (nexchanges >= 7) rewards = rewards + 100;
+      else if(nexchanges >= 10) rewards = rewards + 150;
     }
 
     user.ecoPoints = points + rewards;
     user.save();
     res.status(200).json(user);
     
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserRewards = async (req, res) => {
+  try {
+    const {type, estimatedPoints} = req.body;
+
+    const id = req.params.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to get reward: " + user.name);
+    
+    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
+    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
+    if (type != 'exchange') user.ecoPoints += 15;
+
+    await user.save();
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }
@@ -351,25 +370,6 @@ exports.getUserPoints = async (req, res) => {
     const user = await User.findById({ _id: req.params.id });
     console.log("Puntos del usuario: " , user.ecoPoints);
     res.status(200).json(user.ecoPoints);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.getUserRewards = async (req, res) => {
-  try {
-    const {type, estimatedPoints} = req.body;
-
-    const id = req.params.id;
-    const user = await User.findById(id)
-    console.log("Searching for user to get reward: " + user.name);
-    
-    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
-    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
-    if (type != 'exchange') user.ecoPoints += 15;
-
-    await user.save();
-    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }

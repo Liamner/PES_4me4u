@@ -464,172 +464,44 @@ exports.getUserFollowers = async (req, res) => {
   }
 };
 
-exports.addUserFollowed = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
-    
-    let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.followed.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followed);
-    });
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.addUserFollower = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
-    
-    let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.followers.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followers);
-    });
-  } catch (error) {
-    res.status(400).json(error)
-  }
-}
 exports.follow = async (req, res) => {
   try {
     const userId = req.params.id;
     let body = req.body;
-    console.log(userId);
     const ourUser = await User.findById({_id: userId});
     const userFollowed = await User.findOne ({email: body.email});
-    console.log(userFollowed);
         let find = 0;
         let i;
+        let aux2 = userFollowed._id.toString();
         for (i = 0;(find == 0) && (i < ourUser.followed.length) ; i++) {
-          console.log(ourUser.followed[i]);
-          console.log(userFollowed._id);
           let aux1 = ourUser.followed[i].toString();
-          let aux2 = userFollowed._id.toString();
-          console.log(aux1);
-          console.log(aux2);
           if (aux1 == aux2) {find = 1;}
         }
-        console.log(find);
         if (find == 0) {
-          console.log("hola");
           ourUser.followed.push(userFollowed._id);
           await ourUser.save();
           userFollowed.followers.push(ourUser._id);
           await userFollowed.save();
            res.status(200).json(ourUser.followered);
-          //})
-         // User.findByIdandUpdate({_id: userId}, {followed: push(userFollowed._id)});
-         // User.findByIdandUpdate({_id: userFollowed}, followers.push(ourUser._id));
-          /*ourUser.followed.push(userFollowed);
-          console.log("a" + ourUser.followed);
-          userFollowed.followers.push(ourUser);
-          console.log("b" + userFollowed.followers.length);
-          await ourUser.save();
-          await userFollowed.save();*/
         }
         else {
-          console.log("estem dins");
           i = i-1;
-          console.log(ourUser.followed[i]);
           ourUser.followed.splice(i, 1);
           await ourUser.save();
           find = 0;
+          aux2 = ourUser._id.toString();
           for (i = 0;(find == 0) && (i < userFollowed.followers.length) ; i++) {
-            console.log("entra al bucle");
             aux1 = userFollowed.followers[i].toString();
-            aux2 = ourUser._id.toString();
             if(aux1 == aux2){
               find = 1;
             }
           }
-          console.log("surt del bucle");
-          console.log(find);
           i = i - 1; 
           userFollowed.followers.splice(i,1);
           await userFollowed.save();
          res.status(200).json(ourUser.followered);
         }
     } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.unfollow = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
-          if (mail == usersFollowed.followed[i].email ) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not followed'})
-        }
-        else {
-          i = i-1;
-          const idUser = usersFollowed.followed[i]._id;
-          usersFollowed.followed.splice(i, 1);
-          usersFollowed.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowed);
-
-        }
-    }).populate('followed');
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.loseFollower = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
-          if (mail == usersFollowers.followers[i].email ) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not follower'})
-        }
-        else {
-          i = i-1;
-          const idUser = usersFollowers.followers[i]._id;
-          usersFollowers.followers.splice(i, 1);
-          usersFollowers.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowers);
-
-        }
-    }).populate('followers');
-
-  } catch (error) {
     res.status(400).json(error)
   }
 };

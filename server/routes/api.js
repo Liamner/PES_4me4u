@@ -165,26 +165,14 @@ module.exports = function(app) {
     router.route('/user/:id/DeleteFromWishlist')
     .post(userController.deleteFromWishlist)
   
-  router.route('/user/:id/AddFollowed')
-    .post(userController.addUserFollowed)
-  
-  router.route('/user/:id/AddFollower')
-    .post(userController.addUserFollower)
-  
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
 
   router.route('/user/:id/followers')
     .get(userController.getUserFollowers)
 
-  router.route('/user/:id/unfollow')
-    .post(userController.unfollow)
-
   router.route('/user/:id/follow')
     .post(userController.follow)
-
-  router.route('/user/:id/loseFollower')
-    .post(userController.loseFollower)
     
   // ======================
   // ---- Trade Routes ----

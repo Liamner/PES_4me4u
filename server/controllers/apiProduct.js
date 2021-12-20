@@ -6,7 +6,6 @@ const Image = require('../models/image.js');
 const User = require('../models/user.js');
 const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
-//const { readCategory } = require('./apiCategory.js');
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -17,8 +16,6 @@ exports.readAllProducts =  async (req, res) => {
     const product = await Product.find().populate('img');
 
     res.status(200).json(product);
-
-    console.log(product);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);

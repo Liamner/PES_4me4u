@@ -302,8 +302,9 @@ exports.getUserRewards = async (req, res) => {
   try {
     const {type, estimatedPoints} = req.body;
 
-    const id = req.params.id;
-    const user = await User.findById(id)
+    //const id = req.params.id;
+    let user = await User.findById({ _id: req.params.id });
+    //const user = await User.findById(id)
     console.log("Searching for user to get reward: " + user.name);
     
     if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;

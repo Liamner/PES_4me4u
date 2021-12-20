@@ -11,7 +11,7 @@ import axios from 'axios';
 
 export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardScreen'>) {
   
-  const [id, setid] = useState('61a2500c9b1c6cb5e2e0aa90');
+  const [id, setid] = useState('61ba2a4f6bd96835a7895b33');
   const [email, setEmail] = useState('');
   const [reward, setReward] = useState('');
 
@@ -28,9 +28,16 @@ export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardS
 
 
   const getRewards = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id + "/products");  //no puede ser esta llamada
+//    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id + "/products");  //no puede ser esta llamada
+    let response = await axios.get('https://app4me4u.herokuapp.com/api//user/' + id + "/rewards");  //
+    console.log(response.data.ecoPoints);
+    setReward(response.data.ecoPoints );
+    //10151515151515151515
+    //1015151515151515151515
+//  router.route('/user/:id/rewards')
+//.get(userController.getUserRewards)
 
-    setReward('Trofeos');
+//  setReward('Trofeos');
 
     Alert.alert(
       "Trofeos obtenidos!",

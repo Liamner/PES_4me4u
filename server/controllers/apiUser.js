@@ -13,7 +13,6 @@ exports.readAllUsers =  async (req, res) => {
 
     res.status(200).json(user);
 
-    console.log(user);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);

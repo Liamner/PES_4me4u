@@ -81,7 +81,6 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  //console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -106,11 +105,8 @@ exports.createProduct = async (req, res) => {
     }
   } 
  
-  try {
-    console.log("pinche");
-    const category = await Category.findOne({name: req.body.categories});
-    console.log(category);
-    console.log("hola");
+  try {   
+  const category = await Category.findOne({name: req.body.categories});
   if (category == null) res.status(404).json({error:"category not found"});
 
   const type = await Type.findOne({name: req.body.exchange});

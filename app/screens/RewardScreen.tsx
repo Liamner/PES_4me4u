@@ -14,40 +14,59 @@ export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardS
   const [id, setid] = useState('61ba2a4f6bd96835a7895b33');
   const [email, setEmail] = useState('');
   const [reward, setReward] = useState('');
-
-  //const [id, setid] = useState(user_id);
+  const [gift, setGift] = useState(-1);
+  const [loans, setLoans] = useState(-1);
+  const [exchanges, setExchanges] = useState(-1);
+//  "gift":0,"loans":0,"exchanges"
+  
+//const [id, setid] = useState(user_id);
+ 
+  
 
 
   const getUserInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
 
+    setGift(response.data.gift);
+    setLoans(response.data.loans);
+    setExchanges(response.data.exchanges);
 
     setEmail(response.data.email);
+
 
   };
 
 
   const getRewards = async () => {
-//    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id + "/products");  //no puede ser esta llamada
-    let response = await axios.get('https://app4me4u.herokuapp.com/api//user/' + id + "/rewards");  //
-    console.log(response.data.ecoPoints);
-    setReward(response.data.ecoPoints );
-    //10151515151515151515
-    //1015151515151515151515
+
+    //devuelve 400- bad request
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id + '/rewards');  //getUserRewards por transacción cualquiera
+    
+    console.log(response);
+
+    //en caso de ganar un trofeo
+/*    if(gift == 7 || loans == 7 || exchanges == 7){
+
+
+      Alert.alert(
+        "Misión cumplida!",
+        "Has obtenido puntos extra.",
+        [ {text: "Ok"} ]
+
+      );
+    }*/
+    
+
+    
+
+ 
+    
 //  router.route('/user/:id/rewards')
 //.get(userController.getUserRewards)
 
 //  setReward('Trofeos');
 
-    Alert.alert(
-      "Trofeos obtenidos!",
-      "Has obtenido todos tus trofeos",
-      [
-      {
-          text: "Ok",
-      }
-      ]
-  );
+
   };
 
 
@@ -60,6 +79,9 @@ export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardS
         <Text> Trofeos de: {email}</Text>
         <Text> {reward}</Text>
 
+        <Text>Regalos hechos: {gift}/7</Text>
+        <Text>Prestamos hechos: {loans}/7</Text>
+        <Text>Intercambios hechos: {exchanges}/7</Text>
 
         <Button
               onPress={() => getRewards()}

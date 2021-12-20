@@ -4,9 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "cd app && react-scripts start && ../cd server && npx nodemon index.js",
+        "start": "cd web && react-scripts start && ../cd server && npx nodemon index.js",
+        "build": "cd web && react-scripts start && ../cd server && npx nodemon index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "heroku-postbuild": "npm install && cd app && npm install && cd ../server && npm install"
+        "heroku-postbuild": "npm install && cd web && npm install && cd ../server && npm install"
     },
     "author": "",
     "license": "ISC",
@@ -25,6 +26,10 @@
         "mongoose": "^6.0.13",
         "mongoose-double": "0.0.1",
         "mongoose-unique-validator": "^3.0.0",
-        "multer": "^1.4.3"
+        "multer": "^1.4.3",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-scripts": "5.0.0",
+        "web-vitals": "^2.1.2"
     }
 }

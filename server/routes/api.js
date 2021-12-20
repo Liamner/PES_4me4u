@@ -138,7 +138,7 @@ module.exports = function(app) {
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
 
-  router.route('/user/:id/products')
+  router.route('/user/:id/products/rewards')
     .get(userController.getRewards)
 
   router.route('/user/:id/points')
@@ -176,6 +176,9 @@ module.exports = function(app) {
 
   router.route('/user/:id/unfollow')
     .post(userController.unfollow)
+
+  router.route('/user/:id/follow')
+    .post(userController.follow)
 
   router.route('/user/:id/loseFollower')
     .post(userController.loseFollower)

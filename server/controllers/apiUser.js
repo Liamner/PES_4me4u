@@ -290,7 +290,7 @@ exports.getRewards = async (req, res) => {
     }
 
     user.ecoPoints = points + rewards;
-    user.save();
+    await user.save();
     res.status(200).json(user);
     
   } catch (error) {

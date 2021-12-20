@@ -8,8 +8,8 @@ require('dotenv').config()
 
 const app = express()
 var server = require('http').createServer(app);
-//var io = require("socket.io").listen(server);
-var io = require("socket.io");
+var io = require("socket.io")(server);
+//var io = require("socket.io");
 var nicknames = {};
  
 //const app = express()
@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
 */
 
 app.get('/', function(req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 // Connect to MongoDB
@@ -52,9 +52,9 @@ mongoose.connect(process.env.URLDB, {
 
 //server.listen(process.env.PORT, process.env.IP);
 
-io.Socket.on('connection', function(socket) {
+io.sockets.on('connection', function(socket) {
   socket.on('send message', function(data) {
-      io.Socket.emit('new message', {msg: data, nick: socket.nickname});
+      io.sockets.emit('new message', {msg: data, nick: socket.nickname});
   });
   
   socket.on('new user', function(data, callback) {

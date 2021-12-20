@@ -5,9 +5,9 @@
     "main": "index.js",
     "scripts": {
         "start": "cd web && react-scripts start && ../cd server && npx nodemon index.js",
-        "build": "cd web && react-scripts start && ../cd server && npx nodemon index.js",
+        "build": "cd web && react-scripts build && ../cd server && npx nodemon index.js",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "heroku-postbuild": "npm install && cd web && npm install && cd ../server && npm install"
+        "heroku-postbuild": "npm install && cd web && npm run build && cd ../server && npm install"
     },
     "author": "",
     "license": "ISC",

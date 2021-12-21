@@ -5,7 +5,7 @@
  */
 
 import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -36,6 +36,7 @@ import FollowedScreen from '../screens/FollowedScreen';
 import RateUser from '../screens/UserRate';
 
 //to incorporar
+import NavigationBar from '../components/NavigationBar';
 import SearchProduct from '../screens/SearchProduct';
 import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -63,8 +64,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: false}} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
+      <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: false }} />    
+      <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: false }} />    
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
@@ -109,15 +112,24 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
 
-      initialRouteName="ProductRead"
+      initialRouteName="FirstScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
+      name="FirstScreen"
+      component={FirstScreen}
+      options={{
+        title: 'First Screen',
+        tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
+      }
+    }
+      />
+      <BottomTab.Screen
         name="ProductRead"
         component={ProductRead}
         options={({ navigation }: RootTabScreenProps<'ProductRead'>) => ({
-          title: 'Ver Producto',
+          title: 'Ver Prodducto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Pressable
@@ -175,14 +187,6 @@ function BottomTabNavigator() {
         component={TestScreen}
         options={{
           title: 'Test Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="FirstScreen"
-        component={FirstScreen}
-        options={{
-          title: 'First Screen',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

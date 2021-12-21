@@ -17,7 +17,6 @@ import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 
 
-//export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
     var userid = route.params;
     //Datos de un usuario

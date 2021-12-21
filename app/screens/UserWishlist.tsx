@@ -6,6 +6,7 @@ import { StyleSheet, ScrollView, FlatList } from 'react-native';
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProductCard from '../components/ProductCard'
+import NavigationBar from '../components/NavigationBar'
 
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
   const [products, setProducts] = useState();
@@ -33,6 +34,7 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
           keyExtractor={item => item.id}
           />
       </ScrollView>
+      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
   );
 }

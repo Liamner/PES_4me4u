@@ -24,6 +24,8 @@ export type RootStackParamList = {
   CreateProduct: undefined;
   TestScreen: undefined;
   FirstScreen: undefined;
+  UserWishlist: undefined;
+  SearchProduct: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -49,6 +51,7 @@ export type RootTabParamList = {
   RateUser: undefined;
   SearchProduct: undefined;
   UserUpdate:undefined;
+  UserWishlist: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

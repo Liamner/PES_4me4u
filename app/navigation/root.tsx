@@ -19,6 +19,7 @@ import FollowersScreen from '../screens/FollowersScreen';
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
+import WishList from '../screens/UserWishlist';
 
 //to incorporar
 import NavigationBar from '../components/NavigationBar';
@@ -36,7 +37,11 @@ export default function RootNavigator() {
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: false }} />    
       <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: false }} /> 
-      <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />  
+      <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} /> 
+      <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: false }} /> 
+      <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SearchProduct" component={SearchProduct} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         

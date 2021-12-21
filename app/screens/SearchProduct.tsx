@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import NavigationBar from '../components/NavigationBar'
 
 export default function SearchProduct({ navigation }: RootTabScreenProps<'SearchProduct'>) {
 	
@@ -27,6 +28,7 @@ export default function SearchProduct({ navigation }: RootTabScreenProps<'Search
       <ScrollView>
         <Text>Resultados</Text>
       </ScrollView>
+      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
   );
 }
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    marginTop: 60
   },
   row: {
     flexDirection: 'row',

@@ -20,10 +20,9 @@ import FollowedScreen from '../screens/FollowedScreen';
 import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
 import WishList from '../screens/UserWishlist';
+import UserUpdate from '../screens/UserUpdate';
 
-//to incorporar
 import NavigationBar from '../components/NavigationBar';
-import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -42,6 +41,7 @@ export default function RootNavigator() {
       <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: false }} />
       <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SearchProduct" component={SearchProduct} options={{ headerShown: false }} />
+      <Stack.Screen name="UserUpdate" component={UserUpdate} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         

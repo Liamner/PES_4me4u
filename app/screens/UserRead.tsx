@@ -23,6 +23,7 @@ import axios from 'axios';
 
     //const [id, setid] = useState(user_id);
     const [email, setEmail] = useState('Cargando...');
+    const [name, setName]= useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
     const [postalCode, setPostalCode] = useState('Cargando...');
@@ -107,6 +108,7 @@ import axios from 'axios';
     //console.log(aux);
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
     setEmail(response.data.email);
+    setName(response.data.userId);
     if(aux !== session.id)
       setOwnProfile(false);
     console.log(ownProfile);
@@ -229,6 +231,22 @@ import axios from 'axios';
           }}>
             <Text style={styles.text2}> Mi perfil</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate("UserUpdate", session.id);
+                }}
+                style={{width: 150 }}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Editar Perfil
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
           </View>
           :
           <View style={{ alignItems: 'center',
@@ -272,9 +290,11 @@ import axios from 'axios';
           
         }
         <Text style={styles.text}>
+            Nombre: <Text style={styles.text2}>{name}</Text>
+        </Text>
+        <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
-
         <View style={styles.container2}>
           <Text style={styles.text} onPress={onPressFollowers}>
               Followers: <Text style={styles.text2}>{followersSize}</Text>

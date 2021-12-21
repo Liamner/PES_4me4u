@@ -8,15 +8,18 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { RootTabScreenProps } from '../types';
 import axios from 'axios';
 import GeocoderOsm from 'react-native-geocoder-osm';
+import NavigationBar from '../components/NavigationBar'
 
-export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'UserUpdate'>) {
+export default function UserUpdateScreen({ navigation, route}: RootTabScreenProps<'UserUpdate'>) {
+  const userid = route.params;
   const [name, onChangeName] = React.useState("");  
   const [email, onChangeEmail] = React.useState("");  
   const [image, setImage] = React.useState(null);
   const [latlon, setlatlon] = React.useState();
 
-  const url = 'https://app4me4u.herokuapp.com/api/user/61952ec8adeb9693da219fc2';
-  const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2'
+
+  const url = 'https://app4me4u.herokuapp.com/api/user/' + userid;
+  const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2' +userid;
 
   const ref = React.useRef();
 
@@ -155,6 +158,7 @@ export default function UserUpdateScreen({ navigation }: RootTabScreenProps<'Use
         />       
       </View>
       </ScrollView>
+      <NavigationBar  navigation={navigation} profile={true}/>
     </View>
   );
 }

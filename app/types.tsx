@@ -26,6 +26,7 @@ export type RootStackParamList = {
   FirstScreen: undefined;
   UserWishlist: undefined;
   SearchProduct: undefined;
+  UserUpdate:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

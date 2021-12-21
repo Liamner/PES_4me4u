@@ -13,6 +13,7 @@ import DeleteUser from '../components/DeleteUser';
 import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 
 
@@ -212,8 +213,8 @@ import axios from 'axios';
 
   return(
     <View style ={styles.container}>
-      <ScrollView>
-        
+      <ScrollView style={{marginBottom: 45}}>
+
         <Image
             style={styles.image}
             source={{
@@ -370,7 +371,6 @@ import axios from 'axios';
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
-        
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
@@ -380,6 +380,7 @@ import axios from 'axios';
         
 
       </ScrollView>
+      <NavigationBar  navigation={navigation} profile={true}/>
     </View>
   );
 
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   container2: {
     flex: 1,

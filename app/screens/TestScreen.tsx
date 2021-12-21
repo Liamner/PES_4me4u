@@ -9,6 +9,7 @@ import GiveButton from '../components/GiveButton';
 import LoanButton from '../components/LoanButton';
 import ExchangeButton from '../components/ExchangeButton';
 import LogOutButton from '../components/LogOutButton';
+import NavigationBar from'../components/NavigationBar';
 
 export default function TestScreen({ navigation }: RootTabScreenProps<'TestScreen'>) {
   const gatitos = { hola: "hola", adios: "adios"}
@@ -19,6 +20,7 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
     <LoanButton/>
     <ExchangeButton/>
     <LogOutButton navigation={navigation}/>
+    <NavigationBar navigation={navigation}/>
     </>
   );
 }

@@ -113,7 +113,7 @@ export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}:
 )
 
 }
-  console.log("hola")
+ // console.log("hola")
 const styles = StyleSheet.create({
     container: {
       width: '50%',

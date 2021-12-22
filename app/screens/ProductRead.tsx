@@ -155,9 +155,15 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     //console.log(userid)
   };
 
-  getProductInfo()
-  getUserInfo()
   
+  React.useEffect(() => {
+    getProductInfo();
+  }, []);  
+
+  
+  getUserInfo();
+
+
   return (
     <View style={styles.container}>
       <ScrollView>

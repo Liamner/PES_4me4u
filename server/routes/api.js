@@ -142,7 +142,8 @@ module.exports = function(app) {
     .post(authenticateJWT, userController.rateUser);
 
   router.route('/user/:id/products/rewards')
-    .get(userController.getRewards)
+    //.get(userController.getRewards)
+    .put(userController.getRewards)
 
   router.route('/user/:id/points')
     .get(userController.getUserPoints)

@@ -262,7 +262,9 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
+    console.log("antes del find")
     const user = await User.findById({ _id: req.params.id });
+    console.log("despues del find")
     var ngifts = user.gifts;
     var nloans = user.loans;
     var nexchanges = user.exchanges;

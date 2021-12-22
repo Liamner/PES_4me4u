@@ -262,19 +262,12 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
-    console.log("antes del find")
     const user = await User.findById({ _id: req.params.id });
-    console.log("despues del find , user" + user)
-    console.log("gifts: " + user.gifts)
     var ngifts = user.gifts;
-    console.log("loans: " + user.loans)
     var nloans = user.loans;
-    console.log("nexchanges: " + user.exchanges)
     var nexchanges = user.exchanges;
-    console.log("ecoPoints: " + user.ecoPoints)
     var points = user.ecoPoints;
     var rewards = 0;
-    console.log("primera fase")
     if(ngifts >= 3) {
       if(ngifts >=3) rewards = rewards + 10;
       if(ngifts >= 5) rewards = rewards + 50;
@@ -295,11 +288,8 @@ exports.getRewards = async (req, res) => {
       else if (nexchanges >= 7) rewards = rewards + 100;
       else if(nexchanges >= 10) rewards = rewards + 150;
     }
-    console.log("segunda fase")
     user.ecoPoints = points + rewards;
-    console.log("suma puntos")
     await user.save();
-    console.log("hace el save")
     res.status(200).json(user);
     
   } catch (error) {
@@ -311,9 +301,7 @@ exports.getUserRewards = async (req, res) => {
   try {
     const {type, estimatedPoints} = req.body;
 
-    //const id = req.params.id;
     let user = await User.findById({ _id: req.params.id });
-    //const user = await User.findById(id)
     console.log("Searching for user to get reward: " + user.name);
     
     if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;

@@ -142,7 +142,6 @@ module.exports = function(app) {
     .post(authenticateJWT, userController.rateUser);
 
   router.route('/user/:id/products/rewards')
-    //.get(userController.getRewards)
     .put(userController.getRewards)
 
   router.route('/user/:id/points')
@@ -158,7 +157,7 @@ module.exports = function(app) {
     .get(userController.levelManage)
 
   router.route('/user/:id/rewards')
-    .get(userController.getUserRewards)
+    .put(userController.getUserRewards)
 
   router.route('/user/:id/AddToWishlist')
     .post(userController.addToWishlist)

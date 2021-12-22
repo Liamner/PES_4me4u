@@ -31,6 +31,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
   const getProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
+    console.log("products"  + response.data)
     setProducts(response.data);
   };
 
@@ -84,10 +85,11 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     <Item title={item.title} />
   );
   function renderItem2(item:any) {
-    console.log(item)
-  //console.log(item.img[0].url)
-  // if(item.img === undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
-  // else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+    console.log("imaage: i "+ item.img)
+ // console.log(item.img[0].url)
+  if(item.img == undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
+//  else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+  else return( <Text style= {{backgroundColor: 'black'}}>HOLA</Text>)
 
   }
   return (
@@ -168,16 +170,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
        </ScrollView>
     <ScrollView style={{marginBottom: 30}}>
     <View style = {styles.fila}>                  
-      <ProductCard name ={"Olla a presion"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "regalar", "prestar"]}/>
-      <ProductCard name ={"paraguas de viento"}  guardado ={false} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["exchange", "loan", "prestar"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "give", "loan"]}/>
+    <SafeAreaView>
+        <FlatList
+          data={products}
+          renderItem={renderItem2}
+          keyExtractor={item => item.index}
+          numColumns={2}
+        />
+            </SafeAreaView>
       </View>  
     </ScrollView>    
     <NavigationBar  navigation={navigation} casa={true}/>

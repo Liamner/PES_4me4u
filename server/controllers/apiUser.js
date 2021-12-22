@@ -268,6 +268,7 @@ exports.getRewards = async (req, res) => {
     var nexchanges = user.exchanges;
     var points = user.ecoPoints;
     var rewards = 0;
+    console.log("primera fase")
     if(ngifts >= 3) {
       if(ngifts >=3) rewards = rewards + 10;
       if(ngifts >= 5) rewards = rewards + 50;
@@ -288,9 +289,11 @@ exports.getRewards = async (req, res) => {
       else if (nexchanges >= 7) rewards = rewards + 100;
       else if(nexchanges >= 10) rewards = rewards + 150;
     }
-
+    console.log("segunda fase")
     user.ecoPoints = points + rewards;
+    console.log("suma puntos")
     await user.save();
+    console.log("hace el save")
     res.status(200).json(user);
     
   } catch (error) {

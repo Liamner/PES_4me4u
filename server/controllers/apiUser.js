@@ -264,10 +264,14 @@ exports.getRewards = async (req, res) => {
   try {
     console.log("antes del find")
     const user = await User.findById({ _id: req.params.id });
-    console.log("despues del find")
+    console.log("despues del find , user" + user)
+    console.log("gifts: " + user.gifts)
     var ngifts = user.gifts;
+    console.log("loans: " + user.loans)
     var nloans = user.loans;
+    console.log("nexchanges: " + user.exchanges)
     var nexchanges = user.exchanges;
+    console.log("ecoPoints: " + user.ecoPoints)
     var points = user.ecoPoints;
     var rewards = 0;
     console.log("primera fase")

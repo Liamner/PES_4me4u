@@ -21,7 +21,7 @@ import axios from 'axios';
     
 
     const onPressUser = (id) => {
-       navigation.navigate("ViewUser", {id});
+       navigation.navigate("UserRead", id);
       };
  
 
@@ -35,7 +35,7 @@ import axios from 'axios';
           data = {list}
           renderItem={({ item }) => (
 
-              <Text style={styles.item}   onPress={() => onPressUser(item.id)}>
+              <Text style={styles.item}   onPress={() => onPressUser(item._id)}>
                 {item.email}
               </Text>
           )}

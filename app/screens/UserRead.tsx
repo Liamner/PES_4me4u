@@ -46,7 +46,7 @@ import axios from 'axios';
 
   const getData = async () => {
     const sess = await retrieveSession();
-    console.log(sess)
+      console.log(sess)
       setSession(sess);
     }
 
@@ -98,15 +98,15 @@ import axios from 'axios';
 
   const getUserInfo = async () => {
     let aux
-    if (userid != null || userid == "") {
+    if (userid != null || userid === "") {
       aux = userid
     }
     else {
       aux = session.id
     }
+    //console.log(session.id);
+    //console.log(aux);
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
-//    6186d4d5f501eb82cb4b2c13
-    //Datos de usuario
     setEmail(response.data.email);
     if(aux !== session.id)
       setOwnProfile(false);
@@ -205,9 +205,11 @@ import axios from 'axios';
   
   React.useEffect(() => {
     getData();
-    
+    getUserInfo();
   }, []);  
-  getUserInfo();
+
+  
+ 
 
   return(
     <View style ={styles.container}>
@@ -222,7 +224,12 @@ import axios from 'axios';
         {ownProfile? 
           <View style={{ alignItems: 'center',
           justifyContent: 'center'}}>
+            <TouchableOpacity
+            onPress={() => {
+              getUserInfo();
+          }}>
             <Text style={styles.text2}> Mi perfil</Text>
+            </TouchableOpacity>
           </View>
           :
           <View style={{ alignItems: 'center',

@@ -22,6 +22,8 @@ export type RootStackParamList = {
   CreateProduct: undefined;
   TestScreen: undefined;
   FirstScreen: undefined;
+  FollowersScreen: undefined;
+  FollowedScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

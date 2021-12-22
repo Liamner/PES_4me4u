@@ -63,7 +63,7 @@ module.exports = function(app) {
 
   // Delete product with id = id
   router.route('/product/delete/:id')
-    .delete(/*authenticateJWT, */productController.deleteProduct);
+    .delete(authenticateJWT, productController.deleteProduct);
 
   // Create new category
   router.route('/category/create/')

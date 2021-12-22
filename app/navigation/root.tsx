@@ -37,6 +37,7 @@ export default function RootNavigator() {
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: false }} />    
       <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: false }} /> 
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} /> 
+      <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: false }} /> 
       <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: false }} /> 
       <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: false }} />
       <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }} />

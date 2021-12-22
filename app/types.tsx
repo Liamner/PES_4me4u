@@ -18,6 +18,7 @@ export type RootStackParamList = {
   Modal: undefined;
   NotFound: undefined;
   UserRead: undefined;
+  OtherUserRead: undefined;
   ViewUser: undefined;
   FollowersScreen: undefined;
   FollowedScreen: undefined;

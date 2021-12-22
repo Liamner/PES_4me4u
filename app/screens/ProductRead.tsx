@@ -198,7 +198,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         }
         
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}  onPress={() => navigation.navigate("UserRead", userid)}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText}  onPress={() => navigation.navigate("OtherUserRead", userid)}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}

@@ -42,6 +42,7 @@ export default function RootNavigator() {
       <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SearchProduct" component={SearchProduct} options={{ headerShown: false }} />
       <Stack.Screen name="UserUpdate" component={UserUpdate} options={{ headerShown: false }} />
+      <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: false }} /> 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         

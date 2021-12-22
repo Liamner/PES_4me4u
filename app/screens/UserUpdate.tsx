@@ -19,7 +19,7 @@ export default function UserUpdateScreen({ navigation, route}: RootTabScreenProp
 
 
   const url = 'https://app4me4u.herokuapp.com/api/user/' + userid;
-  const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2' +userid;
+  const url2 = 'https://app4me4u.herokuapp.com/api/user/update/61952ec8adeb9693da219fc2' + userid;
 
   const ref = React.useRef();
 

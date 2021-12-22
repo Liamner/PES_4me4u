@@ -235,7 +235,7 @@ import axios from 'axios';
                 onPress={() => {
                     navigation.navigate("UserUpdate", session.id);
                 }}
-                style={{width: 150 }}
+                style={{width: 150,  marginTop: 5}}
               >
                 <LinearGradient
                     colors={['#a2cff0', '#ADE8F4']}

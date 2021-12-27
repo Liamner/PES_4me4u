@@ -8,7 +8,6 @@ import { RootTabScreenProps } from '../types';
 
 export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>) {
   const [chats, setChats] = useState();
-   const id = '61c9bf59a5563eb22f9e84c3'
 
   const getConversation = async () => {
     const config = {

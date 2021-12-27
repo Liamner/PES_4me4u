@@ -30,7 +30,7 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'ChatLis
         <FlatList
           data={chats}
           renderItem={({ item }) => (
-            <Pressable onPress={()=>navigation.navigate('ChatView')}>
+            <Pressable onPress={()=>navigation.navigate('ChatView', item._id)}>
                 <><Text>{item._id}</Text><Text>{item.members[0]}</Text><Text>{item.members[1]}</Text><Text>----</Text></>
             </Pressable>
           )}

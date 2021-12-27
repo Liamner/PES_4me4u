@@ -24,6 +24,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
     <View style={styles.container}>
       <View style={styles.row}>
         <TextInput
+          style={{width: '80%'}}
           onChangeText={onChangeText}
           value={text}
           placeholder="Buscar..."
@@ -60,14 +61,9 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-  },
-  flex: {
-    flex: 1,
   },
   row: {
     flexDirection: 'row',
-    alignSelf: 'center',
     marginHorizontal: '10%',
     marginVertical: 5,
   },

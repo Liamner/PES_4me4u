@@ -74,14 +74,16 @@ let usuarioSchema = new Schema({
         type: Number,
         default: '0'
     },
-    followers: {
-        type: [mongoose.Schema.usuarioSchema],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
         required: false
-    },
-    followed: {
-        type: [mongoose.Schema.usuarioSchema],
+    }],
+    followed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Usuario",
         required: false
-    },
+    }],
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false

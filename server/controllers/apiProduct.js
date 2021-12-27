@@ -6,7 +6,6 @@ const Image = require('../models/image.js');
 const User = require('../models/user.js');
 const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
-//const { readCategory } = require('./apiCategory.js');
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -17,8 +16,6 @@ exports.readAllProducts =  async (req, res) => {
     const product = await Product.find().populate('img');
 
     res.status(200).json(product);
-
-    console.log(product);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
@@ -81,7 +78,6 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  //console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -106,11 +102,8 @@ exports.createProduct = async (req, res) => {
     }
   } 
  
-  try {
-    console.log("pinche");
-    const category = await Category.findOne({name: req.body.categories});
-    console.log(category);
-    console.log("hola");
+  try {   
+  const category = await Category.findOne({name: req.body.categories});
   if (category == null) res.status(404).json({error:"category not found"});
 
   const type = await Type.findOne({name: req.body.exchange});

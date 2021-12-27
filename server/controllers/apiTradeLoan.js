@@ -8,8 +8,7 @@ exports.readAllTradeLoan = async (req, res) => {
       const tradeLoan = await TradeLoan.find();
   
       res.status(200).json(tradeLoan);
-      
-      console.log(tradeLoan);
+
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);

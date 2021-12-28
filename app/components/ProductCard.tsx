@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Alert, Button, StyleSheet, View , Text, Image, TouchableOpacity} from "react-native";
+import { useState } from 'react';
 
 import axios from 'axios'
 import { not } from "react-native-reanimated";
@@ -8,23 +9,90 @@ import { functionExpression } from "@babel/types";
 
 type CardProps = {
   id: string,
-  uid: string,
-  name: string,
-  guardado: boolean,
-  imageUri?: string,
-  arrayTratos: string[],
+  uid: string
+  // name: string,
+  // guardado: boolean,
+  // imageUri?: string,
+  // arrayTratos: string[],
 }
 
 
-export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
+export function ProductCard  ({ id, uid/*, name, guardado, imageUri, arrayTratos*/}: CardProps) {
+
+
   var prestar = false;
   var intercambiar = true;
   var dar = false;
-  arrayTratos.forEach(element => {
-    if(element == "exchange") intercambiar = true;
-    if(element == "present") dar = true;
-    if(element == "loan") prestar = true
-  });
+
+//  var name = 'NNN';
+  var guardado = false;
+ // var imageUri: String;
+ //var arrayTratos: String[];
+
+  const [name, setName] = useState('NNN');
+  const [imageUri, setImageUri] = useState('https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png');
+  const [arrayTratos, setArrayTratos] = useState([]);
+
+
+
+  const APIGetInfoProduct = () =>{
+    let response = axios.get('https://app4me4u.herokuapp.com/api/product/'+ id)
+    .then(response => {
+            //console.log(response);
+            console.log("EXITO!!! " + id);
+
+
+            // name = response.data.name;
+            // imageUri = response.data.image[0].url;
+            // arrayTratos = response.data.exchange;
+
+            setName(response.data.name);
+            setImageUri(response.data.img[0].url);
+     
+            setArrayTratos(response.data.exchange);
+
+            //present
+            //provide
+            //provide
+
+            console.log( 'COSA ' + imageUri  );
+
+            arrayTratos.forEach(element => {
+              if(element == "exchange"){
+                intercambiar = true;
+                console.log(id + ' exchange');
+              } 
+              if(element == "present"){
+                dar = true;
+                console.log(id + ' present');
+
+              } 
+              if(element == "provide"){
+                prestar = true
+                console.log(id + ' provide');
+
+              } 
+
+
+            });
+            console.log(id + ' AAA ' + arrayTratos.length);
+            console.log('_________________________________________');
+            console.log('');
+
+        })
+    .catch(function (error) {
+//      console.log("FALLOOOOO!!! " + id);
+      //console.log(error);
+    });
+
+
+
+};
+
+
+
+
+
   const guardarProducto = async () => {   
     await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
@@ -46,8 +114,18 @@ export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}:
         console.log(error);
       }); 
   }
+
+  React.useEffect(() => {
+    APIGetInfoProduct();
+  }, []);  
+
+
   return (
+    
     <>
+
+
+
   <View style={styles.container}>            
   <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
   <View

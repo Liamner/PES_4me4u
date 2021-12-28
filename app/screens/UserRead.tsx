@@ -7,6 +7,9 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+
+import ProductCard from '../components/ProductCard';
+
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
 import DeleteUser from '../components/DeleteUser';
@@ -35,6 +38,7 @@ import axios from 'axios';
       user:"",
       token:""
     });
+    
     const [ownProfile, setOwnProfile] = useState(true);
     const [following, setFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
@@ -61,25 +65,17 @@ import axios from 'axios';
     const longitude = 125.75432
 */
 
-    const [products, setproducts] = React.useState([
-      {
-        id: '61768a008b251b960db42a49',
-        name: 'HarryPotter',
-        state: 'available'
-      },
-      {
-        id: "2",
-        name: "Coche",
-        state: "reserved"
-      },
-      {
-        id: "3",
-        name: "Libro",
-        state: "provide"
-      }
-    ]);
+    const [products, setProducts] = React.useState([]);
 
-
+    /*
+    const [productInfo, setProductInfo] = React.useState({
+      name: "",
+      guardado: false,
+      arrayTratos: [],
+      imageUri: "",
+      id: "",
+      uid: ""
+    });*/
 
     const userImage: string = 'https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png'
     const [currentPage, setCurrentPage] = useState(1);
@@ -105,7 +101,9 @@ import axios from 'axios';
     }
     //console.log(session.id);
     //console.log(aux);
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
+//    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61bb8086b748e8cb515b798f");
+
     setEmail(response.data.email);
     if(aux !== session.id)
       setOwnProfile(false);
@@ -127,13 +125,19 @@ import axios from 'axios';
     if(response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
     
-   setFollowers(response.data.followers);
+    setFollowers(response.data.followers);
     setFollowed(response.data.followed);
 
     setFollowersSize(response.data.followers.length);
     setFollowedSize(response.data.followed.length);
-    //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+
+    setProducts(response.data.products);
+
+    console.log('products response: ' + response.data.products.length);
+    console.log('products: ' + products.length);
+
+
+    
 
 /*    
    //en caso de tener datos desconocidos
@@ -141,7 +145,16 @@ import axios from 'axios';
     else setXXX(response.data.XXX);
     */
 
+  };
 
+  async function getProductInfo(){
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61bb8086b748e8cb515b798f" + '/products');
+
+
+    setProducts(response.data);
+    console.log('products response2: ' + response.data.length);
+    console.log('products: ' + products.length);
   };
 
   async function followUser() {
@@ -297,9 +310,7 @@ import axios from 'axios';
             Puntuación: <Text style={styles.text2}>{score}</Text> ⭐
         </Text>
 
-        <Text style={styles.text}>
-            Localización: <Text style={styles.text2}>{location}</Text>
-        </Text>
+
 
 
         <CustomMap
@@ -319,14 +330,18 @@ import axios from 'axios';
           ></CustomMarker>
         </CustomMap>
 
-        <Text style={styles.text}>
-            Código postal: <Text style={styles.text2}>{postalCode}</Text>
-        </Text>
 
 
 
 
-        <Text style={styles.titleText}>Tus productos</Text>
+        <Text style={styles.titleText}>Productos</Text>
+
+
+
+{//        <ProductCard "61ba2aebbe1ccba43df8f3c1"> </ProductCard>
+ //         <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+  }
+
 
         <FlatList
           numColumns = {1}
@@ -334,42 +349,32 @@ import axios from 'axios';
           renderItem={({ item }) => ( 
 
             <>
+{/*
+              <ProductCard name={item.name} 
+                  guardado={false} 
+                  arrayTratos={item.exchange} 
+//                  imageUri={item.img[0].url}
+                  id={item.id} 
+                  uid={'61bb8086b748e8cb515b798f'}
+              />
+*/}
+               <ProductCard 
+                  id={item} 
+                  uid={'61bb8086b748e8cb515b798f'}
+              />
+              {// ownProfile?  BOTON-DE-BORRAR: NADA 
+              }
+              <Text style={styles.productText}> {item} GATO</Text>
 
-            <Text style={styles.productText}>
-              <Text style={styles.deleteButton} onPress={() => Alert.alert(
-                    "BORRAR",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}>Borrar
-              </Text>
-              <Text>   </Text>
-              
-              <Text onPress={() => Alert.alert(
-                    "MODIFICAR ESTADO",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}>Estado: {item.state}</Text>
-              <Text>   </Text>
-              <Text onPress={() => Alert.alert(
-                    "NAVEGACION A VER PRODUCTO",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}
-              >{item.name}</Text>
-            </Text>
+
             </>
-
-
-
-
-
-
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
+
         
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,

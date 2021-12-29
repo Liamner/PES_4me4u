@@ -1,10 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
 require('./config/config.js');
-require('dotenv').config()
+require('dotenv').config();
+const io = require('socket.io')(3000);
  
 const app = express()
 const path = require('path');
@@ -16,17 +16,51 @@ app.use(bodyParser.json())
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
-//app.use(cors());
+app.use(cors());
 
 
-const CONNECTION_URL =
-  "mongodb+srv://admin:1234@4me4u.4lr2m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// Sockets
 
+io.on('connection', (socket) => {
+  // Connect User
+  console.log('user connected')
+  // take userId and socketId from user
+  // necesitamos id del User
+  socket.on('newUser', userId => {
+      addUser(userId, socket.id);
+      io.emit('getUsers', users)
+  });
 
+  // Send message
+  socket.on('sendMessage',({senderId, reciverId, text}) => {
+      const user = getUser(reciverId);
+      io.to(user.socket).emit('getMessage', {
+          senderId, 
+          text
+      })
+  })
 
-app.get('/', function(req, res) {
-  res.sendFile(renderHTML);
+  // Disconnect user
+  socket.on('disconnect', ()=> {
+      console.log('User disconnected')
+      removeUser(socket.id)
+      io.emit('getUsers', users)
+  })
 })
+
+let users = [];
+
+const addUser = (userId, socketId) => {
+    !user.some((user)=> user.userId === userId) && user.push({userId, socketId})
+}
+
+const removeUser = (socketId) => {
+    users= user.filter(user=>user.socketId !== socketId)
+}
+
+const getUser = (userId) => {
+    return getUserRewards.find(user=>user.userId === userId)
+}
 
 // Connect to MongoDB
 

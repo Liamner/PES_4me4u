@@ -74,14 +74,16 @@ let usuarioSchema = new Schema({
         type: Number,
         default: '0'
     },
-    followers: {
-        type: [mongoose.Schema.usuarioSchema],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
         required: false
-    },
-    followed: {
-        type: [mongoose.Schema.usuarioSchema],
+    }],
+    followed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Usuario",
         required: false
-    },
+    }],
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false
@@ -89,7 +91,29 @@ let usuarioSchema = new Schema({
     recentlyViewed: {
         type: [mongoose.Schema.ProductSchema],
         required: false
-    }
+    },
+    commentsRecived: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    commentsDone: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    rateScore: {
+        type: Number,
+        default: 0
+    },
+    totalRateScore: {
+        type: Number,
+        default: 0
+    },
+    tradesRated: {
+        type: Number,
+        default: 0
+    },
 });
     
 

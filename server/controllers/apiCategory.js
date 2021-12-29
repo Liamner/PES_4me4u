@@ -6,8 +6,6 @@ exports.readAllCategories = async (req, res) => {
       const category = await Category.find();
   
       res.status(200).json(category);
-      
-      console.log(category);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);
@@ -64,69 +62,63 @@ exports.readAllCategories = async (req, res) => {
 }
 
 exports.getProductCategory = async (req, res) => {
-  
-  console.log('Reading category: ' + req.body.category);
   const category = req.body.category;
-  let exchangeType;
+  let exchangeType = null;
   if (req.body.exchange != null) exchangeType = req.body.exchange;
-  else exchangeType = null;
 
-  console.log(exchangeType)
+  let productName = null;
+  if (req.body.productName != null) productName = req.body.productName;
+
   try {
-    let result = [];
-    if (category != null && exchangeType != null) {
-      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
-      await Category.find({name: category, exchange : exchangeType}, {products: 1}, async (erro, products) => {
-        console.log(products[0].products[0])
-       
-        /*if (exchangeType != null) {
-          for (let i = 0; i < products[0].products.length; i++) {
-            if (products[0].products[i].exchange[0].name == exchangeType) {
-              console.log('igual')
-              result.push(products[0].products[i])
-            }
-            //console.log(products[0].products[i].exchange[0].name)
-          }
-          res.status(200).json(result);
+    if (productName != null && exchangeType != null && category != null) {
+      await Product.find({name: {$regex : productName}, categories: category, exchange : exchangeType}, (error, products) => {
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (category != null && exchangeType != null) {
+      await Product.find({exchange : exchangeType, categories: category}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
         }
-        else {
-          res.status(200).json(products);
-        }*/
-        res.status(200).json(products[0]);
-      }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (productName != null && category != null) {
+      await Product.find({name: {$regex : productName}, categories: category}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (productName != null && exchangeType != null) {
+      await Product.find({name: {$regex : productName}, exchange : exchangeType}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
+        res.status(200).json(products);
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
+    else if (productName != null) {
+        const products = await Product.find({name: {$regex : productName}})
+        res.status(200).json(products);
     }
     else if (category != null) {
-      await Category.find({name: category}, {products: 1}, async (erro, products) => {
-        console.log(products[0].products)
-       
-        /*if (exchangeType != null) {
-          for (let i = 0; i < products[0].products.length; i++) {
-            if (products[0].products[i].exchange[0].name == exchangeType) {
-              console.log('igual')
-              result.push(products[0].products[i])
-            }
-            //console.log(products[0].products[i].exchange[0].name)
-          }
-          res.status(200).json(result);
+      await Category.find({name: category}, {products: 1}, async (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
         }
-        else {
-          res.status(200).json(products);
-        }*/
-        res.status(200).json(products[0]);
-      }).populate({path: 'products', populate: {path: 'exchange', select: { 'name': 1}}, populate: {path: 'img', select: { 'url': 1}} }).clone()
+        res.status(200).json(products[0].products);
+      }).populate({path: 'products', populate: {path: 'img', select: { 'url': 1}} }).clone()
     }
-    else if (exchangeType != null) {
-      // Traducir exchange por facilidad
-      if (exchangeType == 'present') exchangeType = '6193a583e47e769eeaa7a978';
-      else if (exchangeType == 'provide') exchangeType = '61abaf87aa37fa1150ceff62';
-
-      
+    else if (exchangeType != null) {      
       await Product.find({exchange: exchangeType} ,(error, products) => { 
-        console.log(products)  
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
         res.status(200).json(products);
-      }).populate({path: 'exchange' }).populate({path: 'img', select: { 'url': 1}}).clone()
-    }   
+      }).populate({path: 'img', select: { 'url': 1}}).clone()
+    }
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

@@ -9,7 +9,6 @@ exports.readAllTradeGive = async (req, res) => {
   
       res.status(200).json(tradeGive);
       
-      console.log(tradeGive);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);

@@ -9,7 +9,6 @@ exports.readAllTradeExchange = async (req, res) => {
   
       res.status(200).json(tradeExchange);
       
-      console.log(tradeExchange);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);
@@ -60,7 +59,7 @@ exports.readAllTradeExchange = async (req, res) => {
       --> cal assignar points, que sigui obligatori i que al acabar el creat faci les sumes/restes corresponents als usuaris (sum_points i checkEnoguthPoints)
       */
   
-        if (userOfering != null && userTaking != null && productOfering != null && prodyctTaking != null && req.body.userOfering != req.body.userTaking) {
+        if (userOfering != null && userTaking != null && productOfering != null && productTaking  != null && req.body.userOfering != req.body.userTaking) {
           const newProduct = await tradeExchange.save();
           res.status(201).json(tradeExchange);  
      }

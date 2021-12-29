@@ -8,6 +8,7 @@ const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
 const conversationController = require ('../controllers/apiConvesration.js')
+const messageController = require ('../controllers/apiMessages.js')
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -63,7 +64,7 @@ module.exports = function(app) {
 
   // Delete product with id = id
   router.route('/product/delete/:id')
-    .delete(/*authenticateJWT, */productController.deleteProduct);
+    .delete(authenticateJWT, productController.deleteProduct);
 
   // Create new category
   router.route('/category/create/')
@@ -137,9 +138,12 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+  
+  router.route('/user/:userId/rate')
+    .post(authenticateJWT, userController.rateUser);
 
-  router.route('/user/:id/products')
-    .get(userController.getRewards)
+  router.route('/user/:id/products/rewards')
+    .put(userController.getRewards)
 
   router.route('/user/:id/points')
     .get(userController.getUserPoints)
@@ -154,7 +158,7 @@ module.exports = function(app) {
     .get(userController.levelManage)
 
   router.route('/user/:id/rewards')
-    .get(userController.getUserRewards)
+    .put(userController.getUserRewards)
 
   router.route('/user/:id/AddToWishlist')
     .post(userController.addToWishlist)
@@ -162,17 +166,14 @@ module.exports = function(app) {
     router.route('/user/:id/DeleteFromWishlist')
     .post(userController.deleteFromWishlist)
   
-  router.route('/user/:id/AddFollowed')
-    .post(userController.addUserFollowed)
-  
-  router.route('/user/:id/AddFollower')
-    .post(userController.addUserFollower)
-  
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
 
   router.route('/user/:id/followers')
     .get(userController.getUserFollowers)
+
+  router.route('/user/:id/follow')
+    .post(userController.follow)
 
   router.route('/user/:id/unfollow')
     .post(userController.unfollow)
@@ -185,6 +186,9 @@ module.exports = function(app) {
 
   router.route('/user/:id/addProductsRecentlyViewed')
     .post(userController.updateRecentlyViewed)
+
+  
+
     
   // ======================
   // ---- Trade Routes ----
@@ -260,18 +264,19 @@ module.exports = function(app) {
   router.route('/image/:productId')
     .get(imageController.getProductImages)
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
-    .delete(upload.array('img',6),/*authenticateJWT, */ imageController.deleteImages)
+  router.route('/product/:productId/image/:imageId')
+    .delete(/*authenticateJWT, */ imageController.deleteImages)
     //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 
 
- /*router.route('/comments')
+  router.route('/comments')
     .get(userController.getAllComments)
   router.route('/comments/done')
     .get(authenticateJWT, userController.getMyCommentsDone)
   router.route('/comments/recived')
-    .get(authenticateJWT, userController.getMyCommentsRecived)*/
+    .get(authenticateJWT, userController.getMyCommentsRecived)
 
     // CONVERSATION
   router.route('/conversation')
@@ -279,6 +284,15 @@ module.exports = function(app) {
     .post(authenticateJWT, conversationController.newConversation)
 
   router.route('/conversation/user')
-    .get(authenticateJWT, conversationController.getConversations)
+    // get my conversations
+    .get(authenticateJWT, conversationController.getMyConversations)
+
+
+  router.route('/message')
+    .get(messageController.getMessages)
+    .post(authenticateJWT, messageController.sendMessage)
+  
+  router.route('/conversation/:conversationId')
+    .get(authenticateJWT, messageController.getConversationMessages)
   return router;
 }

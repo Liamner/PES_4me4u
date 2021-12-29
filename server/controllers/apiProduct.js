@@ -6,7 +6,6 @@ const Image = require('../models/image.js');
 const User = require('../models/user.js');
 const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
-//const { readCategory } = require('./apiCategory.js');
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -17,8 +16,6 @@ exports.readAllProducts =  async (req, res) => {
     const product = await Product.find().populate('img');
 
     res.status(200).json(product);
-
-    console.log(product);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
@@ -81,7 +78,6 @@ exports.readProductsId = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   const product = new Product();
-  console.log(req.body.categories)
   product.name = req.body.name;
   product.categories = req.body.categories  
   product.description = req.body.description;
@@ -106,11 +102,11 @@ exports.createProduct = async (req, res) => {
     }
   } 
  
-  try {
-    const category = await Category.findById({_id:req.body.categories});
+  try {   
+  const category = await Category.findOne({name: req.body.categories});
   if (category == null) res.status(404).json({error:"category not found"});
 
-  const type = await Type.findById({_id:req.body.exchange});
+  const type = await Type.findOne({name: req.body.exchange});
   if (type == null) res.status(404).json({error:"type not found"});
     
   if (category != null && type != null) {
@@ -124,12 +120,19 @@ exports.createProduct = async (req, res) => {
                               }
                             });
 
-    const categories = await Category.findByIdAndUpdate(
-                            { _id: ObjectId(req.body.categories) }, 
+    const categories = await Category.findOneAndUpdate(
+                            { name: req.body.categories }, 
                                 {$push : {
                                   products: newProduct
                                 }
                               });
+
+    const types = await Type.findOneAndUpdate(
+                                { name: req.body.exchange }, 
+                                    {$push : {
+                                      products: newProduct
+                                    }
+                                  });
                               
     res.status(201).json(product);}
 
@@ -235,9 +238,7 @@ exports.deleteProduct = async (req, res) => {
         res.status(401).json({error: "Do not have permission"})
         return;
       }*/
-        console.log("before")
-        const images = [];
-        images.push(product.img)    
+        
         for (let i = 0; i < product.img.length; ++i) {  
           const res = await Image.findByIdAndDelete({_id: product.img[i]});
           await cloudinary.uploader.destroy(res.public_id);

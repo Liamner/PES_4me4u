@@ -299,14 +299,31 @@ exports.getRewards = async (req, res) => {
 
 exports.getUserRewards = async (req, res) => {
   try {
-    const {type, estimatedPoints} = req.body;
+    let {type, estimatedPoints} = req.body;
 
     let user = await User.findById({ _id: req.params.id });
     console.log("Searching for user to get reward: " + user.name);
-    
-    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
-    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
-    if (type != 'exchange') user.ecoPoints += 15;
+    let eco = user.ecoPoints;
+
+    if (type == 'gift'){
+      if(estimatedPoints >= 1 && estimatedPoints <= 100) {
+        user.ecoPoints = eco + estimatedPoints;
+      }
+      else {
+        res.status(400).json({error: 'Estimated points are too high'})
+      }
+    }
+    else if (type == 'loan') {
+      if(estimatedPoints >= 1 && estimatedPoints <= 15) {
+        user.ecoPoints = eco + estimatedPoints;
+      }
+     else {
+      res.status(400).json({error: 'Estimated points are too high'})
+      }
+    }
+    else {
+      user.ecoPoints = eco + 15;
+    }
 
     await user.save();
     res.status(201).json(user);

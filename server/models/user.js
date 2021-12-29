@@ -43,7 +43,7 @@ let usuarioSchema = new Schema({
         default: '1',
     },
     ecoPoints: {
-        type: String,
+        type: Number,
         default: '10',
     },
     score: {

@@ -27,12 +27,14 @@ io.on('connection', (socket) => {
   // take userId and socketId from user
   // necesitamos id del User
   socket.on('newUser', userId => {
-      addUser(userId, socket.id);
-      io.emit('getUsers', users)
+        console.log('New user: ' + userId)
+        addUser(userId, socket.id);
+        io.emit('getUsers', users)
   });
 
   // Send message
   socket.on('sendMessage',({senderId, reciverId, text}) => {
+    console.log('New Message: ' + text)
       const user = getUser(reciverId);
       io.to(user.socket).emit('getMessage', {
           senderId, 

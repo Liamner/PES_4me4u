@@ -32,6 +32,18 @@ exports.readUser = async (req, res) => {
   }
 };
 
+exports.readUserByName = async (req, res) => {
+  try {
+    const user = await User.find({ userId: {$regex: req.params.userId} });
+    console.log("Reading users: " + req.params.userId);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
 exports.readUsersId = async (req, res) => {
   try {
     const user = await User.find({}, {_id: 1 });

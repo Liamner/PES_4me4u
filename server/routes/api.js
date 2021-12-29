@@ -7,6 +7,7 @@ const typeController = require('../controllers/apiType.js');
 const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
+const reportController = require('../controllers/apiReport.js');
 const conversationController = require ('../controllers/apiConvesration.js')
 const jwt = require('jsonwebtoken')
 
@@ -134,6 +135,9 @@ module.exports = function(app) {
 
   router.route('/user/:id')
     .get(userController.readUser);
+
+  router.route('/user/name/:userId')
+    .get(userController.readUserByName);
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
@@ -237,6 +241,38 @@ module.exports = function(app) {
   // Delete tradeLoan with id = id
   router.route('/tradeLoan/delete/:id')
     .delete(tradeLoanController.deleteTradeLoan);
+
+  // ======================
+  // ---- Report Routes ---
+  // ======================
+
+  // Create new tradeGive
+  router.route('/report/create/')
+    .post(reportController.createReport);
+
+  // Read reports from userReported = userReported
+    router.route('/report/:userReported')
+    .get(reportController.readUserReports);
+  
+  // Read all reports
+  router.route('/report/')
+    .get(reportController.readAllReports);
+  
+     // Read no solved reports from userReported = userReported
+  router.route('/report/nosolved/:userReported')
+  .get(reportController.readNoSolvedUserReports);
+
+  // Close Report with id = id
+  router.route('/report/close/:id')
+    .put(reportController.closeReport);
+
+  // Update Report with id = id
+    router.route('/report/update/:id')
+    .put(reportController.updateReport);
+  
+  // Delete Report with id = id
+  router.route('/report/delete/:id')
+    .delete(reportController.deleteReport);
 
   // ======================
   // ---- Image Routes ----

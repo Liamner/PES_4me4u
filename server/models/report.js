@@ -10,8 +10,7 @@ const ReportSchema = new mongoose.Schema({
     userReported: {     
         type: mongoose.Schema.Types.ObjectId,
         ref:'Usuario',
-        required: true 
-        
+        required: true   
     },
     description: {
         type: 'String',
@@ -28,6 +27,11 @@ const ReportSchema = new mongoose.Schema({
         ref: "Product",
         required: false
     },
+
+    solved: {
+        type: Boolean,
+        default: false
+    }
 });
 
 module.exports = mongoose.model('Report', ReportSchema);

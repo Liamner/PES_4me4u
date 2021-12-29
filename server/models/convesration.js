@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 
 const MessageSchema = new mongoose.Schema(
     {
-        members: {type: Array}
+        members: {type: Array},
+        productId: {type: String}
     },
     {timestamps: true}
 )

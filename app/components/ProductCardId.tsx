@@ -17,7 +17,7 @@ type CardProps = {
 }
 
 
-export function ProductCard  ({ id, uid/*, name, guardado, imageUri, arrayTratos*/}: CardProps) {
+export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTratos*/}: CardProps) {
 
 
   var prestar = false;
@@ -239,4 +239,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default ProductCard;
+export default ProductCardId;

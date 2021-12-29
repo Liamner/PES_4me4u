@@ -26,7 +26,7 @@ import EditProduct from '../screens/ProductEdit';
 import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
-import ProductCard from '../screens/ProductCardScreen';
+import ProductCardId from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
 import CreateProduct from '../screens/ProductCreate';
@@ -36,6 +36,7 @@ import FollowedScreen from '../screens/FollowedScreen';
 import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
 
+import UserWishlist from '../screens/UserWishlist';
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -145,8 +146,8 @@ function BottomTabNavigator() {
     
 {/*   TODO :  1descomentar */}
       <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
+        name="ProductCardId"
+        component={ProductCardId}
         options={{
           title: 'Product Card',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
@@ -218,6 +219,15 @@ function BottomTabNavigator() {
          }}
         />
    
+   <BottomTab.Screen
+         name="UserWishlist"
+         component={UserWishlist}
+         options={{
+           title: 'User wishlist',
+           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+         }}
+        />
+
      </BottomTab.Navigator>
    );
  }

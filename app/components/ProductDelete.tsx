@@ -21,9 +21,12 @@ class ProductDelete extends Component {
         .delete('https://app4me4u.herokuapp.com/api/product/delete/'+ id)
         .then(res => {
                 console.log(res);
+                console.log('EXITO');
             })
         .catch(function (error) {
             console.log(error);
+            console.log('ERROR');
+
         })
     }
 
@@ -46,14 +49,32 @@ class ProductDelete extends Component {
 
     render() {
         return (
-            <Button
-            onPress={() => this.deleteConfirmationAlert(this.props.children)}
-            title = "YO" 
-            color="#FF0000"//color de fondo rojo
-            />
+            <View style= {styles.button}>
+
+                <Button 
+                onPress={() => this.deleteConfirmationAlert(this.props.children)}
+                title = "Borrar" 
+                color="#FF0000"//color de fondo rojo
+                />
+
+            </View>
+
         )
     }
 }
+
+const styles = StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 2,
+      margin : 10,
+      borderRadius: 4,
+      elevation: 3,
+      width: '25%',    
+      backgroundColor: '#a2cff0',
+    }});
 
 export default ProductDelete;
 

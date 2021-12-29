@@ -7,8 +7,8 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-
-import ProductCard from '../components/ProductCard';
+import ProductCardId from '../components/ProductCardId';
+import ProductDelete from '../components/ProductDelete';
 
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
@@ -17,6 +17,14 @@ import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
+
+
+/*
+wishlist -> provada
+(boton te lleva a ver los productos) -> productos de un usuario en pestaña aparte
+boton para cambiar idiomas
+
+*/
 
 
 //export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
@@ -67,6 +75,8 @@ import axios from 'axios';
 
     const [products, setProducts] = React.useState([]);
 
+    const [wishlist, setWishlist] = React.useState([]);
+
     /*
     const [productInfo, setProductInfo] = React.useState({
       name: "",
@@ -77,7 +87,7 @@ import axios from 'axios';
       uid: ""
     });*/
 
-    const userImage: string = 'https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png'
+
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -102,12 +112,15 @@ import axios from 'axios';
     //console.log(session.id);
     //console.log(aux);
 //    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61bb8086b748e8cb515b798f");
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61c215918e402966b2c13e8d");  //HK -> session.id
 
     setEmail(response.data.email);
     if(aux !== session.id)
       setOwnProfile(false);
     console.log(ownProfile);
+
+
+
     if(response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
 
@@ -137,7 +150,17 @@ import axios from 'axios';
     console.log('products: ' + products.length);
 
 
+
+
+    let response2 = await axios.get('https://app4me4u.herokuapp.com/api/user/' + '61c215918e402966b2c13e8d' + '/wishlist'); //HK -> session.id
+    console.log(response2.data)
     
+    setWishlist(response2.data.wishlist);
+
+    console.log('wishlist response: ' + response.data.wishlist.length);
+
+    console.log('wishlist response2: ' + response2.data.wishlist.length);
+    console.log('wishlist: ' + wishlist.length);
 
 /*    
    //en caso de tener datos desconocidos
@@ -147,15 +170,8 @@ import axios from 'axios';
 
   };
 
-  async function getProductInfo(){
-
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61bb8086b748e8cb515b798f" + '/products');
 
 
-    setProducts(response.data);
-    console.log('products response2: ' + response.data.length);
-    console.log('products: ' + products.length);
-  };
 
   async function followUser() {
     // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
@@ -227,12 +243,11 @@ import axios from 'axios';
     <View style ={styles.container}>
       <ScrollView>
         
-        <Image
-            style={styles.image}
-            source={{
-                uri: userImage,
-            }}
-        />
+        <Text style={styles.text}>
+            Correo: <Text style={styles.text2}>{email}</Text>
+        </Text>
+
+
         {ownProfile? 
           <View style={{ alignItems: 'center',
           justifyContent: 'center'}}>
@@ -284,9 +299,7 @@ import axios from 'axios';
           </View>
           
         }
-        <Text style={styles.text}>
-            Correo: <Text style={styles.text2}>{email}</Text>
-        </Text>
+
 
         <View style={styles.container2}>
           <Text style={styles.text} onPress={onPressFollowers}>
@@ -311,6 +324,13 @@ import axios from 'axios';
         </Text>
 
 
+        {ownProfile?  
+          <Button 
+              onPress={() =>  navigation.navigate( 'UserWishlist' ) }
+              title = "Mis productos deseados" 
+              color="#a2cff0" //azul iconico
+          />
+          : <></>  }
 
 
         <CustomMap
@@ -332,41 +352,42 @@ import axios from 'axios';
 
 
 
+        {ownProfile?  
+                <Text style={styles.titleText}> Tus productos</Text>
+              : <Text style={styles.titleText}>Productos de este usuario</Text>}
+        
 
 
-        <Text style={styles.titleText}>Productos</Text>
 
 
-
-{//        <ProductCard "61ba2aebbe1ccba43df8f3c1"> </ProductCard>
- //         <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
-  }
 
 
         <FlatList
-          numColumns = {1}
+          numColumns = {2}
           data={products}
           renderItem={({ item }) => ( 
 
             <>
-{/*
-              <ProductCard name={item.name} 
-                  guardado={false} 
-                  arrayTratos={item.exchange} 
-//                  imageUri={item.img[0].url}
-                  id={item.id} 
-                  uid={'61bb8086b748e8cb515b798f'}
-              />
-*/}
-               <ProductCard 
+
+
+               <ProductCardId 
                   id={item} 
-                  uid={'61bb8086b748e8cb515b798f'}
+                  uid={'61c215918e402966b2c13e8d'}  //HK ->se session.id
               />
               {// ownProfile?  BOTON-DE-BORRAR: NADA 
+               // import ProductDelete from '../components/ProductDelete';
+
+               // <ProductDelete children= ID_DEL_PRODUCTO_A_BORRAR />
+
               }
-              <Text style={styles.productText}> {item} GATO</Text>
+              { //{ alignItems: 'left', justifyContent: 'left'}
+               }
 
+               {ownProfile?  
+                                <ProductDelete style={styles.productText} children= {item} />
+                : <></> }
 
+            
             </>
           )}
           horizontal={false}
@@ -375,7 +396,33 @@ import axios from 'axios';
           onMomentumScrollEnd={Scroll}
         />
 
-        
+{/*
+        <Text style={styles.titleText}> Productos deseados</Text>
+        <FlatList
+          numColumns = {1}
+          data={wishlist}
+          renderItem={({ item }) => ( 
+            <>
+              { (item == null)? <> </> : 
+                    <ProductCardId
+                      id={item.id} 
+                      uid={'61bb8086b748e8cb515b798f'}  //HK -> session.id
+                    />
+              }
+               {ownProfile?  
+                                <ProductDelete style={styles.productText} children= {item._id} />
+                : <></> }            
+            </>
+          )}
+          horizontal={false}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
+          onMomentumScrollEnd={Scroll}
+        />
+*/}
+               
+
+
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
@@ -393,17 +440,29 @@ import axios from 'axios';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+//    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
   container2: {
-    flex: 1,
+//    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: "row",
     padding: 0
     
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 2,
+    margin : 10,
+    borderRadius: 4,
+    elevation: 3,
+    width: '25%',    
+    backgroundColor: '#a2cff0',
   },
   item: {
     padding: 20,
@@ -431,7 +490,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     //fontFamily: "Cochin",
-    fontSize: 30,
+    fontSize: 27,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
@@ -470,3 +529,5 @@ textFollow: {
 },
 
 });
+
+

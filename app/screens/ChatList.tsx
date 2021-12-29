@@ -12,7 +12,7 @@ export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>)
   const getConversation = async () => {
     const config = {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYzliZjU5YTU1NjNlYjIyZjllODRjMyIsInVzZXJuYW1lIjoibiIsImlhdCI6MTY0MDYxMTY3OCwiZXhwIjoxNjQwNzg0NDc4fQ.KeW8CdZu4O7gLMZaiG1e97IPPLi0fTpJBCdLPGmhsw8`
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA3OTg0NDQsImV4cCI6MTY0MDk3MTI0NH0.KIPbKJw1Bc0UF3Ld4feu3rWFEml9lD8IMl-TNVMU6dQ`
         }
       }
       let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/user', config);

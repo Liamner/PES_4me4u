@@ -7,6 +7,9 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+
 
 
 
@@ -16,14 +19,25 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
   const [sliderValue] = React.useState(4)
   const [sliderRate, setSliderRate] = React.useState(sliderValue);
 
+  const {t, i18n} = useTranslation();
+  const [currentLanguage,setLanguage] =useState('cat');
+
   
-  const [id, setid] = useState('61b66f564dfc200ae67a3eba'); 
+  const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 
+
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch(err => console.log(err));
+  };
+  
 
   const sendApi = async () => {
     console.log("sending")
     const config = {
       headers: {
-        Authorization: `Bearer  ${token}`
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmEyZTNmODVjMmMxMDMwNmYwMTE3YSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2Mzk1OTE1MjUsImV4cCI6MTYzOTc2NDMyNX0.5GKJ_rNnRZvZyO-72q71BdD97-R5E1Pgzj2TlOPT28M`
       }
     }
    
@@ -42,7 +56,7 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
   return (
     <ScrollView>
         <View style={styles.container}>
-            <Text style={[styles.title, { marginTop: 20 }]}> ¿Cómo evaluas esta transacción?</Text>
+            <Text style={[styles.title, { marginTop: 20 }]}> {t('evalue')}</Text>
 
             <View
             style={styles.checkbox}>
@@ -65,7 +79,7 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
             <Text >5</Text>
 
             </View>
-            <Text style={[styles.title, { marginTop: 20 }]}> ¿Deseas añadir un comentario?</Text>
+            <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Deseas añadir un comentario?')}</Text>
 
             <TextInput
                 label="Comentario"
@@ -83,7 +97,26 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
         </ View>
 
-        
+        <Pressable
+          onPress={() => changeLanguage('cat')}
+          style={{
+            backgroundColor:
+              currentLanguage === 'en' ? '#33A850' : '#d3d3d3',
+            padding: 20,
+          }}>
+            
+          <Text>CATALAN UEEE</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => changeLanguage('es')}
+          style={{
+            backgroundColor:
+              currentLanguage === 'en' ? '#33A850' : '#d3d3d3',
+            padding: 20,
+          }}>
+            
+          <Text>CATELLANO UEE</Text>
+        </Pressable>
         <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> Guardar valoración! </Text></Pressable>
         <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> Cancelar </Text></Pressable>
       </View>

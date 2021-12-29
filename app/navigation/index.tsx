@@ -108,32 +108,11 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
 
-      initialRouteName="ProductRead"
+      initialRouteName="CreateProduct"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
-      <BottomTab.Screen
-        name="ProductRead"
-        component={ProductRead}
-        options={({ navigation }: RootTabScreenProps<'ProductRead'>) => ({
-          title: 'Ver Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      />
+      
       <BottomTab.Screen
         name="CreateProduct"
         component={CreateProduct}
@@ -142,73 +121,7 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
-    
-{/*   TODO :  1descomentar */}
-      <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
-        options={{
-          title: 'Product Card',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      {/*   TODO :  2descomentar */}
-       <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{
-          title: 'Test Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="FirstScreen"
-        component={FirstScreen}
-        options={{
-          title: 'First Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="EditProduct"
-        component={EditProduct}
-        options={{
-          title: 'Editar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="ViewUser"
-        component={ViewUser}
-        options={{
-          title: 'Ver Usuario',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      /> 
-      <BottomTab.Screen
-        name="SearchProduct"
-        component={SearchProduct}
-        options={{
-          title: 'Buscar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      /> 
-      <BottomTab.Screen
-        name="FollowersScreen"
-        component={FollowersScreen}
-        options={{
-          title: 'Followers',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="FollowedScreen"
-        component={FollowedScreen}
-        options={{
-          title: 'Followed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />      
+
        <BottomTab.Screen
          name="RateUser"
          component={RateUser}

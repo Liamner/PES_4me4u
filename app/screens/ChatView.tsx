@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { StyleSheet, ScrollView, FlatList, Pressable, TextInput, Button } from 'react-native';
 import axios from 'axios';
+import { io } from "socket.io-client";
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -12,6 +13,18 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   var userId = '61bb8086b748e8cb515b798f';
   const [msgs, setMsgs] = useState("hola")
   const [newMessage, setNewMessage] = useState("");
+  const socket = useRef();
+
+  React.useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
 
   const getConversation = async () => {
     const config = {
@@ -48,7 +61,12 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     });
 
     try {
-      const res = await axios.post("https://app4me4u.herokuapp.com/api/message", message);
+      const config = {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA3OTg0NDQsImV4cCI6MTY0MDk3MTI0NH0.KIPbKJw1Bc0UF3Ld4feu3rWFEml9lD8IMl-TNVMU6dQ`
+        }
+      }
+      const res = await axios.post("https://app4me4u.herokuapp.com/api/message", message, config);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {

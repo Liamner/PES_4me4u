@@ -88,6 +88,10 @@ let usuarioSchema = new Schema({
         type: [mongoose.Schema.ProductSchema],
         required: false
     },
+    recentlyViewed: {
+        type: [mongoose.Schema.ProductSchema],
+        required: false
+    },
     commentsRecived: [{
         // Comentarios recibidos
         type: Schema.Types.ObjectId, 

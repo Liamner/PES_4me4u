@@ -174,6 +174,21 @@ module.exports = function(app) {
 
   router.route('/user/:id/follow')
     .post(userController.follow)
+
+  router.route('/user/:id/unfollow')
+    .post(userController.unfollow)
+
+  router.route('/user/:id/loseFollower')
+    .post(userController.loseFollower)
+
+  router.route('/user/:id/productsRecentlyViewed')
+    .get(userController.getRecentlyViewed)
+
+  router.route('/user/:id/addProductsRecentlyViewed')
+    .post(userController.updateRecentlyViewed)
+
+  
+
     
   // ======================
   // ---- Trade Routes ----

@@ -298,33 +298,32 @@ exports.getRewards = async (req, res) => {
 };
 
 exports.getUserRewards = async (req, res) => {
+  let {type, estimatedPoints} = req.body;
+
+  let user = await User.findById({ _id: req.params.id });
+  console.log("Searching for user to get reward: " + user.name);
+  let eco = user.ecoPoints;
+  let total = 0;
+  if (type == 'gift'){
+    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+  }
+
+  else if (type == 'loan') {
+    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+    
+  }
+  else if (type == 'exchange') {
+    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points not accepted'})
+  }
+  else res.status(400).json({error: 'Transaction not available'});
+  
+  
+  user.ecoPoints = total;
+
   try {
-    let {type, estimatedPoints} = req.body;
-
-    let user = await User.findById({ _id: req.params.id });
-    console.log("Searching for user to get reward: " + user.name);
-    let eco = user.ecoPoints;
-
-    if (type == 'gift'){
-      if(estimatedPoints >= 1 && estimatedPoints <= 100) {
-        user.ecoPoints = eco + estimatedPoints;
-      }
-      else {
-        res.status(400).json({error: 'Estimated points are too high'})
-      }
-    }
-    else if (type == 'loan') {
-      if(estimatedPoints >= 1 && estimatedPoints <= 15) {
-        user.ecoPoints = eco + estimatedPoints;
-      }
-     else {
-      res.status(400).json({error: 'Estimated points are too high'})
-      }
-    }
-    else {
-      user.ecoPoints = eco + 15;
-    }
-
     await user.save();
     res.status(201).json(user);
   } catch (error) {

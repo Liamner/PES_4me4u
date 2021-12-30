@@ -12,7 +12,8 @@ exports.getConversations = async (req, res) => {
 exports.newConversation = async (req, res) => {
     console.log(req.body.reciverId)
     const newConversation = new Conversation({
-        members: [req.user.id, req.body.reciverId]
+        members: [req.user.id, req.body.reciverId],
+        productId: req.body.productId
     })
     try {
         const savedConversation = await newConversation.save();

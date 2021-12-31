@@ -17,6 +17,8 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 
 import Login from '../screens/LandingPage';
+import ChatView from '../screens/ChatView';
+import ChatList from '../screens/ChatList';
 import SignUp from '../screens/EmailSignUp';
 import SignIn from '../screens/EmailSignIn'
 import Main from '../screens/MainScreen'
@@ -121,26 +123,18 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="CreateProduct"
-        component={CreateProduct}
+        name="ChatView"
+        component={ChatView}
         options={{
           title: 'Nuevo Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
+        name="ChatList"
+        component={ChatList}
         options={{
-          title: 'Product Card',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-       <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{
-          title: 'Test Screen',
+          title: 'Nuevo Producto',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

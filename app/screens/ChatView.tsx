@@ -13,17 +13,19 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   var userId = '61bb8086b748e8cb515b798f';
   const [msgs, setMsgs] = useState("hola")
   const [newMessage, setNewMessage] = useState("");
-  const socket = useRef();
+  const [socket, setSocket] = useState(null)
+  //const socket = useRef();
 
   React.useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
+    setSocket(io("ws://localhost:3000")); 
+    //socket.current = io("ws://localhost:8900");
+    /*socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       });
-    });
+    });*/
   }, []);
 
   const getConversation = async () => {

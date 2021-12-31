@@ -1,17 +1,30 @@
-const io = require('socket.io')(3000)
+const io = require('socket.io')(3000);
 
-const users = {}
+io.on('connection', (socket) => {
+  // Connect User
+  console.log('user connected')
+  // take userId and socketId from user
+  // necesitamos id del User
+  socket.on('newUser', userId => {
+        console.log('New user: ' + userId)
+        addUser(userId, socket.id);
+        io.emit('getUsers', users)
+  });
 
-io.on('connection', socket => {
-  socket.on('new-user', name => {
-    users[socket.id] = name
-    socket.broadcast.emit('user-connected', name)
+  // Send message
+  socket.on('sendMessage',({senderId, reciverId, text}) => {
+    console.log('New Message: ' + text)
+      const user = getUser(reciverId);
+      io.to(user.socket).emit('getMessage', {
+          senderId, 
+          text
+      })
   })
-  socket.on('send-chat-message', message => {
-    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
-  })
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user-disconnected', users[socket.id])
-    delete users[socket.id]
+
+  // Disconnect user
+  socket.on('disconnect', ()=> {
+      console.log('User disconnected')
+      removeUser(socket.id)
+      io.emit('getUsers', users)
   })
 })

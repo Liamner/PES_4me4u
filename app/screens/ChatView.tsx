@@ -29,7 +29,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   const getConversation = async () => {
     const config = {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA3OTg0NDQsImV4cCI6MTY0MDk3MTI0NH0.KIPbKJw1Bc0UF3Ld4feu3rWFEml9lD8IMl-TNVMU6dQ`
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA5NDc1NDksImV4cCI6MTY0MTEyMDM0OX0.AWMjcMCkG73TJfYb8YNXEK_PX0sXFLgEvJdxSZn2OI0`
         }
       }
       let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/' + converid, config);
@@ -44,9 +44,9 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     e.preventDefault();
     console.log('Message: ' + newMessage)
     const message = {
-      sender: userId,
+      //sender: userId,
       text: newMessage,
-      conversationId: converid,
+      conversationId: '61cc98ab39dfda8fcf98e883',
     };
     console.log(message)
 
@@ -54,16 +54,16 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       (member) => member !== user._id
     );*/
 
-    socket.current.emit("sendMessage", {
+    /*socket.current.emit("sendMessage", {
       senderId: userId,
       receiverId: '61cc40614188001e3b5cab3d',
       text: newMessage,
-    });
+    });*/
 
     try {
       const config = {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA3OTg0NDQsImV4cCI6MTY0MDk3MTI0NH0.KIPbKJw1Bc0UF3Ld4feu3rWFEml9lD8IMl-TNVMU6dQ`
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA5NDc1NDksImV4cCI6MTY0MTEyMDM0OX0.AWMjcMCkG73TJfYb8YNXEK_PX0sXFLgEvJdxSZn2OI0`
         }
       }
       const res = await axios.post("http://app4me4u.herokuapp.com/api/message", message, config);

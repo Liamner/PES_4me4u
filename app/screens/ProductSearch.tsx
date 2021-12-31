@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Button } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Button, Alert, Modal, Pressable, Text } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 import { View } from '../components/Themed';
@@ -10,14 +10,22 @@ import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
 
 export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
-
   const [products, setProducts] = useState();
-  const [text, onChangeText] = useState("");
+  const [text, onChangeText] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [type, setType] = useState(null);
 
   const getPNameInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/name/'+text);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/filter/products', {
+      params: {
+        category: category,
+        exchange: type,
+        productName: text
+      }
+    });
     setProducts(response.data);
-    console.log(response.data[0].img);
+    console.log(response.data)
+    console.log('llamada hecha');
   };
 	
   return (
@@ -35,25 +43,46 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
         />
       </View>
 			<View style={styles.row}>
-				<Button
-					onPress={()=>console.log("Buscar por categoria")}
-					title="Categoria"
-				/>
-				<Button
-					onPress={()=>console.log("Buscar por tipo intercambio")}
-					title="Tipo intercambio"
-				/>
+        <Picker
+          style={{width: '50%'}}
+          selectedValue={category}
+          onValueChange={(itemValue, itemIndex) =>
+            setCategory(itemValue)}
+        >
+          <Picker.Item label="Categoria" />          
+          <Picker.Item label="fashion" value="fashion" />
+          <Picker.Item label="computer" value="computer" />
+          <Picker.Item label="homeApplicances" value="homeApplicances" />
+          <Picker.Item label="sports" value="sports" />
+          <Picker.Item label="home" value="home" />
+          <Picker.Item label="videogames" value="videogames" />
+          <Picker.Item label="movies" value="movies" />
+          <Picker.Item label="children" value="children" />
+          <Picker.Item label="construction" value="construction" />
+          <Picker.Item label="pets" value="pets" />
+          <Picker.Item label="games" value="games" />
+          <Picker.Item label="other" value="other" />
+        </Picker>
+				<Picker
+          style={{width: '50%'}}
+          selectedValue={category}
+          onValueChange={(itemValue, itemIndex) =>
+            setType(itemValue)}
+        >
+          <Picker.Item label="Tipo intercambio" />          
+          <Picker.Item label="Prestar" value="provide" />
+          <Picker.Item label="Intercambiar" value="exhange" />
+          <Picker.Item label="Dar" value="present" />
+        </Picker>
 			</View>
-      <ScrollView style={styles.flex}>
         <FlatList
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
             <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
           )}
-          keyExtractor={item => item.id}
-          />
-      </ScrollView>
+          keyExtractor={item => item._id}
+        />
     </View>
   );
 }
@@ -64,7 +93,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    marginHorizontal: '10%',
+    marginHorizontal: '5%',
     marginVertical: 5,
   },
 });

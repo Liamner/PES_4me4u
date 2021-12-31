@@ -267,6 +267,9 @@ module.exports = function(app) {
   router.route('/product/:productId/image/:imageId')
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+
+  router.route('/filter/products')
+    .get(categoryController.getProductCategory2)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 

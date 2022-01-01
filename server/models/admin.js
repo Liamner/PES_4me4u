@@ -36,26 +36,25 @@ let usuarioSchema = new Schema({
         type: Number,
         default: 0,
     },
-    exchanges: {
+    changes: {
         type: Number,
         default: 0
     },
     users: {
-        type: [mongoose.Schema.usuarioSchema],
-        required: false
+        type: Number,
+        default: 0
     },
     products: {
-        type: [mongoose.Schema.ProductSchema],
-        required: false
+        type: Number,
+        default: 0
     },
     ecoPoints: {
         type: Number,
         default: 0
     },
     blockedUsers: [{
-        // Comentarios recibidos
-        type: Schema.Types.ObjectId, 
-        ref: 'Comment'
+        type: Number,
+        default: 0
     }]
 });
     

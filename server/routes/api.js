@@ -8,6 +8,7 @@ const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
 const conversationController = require ('../controllers/apiConvesration.js')
+const adminController = require ('../controllers/apiAdmin.js')
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -278,5 +279,34 @@ module.exports = function(app) {
 
   router.route('/conversation/user')
     .get(authenticateJWT, conversationController.getConversations)
+
+  // ======================
+  // ---- Admin Routes ----
+  // ======================
+
+  router.route('/admin/:id/gifts')
+    .get(adminController.readGifts);
+
+  router.route('/admin/:id/loans')
+    .get(adminController.readLoans);
+
+  router.route('/admin/:id/exchanges')
+    .get(adminController.readExchanges);
+  
+  router.route('/admin/:id/users')
+    .get(adminController.readUsers)
+
+  router.route('/admin/:id/products')
+    .get(adminController.readProducts)
+
+  router.route('/admin/:id/ecoPoints')
+    .get(adminController.readEcoPoints)
+
+  router.route('/admin/:id/blockedUsers')
+    .get(adminController.readBlockedUsers)
+
   return router;
+
+
 }
+

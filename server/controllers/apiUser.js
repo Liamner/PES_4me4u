@@ -263,32 +263,38 @@ exports.getMyCommentsRecived = async (req, res) => {
 exports.getRewards = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
-    var ngifts = user.gifts;
-    var nloans = user.loans;
-    var nexchanges = user.exchanges;
-    var points = user.ecoPoints;
-    var rewards = 0;
+    let ngifts = user.gifts;
+    let nloans = user.loans;
+    let nexchanges = user.exchanges;
+    let points = user.ecoPoints;
+    let rewards = 0;
+    let diez = 10;
+    let cincuenta = 50;
+    let cien = 100;
+    let cientoCincuenta = 150;
+
     if(ngifts >= 3) {
-      if(ngifts >=3) rewards = rewards + 10;
-      if(ngifts >= 5) rewards = rewards + 50;
-      else if (ngifts >= 7) rewards = rewards + 100;
-      else if(ngifts >= 10) rewards = rewards + 150;
+      if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(diez);
+      else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(cincuenta);
+      else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(cien);
+      else if(ngifts >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nloans >= 3) {
-      if(nloans >=3) rewards = rewards + 10;
-      if(nloans >= 5) rewards = rewards + 50;
-      else if (nloans >= 7) rewards = rewards + 100;
-      else if(nloans >= 10) rewards = rewards + 150;
+    if(nloans >= 3) {
+      if(nloans >=3 && nloans <= 5) rewards += parseFloat(diez);
+      else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(cincuenta);
+      else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(cien);
+      else if(nloans >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nexchanges >= 3) {
-      if(nexchanges >=3) rewards = rewards + 10;
-      if(nexchanges >= 5) rewards = rewards + 50;
-      else if (nexchanges >= 7) rewards = rewards + 100;
-      else if(nexchanges >= 10) rewards = rewards + 150;
+    if(nexchanges >= 3) {
+      if(nexchanges >=3 && nexchanges <= 5) rewards += parseFloat(diez);
+      else if(nexchanges >= 5 && nexchanges <= 7) rewards += parseFloat(cincuenta);
+      else if (nexchanges >= 7 && nexchanges <= 10) rewards += parseFloat(cien);
+      else if(nexchanges >= 10) rewards += parseFloat(cientoCincuenta);
     }
-    user.ecoPoints = points + rewards;
+    user.ecoPoints = parseFloat(points)+parseFloat(rewards)
+    //user.ecoPoints += rewards;
     await user.save();
     res.status(200).json(user);
     

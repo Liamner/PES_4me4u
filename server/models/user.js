@@ -64,15 +64,15 @@ let usuarioSchema = new Schema({
     },
     gift: {
         type: Number,
-        default: '0',
+        default: 0,
     },
     loans: {
         type: Number,
-        default: '0',
+        default: 0,
     },
     exchanges: {
         type: Number,
-        default: '0'
+        default: 0
     },
     followers: [{
         type: mongoose.Schema.Types.ObjectId,

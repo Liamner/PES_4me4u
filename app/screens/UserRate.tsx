@@ -56,7 +56,7 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
   return (
     <ScrollView>
         <View style={styles.container}>
-            <Text style={[styles.title, { marginTop: 20 }]}> {t('evalue')}</Text>
+            <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Cómo evaluas esta transacción?')}</Text>
 
             <View
             style={styles.checkbox}>

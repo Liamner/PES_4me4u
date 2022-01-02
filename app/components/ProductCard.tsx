@@ -7,55 +7,31 @@ import navigation from "../navigation";
 import { functionExpression } from "@babel/types";
 
 type CardProps = {
-  navigation: any,
-  id: string,
-  uid: string,
   name: string,
   guardado: boolean,
   imageUri?: string,
   arrayTratos: string[],
 }
 
-
-export function ProductCard  ({navigation, id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
+const guardarProducto = async () => {        
+  console.log("guardar")
+  }
+const noGuardarProducto = async () => {          
+  console.log("no guardar")  
+}
+export function ProductCard  ({ name, guardado, imageUri, arrayTratos}: CardProps) {  
   var prestar = false;
   var intercambiar = true;
-  var dar = false;
+  var dar = false   
   arrayTratos.forEach(element => {
     if(element == "exchange") intercambiar = true;
-    if(element == "present") dar = true;
+    if(element == "give") dar = true;
     if(element == "loan") prestar = true
-  });
-
-  // no se puede probar hasta que se pueda hacer una busqueda de productos
-  const guardarProducto = async () => {   
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
-        idProduct: id
-      }).then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    }
-  
-  const noGuardarProducto = async () => {          
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
-        idProduct: id
-      }).then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      }); 
-  }
-  
+});
   return (
     <>
-  <View style={styles.container}>
-  <TouchableOpacity onPress= {()=> {navigation.navigate("ProductRead", id)}}>      
+  <View style={styles.container}>            
   <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
-  </TouchableOpacity>      
   <View
   style={{
     backgroundColor: "white",     
@@ -119,7 +95,7 @@ export function ProductCard  ({navigation, id, uid, name, guardado, imageUri, ar
 )
 
 }
- // console.log("hola")
+  console.log("hola")
 const styles = StyleSheet.create({
     container: {
       width: '50%',

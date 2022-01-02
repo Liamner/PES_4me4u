@@ -16,7 +16,6 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 
 import Login from '../screens/LandingPage';
 import SignUp from '../screens/EmailSignUp';
@@ -34,13 +33,15 @@ import ViewUser from '../screens/UserRead';
 import FollowersScreen from '../screens/FollowersScreen';	
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
-import SearchProduct from '../screens/SearchProduct';
+import SearchProduct from '../screens/ProductSearch';
 
 //to incorporar
 import UserWishlist from '../screens/UserWishlist';
+import NavigationBar from '../components/NavigationBar';
 import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import RootNavigator from './root';
 
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -58,7 +59,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
- */
+
+/*
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -76,7 +78,7 @@ function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
+*/
 
 const LoginStack = createNativeStackNavigator();
 
@@ -105,152 +107,3 @@ function LoginNavigator() {
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
-
-function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <BottomTab.Navigator
-
-      initialRouteName="FirstScreen"
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
-      <BottomTab.Screen
-      name="FirstScreen"
-      component={FirstScreen}
-      options={{
-        title: 'First Screen',
-        tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />
-      }
-    }
-      />
-      <BottomTab.Screen
-        name="ProductRead"
-        component={ProductRead}
-        options={({ navigation }: RootTabScreenProps<'ProductRead'>) => ({
-          title: 'Ver Prodducto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      />
-      <BottomTab.Screen
-        name="CreateProduct"
-        component={CreateProduct}
-        options={{
-          title: 'Nuevo Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-       <BottomTab.Screen
-        name="UserUpdate"
-        component={UserUpdateScreen}
-        options={{
-          title: 'UserUpdate',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-       <BottomTab.Screen
-        name="SearchProduct"
-        component={SearchProduct}
-        options={{
-          title: 'SearchProduct',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    
-{/*   TODO :  1descomentar */}
-      <BottomTab.Screen
-        name="ProductCard"
-        component={ProductCard}
-        options={{
-          title: 'Product Card',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      {/*   TODO :  2descomentar */}
-       <BottomTab.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{
-          title: 'Test Screen',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="EditProduct"
-        component={EditProduct}
-        options={{
-          title: 'Editar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="ViewUser"
-        component={ViewUser}
-        options={{
-          title: 'Ver Usuario',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      /> 
-      <BottomTab.Screen
-        name="SearchProduct"
-        component={SearchProduct}
-        options={{
-          title: 'Buscar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      /> 
-      <BottomTab.Screen
-        name="FollowersScreen"
-        component={FollowersScreen}
-        options={{
-          title: 'Followers',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="FollowedScreen"
-        component={FollowedScreen}
-        options={{
-          title: 'Followed',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />      
-       <BottomTab.Screen
-         name="RateUser"
-         component={RateUser}
-         options={{
-           title: 'Valorar usuario',
-           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-         }}
-        />
-   
-     </BottomTab.Navigator>
-   );
- }
- 
- /**
-  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-  */
- function TabBarIcon(props: {
-   name: React.ComponentProps<typeof FontAwesome>['name'];
-   color: string;
- }) {
-   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
- }
- 

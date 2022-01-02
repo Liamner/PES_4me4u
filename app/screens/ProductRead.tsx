@@ -9,10 +9,14 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import NavigationBar from '../components/NavigationBar'
 
-export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
+
   const uid = '61b09c0f9482049de40b74f3';
-  const pid = '61b64a52d4851901d035ed57';
+  //const pid = '61b64a52d4851901d035ed57';
+  const pid = route.params;
+  console.log(pid);
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -194,7 +198,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
         }
         
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}  onPress={() => navigation.navigate("UserRead", userid)}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText}  onPress={() => navigation.navigate("OtherUserRead", userid)}>Publicado por: {`${user}`}</Text>
         <FlatList 
           style={styles.flatlist}
           horizontal={true}
@@ -258,6 +262,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           ></CustomMarker>
         </CustomMap>
       </ScrollView>
+      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
   );
 }

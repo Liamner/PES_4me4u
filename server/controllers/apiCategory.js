@@ -72,7 +72,7 @@ exports.getProductCategory2 = async (req, res) => {
     if (productName != null && exchangeType != null && category != null) {
       await Product.find({name: {$regex : productName}, categories: category, exchange : exchangeType}, (error, products) => {
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (category != null && exchangeType != null) {
       await Product.find({exchange : exchangeType, categories: category}, (error, products) => {
@@ -80,7 +80,7 @@ exports.getProductCategory2 = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null && category != null) {
       await Product.find({name: {$regex : productName}, categories: category}, (error, products) => {
@@ -88,7 +88,7 @@ exports.getProductCategory2 = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null && exchangeType != null) {
       await Product.find({name: {$regex : productName}, exchange : exchangeType}, (error, products) => {
@@ -96,11 +96,15 @@ exports.getProductCategory2 = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null) {
-        const products = await Product.find({name: {$regex : productName}})
+      await Product.find({name: {$regex : productName}}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
         res.status(200).json(products);
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (category != null) {
       await Category.find({name: category}, {products: 1}, async (error, products) => {
@@ -108,7 +112,7 @@ exports.getProductCategory2 = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products[0].products);
-      }).populate({path: 'products', populate: {path: 'img', select: { 'url': 1}} }).clone()
+      }).populate({path: 'products', populate: [{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}] }).clone()
     }
     else if (exchangeType != null) {      
       await Product.find({exchange: exchangeType} ,(error, products) => { 
@@ -116,7 +120,7 @@ exports.getProductCategory2 = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else {
       res.status(200).json()
@@ -139,7 +143,7 @@ exports.getProductCategory = async (req, res) => {
     if (productName != null && exchangeType != null && category != null) {
       await Product.find({name: {$regex : productName}, categories: category, exchange : exchangeType}, (error, products) => {
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (category != null && exchangeType != null) {
       await Product.find({exchange : exchangeType, categories: category}, (error, products) => {
@@ -147,7 +151,7 @@ exports.getProductCategory = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null && category != null) {
       await Product.find({name: {$regex : productName}, categories: category}, (error, products) => {
@@ -155,7 +159,7 @@ exports.getProductCategory = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null && exchangeType != null) {
       await Product.find({name: {$regex : productName}, exchange : exchangeType}, (error, products) => {
@@ -163,11 +167,15 @@ exports.getProductCategory = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (productName != null) {
-        const products = await Product.find({name: {$regex : productName}})
+      await Product.find({name: {$regex : productName}}, (error, products) => {
+        if (error) {
+          return res.status(500).json({ok: false, err: erro})
+        }
         res.status(200).json(products);
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
     }
     else if (category != null) {
       await Category.find({name: category}, {products: 1}, async (error, products) => {
@@ -175,7 +183,7 @@ exports.getProductCategory = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products[0].products);
-      }).populate({path: 'products', populate: {path: 'img', select: { 'url': 1}} }).clone()
+      }).populate({path: 'products', populate: [{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}] }).clone()
     }
     else if (exchangeType != null) {      
       await Product.find({exchange: exchangeType} ,(error, products) => { 
@@ -183,7 +191,10 @@ exports.getProductCategory = async (req, res) => {
           return res.status(500).json({ok: false, err: erro})
         }
         res.status(200).json(products);
-      }).populate({path: 'img', select: { 'url': 1}}).clone()
+      }).populate([{path: 'userId', select: {'latitude': 1, 'longitude': 1}}, {path: 'img', select: { 'url': 1}}]).clone()
+    }
+    else {
+      res.status(200).json()
     }
   } catch (error) {
     res.status(404).json(error.message);

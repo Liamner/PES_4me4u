@@ -245,9 +245,7 @@ exports.deleteProduct = async (req, res) => {
         res.status(401).json({error: "Do not have permission"})
         return;
       }*/
-        console.log("before")
-        const images = [];
-        images.push(product.img)    
+        
         for (let i = 0; i < product.img.length; ++i) {  
           const res = await Image.findByIdAndDelete({_id: product.img[i]});
           await cloudinary.uploader.destroy(res.public_id);

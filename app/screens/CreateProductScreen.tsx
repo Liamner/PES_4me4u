@@ -8,6 +8,7 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
+import retrieveSession from '../hooks/retrieveSession'
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [name, onChangeName] = React.useState("");  
@@ -23,7 +24,19 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);     
   const imageArray = [image, image2, image3, image4, image5, image6] ;
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+})
+
+const getData = async () => {
+  const sess = await retrieveSession();
+    console.log(sess)
+    setSession(sess);
+}
   React.useEffect(() => {
+    getData();
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -97,19 +110,27 @@ const pickImage = async (id?: Number) => {
 };
 const sendApi = async () =>{
   console.log("sending")
+  console.log(session.token)
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.token}`
+    }
+  }
   let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
-    name : name,
-    categories : [selectedCategory],
-    description : description,
-    exchange :"present",
-    state :"available",
-    owner :"owner"
-  }).then(function (response) {
+    name: name,
+    categories: [selectedCategory],
+    description: description,
+    exchange: "present",
+    state: "available",
+    owner: "owner"
+  }, config).then(function (response) {
     console.log(response);
   })
-  .catch(function (error) {
-    console.log(error);
-  });
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 }
   return (
     <ScrollView>

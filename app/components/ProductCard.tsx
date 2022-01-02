@@ -7,6 +7,7 @@ import navigation from "../navigation";
 import { functionExpression } from "@babel/types";
 
 type CardProps = {
+  navigation: any,
   id: string,
   uid: string,
   name: string,
@@ -16,7 +17,7 @@ type CardProps = {
 }
 
 
-export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
+export function ProductCard  ({navigation, id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
   var prestar = false;
   var intercambiar = true;
   var dar = false;
@@ -25,6 +26,8 @@ export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}:
     if(element == "present") dar = true;
     if(element == "loan") prestar = true
   });
+
+  // no se puede probar hasta que se pueda hacer una busqueda de productos
   const guardarProducto = async () => {   
     await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
@@ -46,10 +49,13 @@ export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}:
         console.log(error);
       }); 
   }
+  
   return (
     <>
-  <View style={styles.container}>            
+  <View style={styles.container}>
+  <TouchableOpacity onPress= {()=> {navigation.navigate("ProductRead", id)}}>      
   <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
+  </TouchableOpacity>      
   <View
   style={{
     backgroundColor: "white",     

@@ -18,6 +18,7 @@ export type RootStackParamList = {
   Modal: undefined;
   NotFound: undefined;
   UserRead: undefined;
+  UserWishlist:undefined;
   ViewUser: undefined;
   CreateProduct: undefined;
   TestScreen: undefined;
@@ -49,6 +50,8 @@ export type RootTabParamList = {
   RateUser: undefined;
   UserUpdate:undefined;
   SearchProduct:undefined;
+  UserWishlist: undefined;
+  
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

@@ -37,8 +37,7 @@ import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
 
 //to incorporar
-import NavigationBar from '../components/NavigationBar';
-import SearchProduct from '../screens/SearchProduct';
+import UserWishlist from '../screens/UserWishlist';
 import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
@@ -72,6 +71,7 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
         <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
+        <Stack.Screen name="UserWishlist" component={UserWishlist} options={{ headerShown: false }} />
       </Stack.Group>
     </Stack.Navigator>
   );

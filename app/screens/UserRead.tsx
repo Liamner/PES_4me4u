@@ -13,16 +13,17 @@ import DeleteUser from '../components/DeleteUser';
 import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 
 
-//export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
     var userid = route.params;
     //Datos de un usuario
 
     //const [id, setid] = useState(user_id);
     const [email, setEmail] = useState('Cargando...');
+    const [name, setName]= useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
     const [postalCode, setPostalCode] = useState('Cargando...');
@@ -107,6 +108,7 @@ import axios from 'axios';
     //console.log(aux);
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
     setEmail(response.data.email);
+    setName(response.data.userId);
     if(aux !== session.id)
       setOwnProfile(false);
     console.log(ownProfile);
@@ -212,8 +214,8 @@ import axios from 'axios';
 
   return(
     <View style ={styles.container}>
-      <ScrollView>
-        
+      <ScrollView style={{marginBottom: 45}}>
+
         <Image
             style={styles.image}
             source={{
@@ -229,6 +231,22 @@ import axios from 'axios';
           }}>
             <Text style={styles.text2}> Mi perfil</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate("UserUpdate", session.id);
+                }}
+                style={{width: 150,  marginTop: 5}}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Editar Perfil
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
           </View>
           :
           <View style={{ alignItems: 'center',
@@ -272,9 +290,11 @@ import axios from 'axios';
           
         }
         <Text style={styles.text}>
+            Nombre: <Text style={styles.text2}>{name}</Text>
+        </Text>
+        <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
-
         <View style={styles.container2}>
           <Text style={styles.text} onPress={onPressFollowers}>
               Followers: <Text style={styles.text2}>{followersSize}</Text>
@@ -370,7 +390,6 @@ import axios from 'axios';
           pagingEnabled={true}
           onMomentumScrollEnd={Scroll}
         />
-        
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
@@ -380,6 +399,7 @@ import axios from 'axios';
         
 
       </ScrollView>
+      <NavigationBar  navigation={navigation} profile={true}/>
     </View>
   );
 
@@ -390,7 +410,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   container2: {
     flex: 1,

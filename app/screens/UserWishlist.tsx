@@ -1,25 +1,38 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProductCard from '../components/ProductCard'
+import NavigationBar from '../components/NavigationBar'
+import retrieveSession from '../hooks/retrieveSession';
 
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
   const [products, setProducts] = useState();
-
-  const uid = '61b48cfd6dac17ee8ff33050';
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+  });
 
   const getWishlist = async () => {
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ session.id +'/wishlist');
       setProducts(response.data);
   };
 
+  const getData = async () => {
+    const sess = await retrieveSession();
+      console.log(sess)
+      setSession(sess);
+    }
+
   React.useEffect(() => {
-    getWishlist();
+    getData();
+    
   }, []);
+  getWishlist();
   
   return (
     <View style={styles.container}>
@@ -28,11 +41,17 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>
+            <ProductCard 
+              navigation={navigation} 
+              id={item._id}
+              name={item.name} 
+              guardado={false} 
+              arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>
           )}
           keyExtractor={item => item.id}
           />
       </ScrollView>
+      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
   );
 }

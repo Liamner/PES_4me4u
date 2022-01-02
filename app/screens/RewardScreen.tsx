@@ -6,18 +6,27 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProductCardElement from './ProductCardElement'
 
+
 import axios from 'axios';
 
 
-export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardScreen'>) {
+export default function RewardScreen({ navigation, route }: RootTabScreenProps<'RewardScreen'>) {
   
-  const [id, setid] = useState('61ba2a4f6bd96835a7895b33');
+  //Se recibe el id del usuario del que se quiere saber los puntos y transacciones
+
+//  const id = route.params;
+const [id, setid] = useState('61ba2e3f85c2c10306f0117a'); //HK -> borrar y descomentar linea de arriba
+
+
+
   const [email, setEmail] = useState('');
   const [reward, setReward] = useState('');
   const [gift, setGift] = useState(-1);
   const [loans, setLoans] = useState(-1);
   const [exchanges, setExchanges] = useState(-1);
-//  "gift":0,"loans":0,"exchanges"
+  const [ecoPoints, setEcoPoints] = useState(0);
+  const [transaccionesTotales, setTransaccionesTotales] = useState(0);
+  //  "gift":0,"loans":0,"exchanges"
   
 //const [id, setid] = useState(user_id);
  
@@ -32,6 +41,10 @@ export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardS
     setExchanges(response.data.exchanges);
 
     setEmail(response.data.email);
+
+    setEcoPoints(response.data.ecoPoints);
+
+//    setTransaccionesTotales({gift} + {loans} + {exchanges})
 
 
   };
@@ -75,35 +88,55 @@ export default function RewardScreen({ navigation }: RootTabScreenProps<'RewardS
 
   return (
     <>
-      <View>            
-        <Text> Trofeos de: {email}</Text>
-        <Text> {reward}</Text>
+      <View style = {styles.container}>            
+      <Text style={styles.titleText}> Trofeos de {email} </Text>
 
-        <Text>Regalos hechos: {gift}/7</Text>
-        <Text>Prestamos hechos: {loans}/7</Text>
-        <Text>Intercambios hechos: {exchanges}/7</Text>
-
-        <Button
-              onPress={() => getRewards()}
-              title = "Get my rewards"
-              color="#A2CFF0" //color de fondo establecido
-        />
+      <View style = {styles.container2}>
 
 
+        <Text style={styles.text3}>
+              Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
+        </Text>
 
+          <Text style={styles.text}>
+          Regalos hechos: <Text style={styles.text2}>{gift}</Text> 
+        </Text>
+
+        <Text style={styles.text}>
+          Prestamos hechos:  <Text style={styles.text2}>{loans}</Text> 
+        </Text>
+
+        <Text style={styles.text}>
+        Intercambios hechos:  <Text style={styles.text2}>{exchanges}</Text> 
+        </Text>
+
+        <Text style={styles.text}>
+        transacciones totales:  <Text style={styles.text2}>{transaccionesTotales}</Text> 
+        </Text>
+
+        
       </View>                    
+
+    </View>                    
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: '50%',
-    height: '50%',
-    borderRadius: 10,
-    borderColor: '#5e5c57',
-    borderWidth: 3,
-    backgroundColor: 'white',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+
+    backgroundColor: '#a2cff0',
+  }, 
+  container2: {
+
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    paddingTop: 50
+
   }, 
   cameraImage: {
     width: '100%', 
@@ -133,11 +166,38 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
     width: '90%',
   },  
+  titleText: {
+    padding: 10,
+    textAlign: "center",
+    //fontFamily: "Cochin",
+    fontSize: 27,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    width: '100%'
+  },
   textInput: {
     marginVertical: 15,
     height: 60,
     width: '90%',
   },  
+  text: {
+    textAlign: 'center',
+    //fontFamily: "Cochin",
+    fontSize: 20,
+    margin:10,
+    fontStyle: 'italic'
+  },
+  text2: {
+    fontWeight: "bold",
+    fontStyle: "normal"
+  },
+  text3: {
+    textAlign: 'center',
+    //fontFamily: "Cochin",
+    fontSize: 25,
+    margin:10,
+    fontStyle: 'italic'
+  },
 });
 
 

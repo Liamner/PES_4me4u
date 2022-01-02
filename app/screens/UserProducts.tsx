@@ -25,13 +25,17 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
 
 
 
-  const {id, ownProfileAux} = route.params;
+  //const {id, ownProfileAux} = route.params;
+
+  const id = '61d1c011f5d0f2261e75160e';
+  const ownProfileAux = 'S';
 
   const [products, setProducts] = useState([]);
 
   const [email, setEmail] = useState('');
 
   const getProducts = async () => {
+    console.log('id '+ id)
       let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+id);
 
       setProducts(response.data.products);//lista de ids de productos en la
@@ -41,6 +45,9 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
       setEmail(response.data.email);
       console.log('email response: ' + response.data.email);
       console.log('email: ' + email);
+
+
+      console.log('AAAA');
 
 
       products.forEach(element => {
@@ -83,7 +90,7 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
 
       <ScrollView>
 
-      { (ownProfileAux == '')?
+      { (ownProfileAux == 'S')?
         <Text style={styles.titleText}> Mis productos </Text>
         :
         <Text style={styles.titleText}> Productos de {email} </Text>
@@ -97,12 +104,13 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
             <>
             <View style={styles.container2}>
 
-               <ProductCardId 
-                  id={item} 
+              <ProductCardId 
+                  id={item}
                   uid={id} 
-              />              
-              { (ownProfileAux == '')?
-                                <ProductDelete style={styles.productText} children= {item} />
+              />
+ 
+              { (ownProfileAux == 'S')?
+                                <ProductDelete id= {item} token = {session.token} />
                 : <></> } 
             </View>
             </>
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
   container2: {
     alignItems: 'center',
     flexDirection: 'column',
-    marginVertical: 10,
+    marginVertical: 0,
     
     width: '50%',
 //    height: 310,
@@ -144,15 +152,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#f3f1ed',
   }, 
-  flex: {
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    marginHorizontal: '10%',
-    marginVertical: 5,
-  },
+
   titleText: {
     padding: 10,
     textAlign: "center",

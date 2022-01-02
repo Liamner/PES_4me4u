@@ -10,7 +10,7 @@ import ProductCardId from '../components/ProductCardId';
 import retrieveSession from '../hooks/retrieveSession'
 
 
-export default function UserWishlist({ navigation, route }: RootTabScreenProps<'UserWishlist'>) {
+export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
   
   const [session, setSession] = React.useState({
     id: "",
@@ -18,22 +18,31 @@ export default function UserWishlist({ navigation, route }: RootTabScreenProps<'
     token:""
   });
 
-  const [productsId, setProductsId] = useState('si me ves, algo malo ha pasado');
+  const [productsId, setProductsId] = useState([]);
 
-  const uid =  '61b48cfd6dac17ee8ff33050'; //HK ->borrar linea y descomntar la siguiente linea
-//  const uid =  route.params; //id del usuario
+  const [uid, setUid] = useState('');
 
   const getWishlist = async () => {
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
-      setProductsId(response.data); //lista de ids de productos en la
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid);
+      // setProductsId(response.data.wishlist); //lista de ids de productos en la
 
 
-      console.log('wishlist response: ' + response.data.length);
-      console.log('wishlist: ' + productsId.length);
+      // console.log('wishlist response: ' + response.data.wishlist);
+
+
+      setProductsId(response.data.wishlist); //lista de ids de productos en la
+
+
+      console.log('wishlist response: ' + response.data.wishlist);
+
+      console.log('wishlist: ' + wishlist.length);
+
+
 
       productsId.forEach(element => {
         console.log(element);
       });
+
 
     };
 
@@ -57,7 +66,7 @@ export default function UserWishlist({ navigation, route }: RootTabScreenProps<'
 
   React.useEffect(() => {
     getData();
-//    setUid(session.id);     //HK -> descomentar
+    setUid(session.id);  
 
     getWishlist();
   }, []);
@@ -73,14 +82,16 @@ export default function UserWishlist({ navigation, route }: RootTabScreenProps<'
             numColumns = {2}
             data={productsId}
             renderItem={({ item }) => ( 
-              <>
-                { (item == null)? <> </> : 
-                      <ProductCardId
-                        id={item.id} 
-                        uid={uid}  
-                      />
-                }      
-              </>
+  
+              <View style={styles.container2}>
+                <ProductCardId
+                id={item}
+                uid={uid}  
+              />
+
+
+              </View>
+            
             )}
             horizontal={false}
             showsHorizontalScrollIndicator={false}
@@ -99,9 +110,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  flex: {
-    flex: 1,
+  container2: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    marginVertical: 0,
+    width: '50%',
+//    height: 310,
   },
+
   row: {
     flexDirection: 'row',
     alignSelf: 'center',
@@ -111,14 +127,12 @@ const styles = StyleSheet.create({
   titleText: {
     padding: 10,
     textAlign: "center",
-    //fontFamily: "Cochin",
     fontSize: 27,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
   productText: {
     textAlign: 'left',
-    //fontFamily: "Cochin",
     fontSize: 20,
     margin:10,
   },

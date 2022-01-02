@@ -17,6 +17,7 @@ import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
+import { Picker } from '@react-native-picker/picker';
 
 
 /*
@@ -29,10 +30,11 @@ boton para cambiar idiomas
 
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
     
-    // var userid = route.params;
-    var userid = '61c215918e402966b2c13e8d'; //HK -> borrar y descomentar linea superior
-    //Datos de un usuario
+    //id del usuario que se recibe y se desea ver
+     var userid: string | null | undefined;
+    //var userid = '61c215918e402966b2c13e8d'; 
 
+    //Datos de un usuario
     const [email, setEmail] = useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
@@ -59,7 +61,10 @@ boton para cambiar idiomas
     const [followersSize, setFollowersSize] = useState(0);
     const [followedSize, setFollowedSize] = useState(0);
 
-    const [titAux, setTitAux] = useState('Productos');
+
+    
+    const [selectedLanguage, setSelectedLanguage] = React.useState();
+
 
   const getData = async () => {
     const sess = await retrieveSession();
@@ -69,7 +74,6 @@ boton para cambiar idiomas
 
   
  
-    const [products, setProducts] = React.useState([]);
 
 //    const [wishlist, setWishlist] = React.useState([]);
 
@@ -102,7 +106,7 @@ boton para cambiar idiomas
 
     setEmail(response.data.email);
     if(aux !== session.id)
-      setOwnProfile(false);
+      setOwnProfile(false); //HK -> a de ser false
       setOwnProfileAux('N');
     console.log('nuestro perfil? ' + ownProfile);
 
@@ -125,18 +129,26 @@ boton para cambiar idiomas
     if(response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
     
-    setFollowers(response.data.followers);
-    setFollowed(response.data.followed);
+    if (response.data.followers == null){
+       setFollowers([]);
+       setFollowersSize(0);
+    }
+    else{
+       setFollowers(response.data.followers);
+       setFollowersSize(response.data.followers.length);
+    }
 
-    setFollowersSize(response.data.followers.length);
-    setFollowedSize(response.data.followed.length);
 
-    setProducts(response.data.products);
+    if(response.data.followed == null){
+       setFollowed([]);
+       setFollowedSize(0);
 
-    console.log('products response: ' + response.data.products.length);
-    console.log('products: ' + products.length);
+    }
+    else{
+        setFollowed(response.data.followed);
+        setFollowedSize(response.data.followed.length);
+    }
 
-    console.log('wishlist: ' + wishlist.length);
 
 
 /*    
@@ -212,9 +224,8 @@ boton para cambiar idiomas
     getData();
     getUserInfo();
 
-    setTitAux('Productos de ' + email );
 
-//    console.log(session.id + ' ' + session.token + ' ' + session.user);
+    console.log(session.id + ' ' + session.token + ' ' + session.user);
 
   }, []);  
 
@@ -224,6 +235,21 @@ boton para cambiar idiomas
   return(
     <View style ={styles.container}>
       <ScrollView>
+
+      {ownProfile? 
+          <View style={{ alignItems: 'center',
+          justifyContent: 'center'}}>
+            <TouchableOpacity
+            onPress={() => {
+              getUserInfo();
+          }}>
+            <Text style={styles.titleText}> Mi perfil</Text>
+            </TouchableOpacity>
+          </View>
+          :
+          <></>
+          
+        }
         
 
         <Text style={styles.text}>
@@ -232,15 +258,7 @@ boton para cambiar idiomas
 
 
         {ownProfile? 
-          <View style={{ alignItems: 'center',
-          justifyContent: 'center'}}>
-            <TouchableOpacity
-            onPress={() => {
-              getUserInfo();
-          }}>
-            <Text style={styles.text2}> Mi perfil</Text>
-            </TouchableOpacity>
-          </View>
+          <></>
           :
           <View style={{ alignItems: 'center',
            justifyContent: 'center'}}>
@@ -307,41 +325,26 @@ boton para cambiar idiomas
         </Text>
 
 
-        {ownProfile?  
-          // ir a wishlist si es tu perfil
-          <Button 
-              onPress={() =>  navigation.navigate( 'UserWishlist', {userId: userid} ) }
-              title = "Mis productos deseados" 
-              color="#a2cff0" //azul iconico
-          />
-          : <></>  }
+       
 
 
-
-        {
-//         ownProfile?  
-//           // ir a ver los productos
-//           <Button 
-//               onPress={() =>  navigation.navigate( 'UserProducts', {title: 'Mis productos', id: userid ,products: products } ) }
-//               title = "Mis productos" 
-//               color="#a2cff0" //azul iconico
-//           />
-//           : 
-//           <View>
-
-//             <Button 
-// //                onPress={() =>  navigation.navigate( 'UserProducts', {title:  titAux, id: userid ,products: products } ) }
-//                 title = {titAux}
-//                 color="#a2cff0" //azul iconico
-//             />            
-//           </View>
-  }
 
           <Button 
-                 onPress={() =>  navigation.navigate( 'UserProducts', {id:  userid, ownProfileAux:  'S' /*ownProfileAux*/ } ) }
+                 onPress={() =>  navigation.navigate( 'UserProducts', {id:  userid, ownProfileAux:  ownProfileAux } ) } 
                  title = 'Lista de productos'
                  color="#a2cff0" //azul iconico
           />
+
+          {ownProfile?  
+          // ir a wishlist si es tu perfil
+            <Button
+              onPress={() => navigation.navigate('UserWishlist', userid)}
+              title="Mis productos deseados"
+              color="#a2cff0" //azul iconico
+            />
+          : <></>  }
+
+
 
         <CustomMap
           style={styles.mapview}
@@ -360,63 +363,6 @@ boton para cambiar idiomas
           ></CustomMarker>
         </CustomMap>
 
-
-
-        {ownProfile?  
-                <Text style={styles.titleText}> Tus productos</Text>
-              : <Text style={styles.titleText}>Productos de este usuario</Text>}
-        
-
-
-
-
-
-
-        <FlatList
-          numColumns = {2}
-          data={products}
-          renderItem={({ item }) => ( 
-            
-               <ProductCardId 
-                  id={item} 
-                  uid={userid} 
-              />
-
-            
-          )}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={Scroll}
-        />
-
-{/*
-        <Text style={styles.titleText}> Productos deseados</Text>
-        <FlatList
-          numColumns = {1}
-          data={wishlist}
-          renderItem={({ item }) => ( 
-            <>
-              { (item == null)? <> </> : 
-                    <ProductCardId
-                      id={item.id} 
-                      uid={userid}  
-                    />
-              }
-               {ownProfile?  
-                                <ProductDelete style={styles.productText} children= {item._id} />
-                : <></> }            
-            </>
-          )}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={Scroll}
-        />
-*/}
-               
-
-
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
@@ -424,6 +370,34 @@ boton para cambiar idiomas
         </Text>
         */}
         
+        {ownProfile?  
+          // Cambiar de idioma
+          <>
+            <Text style={styles.titlePicker}> Idioma </Text>
+            
+            <Picker
+                selectedValue={selectedLanguage}
+                style={styles.picker}
+                onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}>
+              <Picker.Item label="Castellano" value="castellano" />
+              <Picker.Item label="Catalan" value="catalan" />
+            </Picker>
+            
+            </>
+          : 
+          
+          <Button
+            onPress={() => {Alert.alert(
+              "Denunciado" ,
+              "Has reportado a este usuario",
+              [{text: "Aceptar"}]
+              )}}
+            title="Reportar usuario"
+            color="#FF0000" //azul iconico
+          />
+        
+        }
+
 
       </ScrollView>
     </View>
@@ -517,10 +491,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10
 },
-textFollow: {
-  fontSize: 18,
-  fontWeight: 'bold'
-},
+  textFollow: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  titlePicker: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 15,
+    width: '90%',
+  },
+  picker: {
+    marginVertical: 10,
+    height: 60,
+    width: '90%',
+  },
 
 });
 

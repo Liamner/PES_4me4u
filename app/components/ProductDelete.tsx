@@ -13,28 +13,39 @@ import ProductDelete from '../components/ProductDelete';
 */
 
 
+type DeleteProps = {
+  id: string,
+  token: string
+}
 
-class ProductDelete extends Component {
 
-    APIDeleteProduct= (id: string) =>{
-        axios
-        .delete('https://app4me4u.herokuapp.com/api/product/delete/'+ id)
+export function ProductDelete  ({ id, token}: DeleteProps) {
+//class ProductDelete extends Component {
+
+    const APIDeleteProduct= (id: string) =>{
+
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+  
+        axios.delete('https://app4me4u.herokuapp.com/api/product/delete/'+ id, config)
         .then(res => {
                 console.log(res);
-                console.log('EXITO');
+                console.log('EXITO, producto borrado');
             })
         .catch(function (error) {
             console.log(error);
-            console.log('ERROR');
+            console.log('ERROR, no se ha borrado');
 
         })
     }
 
 
 
-
     //Alerta de confirmación de borrado
-    deleteConfirmationAlert = (id: string) =>
+    const deleteConfirmationAlert = (id: string) =>
     Alert.alert(
       "Alerta",
       "¿Está seguro de que desea borrar el producto seleccionado?",
@@ -43,16 +54,15 @@ class ProductDelete extends Component {
           text: "No",
 //          onPress: () => console.log("Cancel Pressed"),
         },
-        { text: "Sí", onPress: () => this.APIDeleteProduct(id) }
+        { text: "Sí", onPress: () => APIDeleteProduct(id) }
       ]
     );
 
-    render() {
         return (
             <View style= {styles.button}>
 
                 <Button 
-                onPress={() => this.deleteConfirmationAlert(this.props.children)}
+                onPress={() => deleteConfirmationAlert( id )}
                 title = "Borrar" 
                 color="#FF0000"//color de fondo rojo
                 />
@@ -60,7 +70,6 @@ class ProductDelete extends Component {
             </View>
 
         )
-    }
 }
 
 const styles = StyleSheet.create({

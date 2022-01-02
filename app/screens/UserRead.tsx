@@ -220,12 +220,24 @@ boton para cambiar idiomas
     }
   };
   
+
+
   React.useEffect(() => {
     getData();
     getUserInfo();
 
+    // Alert.alert(
+    //   "Desea cargar este perfil?" ,
+    //   "puede contener datos extraños?",
+    //   [{ text: 'cargar', onPress: () => getUserInfo() }]
+    //   )
+
 
     console.log(session.id + ' ' + session.token + ' ' + session.user);
+
+
+
+    
 
   }, []);  
 
@@ -247,8 +259,15 @@ boton para cambiar idiomas
             </TouchableOpacity>
           </View>
           :
-          <></>
-          
+          <View style={{ alignItems: 'center',
+          justifyContent: 'center'}}>
+            <TouchableOpacity
+            onPress={() => {
+              getUserInfo();
+          }}>
+            <Text style={styles.titleText}> Perfil ajeno</Text>
+            </TouchableOpacity>
+          </View>          
         }
         
 

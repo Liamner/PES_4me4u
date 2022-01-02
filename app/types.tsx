@@ -46,6 +46,7 @@ export type RootTabParamList = {
   RateUser: undefined;
   SearchProduct: undefined;
   UserWishlist: undefined;
+  UserProducts: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

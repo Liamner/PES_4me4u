@@ -27,12 +27,12 @@ boton para cambiar idiomas
 */
 
 
-//export default function ViewUserScreenScreen({ navigation}: RootTabScreenProps<'ViewUser'>) {
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
-    var userid = route.params;
+    
+    // var userid = route.params;
+    var userid = '61c215918e402966b2c13e8d'; //HK -> borrar y descomentar linea superior
     //Datos de un usuario
 
-    //const [id, setid] = useState(user_id);
     const [email, setEmail] = useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
@@ -41,6 +41,8 @@ boton para cambiar idiomas
     const [score, setScore] = useState('Cargando...');
     const [latitude, setLatitude] = useState(39.03385);
     const [longitude, setLongitude] = useState(125.75432);
+
+    //sesion
     const [session, setSession] = React.useState({
       id: "",
       user:"",
@@ -48,12 +50,16 @@ boton para cambiar idiomas
     });
     
     const [ownProfile, setOwnProfile] = useState(true);
+    const [ownProfileAux,  setOwnProfileAux] = useState('S');
+
     const [following, setFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [followed, setFollowed] = useState([]);
 
     const [followersSize, setFollowersSize] = useState(0);
     const [followedSize, setFollowedSize] = useState(0);
+
+    const [titAux, setTitAux] = useState('Productos');
 
   const getData = async () => {
     const sess = await retrieveSession();
@@ -62,30 +68,12 @@ boton para cambiar idiomas
     }
 
   
-   /* 
-    const email = 'a@mail.algo'
-    const location = 'Pyongyang'
-    const level = '1'
-    const postalCode = '08028'
-    const ecoPoints = '10'
-    const score = '5.0'
-    const latitude = 39.03385
-    const longitude = 125.75432
-*/
-
+ 
     const [products, setProducts] = React.useState([]);
 
-    const [wishlist, setWishlist] = React.useState([]);
+//    const [wishlist, setWishlist] = React.useState([]);
 
-    /*
-    const [productInfo, setProductInfo] = React.useState({
-      name: "",
-      guardado: false,
-      arrayTratos: [],
-      imageUri: "",
-      id: "",
-      uid: ""
-    });*/
+
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -109,15 +97,14 @@ boton para cambiar idiomas
     else {
       aux = session.id
     }
-    //console.log(session.id);
-    //console.log(aux);
-//    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + "61c215918e402966b2c13e8d");  //HK -> session.id
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
 
     setEmail(response.data.email);
     if(aux !== session.id)
       setOwnProfile(false);
-    console.log(ownProfile);
+      setOwnProfileAux('N');
+    console.log('nuestro perfil? ' + ownProfile);
 
 
 
@@ -149,18 +136,8 @@ boton para cambiar idiomas
     console.log('products response: ' + response.data.products.length);
     console.log('products: ' + products.length);
 
-
-
-
-    let response2 = await axios.get('https://app4me4u.herokuapp.com/api/user/' + '61c215918e402966b2c13e8d' + '/wishlist'); //HK -> session.id
-    console.log(response2.data)
-    
-    setWishlist(response2.data.wishlist);
-
-    console.log('wishlist response: ' + response.data.wishlist.length);
-
-    console.log('wishlist response2: ' + response2.data.wishlist.length);
     console.log('wishlist: ' + wishlist.length);
+
 
 /*    
    //en caso de tener datos desconocidos
@@ -234,6 +211,11 @@ boton para cambiar idiomas
   React.useEffect(() => {
     getData();
     getUserInfo();
+
+    setTitAux('Productos de ' + email );
+
+//    console.log(session.id + ' ' + session.token + ' ' + session.user);
+
   }, []);  
 
   
@@ -243,6 +225,7 @@ boton para cambiar idiomas
     <View style ={styles.container}>
       <ScrollView>
         
+
         <Text style={styles.text}>
             Correo: <Text style={styles.text2}>{email}</Text>
         </Text>
@@ -325,13 +308,40 @@ boton para cambiar idiomas
 
 
         {ownProfile?  
+          // ir a wishlist si es tu perfil
           <Button 
-              onPress={() =>  navigation.navigate( 'UserWishlist' ) }
+              onPress={() =>  navigation.navigate( 'UserWishlist', {userId: userid} ) }
               title = "Mis productos deseados" 
               color="#a2cff0" //azul iconico
           />
           : <></>  }
 
+
+
+        {
+//         ownProfile?  
+//           // ir a ver los productos
+//           <Button 
+//               onPress={() =>  navigation.navigate( 'UserProducts', {title: 'Mis productos', id: userid ,products: products } ) }
+//               title = "Mis productos" 
+//               color="#a2cff0" //azul iconico
+//           />
+//           : 
+//           <View>
+
+//             <Button 
+// //                onPress={() =>  navigation.navigate( 'UserProducts', {title:  titAux, id: userid ,products: products } ) }
+//                 title = {titAux}
+//                 color="#a2cff0" //azul iconico
+//             />            
+//           </View>
+  }
+
+          <Button 
+                 onPress={() =>  navigation.navigate( 'UserProducts', {id:  userid, ownProfileAux:  'S' /*ownProfileAux*/ } ) }
+                 title = 'Lista de productos'
+                 color="#a2cff0" //azul iconico
+          />
 
         <CustomMap
           style={styles.mapview}
@@ -366,29 +376,13 @@ boton para cambiar idiomas
           numColumns = {2}
           data={products}
           renderItem={({ item }) => ( 
-
-            <>
-
-
+            
                <ProductCardId 
                   id={item} 
-                  uid={'61c215918e402966b2c13e8d'}  //HK ->se session.id
+                  uid={userid} 
               />
-              {// ownProfile?  BOTON-DE-BORRAR: NADA 
-               // import ProductDelete from '../components/ProductDelete';
-
-               // <ProductDelete children= ID_DEL_PRODUCTO_A_BORRAR />
-
-              }
-              { //{ alignItems: 'left', justifyContent: 'left'}
-               }
-
-               {ownProfile?  
-                                <ProductDelete style={styles.productText} children= {item} />
-                : <></> }
 
             
-            </>
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}
@@ -406,7 +400,7 @@ boton para cambiar idiomas
               { (item == null)? <> </> : 
                     <ProductCardId
                       id={item.id} 
-                      uid={'61bb8086b748e8cb515b798f'}  //HK -> session.id
+                      uid={userid}  
                     />
               }
                {ownProfile?  

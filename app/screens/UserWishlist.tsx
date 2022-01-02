@@ -10,7 +10,7 @@ import ProductCardId from '../components/ProductCardId';
 import retrieveSession from '../hooks/retrieveSession'
 
 
-export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
+export default function UserWishlist({ navigation, route }: RootTabScreenProps<'UserWishlist'>) {
   
   const [session, setSession] = React.useState({
     id: "",
@@ -20,14 +20,15 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
 
   const [productsId, setProductsId] = useState('si me ves, algo malo ha pasado');
 
-  const [uid, setUid] =  useState('61b48cfd6dac17ee8ff33050'); //id del usuario
+  const uid =  '61b48cfd6dac17ee8ff33050'; //HK ->borrar linea y descomntar la siguiente linea
+//  const uid =  route.params; //id del usuario
 
   const getWishlist = async () => {
       let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+uid+'/wishlist');
       setProductsId(response.data); //lista de ids de productos en la
 
 
-      console.log('wishlist response: ' + response.data..length);
+      console.log('wishlist response: ' + response.data.length);
       console.log('wishlist: ' + productsId.length);
 
       productsId.forEach(element => {
@@ -66,10 +67,8 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
       <ScrollView>
 
     
-        <Text> gato</Text>
-    
-
         <Text style={styles.titleText}> Productos deseados</Text>
+    
           <FlatList
             numColumns = {2}
             data={productsId}

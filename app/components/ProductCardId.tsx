@@ -29,7 +29,7 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
  // var imageUri: String;
  //var arrayTratos: String[];
 
-  const [name, setName] = useState('NNN');
+  const [name, setName] = useState('Cargando...');
   const [imageUri, setImageUri] = useState('https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png');
   const [arrayTratos, setArrayTratos] = useState([]);
 
@@ -39,7 +39,6 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
     let response = axios.get('https://app4me4u.herokuapp.com/api/product/'+ id)
     .then(response => {
             //console.log(response);
-            console.log("EXITO!!! " + id);
 
 
             // name = response.data.name;
@@ -55,34 +54,26 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
             //provide
             //provide
 
-            console.log( 'COSA ' + imageUri  );
 
             arrayTratos.forEach(element => {
               if(element == "exchange"){
                 intercambiar = true;
-                console.log(id + ' exchange');
               } 
               if(element == "present"){
                 dar = true;
-                console.log(id + ' present');
 
               } 
               if(element == "provide"){
                 prestar = true
-                console.log(id + ' provide');
-
               } 
 
 
             });
-            console.log(id + ' AAA ' + arrayTratos.length);
-            console.log('_________________________________________');
-            console.log('');
+
 
         })
     .catch(function (error) {
-//      console.log("FALLOOOOO!!! " + id);
-      //console.log(error);
+      console.log(error);
     });
 
 
@@ -194,7 +185,7 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
  // console.log("hola")
 const styles = StyleSheet.create({
     container: {
-      width: '50%',
+      width: '100%',
       height: 310,
       borderRadius: 10,
       borderColor: '#ffffff',

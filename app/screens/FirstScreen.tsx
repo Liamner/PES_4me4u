@@ -6,7 +6,7 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import ProductCardElement from './ProductCardElement'
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import ProductCard from '../components/ProductCard';
+//import ProductCard from '../components/ProductCard';
 
 interface ProductImage{
   __v: number;

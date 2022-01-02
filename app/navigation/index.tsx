@@ -40,6 +40,7 @@ import UserWishlist from '../screens/UserWishlist';
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import UserProducts from '../screens/UserProducts';
 
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -224,6 +225,15 @@ function BottomTabNavigator() {
          component={UserWishlist}
          options={{
            title: 'User wishlist',
+           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+         }}
+        />
+
+    <BottomTab.Screen
+         name="UserProducts"
+         component={UserProducts}
+         options={{
+           title: 'User products',
            tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
          }}
         />

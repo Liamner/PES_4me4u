@@ -84,10 +84,16 @@ let usuarioSchema = new Schema({
         ref:"Usuario",
         required: false
     }],
+    /*
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false
     },
+    */
+    wishlist: [{
+        type: String,
+        required: false
+    }],
     recentlyViewed: {
         type: [mongoose.Schema.ProductSchema],
         required: false

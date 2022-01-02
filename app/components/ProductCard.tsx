@@ -26,6 +26,8 @@ export function ProductCard  ({navigation, id, uid, name, guardado, imageUri, ar
     if(element == "present") dar = true;
     if(element == "loan") prestar = true
   });
+
+  // no se puede probar hasta que se pueda hacer una busqueda de productos
   const guardarProducto = async () => {   
     await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id

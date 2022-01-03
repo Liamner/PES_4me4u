@@ -403,8 +403,6 @@ exports.getUserWishlist = async (req, res) => {
       console.log(user);
      res.status(200).json(user.wishlist);
     }).populate({path:"wishlist", populate: { path: 'img'}});
-    
-    
   } catch (error) {
     res.status(400).json(error)
   }
@@ -415,9 +413,9 @@ exports.addToWishlist = async (req, res) => {
     const userId = req.params.id;
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
-     ourUser.wishlist.push(idProduct);
-     ourUser.save();
-     res.status(200).json(ourUser.wishlist);
+    ourUser.wishlist.push(idProduct);
+    ourUser.save();
+    res.status(200).json(ourUser.wishlist);
 
   } catch (error) {
     res.status(400).json(error)
@@ -427,57 +425,23 @@ exports.addToWishlist = async (req, res) => {
 exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId}).populate("wishlist");
-    console.log("usuario: ", ourUser);
     let idProduct = req.body.idProduct;
-    console.log("producto: ", idProduct)
-    //let wl = ourUser.wishlist;
-    console.log("user wishlist: ", ourUser.wishlist);
-    let i = 0;
-    console.log("hola")
-    console.log("tamaño de la wishlist: ",ourUser.wishlist.length)
-    let find = 0;
+    const ourUser = await User.findById({_id: userId}).populate("wishlist");
+    let i = 0, find = 0;
+
     for (i = 0;(find == 0) && (i < ourUser.wishlist.length); i++) {
-      console.log("va recorriendo la wishlist, ", i);
-      if (idProduct == ourUser.wishlist[i]) {
-        find = 1;
-        console.log("producto encontrado!");
-      }
+      if (idProduct == ourUser.wishlist[i]) find = 1;
     }
     if (find == 0) {
       res.status(400).json({error: 'The product is not in the wishlist'})
     }
     else {
-      console.log("ha encontrado el producto")
       i = i-1;
       ourUser.wishlist.splice(i, 1);
-      console.log("wishlist actualizada: ", ourUser.wishlist);
       ourUser.save();
-      //const user = await User.findById({_id: userId});
       console.log(ourUser.wishlist)
       res.status(200).json(ourUser);
     }
-    /*
-    User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersProducts.wishlist.length) ; i++) {
-          if (idProduct == usersProducts.wishlist[i]._id) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not wishlist'})
-        }
-        else {
-          i = i-1;
-          usersProducts.wishlist.splice(i, 1);
-          usersProducts.save();
-          const user = await User.findById({_id: userId});
-          console.log(user.wishlist)
-          res.status(200).json(usersProducts);
-
-        }
-    }).populate('wishlist');
-    */
   } catch (error) {
     res.status(400).json(error)
   }

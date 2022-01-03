@@ -39,12 +39,7 @@ export type RootTabParamList = {
   TestScreen: undefined;
   FirstScreen: undefined;
   ViewUserScreen: undefined;
-  FollowersScreen: undefined;
-  FollowedScreen: undefined;
-  ViewUser: undefined;
   ProductRead: undefined;
-  RateUser: undefined;
-  SearchProduct: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

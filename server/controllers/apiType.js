@@ -6,7 +6,6 @@ exports.readAllTypes = async (req, res) => {
   
       res.status(200).json(type);
       
-      console.log(type);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);

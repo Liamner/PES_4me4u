@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+import { resolvePlugin } from '@babel/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
@@ -43,7 +44,6 @@ const getData = async () => {
         console.log(e)
     }
   }
-  const [newImages, setNewImages] = React.useState([]);
 
   React.useEffect(() => {
     getData();

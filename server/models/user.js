@@ -43,7 +43,7 @@ let usuarioSchema = new Schema({
         default: '1',
     },
     ecoPoints: {
-        type: String,
+        type: Number,
         default: '10',
     },
     score: {
@@ -64,25 +64,31 @@ let usuarioSchema = new Schema({
     },
     gift: {
         type: Number,
-        default: '0',
+        default: 0,
     },
     loans: {
         type: Number,
-        default: '0',
+        default: 0,
     },
     exchanges: {
         type: Number,
-        default: '0'
+        default: 0
     },
-    followers: {
-        type: [mongoose.Schema.usuarioSchema],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
         required: false
-    },
-    followed: {
-        type: [mongoose.Schema.usuarioSchema],
+    }],
+    followed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Usuario",
         required: false
-    },
+    }],
     wishlist: {
+        type: [mongoose.Schema.ProductSchema],
+        required: false
+    },
+    recentlyViewed: {
         type: [mongoose.Schema.ProductSchema],
         required: false
     },

@@ -9,6 +9,7 @@ const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
 const conversationController = require ('../controllers/apiConvesration.js')
 const adminController = require ('../controllers/apiAdmin.js')
+const messageController = require ('../controllers/apiMessages.js')
 const jwt = require('jsonwebtoken')
 
 const { validateCreateProduct } = require('../validators/product.js');
@@ -142,8 +143,8 @@ module.exports = function(app) {
   router.route('/user/:userId/rate')
     .post(authenticateJWT, userController.rateUser);
 
-  router.route('/user/:id/products')
-    .get(userController.getRewards)
+  router.route('/user/:id/products/rewards')
+    .put(userController.getRewards)
 
   router.route('/user/:id/points')
     .get(userController.getUserPoints)
@@ -158,7 +159,7 @@ module.exports = function(app) {
     .get(userController.levelManage)
 
   router.route('/user/:id/rewards')
-    .get(userController.getUserRewards)
+    .put(userController.getUserRewards)
 
   router.route('/user/:id/AddToWishlist')
     .post(userController.addToWishlist)
@@ -166,23 +167,29 @@ module.exports = function(app) {
     router.route('/user/:id/DeleteFromWishlist')
     .post(userController.deleteFromWishlist)
   
-  router.route('/user/:id/AddFollowed')
-    .post(userController.addUserFollowed)
-  
-  router.route('/user/:id/AddFollower')
-    .post(userController.addUserFollower)
-  
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
 
   router.route('/user/:id/followers')
     .get(userController.getUserFollowers)
 
-  router.route('/user/:id/unfollow')
-    .post(userController.unfollow)
+  router.route('/user/:id/follow')
+    .post(userController.follow)
 
-  router.route('/user/:id/loseFollower')
-    .post(userController.loseFollower)
+  //router.route('/user/:id/unfollow')
+  //  .post(userController.unfollow)
+
+  //router.route('/user/:id/loseFollower')
+  //  .post(userController.loseFollower)
+
+  router.route('/user/:id/productsRecentlyViewed')
+    .get(userController.getRecentlyViewed)
+
+  router.route('/user/:id/addProductsRecentlyViewed')
+    .post(userController.updateRecentlyViewed)
+
+  
+
     
   // ======================
   // ---- Trade Routes ----
@@ -261,6 +268,9 @@ module.exports = function(app) {
   router.route('/product/:productId/image/:imageId')
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+
+  router.route('/filter/products')
+    .get(categoryController.getProductCategory2)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 
@@ -304,6 +314,18 @@ module.exports = function(app) {
 
   router.route('/admin/:id/blockedUsers')
     .get(adminController.readBlockedUsers)
+
+
+    // get my conversations
+    .get(authenticateJWT, conversationController.getMyConversations)
+
+
+  router.route('/message')
+    .get(messageController.getMessages)
+    .post(authenticateJWT, messageController.sendMessage)
+  
+  router.route('/conversation/:conversationId')
+    .get(authenticateJWT, messageController.getConversationMessages)
 
   return router;
 

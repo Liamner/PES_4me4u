@@ -10,9 +10,9 @@ import { CustomMap, CustomMarker} from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
-  const uid = '61b09c0f9482049de40b74f3';
-  const pid = '61b64a52d4851901d035ed57';
+
+export default function ProductRead({ navigation }:RootTabScreenProps<'ProductRead'>) {
+
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -115,7 +115,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   const getProductInfo = async () => {
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/'+pid);
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca');
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);

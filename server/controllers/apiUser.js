@@ -13,7 +13,6 @@ exports.readAllUsers =  async (req, res) => {
 
     res.status(200).json(user);
 
-    console.log(user);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
@@ -264,36 +263,75 @@ exports.getMyCommentsRecived = async (req, res) => {
 exports.getRewards = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
-    var ngifts = user.gifts;
-    var nloans = user.loans;
-    var nexchanges = user.exchanges;
-    var points = user.ecoPoints;
-    var rewards = 0;
+    let ngifts = user.gifts;
+    let nloans = user.loans;
+    let nexchanges = user.exchanges;
+    let points = user.ecoPoints;
+    let rewards = 0;
+    let diez = 10;
+    let cincuenta = 50;
+    let cien = 100;
+    let cientoCincuenta = 150;
+
     if(ngifts >= 3) {
-      if(ngifts >=3) rewards += 10;
-      if(ngifts >= 5) rewards += 50;
-      else if (ngifts >= 7) rewards += 100;
-      else if(ngifts >= 10) rewards += 150;
+      if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(diez);
+      else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(cincuenta);
+      else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(cien);
+      else if(ngifts >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nloans >= 3) {
-      if(nloans >=3) rewards += 10;
-      if(nloans >= 5) rewards += 50;
-      else if (nloans >= 7) rewards += 100;
-      else if(nloans >= 10) rewards += 150;
+    if(nloans >= 3) {
+      if(nloans >=3 && nloans <= 5) rewards += parseFloat(diez);
+      else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(cincuenta);
+      else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(cien);
+      else if(nloans >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nexchanges >= 3) {
-      if(nexchanges >=3) rewards += 10;
-      if(nexchanges >= 5) rewards += 50;
-      else if (nexchanges >= 7) rewards += 100;
-      else if(nexchanges >= 10) rewards += 150;
+    if(nexchanges >= 3) {
+      if(nexchanges >=3 && nexchanges <= 5) rewards += parseFloat(diez);
+      else if(nexchanges >= 5 && nexchanges <= 7) rewards += parseFloat(cincuenta);
+      else if (nexchanges >= 7 && nexchanges <= 10) rewards += parseFloat(cien);
+      else if(nexchanges >= 10) rewards += parseFloat(cientoCincuenta);
     }
-
-    user.ecoPoints = points + rewards;
-    user.save();
+    user.ecoPoints = parseFloat(points)+parseFloat(rewards)
+    //user.ecoPoints += rewards;
+    await user.save();
     res.status(200).json(user);
     
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserRewards = async (req, res) => {
+  let {type, estimatedPoints} = req.body;
+
+  let user = await User.findById({ _id: req.params.id });
+  console.log("Searching for user to get reward: " + user.name);
+  let eco = user.ecoPoints;
+  let total = 0;
+  if (type == 'gift'){
+    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+  }
+
+  else if (type == 'loan') {
+    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+    
+  }
+  else if (type == 'exchange') {
+    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points not accepted'})
+  }
+  else res.status(400).json({error: 'Transaction not available'});
+  
+  
+  user.ecoPoints = total;
+
+  try {
+    await user.save();
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }
@@ -352,25 +390,6 @@ exports.getUserPoints = async (req, res) => {
     const user = await User.findById({ _id: req.params.id });
     console.log("Puntos del usuario: " , user.ecoPoints);
     res.status(200).json(user.ecoPoints);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.getUserRewards = async (req, res) => {
-  try {
-    const {type, estimatedPoints} = req.body;
-
-    const id = req.params.id;
-    const user = await User.findById(id)
-    console.log("Searching for user to get reward: " + user.name);
-    
-    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
-    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
-    if (type != 'exchange') user.ecoPoints += 15;
-
-    await user.save();
-    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }
@@ -464,109 +483,86 @@ exports.getUserFollowers = async (req, res) => {
   }
 };
 
-exports.addUserFollowed = async (req, res) => {
+exports.follow = async (req, res) => {
   try {
     const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
-    
     let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.followed.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followed);
-    });
+    const ourUser = await User.findById({_id: userId});
+    const userFollowed = await User.findOne ({email: body.email});
+        let find = 0;
+        let i;
+        let aux2 = userFollowed._id.toString();
+        for (i = 0;(find == 0) && (i < ourUser.followed.length) ; i++) {
+          let aux1 = ourUser.followed[i].toString();
+          if (aux1 == aux2) {find = 1;}
+        }
+        if (find == 0) {
+          ourUser.followed.push(userFollowed._id);
+          await ourUser.save();
+          userFollowed.followers.push(ourUser._id);
+          await userFollowed.save();
+           res.status(200).json(ourUser.followered);
+        }
+        else {
+          i = i-1;
+          ourUser.followed.splice(i, 1);
+          await ourUser.save();
+          find = 0;
+          aux2 = ourUser._id.toString();
+          for (i = 0;(find == 0) && (i < userFollowed.followers.length) ; i++) {
+            aux1 = userFollowed.followers[i].toString();
+            if(aux1 == aux2){
+              find = 1;
+            }
+          }
+          i = i - 1; 
+          userFollowed.followers.splice(i,1);
+          await userFollowed.save();
+         res.status(200).json(ourUser.followered);
+        }
+    } catch (error) {
+    res.status(400).json(error)
+  }
+};
 
+exports.getRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("recentlyViewed");
+    
+    res.status(200).json(user.recentlyViewed)
   } catch (error) {
     res.status(400).json(error)
   }
 };
 
-exports.addUserFollower = async (req, res) => {
+exports.updateRecentlyViewed = async (req, res) => {
   try {
     const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
+    let idProduct = req.body.idProduct;
+    let ourUser;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersRecentViewed) => {
+      if (usersRecentViewed.recentlyViewed.length == 5) {
+        usersRecentViewed.followers.splice(1,1);
+        usersRecentViewed.save();
+      }
+      ourUser = usersRecentViewed;
+    }).populate('recentlyViewed');
     
-    let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
+    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
       if (erro) {
         return res.status(500).json({
            ok: false,
            err: erro
         })
      }
-     ourUser.followers.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followers);
+      ourUser.recentlyViewed.push(productDB);
+      ourUser.save();
+      res.status(200).json(ourUser.recentlyViewed);
     });
+
   } catch (error) {
     res.status(400).json(error)
   }
 }
-
-exports.unfollow = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
-          if (mail == usersFollowed.followed[i].email ) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not followed'})
-        }
-        else {
-          i = i-1;
-          const idUser = usersFollowed.followed[i]._id;
-          usersFollowed.followed.splice(i, 1);
-          usersFollowed.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowed);
-
-        }
-    }).populate('followed');
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.loseFollower = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
-          if (mail == usersFollowers.followers[i].email ) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not follower'})
-        }
-        else {
-          i = i-1;
-          const idUser = usersFollowers.followers[i]._id;
-          usersFollowers.followers.splice(i, 1);
-          usersFollowers.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowers);
-
-        }
-    }).populate('followers');
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};

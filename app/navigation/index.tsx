@@ -3,12 +3,14 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -24,11 +26,20 @@ import EditProduct from '../screens/ProductEdit';
 import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
+import ProductCard from '../screens/ProductCardScreen';
+import TestScreen from '../screens/TestScreen';
+import FirstScreen from '../screens/FirstScreen';
 import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
+import FollowersScreen from '../screens/FollowersScreen';	
+import FollowedScreen from '../screens/FollowedScreen';	
+import RateUser from '../screens/UserRate';
+import SearchProduct from '../screens/SearchProduct';
+
 
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -52,13 +63,15 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: false }} />
       </Stack.Group>
     </Stack.Navigator>
   );
 }
+
 
 const LoginStack = createNativeStackNavigator();
 
@@ -81,6 +94,7 @@ function LoginNavigator() {
     </LoginStack.Navigator>
   );
 }
+
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
@@ -128,6 +142,8 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+    
+{/*   TODO :  1descomentar */}
       <BottomTab.Screen
         name="ProductCard"
         component={ProductCard}
@@ -136,11 +152,20 @@ function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+      {/*   TODO :  2descomentar */}
        <BottomTab.Screen
         name="TestScreen"
         component={TestScreen}
         options={{
           title: 'Test Screen',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="FirstScreen"
+        component={FirstScreen}
+        options={{
+          title: 'First Screen',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
@@ -153,39 +178,57 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="DeleteButton"
-        component={DeleteButton}
-        options={{
-          title: 'Borrar Producto',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="ActualizarEstadoProducto"
-        component={ActualizarEstadoProducto}
-        options={{
-          title: 'Actualizar Estado',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
         name="ViewUser"
         component={ViewUser}
         options={{
           title: 'Ver Usuario',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
+      /> 
+      <BottomTab.Screen
+        name="SearchProduct"
+        component={SearchProduct}
+        options={{
+          title: 'Buscar Producto',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> 
+      <BottomTab.Screen
+        name="FollowersScreen"
+        component={FollowersScreen}
+        options={{
+          title: 'Followers',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="FollowedScreen"
+        component={FollowedScreen}
+        options={{
+          title: 'Followed',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
       />      
-    </BottomTab.Navigator>
-  );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
-}
+       <BottomTab.Screen
+         name="RateUser"
+         component={RateUser}
+         options={{
+           title: 'Valorar usuario',
+           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+         }}
+        />
+   
+     </BottomTab.Navigator>
+   );
+ }
+ 
+ /**
+  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+  */
+ function TabBarIcon(props: {
+   name: React.ComponentProps<typeof FontAwesome>['name'];
+   color: string;
+ }) {
+   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+ }
+ 

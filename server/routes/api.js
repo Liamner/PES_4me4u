@@ -165,7 +165,7 @@ module.exports = function(app) {
     .post(userController.addToWishlist)
 
     router.route('/user/:id/DeleteFromWishlist')
-    .post(userController.deleteFromWishlist)
+    .delete(userController.deleteFromWishlist)
   
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)

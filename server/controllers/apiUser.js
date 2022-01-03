@@ -403,8 +403,6 @@ exports.getUserWishlist = async (req, res) => {
       console.log(user);
      res.status(200).json(user.wishlist);
     }).populate({path:"wishlist", populate: { path: 'img'}});
-    
-    
   } catch (error) {
     res.status(400).json(error)
   }
@@ -415,18 +413,10 @@ exports.addToWishlist = async (req, res) => {
     const userId = req.params.id;
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
-    
-    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.wishlist.push(productDB);
-     ourUser.save();
-     res.status(200).json(ourUser.wishlist);
-    });
+    ourUser.wishlist.push(idProduct);
+    ourUser.save();
+    res.status(200).json(ourUser.wishlist);
+
   } catch (error) {
     res.status(400).json(error)
   }
@@ -436,26 +426,22 @@ exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.params.id;
     let idProduct = req.body.idProduct;
-    User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersProducts.wishlist.length) ; i++) {
-          if (idProduct == usersProducts.wishlist[i]._id) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not wishlist'})
-        }
-        else {
-          i = i-1;
-          usersProducts.wishlist.splice(i, 1);
-          usersProducts.save();
-          const user = await User.findById({_id: userId});
-          console.log(user.wishlist)
-          res.status(200).json(usersProducts);
+    const ourUser = await User.findById({_id: userId}).populate("wishlist");
+    let i = 0, find = 0;
 
-        }
-    }).populate('wishlist');
-
+    for (i = 0;(find == 0) && (i < ourUser.wishlist.length); i++) {
+      if (idProduct == ourUser.wishlist[i]) find = 1;
+    }
+    if (find == 0) {
+      res.status(400).json({error: 'The product is not in the wishlist'})
+    }
+    else {
+      i = i-1;
+      ourUser.wishlist.splice(i, 1);
+      ourUser.save();
+      console.log(ourUser.wishlist)
+      res.status(200).json(ourUser);
+    }
   } catch (error) {
     res.status(400).json(error)
   }

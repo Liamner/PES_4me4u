@@ -326,6 +326,9 @@ module.exports = function(app) {
   router.route('/admin/:id/products')
     .get(adminController.readProducts)
 
+  router.route('/admin/:id/increaseProducts')
+    .put(adminController.increaseProducts);
+
   router.route('/admin/:id/ecoPoints')
     .get(adminController.readEcoPoints)
 

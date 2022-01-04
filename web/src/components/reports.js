@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../logoCirculoGrandeRESOLSUPERPEQUE.png'
 
-class Navbar extends Component {
+class Reports extends Component {
     render() {
         return <nav>
           <ul>
@@ -14,4 +14,4 @@ class Navbar extends Component {
 
 }
 
-export default Navbar;
+export default Reports;

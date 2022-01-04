@@ -8,6 +8,40 @@ const jwt = require('jsonwebtoken');
 //const user = require('../models/user.js');
 const app = express();
 
+exports.registerAdmin = async (req, res) => {
+  let body = req.body;
+  let { userId, email, pwd, role } = body;
+  let admin = new Admin({
+    userId,
+    email,
+    pwd: bcrypt.hashSync(pwd, 10),
+    role,
+    
+  });
+  try {
+    await admin.save();
+    res.status(200).json(admin);
+  }
+  catch (err){
+    res.status(400).json(err.message);
+    console.log("Can not register the admin");
+  }
+}
+
+exports.deleteAdmin = async (req, res) => {
+  //let usr = await Admin.findById({_id: req.params.id})
+  //let email = req.params.email; 
+  try{
+    let adm = await Admin.findById({_id: req.params.id})
+    adm.delete();
+    res.status(200).json(adm);
+  }
+  catch(err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}
+
 exports.readGifts =  async (req, res) => {
   try {
     const adminId = req.params.id;
@@ -17,6 +51,24 @@ exports.readGifts =  async (req, res) => {
 
     console.log(admin);
   } catch (error) {
+    res.status(400).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.increaseGifts =  async (req, res) => {
+  try {
+    console.log("llega al try")
+    const adminId = req.params.id;
+    const admin = await Admin.findById({_id: adminId});
+    admin.gifts += 1;
+    admin.save();
+
+    res.status(200).json(admin);
+    console.log(admin);
+
+  } catch (error) {
+    console.loig("entra en el catch");
     res.status(400).json(error.message);
     console.log(error.message);
   }

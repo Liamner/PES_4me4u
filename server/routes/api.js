@@ -113,7 +113,6 @@ module.exports = function(app) {
   // ======================
 
   router.route('/register')
-
     .post(userController.registerUser);
 
   router.route('/login')
@@ -294,8 +293,17 @@ module.exports = function(app) {
   // ---- Admin Routes ----
   // ======================
 
+  router.route('/registerAdmin')
+    .post(adminController.registerAdmin);
+  
+  router.route('/deleteAdmin/:id')
+    .delete(adminController.deleteAdmin);
+
   router.route('/admin/:id/gifts')
     .get(adminController.readGifts);
+
+  router.route('/admin/:id/increaseGifts')
+    .put(adminController.increaseGifts);
 
   router.route('/admin/:id/loans')
     .get(adminController.readLoans);

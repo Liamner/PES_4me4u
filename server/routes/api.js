@@ -313,6 +313,9 @@ module.exports = function(app) {
 
   router.route('/admin/:id/exchanges')
     .get(adminController.readExchanges);
+
+  router.route('/admin/:id/increaseExchanges')
+    .put(adminController.increaseExchanges);
   
   router.route('/admin/:id/users')
     .get(adminController.readUsers)

@@ -8,6 +8,7 @@ import { RootTabScreenProps } from '../types';
 import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
+import NavigationBar from '../components/NavigationBar'
 
 export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
   const [products, setProducts] = useState();
@@ -30,7 +31,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 	
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
+      <View style={[styles.row, {marginTop: 50}]}>
         <TextInput
           style={{width: '80%'}}
           onChangeText={onChangeText}
@@ -79,10 +80,16 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+            <ProductCard navigation={navigation} 
+            id={item._id} 
+            name={item.name}
+            guardado={false} 
+            arrayTratos={item.exchange}
+            imageUri={item.img[0].url}/>
           )}
           keyExtractor={item => item._id}
         />
+        <NavigationBar  navigation={navigation} casa={true}/>
     </View>
   );
 }

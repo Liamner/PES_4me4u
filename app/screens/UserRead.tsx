@@ -31,7 +31,9 @@ boton para cambiar idiomas
   export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
     
     //id del usuario que se recibe y se desea ver
-     var userid: string | null | undefined;
+    // var userid: string | null | undefined;
+
+    var {userid} = route.params;
     //var userid = '61c215918e402966b2c13e8d'; 
 
     //Datos de un usuario
@@ -65,6 +67,7 @@ boton para cambiar idiomas
     
     const [selectedLanguage, setSelectedLanguage] = React.useState();
 
+    var auxiliar =  {id:  '', ownProfileAux:  '' } ;
 
   const getData = async () => {
     const sess = await retrieveSession();
@@ -233,9 +236,11 @@ boton para cambiar idiomas
     //   )
 
 
+    auxiliar =  {id:  userid, ownProfileAux:  ownProfileAux } ;
     console.log(session.id + ' ' + session.token + ' ' + session.user);
 
 
+    console.log('cosa: ' +  userid + ' '+ ownProfileAux );
 
     
 
@@ -349,7 +354,7 @@ boton para cambiar idiomas
 
 
           <Button 
-                 onPress={() =>  navigation.navigate( 'UserProducts', {id:  userid, ownProfileAux:  ownProfileAux } ) } 
+                 onPress={() =>  navigation.navigate( 'UserProducts', auxiliar) } 
                  title = 'Lista de productos'
                  color="#a2cff0" //azul iconico
           />

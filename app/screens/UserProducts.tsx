@@ -22,13 +22,18 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
     token:""
   });
 
+  // const id = navigation.getParams('id','Error');
 
+  //var id ;
+  //var ownProfileAux ;
 
+   const {id, ownProfileAux} = route.params;
 
-  //const {id, ownProfileAux} = route.params;
+  // const {auxiliar} = route.params;
+  // var id, ownProfileAux;
 
-  const id = '61d1c011f5d0f2261e75160e';
-  const ownProfileAux = 'S';
+  // const id = '61d1c011f5d0f2261e75160e';
+  // const ownProfileAux = 'S';
 
   const [products, setProducts] = useState([]);
 
@@ -36,18 +41,22 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
 
   const getProducts = async () => {
     console.log('id '+ id)
+
+    console.log('AAAA');
+    console.log(id);
+    console.log(ownProfileAux);
+    console.log('AAAA');
       let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+id);
 
       setProducts(response.data.products);//lista de ids de productos en la
-      console.log('products response: ' + response.data.products.length);
-      console.log('products: ' + response.data.products.length);
+      // console.log('products response: ' + response.data.products.length);
+      // console.log('products: ' + response.data.products.length);
 
       setEmail(response.data.email);
       console.log('email response: ' + response.data.email);
       console.log('email: ' + email);
 
-
-      console.log('AAAA');
+ 
 
 
       products.forEach(element => {
@@ -77,9 +86,21 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
   };
 
   React.useEffect(() => {
+
+  //  id = auxiliar.id;
+
+  //   ownProfileAux= auxiliar.ownProfileAux;
+
     getData();
 
     getProducts();
+
+ 
+
+    console.log('AAAA');
+    console.log(id);
+    console.log(ownProfileAux);
+    console.log('AAAA');
 
 
 

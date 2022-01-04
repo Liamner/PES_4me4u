@@ -8,7 +8,7 @@ class GeneralStats extends Component {
               <tr>
                 <td style={{width: '100%'}}>
                   <p>Num. transacciones:</p>
-                  <p style={{color: 'blue'}}>XXX</p> 
+                  <p className= {'stats-number'}>XXX</p> 
                 </td>
               </tr>
             </table>
@@ -16,15 +16,15 @@ class GeneralStats extends Component {
               <tr>
                 <td style={{width: '33%'}}>
                   <p>Prestar:</p>
-                  <p style={{color: 'green'}}>XXX</p>
+                  <p className= {'stats-number'}>XXX</p>
                 </td>
                 <td style={{width: '33%'}}>
                   <p>Intercambiar:</p>
-                  <p style={{color: 'orange'}}>XXX</p>
+                  <p className= {'stats-number'}>XXX</p>
                 </td>
                 <td style={{width: '33%'}}>
                   <p>Dar:</p>
-                  <p style={{color: 'yellow'}}>XXX</p>
+                  <p className= {'stats-number'} >XXX</p>
                 </td>
               </tr>
             </table>
@@ -34,13 +34,13 @@ class GeneralStats extends Component {
               <tr>
                 <td style={{width: '100%'}}>
                   <p>Num. productos:</p>
-                  <p style={{color: 'blueviolet'}}>XXX</p>
+                  <p className= {'stats-number'} >XXX</p>
                 </td>
               </tr>
               <tr>
                 <td style={{width: '100%'}}>
                   <p>Prod. reportados:</p>
-                  <p style={{color: 'red'}}>XXX</p>
+                  <a className= {'stats-number'}  href='/reports'>XXX</a>
                 </td>
               </tr>
             </table>
@@ -50,28 +50,28 @@ class GeneralStats extends Component {
               <tr>
                 <td style={{width: '100%'}}>
                   <p>Num. usuarios:</p>
-                  <p style={{color: 'blueviolet'}}>XXX</p>
+                  <p className= {'stats-number'}>XXX</p>
                 </td>
               </tr>
               <tr>
                 <td style={{width: '100%'}}>
                   <p>Usu. reportados:</p>
-                  <p style={{color: 'red'}}>XXX</p>
+                  <a className= {'stats-number'} href='/reports'>XXX</a>
                 </td>
               </tr>
             </table> 
           </div>
           <div className='grid-item'>
-            <p>Numero de categorias:</p>
-            <p>XXX</p>
-            <p>Gestionar categorias ></p>
+            <p>Número de categorias:</p>
+            <p className= {'stats-number'} >XXX</p>
+            <a href='/category'>Gestionar categorias &gt;</a>
           </div>
           <div className='grid-item'>
             <table style={{width: '100%'}}>
               <tr>
                 <td style={{width: '100%'}}>
                   <p>EcoPoints totales:</p>
-                  <p>XXX</p>
+                  <p className= {'stats-number'} >XXX</p>
                 </td>
               </tr>
             </table>
@@ -79,13 +79,13 @@ class GeneralStats extends Component {
               <tr>
                 <td style={{width: '100%'}}>
                   <p>EcoPoints gastados:</p>
-                  <p>XXX</p>
+                  <p className= {'stats-number'}>XXX</p>
                 </td>
               </tr>
             </table>
           </div>
           <div className='grid-item'>
-            Sessions activas
+            Sessiones activas
           </div>
         </div>;
     }

@@ -1,11 +1,17 @@
 const express = require('express')
-const http = require('http')
+//const http = require('http')
 const socket = require('socket.io');
 
 const app = express()
-const server = http.createServer(app)
-const io = socket().listen(server);
+//const server = http.createServer(app)
+//const io = socket().listen(server);
 const port = process.env.PORT || 3000
+
+
+var http = require('http');
+var server = http.createServer(app);
+
+var io = socket().listen(server);
 
 
 // just to test the server

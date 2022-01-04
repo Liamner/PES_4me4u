@@ -6,8 +6,8 @@
   <script src="socket.io/socket.io.js"></script>
     <script>
       //const socket = useRef();
-      const socket = io(); 
-      socket.emit('newUser', '123456');
+      //const socket = io(); 
+      //socket.emit('newUser', '123456');
       
     </script>
   <body>
@@ -25,7 +25,7 @@
           <input id="msg" type="submit" class="chat-submit" value="enter" />
           <script>
             const msg = 'aaa'
-            socket.emit('sendMessage',{ text: msg});
+            //socket.emit('sendMessage',{ text: msg});
 
             
           </script>
@@ -33,10 +33,10 @@
       </div>
     </div>
     <script>
-      socket.on('getUseres',(users) => {
+     /* socket.on('getUseres',(users) => {
               console.log('get users')
               console.log(users.userId)
-            })
+            })*/
     </script>
 
     

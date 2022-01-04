@@ -27,31 +27,32 @@ io.on('connection', (socket) => {
   // take userId and socketId from user
   // necesitamos id del User
   socket.on('newUser', userId => {
-        console.log('New user: ' + userId)
-        addUser(userId, socket.id);
-        io.emit('getUsers', users)
+          console.log('New user: ' + userId)
+          //addUser(userId, socket.id);
+          //io.emit('getUsers', users)
   });
 
   // Send message
-  socket.on('sendMessage',({senderId, reciverId, text}) => {
-    console.log('New Message: ' + text)
-      const user = getUser(reciverId);
+  socket.on('sendMessage',(text) => {
+      console.log('New Message: ' + text)
+      /*const user = getUser(reciverId);
       io.to(user.socket).emit('getMessage', {
           senderId, 
           text
-      })
+      })*/
   })
 
   // Disconnect user
   socket.on('disconnect', ()=> {
       console.log('User disconnected')
-      removeUser(socket.id)
-      io.emit('getUsers', users)
+      //removeUser(socket.id)
+      //io.emit('getUsers', users)
   })
 })
 
 let users = [];
 
+/*
 const addUser = (userId, socketId) => {
     !user.some((user)=> user.userId === userId) && user.push({userId, socketId})
 }
@@ -62,7 +63,7 @@ const removeUser = (socketId) => {
 
 const getUser = (userId) => {
     return getUserRewards.find(user=>user.userId === userId)
-}
+}*/
 
 // Connect to MongoDB
 

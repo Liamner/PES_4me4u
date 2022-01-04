@@ -1,6 +1,33 @@
 {
     "translation": {
       "¿Cómo evaluas esta transacción?":"Com evalues aquesta transacció?",
-      "¿Deseas añadir un comentario?":"Vols deixar un comentari?"
+      "¿Deseas añadir un comentario?":"Vols deixar un comentari?",
+      "Buscar producto...":"Cercar producte...",
+      "Moda": "Moda",
+      "Informática":"Informàtica",
+      "Mascotas":"Mascotes",
+      "Hogar": "Llar",
+      "Ocio": "Oci",
+      "Otros": "Altres",
+      "Electrodomesticos": "Electrodomèstics",
+      "Consolas y videojuegos": "Consoles i videojocs",
+      "Cine, libros, música":"Cinema, llibres, música",
+      "Niños y bebés": "Nens i nadons",
+      "Construcción y reformas": "Construcció i reformes",
+      "Juegos y juguetes": "Jocs i joguines",
+      "Nombre del Producto" : "Nom del producte",
+      "Descripción" : "Descripció",
+      "Categorias" : "Categories",
+      "Seleccione un categoría..." : "Seleccioneu una categoria...",
+      "¿Que quieres hacer con tu producto?" : "Què vols fer amb el teu producte?",
+      "Donar" : "Donar",
+      "Prestar" : "Prestar",
+      "Intercambiar" : "Intercanviar",
+      "¿Que quieres hacer con tu foto?": "Que vols fer amb la teva foto?",
+      "Eliminar foto": "Esborrar foto",
+      "Cambiar foto": "Canviar foto",
+      "Subir Producto!": "Pujar producte!",
+      "Cancelar": "Cancel·lar",
+      "Guardar valoración!": "Desa valoració"
     }
   }

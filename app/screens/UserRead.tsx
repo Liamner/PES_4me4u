@@ -131,6 +131,7 @@ import axios from 'axios';
     
    setFollowers(response.data.followers);
     setFollowed(response.data.followed);
+    console.log("seguidores " + followed);
 
     setFollowersSize(response.data.followers.length);
     setFollowedSize(response.data.followed.length);

@@ -8,6 +8,9 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar'
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
 
 interface ProductImage{
   __v: number;
@@ -28,6 +31,10 @@ interface Product {
 export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScreen'>) {
 
   const [products, setProducts] = React.useState();
+  
+  const {t, i18n} = useTranslation();
+  const [currentLanguage,setLanguage] =useState('cat');
+
   const [noProduct, setNoProduct] = React.useState(false);
   const [recentlyViewedProducts, setRecentlyViewedProducts] = React.useState();
   const [isRecentlyViewedProducts, setIsRecentlyViewed] = React.useState(false);
@@ -40,6 +47,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     }
     
   };
+
   const getProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
     setProducts(response.data);
@@ -53,27 +61,27 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2aed5-3ad53abb28ba',
-      title: 'Electrodomesticos',
+      title: t('Electrodomesticos'),
     },
     {
       id: 'bd7acbea-c11-46c2-aed5-3ad53abb28ba',
-      title: 'Consolas y videojuegos',
+      title: t('Consolas y videojuegos'),
     },
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28a',
-      title: 'Cine, libros, música',
+      title: t('Cine, libros, música'),
     },
     {
       id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Niños y bebés',
+      title: t('Niños y bebés'),
     },
     {
       id: '58694a0f-3da1-471f-bd96-15571e29d72',
-      title: 'Construcción y reformas',
+      title: t('Construcción y reformas'),
     },
     {
       id: '58694a0f-3da1-471f-bd96-1455719d72',
-      title: 'Juegos y juguetes',
+      title: t('Juegos y juguetes'),
     },
   ];
 
@@ -128,7 +136,8 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           </View>
       </Modal>
      <TextInput
-        label="Buscar producto..."
+        label={t('Buscar producto...')}
+
         style={styles.textInput}       
         onChangeText={onChangeName}
         value={name}
@@ -137,40 +146,40 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         <TouchableOpacity> 
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Moda</Text>
+          <Text style = {styles.textoCategoria}>{t('Moda')}</Text>
           </View>
 
         </TouchableOpacity>
         <TouchableOpacity>
           <View style = {styles.elementoCategoria}>
           <Image source={require('../images/informatica.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Informática</Text>
+          <Text style = {styles.textoCategoria}>{t('Informática')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/mascotas.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Mascotas</Text>
+          <Text style = {styles.textoCategoria}>{t('Mascotas')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Hogar</Text>
+          <Text style = {styles.textoCategoria}>{t('Hogar')}</Text>
           </View>
 
         </TouchableOpacity>  
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/deporte.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Ocio</Text>
+          <Text style = {styles.textoCategoria}>{t('Ocio')}</Text>
           </View>
 
         </TouchableOpacity>    
         <TouchableOpacity onPress={() => setModalVisible(true)}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/otros.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Otros</Text>
+          <Text style = {styles.textoCategoria}>{t('Otros')}</Text>
           </View>
 
         </TouchableOpacity>   

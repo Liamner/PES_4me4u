@@ -8,6 +8,8 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationBar from '../components/NavigationBar';
+import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [pid, setProductID] = React.useState('');
@@ -29,6 +31,9 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     user:"",
     token:""
 })
+
+const {t, i18n} = useTranslation();
+const [currentLanguage,setLanguage] =useState('cat');
 
 const getData = async () => {
     try {
@@ -77,20 +82,21 @@ const getData = async () => {
     }
   }
 
+
   const unPickImage = async (id: Number) => {
     Alert.alert(
-      '¿Que quieres hacer con tu foto?',
+     t('¿Que quieres hacer con tu foto?'),
       '',
       [
         {
-          text: 'Eliminar foto',
+          text: t('Eliminar foto'),
           onPress: () => {
             setImageById(id, '');
           },
           style: 'default',
         },
         {
-          text: 'Hacer una foto',
+          text: t('Cambiar foto'),
           onPress: () => {
             //setImageById(id, '');
             pickImage(id);
@@ -204,26 +210,26 @@ const getData = async () => {
     <ScrollView>
       <View style={styles.container}>
         <TextInput
-          label="Nombre del Producto"
+          label= {t("Nombre del Producto")}
           style={styles.textInput}
           onChangeText={onChangeName}
           value={name}
         />
         <TextInput
-          label="Descripción"
+          label={t("Descripción")}
           style={styles.textInput}
           onChangeText={onChangeDescription}
           value={description}
         />
         <Text
-          style={styles.title}> Categorias </Text>
+           style={styles.title}> {t('Categorias')} </Text>
         <Picker
           selectedValue={selectedCategory}
           style={styles.picker}
           onValueChange={(itemValue, itemIndex) =>
             setSelectedCategory(itemValue)
           }>
-          <Picker.Item label="Selecciona un categoria..." value="default" />          
+          <Picker.Item label={t("Seleccione un categoría...")} value="default" />          
           <Picker.Item label="fashion" value="fashion" />
           <Picker.Item label="computer" value="computer" />
           <Picker.Item label="homeApplicances" value="homeApplicances" />
@@ -237,7 +243,7 @@ const getData = async () => {
           <Picker.Item label="games" value="games" />
           <Picker.Item label="other" value="other" />
         </Picker>
-        <Text style={[styles.title, { marginTop: 20 }]}> ¿Que quieres hacer con tu producto?</Text>
+        <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Que quieres hacer con tu producto?')}</Text>
         <View
           style={styles.checkbox}>
           <Checkbox
@@ -246,7 +252,7 @@ const getData = async () => {
               setCheckedDonar(!checkedDonar);
             }}
           />
-          <Text >Donar</Text>
+          <Text >{t('Donar')}</Text>
         </View>
         <View
           style={styles.checkbox}>
@@ -256,7 +262,7 @@ const getData = async () => {
               setCheckedPrestar(!checkedPrestar);
             }}
           />
-          <Text >Prestar</Text>
+          <Text >{t('Prestar')}</Text>
         </View>
         <View
           style={styles.checkbox}>
@@ -266,7 +272,7 @@ const getData = async () => {
               setCheckedIntercambiar(!checkedIntercambiar);
             }}
           />
-          <Text >Intercambiar</Text>
+          <Text >{t('Intercambiar')}</Text>
         </View>
         <View
           style={{
@@ -329,8 +335,8 @@ const getData = async () => {
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </View>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> Subir Producto !</Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> Cancelar </Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Subir Producto!')}</Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> {t('Cancelar')} </Text></Pressable>
       </View>
     </ScrollView>
     <NavigationBar  navigation={navigation} upload={true}/>

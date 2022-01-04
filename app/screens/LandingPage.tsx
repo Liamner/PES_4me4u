@@ -12,6 +12,7 @@ import {StyleSheet,
     Dimensions,
     ActivityIndicator,
     Pressable,
+    Picker,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,7 +23,7 @@ const logoImage = require('../assets/images/logo.png')
 
  export default function Login({navigation}) {
     const {t, i18n} = useTranslation();
-    const [currentLanguage,setLanguage] =useState('cat');
+    const [currentLanguage,setLanguage] =useState('es');
 
 
     const changeLanguage = value => {
@@ -123,28 +124,18 @@ const logoImage = require('../assets/images/logo.png')
                         </LinearGradient>
                 </TouchableOpacity>
 
-                <Pressable
-                    //onPress={() => {updateLanguage('cat')}}
-                    onPress={() => changeLanguage('cat')}
-                    style={{
-                        backgroundColor:
-                        currentLanguage === 'cat' ? '#33A850' : '#d3d3d3',
-                        padding: 20,
-                    }}>
-                        
-                    <Text>CATALAN UEEE</Text>
-                    </Pressable>
-                    <Pressable
-                    //onPress={() => {updateLanguage('es')}}
-                    onPress={() => changeLanguage('es')}
-                    style={{
-                        backgroundColor:
-                        currentLanguage === 'es' ? '#33A850' : '#d3d3d3',
-                        padding: 20,
-                    }}>
-            
-                    <Text>CATELLANO UEE</Text>
-                </Pressable>
+        
+
+                <Picker
+                    selectedValue={currentLanguage}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) =>
+                        changeLanguage(itemValue)
+                    }>
+                    <Picker.Item label={t("Seleccione un idioma...")} value="es" />          
+                    <Picker.Item label="Castellano" value="es" />
+                    <Picker.Item label="Catalán" value="cat" />
+                </Picker>
 
             </View>
         </View>
@@ -182,6 +173,11 @@ const styles = StyleSheet.create({
       },
       whiteText: {
           color: '#fff'
+      },
+      picker: {
+        marginVertical: 10,
+        height: 60,
+        width: '90%',
       },
       button:{
           width: 200,

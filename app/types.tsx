@@ -52,8 +52,8 @@ export type RootTabParamList = {
   ViewUser: undefined;
   ProductRead: undefined;
   RateUser: undefined;
-  SearchProduct: undefined;
   UserUpdate:undefined;
+  SearchProduct:undefined;
   UserWishlist: undefined;
 };
 

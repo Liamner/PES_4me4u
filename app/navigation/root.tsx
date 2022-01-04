@@ -18,7 +18,7 @@ import ViewUser from '../screens/UserRead';
 import FollowersScreen from '../screens/FollowersScreen';	
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
-import SearchProduct from '../screens/SearchProduct';
+import SearchProduct from '../screens/ProductSearch';
 import WishList from '../screens/UserWishlist';
 import UserUpdate from '../screens/UserUpdate';
 

@@ -16,6 +16,7 @@ import DeleteUser from '../components/DeleteUser';
 import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 
@@ -33,11 +34,12 @@ boton para cambiar idiomas
     //id del usuario que se recibe y se desea ver
     // var userid: string | null | undefined;
 
-    var {userid} = route.params;
+    var userid = route.params;
     //var userid = '61c215918e402966b2c13e8d'; 
 
     //Datos de un usuario
     const [email, setEmail] = useState('Cargando...');
+    const [name, setName]= useState('Cargando...');
     const [location, setLocation] = useState('Cargando...');
     const [level, setLevel] = useState('Cargando...');
     const [postalCode, setPostalCode] = useState('Cargando...');
@@ -108,12 +110,15 @@ boton para cambiar idiomas
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
 
     setEmail(response.data.email);
+    setName(response.data.userId);
     if(aux !== session.id)
       setOwnProfile(false); //HK -> a de ser false
       setOwnProfileAux('N');
     console.log('nuestro perfil? ' + ownProfile);
 
+    userid = aux;
 
+    console.log('sol ' + userid + ' sol');
 
     if(response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
@@ -251,9 +256,12 @@ boton para cambiar idiomas
 
   return(
     <View style ={styles.container}>
+
       <ScrollView>
 
       {ownProfile? 
+
+        
           <View style={{ alignItems: 'center',
           justifyContent: 'center'}}>
             <TouchableOpacity
@@ -262,6 +270,22 @@ boton para cambiar idiomas
           }}>
             <Text style={styles.titleText}> Mi perfil</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate("UserUpdate", session.id);
+                }}
+                style={{width: 150,  marginTop: 5}}
+              >
+                <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                        Editar Perfil
+                    </Text>
+                </LinearGradient>
+              </TouchableOpacity>
           </View>
           :
           <View style={{ alignItems: 'center',
@@ -326,6 +350,7 @@ boton para cambiar idiomas
         }
 
 
+
         <View style={styles.container2}>
           <Text style={styles.text} onPress={onPressFollowers}>
               Followers: <Text style={styles.text2}>{followersSize}</Text>
@@ -354,7 +379,7 @@ boton para cambiar idiomas
 
 
           <Button 
-                 onPress={() =>  navigation.navigate( 'UserProducts', auxiliar) } 
+                 onPress={() =>  navigation.navigate( 'UserProducts', {id: userid/*, ownProfileAux: ownProfileAux*/}) } 
                  title = 'Lista de productos'
                  color="#a2cff0" //azul iconico
           />
@@ -386,6 +411,7 @@ boton para cambiar idiomas
             }}
           ></CustomMarker>
         </CustomMap>
+
 
         {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
@@ -424,6 +450,7 @@ boton para cambiar idiomas
 
 
       </ScrollView>
+      <NavigationBar  navigation={navigation} profile={true}/>
     </View>
   );
 

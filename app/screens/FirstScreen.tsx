@@ -6,7 +6,11 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import ProductCardElement from './ProductCardElement'
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-//import ProductCard from '../components/ProductCard';
+
+
+// import ProductCard from '../components/ProductCard';
+import NavigationBar from '../components/NavigationBar'
+
 
 interface ProductImage{
   __v: number;
@@ -28,14 +32,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
   const [products, setProducts] = React.useState();
 
-  const getProducts = async () => {    
+  const getProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
     setProducts(response.data);
   };
-  
+
   React.useEffect(() => {
     getProducts();
-  }, []);  
+  }, []);
 
   const DATA = [
     {
@@ -63,19 +67,19 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
       title: 'Juegos y juguetes',
     },
   ];
-  
+
   const Item = ({ title }) => (
     <TouchableOpacity onPress = {() => setCategory(title)}>
-      <View style={styles.item}>      
+      <View style={styles.item}>
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>
       </View>
     </TouchableOpacity>
   );
 
-  const [name, onChangeName] = React.useState("");  
+  const [name, onChangeName] = React.useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
-  const setCategory = async (title: String) => {    
+  const setCategory = async (title: String) => {
     setModalVisible(false);
    };
 
@@ -85,10 +89,11 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   function renderItem2(item:any) {
     console.log(item)
   //console.log(item.img[0].url)
-  if(item.img === undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
-  else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+  // if(item.img === undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
+  // else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+
   }
-  return (    
+  return (
     <>
      <Modal
         animationType="slide"
@@ -147,6 +152,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>Hogar</Text>
           </View>
+
         </TouchableOpacity>  
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
@@ -161,55 +167,34 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           <Text style = {styles.textoCategoria}>Otros</Text>
           </View>
 
-        </TouchableOpacity>  
-
-       </ScrollView>     
-       <FlatList
-          numColumns={2}
-          data={products}
-          renderItem={renderItem2}
-          keyExtractor={item => item.id}
-         />
-       <Text>Adios</Text>  
-             
-    <View style = {styles.navigator}>
-      <TouchableOpacity>
-        <Image source={require('../images/casa.png')} style={styles.icono}/>  
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Image source={require('../images/corazon.png')} style={styles.icono}/>  
-      </TouchableOpacity>
-      <TouchableOpacity   onPress={()=>navigation.navigate("CreateProduct")}>
-        <Image source={require('../images/add.png')} style={styles.icono}/>  
-      </TouchableOpacity>    
-      <TouchableOpacity>
-        <Image source={require('../images/chat.png')} style={styles.icono}/>  
-      </TouchableOpacity>  
-      <TouchableOpacity>
-        <Image source={require('../images/profile.png')} style={styles.icono}/>  
-      </TouchableOpacity>    
-    </View>
+        </TouchableOpacity>   
+       </ScrollView>
+    <ScrollView style={{marginBottom: 30}}>
+  
+  
+    </ScrollView>    
+    <NavigationBar  navigation={navigation} casa={true}/>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  flatList: {     
-  }, 
+  flatList: {
+  },
   fila: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     backgroundColor: 'white'
   },
   scrollCategorias: {
-    borderRadius: 10,
+    //borderRadius: 10,
     borderColor: '#5e5c57',
     borderWidth: 3,
     backgroundColor: 'white',
     width: '100%',
     height: 120,
     alignContent: 'space-between'
-  }, 
-  navigator: {    
+  },
+  navigator: {
     borderRadius: 5,
     height: 45,
     borderColor: '#5e5c57',
@@ -218,7 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center'
-  }, 
+  },
   container: {
     width: '50%',
     height: '50%',
@@ -226,29 +211,30 @@ const styles = StyleSheet.create({
     borderColor: '#5e5c57',
     borderWidth: 3,
     backgroundColor: 'white',
-  }, 
+  },
   icono: {
     width: 35,
-    height: 35,        
+    height: 35,
   },
   iconoCategoria: {
     width: 40,
-    height: 40,  
-    marginBottom: 2,      
+    height: 40,
+    marginBottom: 2,
   },
   elementoCategoria: {
-    width: 80,    
+    width: 80,
+    height: 120,
     backgroundColor:'white',
-    alignItems: 'center',    
+    alignItems: 'center',
     marginHorizontal: 5,
     marginTop: 8,
   },
   touchable: {
-    width: '20%', 
-    height: '100%',     
+    width: '20%',
+   // height: '100%',
     borderRadius: 10,
     borderColor: 'green',
-    alignItems: 'flex-start'       
+    alignItems: 'flex-start'
   },
   textoCategoria: {
     color: '#8d8c89',
@@ -260,31 +246,31 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     marginLeft: '5%',
     width: '90%',
-  },  
+  },
   itemTitle: {
     fontSize: 22,
     color: 'black',
-    padding: 10,    
+    padding: 10,
     paddingLeft: 14,
     fontWeight: "bold"
-  },  
+  },
   textInput: {
     height: 45,
     borderRadius: 10,
     borderColor: '#5e5c57',
     borderTopWidth: 3,
     borderLeftWidth: 3,
-    borderRightWidth: 3,    
-    backgroundColor: 'white'    
-  },  
-  notImage: {           
-    marginHorizontal :5,    
+    borderRightWidth: 3,
+    backgroundColor: 'white'
+  },
+  notImage: {
+    marginHorizontal :5,
     width: 100,
     height: 100 ,
     borderRadius: 10,
     borderColor: '#5e5c57',
     borderWidth: 3,
-    backgroundColor: '#F0F0F0',    
+    backgroundColor: '#F0F0F0',
   },
   modalView: {
     backgroundColor: "white",

@@ -11,13 +11,13 @@ type CardProps = {
   id: string,
   uid: string
   // name: string,
-  // guardado: boolean,
+   guardado: boolean,
   // imageUri?: string,
   // arrayTratos: string[],
 }
 
 
-export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTratos*/}: CardProps) {
+export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, arrayTratos*/}: CardProps) {
 
 
   var prestar = false;
@@ -25,7 +25,7 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
   var dar = false;
 
 //  var name = 'NNN';
-  var guardado = false;
+  //var guardado = false;
  // var imageUri: String;
  //var arrayTratos: String[];
 
@@ -38,8 +38,8 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
   const APIGetInfoProduct = () =>{
     let response = axios.get('https://app4me4u.herokuapp.com/api/product/'+ id)
     .then(response => {
-            //console.log(response);
 
+      
 
             // name = response.data.name;
             // imageUri = response.data.image[0].url;
@@ -93,6 +93,8 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
       .catch(function(error) {
         console.log(error);
       });
+      console.log('PERRO');
+
     }
   
   const noGuardarProducto = async () => {          
@@ -104,6 +106,9 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
       .catch(function(error) {
         console.log(error);
       }); 
+      console.log('GATO');
+
+
   }
 
   React.useEffect(() => {
@@ -182,7 +187,7 @@ export function ProductCardId  ({ id, uid/*, name, guardado, imageUri, arrayTrat
 )
 
 }
- // console.log("hola")
+  console.log("hola")
 const styles = StyleSheet.create({
     container: {
       width: '100%',

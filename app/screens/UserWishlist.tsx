@@ -1,47 +1,46 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, FlatList, Text } from 'react-native';
+
+import ProductCardId from '../components/ProductCardId';
+
+
+
+
+import { StyleSheet, ScrollView, FlatList, TouchableOpacity, Text, Button } from 'react-native';
 
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import ProductCardId from '../components/ProductCardId';
-
-import retrieveSession from '../hooks/retrieveSession'
-
+import NavigationBar from '../components/NavigationBar';
+import retrieveSession from '../hooks/retrieveSession';
 
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
-  
+
   const [session, setSession] = React.useState({
     id: "",
     user:"",
     token:""
   });
 
+  
   const [productsId, setProductsId] = useState([]);
 
-  const [uid, setUid] = useState('');
+  var [uid, setUid] = useState('');
 
   const getWishlist = async () => {
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid);
+      
+      setUid(session.id);  
+
+
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid + '/wishlist');
       // setProductsId(response.data.wishlist); //lista de ids de productos en la
 
 
-      // console.log('wishlist response: ' + response.data.wishlist);
 
+      
 
-      setProductsId(response.data.wishlist); //lista de ids de productos en la
+      setProductsId(response.data); //lista de ids de productos en la
 
-
-      console.log('wishlist response: ' + response.data.wishlist);
-
-      console.log('wishlist: ' + wishlist.length);
-
-
-
-      productsId.forEach(element => {
-        console.log(element);
-      });
 
 
     };
@@ -62,32 +61,53 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
 
     const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
     setCurrentPage(currentNumber);
+
   };
+
+
 
   React.useEffect(() => {
     getData();
-    setUid(session.id);  
+
 
     getWishlist();
+
+
+
+    
   }, []);
   
   return (
+
     <View>
       <ScrollView>
+
 
     
         <Text style={styles.titleText}> Productos deseados</Text>
     
+        <Button 
+                 onPress={() => getWishlist() } 
+                 title = 'Cargar'
+                 color="#a2cff0" //azul iconico
+        />
+
+
+        <Text style={styles.titleText}>   </Text>
+
+
           <FlatList
             numColumns = {2}
             data={productsId}
             renderItem={({ item }) => ( 
   
               <View style={styles.container2}>
+            
                 <ProductCardId
-                id={item}
-                uid={uid}  
-              />
+                  id={item}
+                  uid={uid} 
+                  guardado={true}
+                />
 
 
               </View>
@@ -97,9 +117,15 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
             showsHorizontalScrollIndicator={false}
             pagingEnabled={true}
             onMomentumScrollEnd={Scroll}
+
+            
           />
 
+          <Text style={styles.titleText}>   </Text>
+
+
       </ScrollView>
+      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
 
   );
@@ -134,7 +160,7 @@ const styles = StyleSheet.create({
   productText: {
     textAlign: 'left',
     fontSize: 20,
-    margin:10,
+    margin: 10
   },
 });
 

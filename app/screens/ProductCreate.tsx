@@ -7,6 +7,7 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NavigationBar from '../components/NavigationBar';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [pid, setProductID] = React.useState('');
@@ -199,6 +200,7 @@ const getData = async () => {
 
   }
   return (
+    <>
     <ScrollView>
       <View style={styles.container}>
         <TextInput
@@ -331,6 +333,8 @@ const getData = async () => {
         <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> Cancelar </Text></Pressable>
       </View>
     </ScrollView>
+    <NavigationBar  navigation={navigation} upload={true}/>
+    </>
   );
 }
 
@@ -339,6 +343,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 45
+  },
+  icono: {
+    width: 35,
+    height: 35,
+  },
+  navigator: {
+    borderRadius: 5,
+    height: 45,
+    borderColor: '#5e5c57',
+    borderWidth: 1,
+    backgroundColor: '#e2e2e1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   button: {
     alignItems: 'center',

@@ -1,4 +1,9 @@
-import React from 'react'
+import * as React from 'react';
+import { useState } from 'react';
+//import '../assets/i18n/i18n';
+//import {useTranslation} from 'react-i18next';
+
+
 import {StyleSheet,
     View,
     Text,
@@ -6,6 +11,7 @@ import {StyleSheet,
     Image,
     Dimensions,
     ActivityIndicator,
+    Pressable,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,7 +19,18 @@ import * as Google from "expo-google-app-auth";
 
 const logoImage = require('../assets/images/logo.png')
 
+
  export default function Login({navigation}) {
+    // const {t, i18n} = useTranslation();
+    const [currentLanguage,setLanguage] =useState('cat');
+
+
+    const changeLanguage = value => {
+        i18n
+          .changeLanguage(value)
+          .then(() => setLanguage(value))
+          .catch(err => console.log(err));
+      };
 
     const googleSignIn = () => {
         const config = {
@@ -105,6 +122,30 @@ const logoImage = require('../assets/images/logo.png')
                             <Text style = {styles.whiteText}>  Continuar con Email</Text>
                         </LinearGradient>
                 </TouchableOpacity>
+
+                <Pressable
+                    //onPress={() => {updateLanguage('cat')}}
+                    onPress={() => changeLanguage('cat')}
+                    style={{
+                        backgroundColor:
+                        currentLanguage === 'cat' ? '#33A850' : '#d3d3d3',
+                        padding: 20,
+                    }}>
+                        
+                    <Text>CATALAN UEEE</Text>
+                    </Pressable>
+                    <Pressable
+                    //onPress={() => {updateLanguage('es')}}
+                    onPress={() => changeLanguage('es')}
+                    style={{
+                        backgroundColor:
+                        currentLanguage === 'es' ? '#33A850' : '#d3d3d3',
+                        padding: 20,
+                    }}>
+            
+                    <Text>CATELLANO UEE</Text>
+                </Pressable>
+
             </View>
         </View>
     );

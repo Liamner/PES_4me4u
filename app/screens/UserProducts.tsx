@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, FlatList, Text, Platform, TouchableHighlight } from 'react-native';
+import { StyleSheet, ScrollView, FlatList, Text, Platform, TouchableHighlight, Button } from 'react-native';
 
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -22,46 +22,36 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
     token:""
   });
 
-  // const id = navigation.getParams('id','Error');
 
-  //var id ;
-  //var ownProfileAux ;
 
-   const {id, ownProfileAux} = route.params;
+  const [ownProfileAux,  setOwnProfileAux] = useState('');
 
-  // const {auxiliar} = route.params;
-  // var id, ownProfileAux;
+   var id = route.params;
 
-  // const id = '61d1c011f5d0f2261e75160e';
-  // const ownProfileAux = 'S';
+
 
   const [products, setProducts] = useState([]);
+
+  const [wishlist, setWishlist] = useState([]);
 
   const [email, setEmail] = useState('');
 
   const getProducts = async () => {
-    console.log('id '+ id)
 
-    console.log('AAAA');
-    console.log(id);
-    console.log(ownProfileAux);
-    console.log('AAAA');
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+id);
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+session.id);
 
       setProducts(response.data.products);//lista de ids de productos en la
-      // console.log('products response: ' + response.data.products.length);
-      // console.log('products: ' + response.data.products.length);
 
+      
       setEmail(response.data.email);
-      console.log('email response: ' + response.data.email);
-      console.log('email: ' + email);
+     
+      
 
- 
+      if (response.data.wishlist != null) setWishlist(response.data.wishlist);
 
 
-      products.forEach(element => {
-        console.log(element);
-      });
+      
 
     };
 
@@ -87,21 +77,41 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
 
   React.useEffect(() => {
 
-  //  id = auxiliar.id;
+    id = route.params;
 
-  //   ownProfileAux= auxiliar.ownProfileAux;
 
     getData();
+    var aux;
+
+    
+    if ( id === session.id) {
+      aux = id
+      setOwnProfileAux('N');
+
+      
+    }
+    else {
+      setOwnProfileAux('S');
+      aux = session.id
+
+      
+
+    }
+
+    
+
+    console.log('nuestro perfil? ' + ownProfileAux);
+
+    id = aux;
+
+
+
 
     getProducts();
 
  
 
-    console.log('AAAA');
-    console.log(id);
-    console.log(ownProfileAux);
-    console.log('AAAA');
-
+    
 
 
   }, []);
@@ -118,6 +128,12 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
 
       }
 
+        <Button 
+                 onPress={() => getProducts() } 
+                 title = 'Cargar'
+                 color="#a2cff0" //azul iconico
+        />
+          
         <FlatList
           numColumns = {2}
           data={products}
@@ -125,10 +141,23 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
             <>
             <View style={styles.container2}>
 
-              <ProductCardId 
+            { 
+            (wishlist == [] )?
+                  <ProductCardId 
                   id={item}
                   uid={id} 
+                  guardado= {false}
+
               />
+            :
+                  <ProductCardId 
+                  id={item}
+                  uid={id} 
+                  guardado= {wishlist.includes(item) }
+
+              />
+            }
+
  
               { (ownProfileAux == 'S')?
                                 <ProductDelete id= {item} token = {session.token} />

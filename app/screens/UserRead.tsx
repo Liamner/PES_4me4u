@@ -150,7 +150,7 @@ import axios from 'axios';
     // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
     const body1 = {email: email}
     let response = axios
-    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/AddFollowed", body1)
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
     .then(function (response){
       console.log("siguiendo a " + response.data.userID)
     })
@@ -160,20 +160,6 @@ import axios from 'axios';
 
     setFollowing(true);
     // añadir follower, usuario del perfil es seguido por el usuario logueado
-  }
-
-  function unfollowUser() {
-    const body1 = {email: email}
-    let response = axios
-    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/unfollow", body1)
-    .then(function (response){
-      console.log("dejando de seguir a" + response.data.userID)
-    })
-    .catch(function(error){
-      console.log(error);
-    });
-
-    setFollowing(false);
   }
 
   const onPressFollowers = () => {
@@ -254,7 +240,7 @@ import axios from 'axios';
              {following? 
               <TouchableOpacity
                 onPress={() => {
-                    unfollowUser();
+                    followUser();
                 }}
                 style={{width: 150 }}
               >
@@ -378,12 +364,6 @@ import axios from 'axios';
               >{item.name}</Text>
             </Text>
             </>
-
-
-
-
-
-
           )}
           horizontal={false}
           showsHorizontalScrollIndicator={false}

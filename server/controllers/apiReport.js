@@ -60,14 +60,14 @@ exports.closeReport = async (req, res) => {
 
 exports.createReport = async (req, res) => {
   const report = new Report();
-  product.userReporting = req.body.userReporting;
+  product.userReporting = req.user.id;
   product.userReported = req.body.userReported;  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
   product.relatedProduct = req.body.relatedProduct;         
  
   try {   
-  const UserReporting = await User.findOne({_id: req.body.userReporting});
+  const UserReporting = await User.findOne({_id: req.user.id});
   if (userReporting == null) res.status(404).json({error:"UserReporting not found"});
 
   const UserReported = await User.findOne({_id: req.body.userReported});

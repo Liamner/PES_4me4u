@@ -58,7 +58,6 @@ exports.readGifts =  async (req, res) => {
 
 exports.increaseGifts =  async (req, res) => {
   try {
-    console.log("llega al try")
     const adminId = req.params.id;
     const admin = await Admin.findById({_id: adminId});
     admin.gifts += 1;
@@ -68,7 +67,6 @@ exports.increaseGifts =  async (req, res) => {
     console.log(admin);
 
   } catch (error) {
-    console.loig("entra en el catch");
     res.status(400).json(error.message);
     console.log(error.message);
   }
@@ -85,6 +83,22 @@ exports.readLoans =  async (req, res) => {
     } catch (error) {
         res.status(400).json(error.message);
         console.log(error.message);
+    }
+  };
+
+  exports.increaseLoans =  async (req, res) => {
+    try {
+      const adminId = req.params.id;
+      const admin = await Admin.findById({_id: adminId});
+      admin.loans += 1;
+      admin.save();
+  
+      res.status(200).json(admin);
+      console.log(admin);
+  
+    } catch (error) {
+      res.status(400).json(error.message);
+      console.log(error.message);
     }
   };
 

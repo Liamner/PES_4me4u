@@ -308,6 +308,9 @@ module.exports = function(app) {
   router.route('/admin/:id/loans')
     .get(adminController.readLoans);
 
+  router.route('/admin/:id/increaseLoans')
+    .put(adminController.increaseLoans);
+
   router.route('/admin/:id/exchanges')
     .get(adminController.readExchanges);
   

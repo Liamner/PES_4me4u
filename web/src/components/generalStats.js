@@ -61,6 +61,32 @@ class GeneralStats extends Component {
               </tr>
             </table> 
           </div>
+          <div className='grid-item'>
+            <p>Numero de categorias:</p>
+            <p>XXX</p>
+            <p>Gestionar categorias ></p>
+          </div>
+          <div className='grid-item'>
+            <table style={{width: '100%'}}>
+              <tr>
+                <td style={{width: '100%'}}>
+                  <p>EcoPoints totales:</p>
+                  <p>XXX</p>
+                </td>
+              </tr>
+            </table>
+            <table style={{width: '100%'}}>
+              <tr>
+                <td style={{width: '100%'}}>
+                  <p>EcoPoints gastados:</p>
+                  <p>XXX</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div className='grid-item'>
+            Sessions activas
+          </div>
         </div>;
     }
 

@@ -15,3 +15,5 @@ class Reports extends Component {
 }
 
 export default Reports;
+
+// lista de reports, no cerrados y cerrar reports

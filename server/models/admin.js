@@ -9,7 +9,7 @@ let rolesValidos = {
 }
 let Schema = mongoose.Schema;
 
-let usuarioSchema = new Schema({
+let adminSchema = new Schema({
     userId: {
         type: String,
         required: [true, 'El nombre es necesario'],
@@ -52,20 +52,20 @@ let usuarioSchema = new Schema({
         type: Number,
         default: 0
     },
-    blockedUsers: [{
+    blockedUsers: {
         type: Number,
         default: 0
-    }]
+    }
 });
     
 
 
 // elimina la key password del objeto que retorna al momento de crear un usuario
-usuarioSchema.methods.toJSON = function() {
-    let user = this;
-    let userObject = user.toObject();
-    delete userObject.password;
-    return userObject;
+adminSchema.methods.toJSON = function() {
+    let admin = this;
+    let adminObject = admin.toObject();
+    delete adminObject.password;
+    return adminObject;
  }
 
 //agregamos el plugin de validación única y exportamos el modelo recién creado
@@ -74,4 +74,4 @@ usuarioSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
 })
 */
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = mongoose.model('Admin', adminSchema);

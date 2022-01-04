@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import logo from '../logoCirculoGrandeRESOLSUPERPEQUE.png'
 
 class Navbar extends Component {
-    render() {
-        return <nav>
-          <ul>
-            <li><a style={{fontWeight: 'bold'}} href='/'><img src={logo}/> 4me4u</a></li>
-            <li><a href='/reports'>Denuncias</a></li>
-            <li style={{float: 'right'}}><a href='/user'>Hola user!</a></li>
-          </ul>
-        </nav>;
-    }
-
+  render() {
+    return <nav>
+      <ul>
+        <li><a href='/'><img src={logo}/><b> 4me4u</b></a></li>
+        <li><a href='/reports'>Gestionar denuncias</a></li>
+        <li><a style={{float: 'bottom'}} href='/user'>Hola user!</a></li>
+      </ul>
+    </nav>;
+  }
 }
 
 export default Navbar;

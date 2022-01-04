@@ -9,12 +9,14 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <Router>
+      <div style={{marginLeft: '10%'}}>
+        <Router>
           <Routes>
             <Route path="/" element={<GeneralStats />} />
             <Route path="/reports" element={<Reports />} />
           </Routes>
         </Router>
+        </div>
     </div>
   );
 }

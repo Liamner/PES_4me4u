@@ -44,7 +44,7 @@ const [id, setid] = useState('61ba2e3f85c2c10306f0117a'); //HK -> borrar y desco
 
     setEcoPoints(response.data.ecoPoints);
 
-//    setTransaccionesTotales({gift} + {loans} + {exchanges})
+    setTransaccionesTotales(gift + loans + exchanges);
 
 
   };

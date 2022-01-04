@@ -10,12 +10,12 @@ import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar'
 
-export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
+export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
   const [products, setProducts] = useState();
   const [text, onChangeText] = useState(null);
   const [category, setCategory] = useState(null);
   const [type, setType] = useState(null);
-
+  console.log("categoria: " + route.params)
   const getPNameInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/filter/products', {
       params: {
@@ -80,12 +80,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard navigation={navigation} 
-            id={item._id} 
-            name={item.name}
-            guardado={false} 
-            arrayTratos={item.exchange}
-            imageUri={item.img[0].url}/>
+            <ProductCard id={item._id} navigation={navigation}name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
           )}
           keyExtractor={item => item._id}
         />
@@ -96,6 +91,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
   },
   row: {

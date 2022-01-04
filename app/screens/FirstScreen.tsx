@@ -8,6 +8,9 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar'
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
 
 interface ProductImage{
   __v: number;
@@ -28,40 +31,57 @@ interface Product {
 export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScreen'>) {
 
   const [products, setProducts] = React.useState();
+  
+  const {t, i18n} = useTranslation();
+  const [currentLanguage,setLanguage] =useState('cat');
+
+  const [noProduct, setNoProduct] = React.useState(false);
+  const [recentlyViewedProducts, setRecentlyViewedProducts] = React.useState();
+  const [isRecentlyViewedProducts, setIsRecentlyViewed] = React.useState(false);
+  const getRecentlyViewedProducts = async () => {
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2e3f85c2c10306f0117a/productsRecentlyViewed');
+    console.log(" recently viewed products"  + response.data)
+    setRecentlyViewedProducts(response.data);
+    if(response.data.lenth != 0){
+      setIsRecentlyViewed(true)
+    }
+    
+  };
 
   const getProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
     setProducts(response.data);
+    if(response.data.length == 0)setNoProduct(true)
   };
-
   React.useEffect(() => {
     getProducts();
+    getRecentlyViewedProducts();
   }, []);
 
   const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2aed5-3ad53abb28ba',
-      title: 'Electrodomesticos',
+      title: t('Electrodomesticos'),
     },
     {
       id: 'bd7acbea-c11-46c2-aed5-3ad53abb28ba',
-      title: 'Consolas y videojuegos',
+      title: t('Consolas y videojuegos'),
     },
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28a',
-      title: 'Cine, libros, música',
+      title: t('Cine, libros, música'),
     },
     {
       id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Niños y bebés',
+      title: t('Niños y bebés'),
     },
     {
       id: '58694a0f-3da1-471f-bd96-15571e29d72',
-      title: 'Construcción y reformas',
+      title: t('Construcción y reformas'),
     },
     {
       id: '58694a0f-3da1-471f-bd96-1455719d72',
-      title: 'Juegos y juguetes',
+      title: t('Juegos y juguetes'),
     },
   ];
 
@@ -83,11 +103,8 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const renderItem = ({ item }) => (
     <Item title={item.title} />
   );
-  function renderItem2(item:any) {
-    console.log(item)
-  //console.log(item.img[0].url)
-  // if(item.img === undefined) return(  <Text style= {{backgroundColor: 'black'}}>ADIOS</Text>)
-  // else return( <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>)
+  function renderItem2({item}) {
+    return(     <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>)
 
   }
   return (
@@ -119,65 +136,78 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           </View>
       </Modal>
      <TextInput
-        label="Buscar producto..."
+        label={t('Buscar producto...')}
+
         style={styles.textInput}       
         onChangeText={onChangeName}
         value={name}
        />  
        <ScrollView style = {styles.scrollCategorias} horizontal= {true}>
-        <TouchableOpacity>
+        <TouchableOpacity> 
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Moda</Text>
+          <Text style = {styles.textoCategoria}>{t('Moda')}</Text>
           </View>
 
         </TouchableOpacity>
         <TouchableOpacity>
           <View style = {styles.elementoCategoria}>
           <Image source={require('../images/informatica.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Informática</Text>
+          <Text style = {styles.textoCategoria}>{t('Informática')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/mascotas.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Mascotas</Text>
+          <Text style = {styles.textoCategoria}>{t('Mascotas')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Hogar</Text>
+          <Text style = {styles.textoCategoria}>{t('Hogar')}</Text>
           </View>
 
         </TouchableOpacity>  
         <TouchableOpacity>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/deporte.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Ocio</Text>
+          <Text style = {styles.textoCategoria}>{t('Ocio')}</Text>
           </View>
 
         </TouchableOpacity>    
         <TouchableOpacity onPress={() => setModalVisible(true)}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/otros.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Otros</Text>
+          <Text style = {styles.textoCategoria}>{t('Otros')}</Text>
           </View>
 
         </TouchableOpacity>   
        </ScrollView>
-    <ScrollView style={{marginBottom: 30}}>
+    <ScrollView style={{marginBottom: 30, height: '100%', backgroundColor: 'white'}}>
+    {isRecentlyViewedProducts &&
+    <View style = {{backgroundColor: '#a2cff0'}}>
+      <Text style = {styles.noProductTitle}> Visto Recientemente</Text>
+      <FlatList
+        numColumns={2}
+        data={recentlyViewedProducts}
+        renderItem={({ item }) => (        
+          <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation}/*imageUri={item.img[0].url}*//>
+          )}
+          keyExtractor={item => item._id}
+          />
+          <View style ={styles.separator}/>
+    </View> }
+    {noProduct && <Text style = {styles.noProductTitle}> No hay productos actualmente</Text>}
     <View style = {styles.fila}>                  
-      <ProductCard name ={"Olla a presion"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={true} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "regalar", "prestar"]}/>
-      <ProductCard name ={"paraguas de viento"}  guardado ={false} arrayTratos ={["intercambiar", "give", "exchange"]}/>
-      </View>                    
-      <View style = {styles.fila}>                  
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["exchange", "loan", "prestar"]}/>
-      <ProductCard name ={"Bicicleta de Montaña"}  guardado ={false} arrayTratos ={["intercambiar", "give", "loan"]}/>
+    {!noProduct && <FlatList
+        numColumns={2}
+        data={products}
+        renderItem={({ item }) => (
+            <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation}/>
+          )}
+          keyExtractor={item => item._id}
+          />}
       </View>  
     </ScrollView>    
     <NavigationBar  navigation={navigation} casa={true}/>
@@ -189,8 +219,17 @@ const styles = StyleSheet.create({
   flatList: {
   },
   fila: {
-    flexDirection: 'row',
     backgroundColor: 'white'
+  },
+  noProductTitle: {
+    color: 'white',
+    backgroundColor: '#a2cff0',
+    borderRadius: 8,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 6
   },
   scrollCategorias: {
     //borderRadius: 10,
@@ -228,6 +267,12 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 2,
   },
+  separator:{
+    backgroundColor: '#a2cff0',
+    height: 8,
+    borderRadius: 5,
+    marginVertical: 8
+  },
   elementoCategoria: {
     width: 80,
     height: 120,
@@ -259,7 +304,7 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 10,
     paddingLeft: 14,
-    fontWeight: "bold"
+ 
   },
   textInput: {
     height: 45,

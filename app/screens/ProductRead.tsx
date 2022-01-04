@@ -16,7 +16,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const uid = '61b09c0f9482049de40b74f3';
   //const pid = '61b64a52d4851901d035ed57';
   const pid = route.params;
-  console.log(pid);
+  console.log("pid : " + pid);
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');

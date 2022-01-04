@@ -134,7 +134,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         value={name}
        />  
        <ScrollView style = {styles.scrollCategorias} horizontal= {true}>
-        <TouchableOpacity>
+        <TouchableOpacity> 
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>Moda</Text>
@@ -182,23 +182,23 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
       <FlatList
         numColumns={2}
         data={recentlyViewedProducts}
-        renderItem={({ item }) => (
-          <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>
+        renderItem={({ item }) => (        
+          <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation}/*imageUri={item.img[0].url}*//>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item._id}
           />
           <View style ={styles.separator}/>
     </View> }
     {noProduct && <Text style = {styles.noProductTitle}> No hay productos actualmente</Text>}
     <View style = {styles.fila}>                  
-    <FlatList
+    {!noProduct && <FlatList
         numColumns={2}
         data={products}
         renderItem={({ item }) => (
-          <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} />
+            <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation}/>
           )}
-          keyExtractor={item => item.id}
-          />
+          keyExtractor={item => item._id}
+          />}
       </View>  
     </ScrollView>    
     <NavigationBar  navigation={navigation} casa={true}/>

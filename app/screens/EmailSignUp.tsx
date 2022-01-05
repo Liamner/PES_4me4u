@@ -129,7 +129,7 @@ export default function SignUp({navigation}) {
                 .post('https://app4me4u.herokuapp.com/api/register', credentials)
                 .then(function (response) {
                     const result = response.data
-                    console.log(result.userId)
+                    //sconsole.log(result.userId)
                     navigation.navigate("Main", result)
                 })
                 .catch(function (error) {

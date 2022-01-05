@@ -280,37 +280,77 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.user.id });
-    var ngifts = user.gifts;
-    var nloans = user.loans;
-    var nexchanges = user.exchanges;
-    var points = user.ecoPoints;
-    var rewards = 0;
+
+    const user = await User.findById({ _id: req.params.id });
+    let ngifts = user.gifts;
+    let nloans = user.loans;
+    let nexchanges = user.exchanges;
+    let points = user.ecoPoints;
+    let rewards = 0;
+    let diez = 10;
+    let cincuenta = 50;
+    let cien = 100;
+    let cientoCincuenta = 150;
+
     if(ngifts >= 3) {
-      if(ngifts >=3) rewards += 10;
-      if(ngifts >= 5) rewards += 50;
-      else if (ngifts >= 7) rewards += 100;
-      else if(ngifts >= 10) rewards += 150;
+      if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(diez);
+      else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(cincuenta);
+      else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(cien);
+      else if(ngifts >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nloans >= 3) {
-      if(nloans >=3) rewards += 10;
-      if(nloans >= 5) rewards += 50;
-      else if (nloans >= 7) rewards += 100;
-      else if(nloans >= 10) rewards += 150;
+    if(nloans >= 3) {
+      if(nloans >=3 && nloans <= 5) rewards += parseFloat(diez);
+      else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(cincuenta);
+      else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(cien);
+      else if(nloans >= 10) rewards += parseFloat(cientoCincuenta);
     }
 
-    else if(nexchanges >= 3) {
-      if(nexchanges >=3) rewards += 10;
-      if(nexchanges >= 5) rewards += 50;
-      else if (nexchanges >= 7) rewards += 100;
-      else if(nexchanges >= 10) rewards += 150;
+    if(nexchanges >= 3) {
+      if(nexchanges >=3 && nexchanges <= 5) rewards += parseFloat(diez);
+      else if(nexchanges >= 5 && nexchanges <= 7) rewards += parseFloat(cincuenta);
+      else if (nexchanges >= 7 && nexchanges <= 10) rewards += parseFloat(cien);
+      else if(nexchanges >= 10) rewards += parseFloat(cientoCincuenta);
     }
-
-    user.ecoPoints = points + rewards;
-    user.save();
+    user.ecoPoints = parseFloat(points)+parseFloat(rewards)
+    //user.ecoPoints += rewards;
+    await user.save();
     res.status(200).json(user);
     
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.getUserRewards = async (req, res) => {
+  let {type, estimatedPoints} = req.body;
+
+  let user = await User.findById({ _id: req.params.id });
+  console.log("Searching for user to get reward: " + user.name);
+  let eco = user.ecoPoints;
+  let total = 0;
+  if (type == 'gift'){
+    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+  }
+
+  else if (type == 'loan') {
+    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points are too high'})
+    
+  }
+  else if (type == 'exchange') {
+    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    else res.status(400).json({error: 'Estimated points not accepted'})
+  }
+  else res.status(400).json({error: 'Transaction not available'});
+  
+  
+  user.ecoPoints = total;
+
+  try {
+    await user.save();
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }
@@ -393,6 +433,7 @@ exports.getUserRewards = async (req, res) => {
   }
 };
 
+
 exports.getUserWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -401,8 +442,6 @@ exports.getUserWishlist = async (req, res) => {
       console.log(user);
      res.status(200).json(user.wishlist);
     }).populate({path:"wishlist", populate: { path: 'img'}});
-    
-    
   } catch (error) {
     res.status(400).json(error)
   }
@@ -413,18 +452,10 @@ exports.addToWishlist = async (req, res) => {
     const userId = req.user.id;
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
-    
-    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.wishlist.push(productDB);
-     ourUser.save();
-     res.status(200).json(ourUser.wishlist);
-    });
+    ourUser.wishlist.push(idProduct);
+    ourUser.save();
+    res.status(200).json(ourUser.wishlist);
+
   } catch (error) {
     res.status(400).json(error)
   }
@@ -434,26 +465,22 @@ exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
     let idProduct = req.body.idProduct;
-    User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersProducts.wishlist.length) ; i++) {
-          if (idProduct == usersProducts.wishlist[i]._id) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not wishlist'})
-        }
-        else {
-          i = i-1;
-          usersProducts.wishlist.splice(i, 1);
-          usersProducts.save();
-          const user = await User.findById({_id: userId});
-          console.log(user.wishlist)
-          res.status(200).json(usersProducts);
+    const ourUser = await User.findById({_id: userId}).populate("wishlist");
+    let i = 0, find = 0;
 
-        }
-    }).populate('wishlist');
-
+    for (i = 0;(find == 0) && (i < ourUser.wishlist.length); i++) {
+      if (idProduct == ourUser.wishlist[i]) find = 1;
+    }
+    if (find == 0) {
+      res.status(400).json({error: 'The product is not in the wishlist'})
+    }
+    else {
+      i = i-1;
+      ourUser.wishlist.splice(i, 1);
+      ourUser.save();
+      console.log(ourUser.wishlist)
+      res.status(200).json(ourUser);
+    }
   } catch (error) {
     res.status(400).json(error)
   }
@@ -522,3 +549,45 @@ exports.follow = async (req, res) => {
     res.status(400).json(error)
   }
 };
+
+exports.getRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById({_id: userId}).populate("recentlyViewed");
+    
+    res.status(200).json(user.recentlyViewed)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+exports.updateRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let idProduct = req.body.idProduct;
+    let ourUser;
+
+    User.findById({_id: userId}, {followers: 1}, async (erro, usersRecentViewed) => {
+      if (usersRecentViewed.recentlyViewed.length == 5) {
+        usersRecentViewed.followers.splice(1,1);
+        usersRecentViewed.save();
+      }
+      ourUser = usersRecentViewed;
+    }).populate('recentlyViewed');
+    
+    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
+      if (erro) {
+        return res.status(500).json({
+           ok: false,
+           err: erro
+        })
+     }
+      ourUser.recentlyViewed.push(productDB);
+      ourUser.save();
+      res.status(200).json(ourUser.recentlyViewed);
+    });
+
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}

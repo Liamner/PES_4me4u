@@ -8,6 +8,12 @@ const { ObjectId } = require('mongodb');
 
 
 exports.readAllReports =  async (req, res) => {
+
+  if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
+
   try {
     const report = await Report.find();
     res.status(200).json(report);
@@ -18,6 +24,12 @@ exports.readAllReports =  async (req, res) => {
 };
 
 exports.readUserReports = async (req, res) => {
+
+  if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
+
   try {
     const report = await Report.find({ userReported: req.params.userReported });
 
@@ -31,6 +43,12 @@ exports.readUserReports = async (req, res) => {
 };
 
 exports.readNoSolvedUserReports = async (req, res) => {
+
+  if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
+
     try {
       const report = await Report.find({ userReported: req.params.userReported, solved: false});
   
@@ -44,6 +62,12 @@ exports.readNoSolvedUserReports = async (req, res) => {
   };
 
 exports.closeReport = async (req, res) => {
+
+  if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
+
     try{
         const report = await Report.findById({_id: req.params.id});
         report.solved = true;
@@ -107,53 +131,13 @@ exports.createReport = async (req, res) => {
   }
 };
 
-exports.updateReport = async (req, res) => {
-  try{/*
-    const nname = req.body.name;
-    const ncategories = req.body.categories;
-    const ndescription = req.body.description;
-    const nexchange = req.body.exchange;
-    const nimg = req.body.img;
-  
-    const id = req.params.id;
-    const product = await Product.findById(id)
-    console.log("Searching for product to update: " + req.params.id);
-    
-    /*authenticateJWT, */
-
-    /*if (product.userId != req.user.id) {
-        res.status(401).json({error: "Do not have permission"})
-        return;
-    }
-      if (nname != null)  product.name = nname;
-      if (ncategories != null) product.categories = ncategories;
-      console.log(ncategories);
-    
-      if (ndescription != null)product.description = ndescription;
-      if (nexchange != null) product.exchange = nexchange;
-      if (nimg != null) product.img = nimg;
-    
-      console.log(product);
-
-    try {
-      await product.save();
-    
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(409).json(error.message);
-    
-      console.log("Can not update the Product");
-    }
-    */
-  } catch (error) {
-    res.status(404).json(error.message);
-    console.log(error.message);
-  }
-};
-
-
-
 exports.deleteReport = async (req, res) => {
+
+  if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
+  
   try {    
     const report = await Report.findByIdAndDelete({_id: req.params.id});
 //caldria suprimir també els links

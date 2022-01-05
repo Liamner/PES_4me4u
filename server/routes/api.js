@@ -68,7 +68,7 @@ module.exports = function(app) {
 
   // Create new category
   router.route('/category/create/')
-    .post(/*authenticateJWT, */validateCreateCategory, categoryController.createCategory);
+    .post(authenticateJWT, validateCreateCategory, categoryController.createCategory);
 
   // Read category with id = id
     router.route('/category/:id')
@@ -80,15 +80,15 @@ module.exports = function(app) {
   
   // Update category with id = id
   router.route('/category/update/:id')
-    .put(/*authenticateJWT,*/ categoryController.updateCategory);
+    .put(authenticateJWT, categoryController.updateCategory);
   
   // Delete category with id = id
   router.route('/category/delete/:id')
-    .delete(/*authenticateJWT,*/ categoryController.deleteCategory);
+    .delete(authenticateJWT, categoryController.deleteCategory);
 
   // Create new type
   router.route('/type/create/')
-    .post(/*authenticateJWT,*/ validateCreateType, typeController.createType);
+    .post(authenticateJWT, validateCreateType, typeController.createType);
 
   // Read type with id = id
   router.route('/type/:id')
@@ -100,11 +100,11 @@ module.exports = function(app) {
 
   // Update type with id = id
   router.route('/type/update/:id')
-    .put(/*authenticateJWT,*/ typeController.updateType);
+    .put(authenticateJWT, typeController.updateType);
 
   // Delete type with id = id
   router.route('/type/delete/:id')
-    .delete(/*authenticateJWT,*/ typeController.deleteType);
+    .delete(authenticateJWT, typeController.deleteType);
 
     
   // ======================
@@ -212,7 +212,7 @@ module.exports = function(app) {
 
   // Delete tradeExchange with id = id
   router.route('/tradeExchange/delete/:id')
-    .delete(/*authenticateJWT,*/ tradeExchangeController.deleteTradeExchange);
+    .delete(authenticateJWT, tradeExchangeController.deleteTradeExchange);
 
   // Create new tradeLoan
   router.route('/tradeLoan/create/')
@@ -228,7 +228,7 @@ module.exports = function(app) {
 
   // Delete tradeLoan with id = id
   router.route('/tradeLoan/delete/:id')
-    .delete(/*authenticateJWT,*/ tradeLoanController.deleteTradeLoan);
+    .delete(authenticateJWT, tradeLoanController.deleteTradeLoan);
 
   // ======================
   // ---- Report Routes ---
@@ -240,27 +240,23 @@ module.exports = function(app) {
 
   // Read reports from userReported = userReported
     router.route('/report/:userReported')
-    .get(/*authenticateJWT,*/ reportController.readUserReports);
+    .get(authenticateJWT, reportController.readUserReports);
   
   // Read all reports
   router.route('/report/')
-    .get(/*authenticateJWT,*/ reportController.readAllReports);
+    .get(authenticateJWT, reportController.readAllReports);
   
      // Read no solved reports from userReported = userReported
   router.route('/report/nosolved/:userReported')
-  .get(/*authenticateJWT,*/ reportController.readNoSolvedUserReports);
+  .get(authenticateJWT, reportController.readNoSolvedUserReports);
 
   // Close Report with id = id
   router.route('/report/close/:id')
     .put(/*authenticateJWT,*/ reportController.closeReport);
-
-  // Update Report with id = id
-    router.route('/report/update/:id')
-    .put(/*authenticateJWT,*/ reportController.updateReport);
   
   // Delete Report with id = id
   router.route('/report/delete/:id')
-    .delete(/*authenticateJWT,*/ reportController.deleteReport);
+    .delete(authenticateJWT, reportController.deleteReport);
 
   // ======================
   // ---- Image Routes ----

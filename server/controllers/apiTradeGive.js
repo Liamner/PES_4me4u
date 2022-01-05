@@ -70,7 +70,12 @@ exports.readAllTradeGive = async (req, res) => {
 };
   
   exports.deleteTradeGive = async (req, res) => {
-  
+
+    if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+    
       try {
         const tradeGive = await TradeGive.findByIdAndDelete({_id: req.params.id});
     

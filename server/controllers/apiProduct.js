@@ -160,12 +160,13 @@ exports.updateProduct = async (req, res) => {
     const product = await Product.findById(id)
     console.log("Searching for product to update: " + req.params.id);
     
-    /*authenticateJWT, */
+    //authenticateJWT
 
-    /*if (product.userId != req.user.id) {
+    if (product.userId != req.user.id) {
         res.status(401).json({error: "Do not have permission"})
         return;
-    }*/
+    }
+
       if (nname != null)  product.name = nname;
       if (ncategories != null) product.categories = ncategories;
       console.log(ncategories);
@@ -200,13 +201,16 @@ exports.updateStateProduct = async (req, res) => {
   
     const id = req.params.id;
     const product = await Product.findById(id)
+
+    //authenticateJWT
+
+    if (product.userId != req.user.id) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+  }
+
     try {
       
-
-      if (product.userId == req.user.id) {
-        res.status(401).json({error: "Do not have permission"})
-        return;
-      }
         console.log("Searching for product to update its state: " + req.params.id);
         product.state = nstate;
         console.log(product);
@@ -227,17 +231,18 @@ exports.updateStateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+
   try {    
     let product = await Product.findById({_id: req.params.id})
     /*if (!product) {
       res.status(404).json({error: "Product not find"})
     }*/
     //else {
-      /*
+      
       if (product.userId == req.user.id) {
         res.status(401).json({error: "Do not have permission"})
         return;
-      }*/
+      }
         
         for (let i = 0; i < product.img.length; ++i) {  
           const res = await Image.findByIdAndDelete({_id: product.img[i]});

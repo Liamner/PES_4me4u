@@ -29,7 +29,11 @@ exports.readAllCategories = async (req, res) => {
 
     const category = new Category();
     category.name = req.body.name;
-   
+
+    if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
     console.log(category);
   
     try {
@@ -44,11 +48,27 @@ exports.readAllCategories = async (req, res) => {
   }
   
   exports.updateCategory = async (req, res) => {
+
+    if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
   
   }
 
   exports.deleteCategory = async (req, res) => {
-  
+
+    /*if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }*/
+    
+    const user = await User.findbyId(req.user.id);
+    if (user.role != 'ADMIN'){
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+    
       try {
         const category = await Category.findByIdAndDelete({_id: req.params.id});
     

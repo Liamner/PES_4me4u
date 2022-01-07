@@ -32,6 +32,18 @@ exports.readUser = async (req, res) => {
   }
 };
 
+exports.readUserByName = async (req, res) => {
+  try {
+    const user = await User.find({ userId: {$regex: req.params.userId} });
+    console.log("Reading users: " + req.params.userId);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
 exports.readUsersId = async (req, res) => {
   try {
     const user = await User.find({}, {_id: 1 });
@@ -117,6 +129,11 @@ exports.loginUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   let usr = await User.findById({_id: req.params.id})
   //let email = req.params.email; 
+
+  if (usr.userId != req.user.id || usr.role != 'ADMIN')  {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
   try{
     let usr = await User.findById({_id: req.params.id})
     usr.delete();
@@ -129,7 +146,7 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {  
-    const user = await User.findById(req.params.id)
+    const user = await User.findById({_id : req.params.id})
 
     console.log(req.body.latitude)
     if (req.body.name) user.userId = req.body.name;
@@ -166,7 +183,7 @@ exports.getUserProducts = async (req, res) => {
 
 exports.rateUser = async (req, res) => {
   // Id usuario a valorar
-  const userId = req.params.userId;
+  const userId = req.params.id;
   const rateScore = req.body.rateScore;
   const comment = req.body.comment;
 
@@ -257,6 +274,7 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
+
     const user = await User.findById({ _id: req.params.id });
     let ngifts = user.gifts;
     let nloans = user.loans;
@@ -346,7 +364,7 @@ exports.getUserLevel = async (req, res) => {
 
 exports.levelManage = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.params.id });
+    const user = await User.findById({ _id: req.user.id });
     console.log("Level del usuario: " , user.name);
 
     var nivelAntiguo = user.level;
@@ -390,9 +408,29 @@ exports.getUserPoints = async (req, res) => {
   }
 };
 
+exports.getUserRewards = async (req, res) => {
+  try {
+    const {type, estimatedPoints} = req.body;
+
+    const id = req.user.id;
+    const user = await User.findById(id)
+    console.log("Searching for user to get reward: " + user.name);
+    
+    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
+    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
+    if (type != 'exchange') user.ecoPoints += 15;
+
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};
+
+
 exports.getUserWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     User.findOne({_id: userId}, (erro, user) => {
       console.log(user.wishlist)
       console.log(user);
@@ -405,7 +443,7 @@ exports.getUserWishlist = async (req, res) => {
     
 exports.addToWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
     ourUser.wishlist.push(idProduct);
@@ -419,7 +457,7 @@ exports.addToWishlist = async (req, res) => {
 
 exports.deleteFromWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     let idProduct = req.body.idProduct;
     const ourUser = await User.findById({_id: userId}).populate("wishlist");
     let i = 0, find = 0;
@@ -466,7 +504,7 @@ exports.getUserFollowers = async (req, res) => {
 
 exports.follow = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     let body = req.body;
     const ourUser = await User.findById({_id: userId});
     const userFollowed = await User.findOne ({email: body.email});

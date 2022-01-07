@@ -31,20 +31,20 @@ exports.readAllTradeExchange = async (req, res) => {
   exports.createTradeExchange = async (req, res) => {
     const tradeExchange = new TradeExchange();
 
-    tradeExchange.userOfering = req.body.userOfering;
+    tradeExchange.userOfering = req.user.id;
     tradeExchange.userTaking = req.body.userTaking;
     tradeExchange.productOfering = req.body.productOfering;
     tradeExchange.productTaking = req.body.productTaking;
    tradeExchange.publishingDate = req.body.publishingDate;
      
     try {
-        const userOfering = await User.findById({_id:req.body.userOfering});
+        const userOfering = await User.findById({_id:req.user.id});
         if (userOfering == null) res.status(404).json({error:"userOfering not found"});
       
         const userTaking = await User.findById({_id:req.body.userTaking});
         if (userTaking == null) res.status(404).json({error:"userTaking not found"});
 
-        if (req.body.userOfering == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
+        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
        
         const productOfering = await Product.findById({_id:req.body.productOfering});
         if (productOfering == null) res.status(404).json({error:"productOfering not found"});
@@ -70,13 +70,20 @@ exports.readAllTradeExchange = async (req, res) => {
       console.log('Can not create the tradeExchange');
     }
 };
-  
-  exports.updateTradeExchange = async (req, res) => {
-  
-};
 
   exports.deleteTradeExchange = async (req, res) => {
-  
+    
+   /* if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }*/
+
+    const user = await User.findbyId(req.user.id);
+    if (user.role != 'ADMIN'){
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+    
       try {
         const tradeExchange = await TradeExchange.findByIdAndDelete({_id: req.params.id});
     

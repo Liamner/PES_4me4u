@@ -7,6 +7,7 @@ const typeController = require('../controllers/apiType.js');
 const tradeGiveController = require('../controllers/apiTradeGive.js');
 const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
+const reportController = require('../controllers/apiReport.js');
 const conversationController = require ('../controllers/apiConvesration.js')
 const adminController = require ('../controllers/apiAdmin.js')
 const messageController = require ('../controllers/apiMessages.js')
@@ -57,11 +58,11 @@ module.exports = function(app) {
 
   // Update product with id = id
   router.route('/product/update/:id')
-    .put(/*authenticateJWT, */ productController.updateProduct);
+    .put(authenticateJWT, productController.updateProduct);
 
   // Update atribute state of product with id = id
   router.route('/product/updateState/:id')
-    .put(/*authenticateJWT, */productController.updateStateProduct);
+    .put(authenticateJWT, productController.updateStateProduct);
 
   // Delete product with id = id
   router.route('/product/delete/:id')
@@ -69,7 +70,7 @@ module.exports = function(app) {
 
   // Create new category
   router.route('/category/create/')
-    .post(validateCreateCategory, categoryController.createCategory);
+    .post(authenticateJWT, validateCreateCategory, categoryController.createCategory);
 
   // Read category with id = id
     router.route('/category/:id')
@@ -81,15 +82,15 @@ module.exports = function(app) {
   
   // Update category with id = id
   router.route('/category/update/:id')
-    .put(categoryController.updateCategory);
+    .put(authenticateJWT, categoryController.updateCategory);
   
   // Delete category with id = id
   router.route('/category/delete/:id')
-    .delete(categoryController.deleteCategory);
+    .delete(authenticateJWT, categoryController.deleteCategory);
 
   // Create new type
   router.route('/type/create/')
-    .post(validateCreateType, typeController.createType);
+    .post(authenticateJWT, validateCreateType, typeController.createType);
 
   // Read type with id = id
   router.route('/type/:id')
@@ -101,11 +102,11 @@ module.exports = function(app) {
 
   // Update type with id = id
   router.route('/type/update/:id')
-    .put(typeController.updateType);
+    .put(authenticateJWT, typeController.updateType);
 
   // Delete type with id = id
   router.route('/type/delete/:id')
-    .delete(typeController.deleteType);
+    .delete(authenticateJWT, typeController.deleteType);
 
     
   // ======================
@@ -121,7 +122,7 @@ module.exports = function(app) {
 
 
   router.route('/deleteUser/:id')
-    .delete(userController.deleteUser);
+    .delete(authenticateJWT, userController.deleteUser);
 
   // Update user with id = id
   router.route('/user/update/:id')
@@ -136,6 +137,9 @@ module.exports = function(app) {
 
   router.route('/user/:id')
     .get(userController.readUser);
+
+  router.route('/user/name/:userId')
+    .get(userController.readUserByName);
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
@@ -150,22 +154,23 @@ module.exports = function(app) {
     .get(userController.getUserPoints)
 
   router.route('/user/:id/wishlist')
-    .get(userController.getUserWishlist)
+    .get(authenticateJWT, userController.getUserWishlist)
     
   router.route('/user/:id/level')
     .get(userController.getUserLevel)
 
   router.route('/user/:id/levelManage')
-    .get(userController.levelManage)
+    .get(authenticateJWT, userController.levelManage)
 
   router.route('/user/:id/rewards')
-    .put(userController.getUserRewards)
+    .put(authenticateJWT, userController.getUserRewards)
 
   router.route('/user/:id/AddToWishlist')
-    .post(userController.addToWishlist)
+    .post(authenticateJWT, userController.addToWishlist)
 
     router.route('/user/:id/DeleteFromWishlist')
-    .delete(userController.deleteFromWishlist)
+    .delete(authenticateJWT, userController.deleteFromWishlist)
+
   
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
@@ -174,21 +179,8 @@ module.exports = function(app) {
     .get(userController.getUserFollowers)
 
   router.route('/user/:id/follow')
-    .post(userController.follow)
 
-  //router.route('/user/:id/unfollow')
-  //  .post(userController.unfollow)
-
-  //router.route('/user/:id/loseFollower')
-  //  .post(userController.loseFollower)
-
-  router.route('/user/:id/productsRecentlyViewed')
-    .get(userController.getRecentlyViewed)
-
-  router.route('/user/:id/addProductsRecentlyViewed')
-    .post(userController.updateRecentlyViewed)
-
-  
+    .post(authenticateJWT, userController.follow)
 
     
   // ======================
@@ -197,7 +189,7 @@ module.exports = function(app) {
 
   // Create new tradeGive
   router.route('/tradeGive/create/')
-    .post(tradeGiveController.createTradeGive);
+    .post(authenticateJWT, tradeGiveController.createTradeGive);
 
   // Read tradeGive with id = id
     router.route('/tradeGive/:id')
@@ -207,17 +199,13 @@ module.exports = function(app) {
   router.route('/tradeGive/')
     .get(tradeGiveController.readAllTradeGive);
   
-  // Update tradeGive with id = id
-  router.route('/tradeGive/update/:id')
-    .put(tradeGiveController.updateTradeGive);
-  
   // Delete tradeGive with id = id
   router.route('/tradeGive/delete/:id')
-    .delete(tradeGiveController.deleteTradeGive);
+    .delete(/*authenticateJWT,*/ tradeGiveController.deleteTradeGive);
 
   // Create new tradeExchange
   router.route('/tradeExchange/create/')
-    .post(tradeExchangeController.createTradeExchange);
+    .post(authenticateJWT, tradeExchangeController.createTradeExchange);
 
   // Read tradeExchange with id = id
   router.route('/tradeExchange/:id')
@@ -227,17 +215,13 @@ module.exports = function(app) {
   router.route('/tradeExchange/')
     .get(tradeExchangeController.readAllTradeExchange);
 
-  // Update tradeExchange with id = id
-  router.route('/tradeExchange/update/:id')
-    .put(tradeExchangeController.updateTradeExchange);
-
   // Delete tradeExchange with id = id
   router.route('/tradeExchange/delete/:id')
-    .delete(tradeExchangeController.deleteTradeExchange);
+    .delete(authenticateJWT, tradeExchangeController.deleteTradeExchange);
 
   // Create new tradeLoan
   router.route('/tradeLoan/create/')
-    .post(tradeLoanController.createTradeLoan);
+    .post(authenticateJWT, tradeLoanController.createTradeLoan);
 
   // Read tradeLoan with id = id
   router.route('/tradeLoan/:id')
@@ -247,13 +231,37 @@ module.exports = function(app) {
   router.route('/tradeLoan/')
     .get(tradeLoanController.readAllTradeLoan);
 
-  // Update tradeLoan with id = id
-  router.route('/tradeLoan/update/:id')
-    .put(tradeLoanController.updateTradeLoan);
-
   // Delete tradeLoan with id = id
   router.route('/tradeLoan/delete/:id')
-    .delete(tradeLoanController.deleteTradeLoan);
+    .delete(authenticateJWT, tradeLoanController.deleteTradeLoan);
+
+  // ======================
+  // ---- Report Routes ---
+  // ======================
+
+  // Create new Report
+  router.route('/report/create/')
+    .post(authenticateJWT, reportController.createReport);
+
+  // Read reports from userReported = userReported
+    router.route('/report/:userReported')
+    .get(authenticateJWT, reportController.readUserReports);
+  
+  // Read all reports
+  router.route('/report/')
+    .get(authenticateJWT, reportController.readAllReports);
+  
+     // Read no solved reports from userReported = userReported
+  router.route('/report/nosolved/:userReported')
+  .get(authenticateJWT, reportController.readNoSolvedUserReports);
+
+  // Close Report with id = id
+  router.route('/report/close/:id')
+    .put(/*authenticateJWT,*/ reportController.closeReport);
+  
+  // Delete Report with id = id
+  router.route('/report/delete/:id')
+    .delete(authenticateJWT, reportController.deleteReport);
 
   // ======================
   // ---- Image Routes ----

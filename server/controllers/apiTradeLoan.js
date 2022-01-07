@@ -74,11 +74,15 @@ exports.readAllTradeLoan = async (req, res) => {
 
   exports.deleteTradeLoan = async (req, res) => {
   
-    if ('ADMIN' != req.user.role) {
+    /*if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }*/
+    const user = await User.findbyId(req.user.id);
+    if (user.role != 'ADMIN'){
       res.status(401).json({error: "Do not have permission"})
       return;
     }
-    
       try {
         const tradeLoan = await TradeLoan.findByIdAndDelete({_id: req.params.id});
     

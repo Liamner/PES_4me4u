@@ -130,7 +130,7 @@ exports.deleteUser = async (req, res) => {
   let usr = await User.findById({_id: req.params.id})
   //let email = req.params.email; 
 
-  if (usr.userId == req.user.id) {
+  if (usr.userId != req.user.id || usr.role != 'ADMIN')  {
     res.status(401).json({error: "Do not have permission"})
     return;
   }

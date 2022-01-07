@@ -25,10 +25,17 @@ exports.readAllReports =  async (req, res) => {
 
 exports.readUserReports = async (req, res) => {
 
+/*
   if ('ADMIN' != req.user.role) {
     res.status(401).json({error: "Do not have permission"})
     return;
+  }*/
+  const user = await User.findbyId(req.user.id);
+  if (user.role != 'ADMIN'){
+    res.status(401).json({error: "Do not have permission"})
+    return;
   }
+
 
   try {
     const report = await Report.find({ userReported: req.params.userReported });
@@ -43,8 +50,14 @@ exports.readUserReports = async (req, res) => {
 };
 
 exports.readNoSolvedUserReports = async (req, res) => {
-
+/*
   if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }*/
+
+  const user = await User.findbyId(req.user.id);
+  if (user.role != 'ADMIN'){
     res.status(401).json({error: "Do not have permission"})
     return;
   }
@@ -63,7 +76,13 @@ exports.readNoSolvedUserReports = async (req, res) => {
 
 exports.closeReport = async (req, res) => {
 
-  if ('ADMIN' != req.user.role) {
+  /*if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }*/
+
+  const user = await User.findbyId(req.user.id);
+  if (user.role != 'ADMIN'){
     res.status(401).json({error: "Do not have permission"})
     return;
   }
@@ -133,7 +152,13 @@ exports.createReport = async (req, res) => {
 
 exports.deleteReport = async (req, res) => {
 
-  if ('ADMIN' != req.user.role) {
+  /*if ('ADMIN' != req.user.role) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }*/
+
+  const user = await User.findbyId(req.user.id);
+  if (user.role != 'ADMIN'){
     res.status(401).json({error: "Do not have permission"})
     return;
   }

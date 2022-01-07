@@ -225,6 +225,23 @@ exports.readLoans =  async (req, res) => {
     }
   };
 
+  exports.increaseEcopoints =  async (req, res) => {
+    try {
+      const adminId = req.params.id;
+      const points = req.body.points;
+      const admin = await Admin.findById({_id: adminId});
+      admin.ecoPoints += points;
+      admin.save();
+  
+      res.status(200).json(admin);
+      console.log(admin);
+  
+    } catch (error) {
+      res.status(400).json(error.message);
+      console.log(error.message);
+    }
+  };
+
   exports.readBlockedUsers =  async (req, res) => {
     try {
         const adminId = req.params.id;

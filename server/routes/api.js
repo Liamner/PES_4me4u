@@ -332,6 +332,9 @@ module.exports = function(app) {
   router.route('/admin/:id/ecoPoints')
     .get(adminController.readEcoPoints)
 
+  router.route('/admin/:id/increaseEcopoints')
+    .put(adminController.increaseEcopoints);
+
   router.route('/admin/:id/blockedUsers')
     .get(adminController.readBlockedUsers)
 

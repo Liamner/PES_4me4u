@@ -9,13 +9,14 @@ import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
 //import ProductCard from '../components/ProductCard';
 
-export default function ProductSearch({ navigation }: RootTabScreenProps<'ProductSearch'>) {
+export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
   const [products, setProducts] = useState();
   const [text, onChangeText] = useState(null);
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState(route.params);
   const [type, setType] = useState(null);
-
+  console.log("categoria: " + route.params)
   const getPNameInfo = async () => {
+    console.log('haciendo llamada ...');
     let response = await axios.get('https://app4me4u.herokuapp.com/api/filter/products', {
       params: {
         category: category,
@@ -27,7 +28,10 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
     console.log(response.data)
     console.log('llamada hecha');
   };
-	
+  React.useEffect(() => {
+    if(route.params != null )  getPNameInfo();
+  }, []);  
+  
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -79,7 +83,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+            <ProductCard id={item._id} navigation={navigation}name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
           )}
           keyExtractor={item => item._id}
         />
@@ -89,6 +93,7 @@ export default function ProductSearch({ navigation }: RootTabScreenProps<'Produc
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
   },
   row: {

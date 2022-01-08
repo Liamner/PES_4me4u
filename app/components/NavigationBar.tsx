@@ -23,7 +23,7 @@ export function NavigationBar({navigation, casa, corazon, upload, chat, profile}
         {casa && <Image source={require('../images/selected/casa.png')} style={styles.icono}/>  }
         {!casa && <Image source={require('../images/noSelected/casa.png')} style={styles.icono}/>  }       
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=>navigation.navigate("SearchProduct")}>
+      <TouchableOpacity onPress={()=>navigation.navigate("ProductSearch")}>
         {corazon && <Image source={require('../images/search.png')} style={styles.icono}/>  }
         {!corazon && <Image source={require('../images/search.png')} style={styles.icono}/>  }
       </TouchableOpacity>
@@ -31,7 +31,7 @@ export function NavigationBar({navigation, casa, corazon, upload, chat, profile}
         {upload && <Image source={require('../images/selected/add.png')} style={styles.icono}/>  }
         {!upload && <Image source={require('../images/noSelected/add.png')} style={styles.icono}/>  }
       </TouchableOpacity>    
-      <TouchableOpacity onPress={()=>navigation.navigate("UserWishlist")} >
+      <TouchableOpacity onPress={()=>navigation.navigate("TestScreen")} >
         {chat && <Image source={require('../images/selected/chat.png')} style={styles.icono}/>  }
         {!chat && <Image source={require('../images/noSelected/chat.png')} style={styles.icono}/>  }
       </TouchableOpacity>  

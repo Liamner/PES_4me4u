@@ -26,7 +26,7 @@ export type RootStackParamList = {
   TestScreen: undefined;
   FirstScreen: undefined;
   UserWishlist: undefined;
-  SearchProduct: undefined;
+  ProductSearch: undefined;
   UserUpdate:undefined;
   ProductRead: undefined;
   UserProducts: undefined;

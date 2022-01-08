@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ScrollView, StyleSheet, Pressable} from 'react-native';
+import {ScrollView, StyleSheet, Pressable, Picker} from 'react-native';
 import  Slider  from '@react-native-community/slider';
 import axios from 'axios';
 import { useState } from 'react';
@@ -7,8 +7,10 @@ import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { resolvePlugin } from '@babel/core';
-// import '../assets/i18n/i18n';
-// import {useTranslation} from 'react-i18next';
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+import NavigationBar from '../components/NavigationBar';
+
 
 
 
@@ -54,6 +56,7 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
   }
   
   return (
+    <>
     <ScrollView>
         <View style={styles.container}>
             <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Cómo evaluas esta transacción?')}</Text>
@@ -97,30 +100,23 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
         </ View>
 
-        <Pressable
-          onPress={() => changeLanguage('cat')}
-          style={{
-            backgroundColor:
-              currentLanguage === 'en' ? '#33A850' : '#d3d3d3',
-            padding: 20,
-          }}>
-            
-          <Text>CATALAN UEEE</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => changeLanguage('es')}
-          style={{
-            backgroundColor:
-              currentLanguage === 'en' ? '#33A850' : '#d3d3d3',
-            padding: 20,
-          }}>
-            
-          <Text>CATELLANO UEE</Text>
-        </Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> Guardar valoración! </Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> Cancelar </Text></Pressable>
+        <Picker
+                    selectedValue={currentLanguage}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) =>
+                        changeLanguage(itemValue)
+                    }>
+                    <Picker.Item label={t("Seleccione un idioma...")} value="es" />          
+                    <Picker.Item label="Castellano" value="es" />
+                    <Picker.Item label="Catalán" value="cat" />
+        </Picker>
+
+        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar valoración!')} </Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> {t('Cancelar')} </Text></Pressable>
       </View>
     </ScrollView>
+    <NavigationBar  navigation={navigation} upload={true}/>
+    </>
   );
 }
 
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
   picker: {
     marginVertical: 10,
     height: 60,
-    width: '90%',
+    width: '80%',
   },
   textInput: {
     marginVertical: 15,

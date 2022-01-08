@@ -10,6 +10,8 @@ import LoanButton from '../components/LoanButton';
 import ExchangeButton from '../components/ExchangeButton';
 import LogOutButton from '../components/LogOutButton';
 import NavigationBar from'../components/NavigationBar';
+import { WebView } from 'react-native-webview'; 
+import { EcommuteAPI } from '../components/EcommuteAPI';
 
 export default function TestScreen({ navigation }: RootTabScreenProps<'TestScreen'>) {
   const gatitos = { hola: "hola", adios: "adios"}
@@ -21,6 +23,7 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
     <ExchangeButton/>
     <LogOutButton navigation={navigation}/>
     <NavigationBar navigation={navigation}/>
+    <EcommuteAPI origin={"Lloret de Mar"} destination= "tossa de mar"/>
     </>
   );
 }

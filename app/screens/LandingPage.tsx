@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-//import '../assets/i18n/i18n';
-//import {useTranslation} from 'react-i18next';
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
 
 
 import {StyleSheet,

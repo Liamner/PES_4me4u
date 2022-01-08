@@ -54,13 +54,15 @@ exports.readAllTradeLoan = async (req, res) => {
         if (userTaking.points < tradeLoan.points) res.status(404).json({error:"not enought points"});
 
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
+          product.state = "reserved";
+          await product.save();
           // UserTaking.getUserRewards();
           // UserOfering.getUserRewards();
           // UserTaking.getRewards();
           // UserOfering.getRewards();
           // UserTaking.levelManage();
           // UserOfering.levelManage();
-          const newProduct = await tradeLoan.save();
+          await tradeLoan.save();
           res.status(201).json(tradeLoan);  
      }
 

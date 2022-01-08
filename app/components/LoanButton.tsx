@@ -38,12 +38,24 @@ const DATA = [
 
 export function LoanButton  () {   
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [productSelected, setProductSelected] = React.useState(false);
+  const [isProductSelected, setIsProductSelected] = React.useState(false);
+  const [productSelected, setProductSelected] = React.useState("");
   const [dateSelected, setDateSelected] = React.useState(false);
   const [date, setDate] = React.useState(new Date());
   const [mode, setMode] = React.useState('date');
+  const [products, setProducts] = React.useState();
+
+  const getProducts = async () => {    
+    console.log("dar procuto")
+    //61ba2a4f6bd96835a7895b33
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    setProducts(response.data)
+    console.log("respuesta" + response.data[0])
+    setModalVisible(true)
+    };
   const selectDate = async(event: any, selectedDate: Date) => {
   console.log("selected:" + selectedDate)
+  console.log("PRODUCT NAME: " +  + "ID: " + productSelected)
     if(selectedDate != null){
       //usar selected date, si selected date es null, pasamos
       //llamada a api
@@ -56,7 +68,7 @@ export function LoanButton  () {
       let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeLoan/create', {
       userOfering  : "61a2500c9b1c6cb5e2e0aa90",
       userTaking: "61a3855a5cd77458b48896ed",
-      product  :"61a68d86d32c5e541ab70a14",
+      product  : productSelected,
       returnDate : selectedDate,
     }).then(function (response) {
       console.log("response: " + response.status);
@@ -66,7 +78,7 @@ export function LoanButton  () {
     });
     console.log("second respones" + response)
       //TODO borrar set product  i set date
-      setProductSelected(false);
+      setIsProductSelected(false);
       setDateSelected(false)
       setModalVisible(false);
     }
@@ -77,13 +89,16 @@ export function LoanButton  () {
   };
 
   const cancel = () => {
-    setProductSelected(false);
+    setIsProductSelected(false);
     setModalVisible(false);
   };
-
+  const selectProduct = (id:string )=> {
+    setIsProductSelected(true)
+    setProductSelected(id);
+  }
   
-  const Item = ({ title }) => (
-    <TouchableOpacity onPress = {() =>  setProductSelected(true)}>
+  const Item = ({ title, id}) => (
+    <TouchableOpacity onPress = {() => selectProduct(id)}>
       <View style={styles.item}>      
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>
@@ -91,7 +106,7 @@ export function LoanButton  () {
     </TouchableOpacity>
   );
   const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Item title={item.name} id ={item._id}/>
   );
 
   return (
@@ -104,13 +119,13 @@ export function LoanButton  () {
           setModalVisible(!modalVisible);
         }}
       >        
-        {!productSelected &&  <View style={styles.modalView}>
+        {!isProductSelected &&  <View style={styles.modalView}>
             <Text style={styles.question}>¿Que quieres prestar?</Text>
             <SafeAreaView>
               <FlatList
-                data={DATA}
+                data={products}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
               />
             </SafeAreaView>
             <Pressable
@@ -120,7 +135,7 @@ export function LoanButton  () {
               <Text> Atrás</Text>
             </Pressable>
           </View>}
-          {productSelected &&  <View style={styles.modalView}>
+          {isProductSelected &&  <View style={styles.modalView}>
             <Text style={styles.question}>¿Hasta cuando quieres prestar?</Text>
             <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]}  onPress = {() => setDateSelected(true)} ><Text>Seleccionar fecha</Text></Pressable>
             { dateSelected && <DateTimePicker
@@ -138,7 +153,7 @@ export function LoanButton  () {
             </Pressable>
           </View>}
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => setModalVisible(true)} ><Text>Prestar Producto!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts()} ><Text>Prestar Producto!</Text></Pressable>
     </>
 )
 

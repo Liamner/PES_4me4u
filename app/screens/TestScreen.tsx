@@ -18,23 +18,20 @@ export default function TestScreen({ navigation }: RootTabScreenProps<'TestScree
 
   return (    
     <>
+    <View style={styles.margin}> 
     <GiveButton/>
     <LoanButton/>
     <ExchangeButton/>
     <LogOutButton navigation={navigation}/>
     <NavigationBar navigation={navigation}/>
     <EcommuteAPI origin={"Lloret de Mar"} destination= "tossa de mar"/>
+    </View>
     </>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    width: '50%',
-    height: '50%',
-    borderRadius: 10,
-    borderColor: '#5e5c57',
-    borderWidth: 3,
-    backgroundColor: 'white',
+  margin: {
+   marginTop: 40
   }, 
   cameraImage: {
     width: '100%', 

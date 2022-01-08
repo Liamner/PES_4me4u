@@ -94,9 +94,8 @@ exports.readLoans =  async (req, res) => {
       admin.loans += 1;
       admin.save();
   
-      res.status(200).json(admin);
-      console.log(admin);
-  
+      //res.status(200).json(admin);
+      //console.log(admin);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);
@@ -124,8 +123,8 @@ exports.readLoans =  async (req, res) => {
       admin.changes += 1;
       admin.save();
   
-      res.status(200).json(admin);
-      console.log(admin);
+      //res.status(200).json(admin);
+      //console.log(admin);
   
     } catch (error) {
       res.status(400).json(error.message);

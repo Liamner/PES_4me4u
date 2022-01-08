@@ -12,10 +12,11 @@ import ProductCard from '../components/ProductCard';
 export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
   const [products, setProducts] = useState();
   const [text, onChangeText] = useState(null);
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState(route.params);
   const [type, setType] = useState(null);
   console.log("categoria: " + route.params)
   const getPNameInfo = async () => {
+    console.log('haciendo llamada ...');
     let response = await axios.get('https://app4me4u.herokuapp.com/api/filter/products', {
       params: {
         category: category,
@@ -27,7 +28,10 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
     console.log(response.data)
     console.log('llamada hecha');
   };
-	
+  React.useEffect(() => {
+    if(route.params != null )  getPNameInfo();
+  }, []);  
+  
   return (
     <View style={styles.container}>
       <View style={styles.row}>

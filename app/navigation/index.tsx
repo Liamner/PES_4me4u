@@ -35,7 +35,6 @@ import FollowedScreen from '../screens/FollowedScreen';
 import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
 
-import UserWishlist from '../screens/UserWishlist';
 
 //to incorporar
 import UserWishlist from '../screens/UserWishlist';

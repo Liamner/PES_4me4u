@@ -26,7 +26,7 @@ export type RootStackParamList = {
   TestScreen: undefined;
   FirstScreen: undefined;
   UserWishlist: undefined;
-  SearchProduct: undefined;
+  ProductSearch: undefined;
   UserUpdate:undefined;
   ProductRead: undefined;
 };
@@ -53,7 +53,7 @@ export type RootTabParamList = {
   ProductRead: undefined;
   RateUser: undefined;
   UserUpdate:undefined;
-  SearchProduct:undefined;
+  ProductSearch:undefined;
   UserWishlist: undefined;
 };
 

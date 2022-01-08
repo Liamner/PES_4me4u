@@ -34,7 +34,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: false}} />
+      <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: true, headerBackVisible: false}} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: false }} />    
       <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: false }} /> 

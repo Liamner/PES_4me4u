@@ -141,13 +141,6 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
             </Pressable>
           </View>
       </Modal>
-     <TextInput
-        label={t('Buscar producto...')}
-
-        style={styles.textInput}       
-        onChangeText={onChangeName}
-        value={name}
-       />  
        <ScrollView style = {styles.scrollCategorias} horizontal= {true}>
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "fashion")}> 
         <View style = {styles.elementoCategoria}>

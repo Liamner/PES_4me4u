@@ -18,6 +18,8 @@ import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
 
 /*
 wishlist -> provada
@@ -66,6 +68,19 @@ boton para cambiar idiomas
 
     
     const [selectedLanguage, setSelectedLanguage] = React.useState();
+
+    const {t, i18n} = useTranslation();
+    const [currentLanguage,setLanguage] =i18n.language;
+  
+    
+    //const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 
+  
+    const changeLanguage = value => {
+      i18n
+        .changeLanguage(value)
+        .then(() => setLanguage(value))
+        .catch(err => console.log(err));
+    };
 
     var auxiliar =  {id:  '', ownProfileAux:  '' } ;
 
@@ -242,9 +257,10 @@ boton para cambiar idiomas
  
 
   return(
-    <View style ={styles.container}>
+    <>
 
       <ScrollView>
+        <View style ={styles.container}>
 
       {ownProfile? 
 
@@ -255,7 +271,7 @@ boton para cambiar idiomas
             onPress={() => {
               getUserInfo();
           }}>
-            <Text style={styles.titleText}> Mi perfil</Text>
+            <Text style={styles.titleText}> {t('Mi perfil')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
@@ -288,7 +304,7 @@ boton para cambiar idiomas
         
 
         <Text style={styles.text}>
-            Correo: <Text style={styles.text2}>{email}</Text>
+            {t('Correo:')} <Text style={styles.text2}>{email}</Text>
         </Text>
 
 
@@ -340,16 +356,16 @@ boton para cambiar idiomas
 
         <View style={styles.container2}>
           <Text style={styles.text} onPress={onPressFollowers}>
-              Followers: <Text style={styles.text2}>{followersSize}</Text>
+              {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
           </Text>
           <Text>        </Text>
           <Text style={styles.text} onPress={onPressFollowed}>
-              Followed: <Text style={styles.text2}>{followedSize}</Text>
+              {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
           </Text>   
         </View>
     
         <Text style={styles.text}>
-            Nivel: <Text style={styles.text2}>{level}</Text>
+            {t('Nivel')}: <Text style={styles.text2}>{level}</Text>
         </Text>
 
         <Text style={styles.text}>
@@ -357,7 +373,7 @@ boton para cambiar idiomas
         </Text>
 
         <Text style={styles.text}>
-            Puntuación: <Text style={styles.text2}>{score}</Text> ⭐
+            {t('Puntuación')}: <Text style={styles.text2}>{score}</Text> ⭐
         </Text>
 
 
@@ -367,7 +383,7 @@ boton para cambiar idiomas
 
           <Button 
                  onPress={() =>  navigation.navigate( 'UserProducts', {id: userid/*, ownProfileAux: ownProfileAux*/}) } 
-                 title = 'Lista de productos'
+                 title = {t('Mis productos')}
                  color="#a2cff0" //azul iconico
           />
 
@@ -375,7 +391,7 @@ boton para cambiar idiomas
           // ir a wishlist si es tu perfil
             <Button
               onPress={() => navigation.navigate('UserWishlist', userid)}
-              title="Mis productos deseados"
+              title={t("Productos deseados")}
               color="#a2cff0" //azul iconico
             />
           : <></>  }
@@ -410,15 +426,18 @@ boton para cambiar idiomas
         {ownProfile?  
           // Cambiar de idioma
           <>
-            <Text style={styles.titlePicker}> Idioma </Text>
-            
+            {/* <Text style={styles.titlePicker}> Idioma </Text> */}
+
             <Picker
-                selectedValue={selectedLanguage}
-                style={styles.picker}
-                onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}>
-              <Picker.Item label="Castellano" value="castellano" />
-              <Picker.Item label="Catalan" value="catalan" />
-            </Picker>
+                    selectedValue={currentLanguage}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) =>
+                        changeLanguage(itemValue)
+                    }>
+                    <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />          
+                    <Picker.Item label="Castellano" value="es" />
+                    <Picker.Item label="Catalán" value="cat" />
+          </Picker>
             
             </>
           : 
@@ -435,10 +454,10 @@ boton para cambiar idiomas
         
         }
 
-
+        </View>
       </ScrollView>
       <NavigationBar  navigation={navigation} profile={true}/>
-    </View>
+      </>
   );
 
 

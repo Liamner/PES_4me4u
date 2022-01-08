@@ -64,8 +64,8 @@ exports.increaseGifts =  async (req, res) => {
     admin.gifts += 1;
     admin.save();
 
-    res.status(200).json(admin);
-    console.log(admin);
+    //res.status(200).json(admin);
+    //console.log(admin);
 
   } catch (error) {
     res.status(400).json(error.message);

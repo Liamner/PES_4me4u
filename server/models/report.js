@@ -31,6 +31,10 @@ const ReportSchema = new mongoose.Schema({
     solved: {
         type: Boolean,
         default: false
+    },
+    strike: {
+        type:Boolean,
+        default: false
     }
 });
 

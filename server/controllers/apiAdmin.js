@@ -122,7 +122,7 @@ exports.readLoans =  async (req, res) => {
       const admin = await Admin.findById({_id: adminId});
       admin.changes += 1;
       admin.save();
-  
+      
       //res.status(200).json(admin);
       //console.log(admin);
   

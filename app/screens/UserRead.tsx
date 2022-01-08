@@ -135,6 +135,9 @@ boton para cambiar idiomas
     if(response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
     
+   setFollowers(response.data.followers);
+    setFollowed(response.data.followed);
+    console.log("seguidores " + followed);
     if (response.data.followers == null){
        setFollowers([]);
        setFollowersSize(0);
@@ -172,7 +175,7 @@ boton para cambiar idiomas
     // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
     const body1 = {email: email}
     let response = axios
-    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/AddFollowed", body1)
+    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
     .then(function (response){
       console.log("siguiendo a " + response.data.userID)
     })
@@ -182,20 +185,6 @@ boton para cambiar idiomas
 
     setFollowing(true);
     // añadir follower, usuario del perfil es seguido por el usuario logueado
-  }
-
-  function unfollowUser() {
-    const body1 = {email: email}
-    let response = axios
-    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/unfollow", body1)
-    .then(function (response){
-      console.log("dejando de seguir a" + response.data.userID)
-    })
-    .catch(function(error){
-      console.log(error);
-    });
-
-    setFollowing(false);
   }
 
   const onPressFollowers = () => {
@@ -311,7 +300,7 @@ boton para cambiar idiomas
              {following? 
               <TouchableOpacity
                 onPress={() => {
-                    unfollowUser();
+                    followUser();
                 }}
                 style={{width: 150 }}
               >

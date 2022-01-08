@@ -56,7 +56,6 @@ export default function SignInScreen({ navigation }) {
     }
 
     const handleLogin = async () => {
-        navigation.navigate("BottomTab");
         if (inputData.email === '' || inputData.password === '') {
             Alert.alert("Error", "Por favor, rellene todos los campos.")
             console.log("Error. Por favor, rellene todos los campos.")

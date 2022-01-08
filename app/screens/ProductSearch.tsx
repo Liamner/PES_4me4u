@@ -7,7 +7,7 @@ import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
-//import ProductCard from '../components/ProductCard';
+import ProductCard from '../components/ProductCard';
 
 export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
   const [products, setProducts] = useState();

@@ -306,23 +306,50 @@ module.exports = function(app) {
   // ---- Admin Routes ----
   // ======================
 
+  router.route('/registerAdmin')
+    .post(adminController.registerAdmin);
+  
+  router.route('/deleteAdmin/:id')
+    .delete(adminController.deleteAdmin);
+
   router.route('/admin/:id/gifts')
     .get(adminController.readGifts);
+
+  router.route('/admin/:id/increaseGifts')
+    .put(adminController.increaseGifts);
 
   router.route('/admin/:id/loans')
     .get(adminController.readLoans);
 
+  router.route('/admin/:id/increaseLoans')
+    .put(adminController.increaseLoans);
+
   router.route('/admin/:id/exchanges')
     .get(adminController.readExchanges);
+
+  router.route('/admin/:id/increaseExchanges')
+    .put(adminController.increaseExchanges);
   
   router.route('/admin/:id/users')
     .get(adminController.readUsers)
 
+  router.route('/admin/:id/increaseUsers')
+    .put(adminController.increaseUsers);
+
   router.route('/admin/:id/products')
     .get(adminController.readProducts)
 
+  router.route('/admin/:id/increaseProducts')
+    .put(adminController.increaseProducts);
+
   router.route('/admin/:id/ecoPoints')
     .get(adminController.readEcoPoints)
+
+  router.route('/admin/:id/increaseEcopoints')
+    .put(adminController.increaseEcopoints);
+
+  router.route('/admin/:id/increaseBlockedUsers')
+    .put(adminController.increaseBlockedUsers);
 
   router.route('/admin/:id/blockedUsers')
     .get(adminController.readBlockedUsers)

@@ -60,33 +60,33 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
   const DATA = [
     {
-      id: 'bd7acbea-c1b1-46c2aed5-3ad53abb28ba',
+      id: 'homeApplicances',
       title: t('Electrodomesticos'),
     },
     {
-      id: 'bd7acbea-c11-46c2-aed5-3ad53abb28ba',
+      id: 'videogames',
       title: t('Consolas y videojuegos'),
     },
     {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28a',
-      title: t('Cine, libros, música'),
+      id: 'movies',
+      title:  t('Cine, libros, música'),
     },
     {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: t('Niños y bebés'),
+      id: 'children',
+      title:  t('Niños y bebés'),
     },
     {
-      id: '58694a0f-3da1-471f-bd96-15571e29d72',
+      id: 'construction',
       title: t('Construcción y reformas'),
     },
     {
-      id: '58694a0f-3da1-471f-bd96-1455719d72',
+      id: 'games',
       title: t('Juegos y juguetes'),
     },
   ];
 
-  const Item = ({ title }) => (
-    <TouchableOpacity onPress = {() => setCategory(title)}>
+  const Item = ({ title, id }) => (
+    <TouchableOpacity onPress = {() => setCategory(title, id)}>
       <View style={styles.item}>
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>
@@ -96,12 +96,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
   const [name, onChangeName] = React.useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
-  const setCategory = async (title: String) => {
+  const setCategory = async (title: String, id:String) => {
     setModalVisible(false);
+    navigation.navigate("ProductSearch", id)
+    console.log("id: " + id)
    };
 
   const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Item title={item.title} id={item.id}/>
   );
   function renderItem2({item}) {
     return(     <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>)
@@ -143,33 +145,33 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         value={name}
        />  
        <ScrollView style = {styles.scrollCategorias} horizontal= {true}>
-        <TouchableOpacity> 
+        <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "fashion")}> 
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>{t('Moda')}</Text>
           </View>
 
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "computer")}>
           <View style = {styles.elementoCategoria}>
           <Image source={require('../images/informatica.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>{t('Informática')}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "pets")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/mascotas.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>{t('Mascotas')}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "home")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>{t('Hogar')}</Text>
           </View>
 
         </TouchableOpacity>  
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "games")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/deporte.png')} style={styles.iconoCategoria}/>  
           <Text style = {styles.textoCategoria}>{t('Ocio')}</Text>

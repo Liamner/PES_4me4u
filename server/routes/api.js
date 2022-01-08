@@ -166,7 +166,7 @@ module.exports = function(app) {
     .put(authenticateJWT, userController.getUserRewards)
 
   router.route('/user/:id/AddToWishlist')
-    .post(authenticateJWT, userController.addToWishlist)
+    .put(authenticateJWT, userController.addToWishlist)
 
   router.route('/user/:id/DeleteFromWishlist')
     .delete(authenticateJWT, userController.deleteFromWishlist)

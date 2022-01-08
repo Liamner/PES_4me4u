@@ -70,59 +70,68 @@ export function ExchangeButton  () {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [firstProductSelected, setFirstProductSelected] = React.useState(false);
   const [secondProductSelected, setSecondProductSelected] = React.useState(false);
-  const[firstProductName,  setFirstProductName] =  React.useState("");
+  const[selfProducts,  setSelfProducts] =  React.useState("");
+  const[otherProducts,  setOtherProducts] =  React.useState("");
   const[secondProductName,  setSecondProductName] =  React.useState("");
+  const[firstProductName,  setFirstProductName] =  React.useState("");
+  const[firstProductId,  setFirstProductId] =  React.useState("");
+  const[secondProductId,  setSecondProductId] =  React.useState("");
   
   const cancel = () => {
     setFirstProductSelected(false);
     setModalVisible(false);
   };
 
-  const selectProduct = async (product: string) => {    
+  const selectProduct = async (productId: string, productName: string) => {    
 
     if(firstProductSelected){
-      setSecondProductName(product)
-      console.log("exchangeing")
+      setSecondProductId(productId)
+      setSecondProductName(productName)
+      console.log("PRIMER ID:" + firstProductId + "SECOND ID: " + secondProductId)
+      console.log("PRIMER NAME:" + firstProductName + "SECOND NAME: " + secondProductName)
+
       let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeExchange/create', {
-        userOfering  : "61a2500c9b1c6cb5e2e0aa90",
         userTaking: "61a3855a5cd77458b48896ed",
         productOfering   :"61a68d86d32c5e541ab70a14",
         productTaking: "61a68d80d32c5e541ab70a0e",
        }).then(function (response) {
-         console.log("respnese abajo")
          console.log("response: " + response.status);
        })
        .catch(function (error) {
          console.log("error" + error);
        });
-       console.log("second respones" + response)
+    
        setModalVisible(false);
-      console.log("first: " + firstProductName)
       //usar product cuando se trata del segundo
-      console.log("second: " + product)
       //TODO descomentar/comentar abajo para hacer tests
       setFirstProductSelected(false)
     }
     else{
-      setFirstProductName(product)
+      setFirstProductId(productId)
+      setFirstProductName(productName)
       setFirstProductSelected(true)
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61bb8086b748e8cb515b798f/products');
+      setOtherProducts(response.data)     
     }
   };
   
-  const Item = ({ title }) => (
-    <TouchableOpacity onPress = {() => selectProduct(title)}>
+  const Item = ({ title, id}) => (
+    <TouchableOpacity onPress = {() => selectProduct(id, title)}>
       <View style={styles.item}>      
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>
       </View>
     </TouchableOpacity>
   );
-  const loanProduct = async () => {     
-    setModalVisible(true);   
-    console.log("darS")
+  const exchangeProduct = async () => {     
+  
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    setSelfProducts(response.data)
+    console.log("respuesta" + response.data[0])
+    setModalVisible(true)
     }
   const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Item title={item.name} id= {item._id}/>
   );
 
   return (
@@ -140,9 +149,9 @@ export function ExchangeButton  () {
             <Text style={styles.question}> ¿Que quieres prestar?</Text>
             <SafeAreaView>
               <FlatList
-                data={DATA}
+                data={selfProducts}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
               />
             </SafeAreaView>
             <Pressable
@@ -156,9 +165,9 @@ export function ExchangeButton  () {
             <Text style={styles.question}> ¿Qué producto quires obtener?</Text>
             <SafeAreaView>
               <FlatList
-                data={DATAaux}
+                data={otherProducts}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
               />
             </SafeAreaView>
             <Pressable
@@ -169,7 +178,7 @@ export function ExchangeButton  () {
             </Pressable>
           </View>}
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={loanProduct} ><Text>Intercambiar Productos!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={exchangeProduct} ><Text>Intercambiar Productos!</Text></Pressable>
     </>
 )
 

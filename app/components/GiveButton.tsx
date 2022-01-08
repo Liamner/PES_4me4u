@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {StyleSheet, View , Text, TouchableOpacity, Pressable} from "react-native";
 import { Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
+import getProduct from "../hooks/getProduct";
 
 
 const DATA = [
@@ -35,13 +36,25 @@ const DATA = [
   },
 ];
 
-export function GiveButton  () {  
+export  function GiveButton  () {  
+  console.log("GIVE BUTTON")
   const [modalVisible, setModalVisible] = React.useState(false);
-  const selectProduct = async (product: String) => {    
+  const [products, setProducts] = React.useState();
+  const getProducts = async (product: String) => {    
+    console.log("dar procuto")
+    //61ba2a4f6bd96835a7895b33
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    setProducts(response.data)
+    console.log("respuesta" + response.data[0])
+    setModalVisible(true)
+    };
+  // let response = await axios.get('https://app4me4u.herokuapp.com/api/tradeGive/create/user/61a2500c9b1c6cb5e2e0aa90/products');
+    // console.log("get de porducts: " + response)
+  const selectProduct = async (name: String, id:String) => {    
+    console.log("PRODUCT NAME: " + name + "ID: " + id)
   await axios.post('https://app4me4u.herokuapp.com/api/tradeGive/create', {
-      userOfering  : "61a2500c9b1c6cb5e2e0aa90",
       userTaking: "61a3855a5cd77458b48896ed",
-      product  :"61a68d86d32c5e541ab70a14",
+      product  :id,
     }).then(function (response) {
       console.log("response: " + response.status);
     })
@@ -50,9 +63,11 @@ export function GiveButton  () {
     });
     setModalVisible(false);
   };
-  
-  const Item = ({ title }) => (
-    <TouchableOpacity onPress = {() => selectProduct(title)}>
+  React.useEffect(() => {
+   // getProducts("");
+  }, []);
+  const Item = ({ title, id }) => (
+    <TouchableOpacity onPress = {() => selectProduct(title, id)}>
       <View style={styles.item}>      
         <Text style={styles.itemTitle}>{title}</Text>
         <View  style= {{height:1.5, backgroundColor:'#cacaca'}}/>
@@ -60,7 +75,7 @@ export function GiveButton  () {
     </TouchableOpacity>
   );
   const renderItem = ({ item }) => (
-    <Item title={item.title} />
+    <Item title={item.name} id = {item._id}/>
   );
 
   return (
@@ -77,9 +92,9 @@ export function GiveButton  () {
             <Text style={styles.question}>¿Que quieres regalar?</Text>
             <SafeAreaView>
               <FlatList
-                data={DATA}
+                data={products}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
               />
             </SafeAreaView>
             <Pressable
@@ -90,7 +105,7 @@ export function GiveButton  () {
             </Pressable>
           </View>
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => setModalVisible(true)} ><Text>Dar Producto!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts("")} ><Text>Dar Producto!</Text></Pressable>
     </>
 )
 

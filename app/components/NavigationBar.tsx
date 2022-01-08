@@ -1,10 +1,7 @@
 import React from "react";
-import {StyleSheet, View , Text, TouchableOpacity, Pressable, Alert} from "react-native";
-import {Modal, Image, SafeAreaView, FlatList } from 'react-native';
-import axios from 'axios'
-import navigation from "../navigation";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { RootTabScreenProps } from "../types";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Image } from 'react-native';
+
 
 type Props = {
   navigation: any,
@@ -23,7 +20,7 @@ export function NavigationBar({navigation, casa, corazon, upload, chat, profile}
         {casa && <Image source={require('../images/selected/casa.png')} style={styles.icono}/>  }
         {!casa && <Image source={require('../images/noSelected/casa.png')} style={styles.icono}/>  }       
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=>navigation.navigate("SearchProduct")}>
+      <TouchableOpacity onPress={()=>navigation.navigate("ProductSearch")}>
         {corazon && <Image source={require('../images/search.png')} style={styles.icono}/>  }
         {!corazon && <Image source={require('../images/search.png')} style={styles.icono}/>  }
       </TouchableOpacity>
@@ -35,6 +32,13 @@ export function NavigationBar({navigation, casa, corazon, upload, chat, profile}
         {chat && <Image source={require('../images/selected/chat.png')} style={styles.icono}/>  }
         {!chat && <Image source={require('../images/noSelected/chat.png')} style={styles.icono}/>  }
       </TouchableOpacity>  
+
+      <TouchableOpacity onPress={()=>navigation.navigate("UserProducts", {id: ''})} >
+        {chat && <Image source={require('../images/selected/chat.png')} style={styles.icono}/>  }
+        {!chat && <Image source={require('../images/noSelected/chat.png')} style={styles.icono}/>  }
+      </TouchableOpacity>  
+
+
       <TouchableOpacity   onPress={()=>navigation.navigate("UserRead")}>
         {profile && <Image source={require('../images/selected/profile.png')} style={styles.icono}/>  }
         {!profile && <Image source={require('../images/noSelected/profile.png')} style={styles.icono}/>  }

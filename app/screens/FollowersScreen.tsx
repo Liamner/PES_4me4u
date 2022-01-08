@@ -9,7 +9,8 @@ import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import ViewUser from '../screens/UserRead';	
+import ViewUser from '../screens/UserRead';
+import NavigationBar from '../components/NavigationBar'	
 
 import axios from 'axios';
 
@@ -45,6 +46,7 @@ import axios from 'axios';
               </Text>
           )}
         />
+        <NavigationBar  navigation={navigation} profile={true}/>
       </View>
 
     );

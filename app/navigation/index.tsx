@@ -25,7 +25,7 @@ import EditProduct from '../screens/ProductEdit';
 import ProductRead from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
-import ProductCard from '../screens/ProductCardScreen';
+import ProductCardId from '../screens/ProductCardScreen';
 import TestScreen from '../screens/TestScreen';
 import FirstScreen from '../screens/FirstScreen';
 import CreateProduct from '../screens/ProductCreate';
@@ -33,7 +33,8 @@ import ViewUser from '../screens/UserRead';
 import FollowersScreen from '../screens/FollowersScreen';	
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
-import SearchProduct from '../screens/ProductSearch';
+import SearchProduct from '../screens/SearchProduct';
+
 
 //to incorporar
 import UserWishlist from '../screens/UserWishlist';
@@ -41,7 +42,11 @@ import NavigationBar from '../components/NavigationBar';
 import UserUpdateScreen from '../screens/UserUpdate';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
+import UserProducts from '../screens/UserProducts';
+
 import RootNavigator from './root';
+
 
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {

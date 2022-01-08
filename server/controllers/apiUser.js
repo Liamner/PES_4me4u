@@ -4,6 +4,7 @@ const Comment = require('../models/comment.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const adminController = require ('../controllers/apiAdmin.js')
 //const user = require('../models/user.js');
 const app = express();
 
@@ -68,6 +69,7 @@ exports.registerUser = async (req, res) => {
   });
   try {
     await usuario.save();
+    adminController.increaseUsers();
     res.status(200).json(usuario);
   }
   catch (err){

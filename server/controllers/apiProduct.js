@@ -6,6 +6,7 @@ const Image = require('../models/image.js');
 const User = require('../models/user.js');
 const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
+const adminController = require ('../controllers/apiAdmin.js')
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -133,7 +134,7 @@ exports.createProduct = async (req, res) => {
                                       products: newProduct
                                     }
                                   });
-                              
+    adminController.increaseProducts();                          
     res.status(201).json(product);}
 
   } catch (error) {

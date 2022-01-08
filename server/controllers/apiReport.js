@@ -127,10 +127,10 @@ exports.createReport = async (req, res) => {
  
   try {   
   const UserReporting = await User.findOne({_id: req.user.id});
-  if (userReporting == null) res.status(404).json({error:"UserReporting not found"});
+  if (UserReporting == null) res.status(404).json({error:"UserReporting not found"});
 
   const UserReported = await User.findOne({_id: req.body.userReported});
-  if (userReported == null) res.status(404).json({error:"UserReported not found"});
+  if (UserReported == null) res.status(404).json({error:"UserReported not found"});
     
   await report.save();
   res.status(201).json(report);

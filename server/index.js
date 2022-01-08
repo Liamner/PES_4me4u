@@ -4,16 +4,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('./config/config.js');
 require('dotenv').config();
-//const io = require('socket.io')(3000);
  
 const app = express()
 const path = require('path');
 
-const http = require('http')
-const server = http.createServer(app)
 
-const socket = require('socket.io')
-const io = socket(server)
+
+
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -25,6 +22,11 @@ app.use(cors());
 
 
 // Sockets
+const socketIO = require('socket.io')
+const http = require('http')
+const server = http.createServer(app)
+
+const io = socketIO(server)
 
 io.on('connection', (socket) => {
   // Connect User

@@ -14,10 +14,11 @@ type CardProps = {
    guardado: boolean,
   // imageUri?: string,
   // arrayTratos: string[],
+  token: string
 }
 
 
-export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, arrayTratos*/}: CardProps) {
+export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, arrayTratos*/, token}: CardProps) {
 
 
   var prestar = false;
@@ -85,9 +86,15 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
 
 
   const guardarProducto = async () => {   
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
     await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
-      }).then(function(response) {
+      }, config).then(function(response) {
         console.log(response);
       })
       .catch(function(error) {
@@ -97,10 +104,17 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
 
     }
   
-  const noGuardarProducto = async () => {          
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
+  const noGuardarProducto = async () => {  
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
         idProduct: id
-      }).then(function(response) {
+      }, config).then(function(response) {
         console.log(response);
       })
       .catch(function(error) {

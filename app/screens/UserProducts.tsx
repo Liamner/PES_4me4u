@@ -144,9 +144,10 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
             { 
             (wishlist == [] )?
                   <ProductCardId 
-                  id={item}
-                  uid={id} 
-                  guardado= {false}
+                  id = {item}
+                  uid = {id} 
+                  guardado = {false}
+                  token = {session.token}
 
               />
             :

@@ -1,18 +1,16 @@
 import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView, Alert, Button } from 'react-native';
+import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button } from 'react-native';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-import ProductCardId from '../components/ProductCardId';
-import ProductDelete from '../components/ProductDelete';
+
 
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import DeleteUser from '../components/DeleteUser';
 import retrieveSession from '../hooks/retrieveSession'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';

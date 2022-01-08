@@ -107,6 +107,7 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
                   id={item}
                   uid={uid} 
                   guardado={true}
+                  token = {session.token}
                 />
 
 

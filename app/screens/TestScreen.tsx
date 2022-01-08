@@ -4,7 +4,7 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProductCardElement from '../screens/ProductCardElement'
 import * as ImagePicker from 'expo-image-picker';
-import ProductCard from '../components/ProductCard';
+// import ProductCard from '../components/ProductCard';
 import GiveButton from '../components/GiveButton';
 import LoanButton from '../components/LoanButton';
 import ExchangeButton from '../components/ExchangeButton';

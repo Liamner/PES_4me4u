@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Alert, Button, StyleSheet, View , Text, Image, TouchableOpacity} from "react-native";
+import { useState } from 'react';
 
 import axios from 'axios'
 import { not } from "react-native-reanimated";
@@ -8,46 +9,133 @@ import { functionExpression } from "@babel/types";
 
 type CardProps = {
   id: string,
-  uid: string,
-  name: string,
-  guardado: boolean,
-  imageUri?: string,
-  arrayTratos: string[],
+  uid: string
+  // name: string,
+   guardado: boolean,
+  // imageUri?: string,
+  // arrayTratos: string[],
+  token: string
 }
 
 
-export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
+export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, arrayTratos*/, token}: CardProps) {
+
+
   var prestar = false;
   var intercambiar = true;
   var dar = false;
-  arrayTratos.forEach(element => {
-    if(element == "exchange") intercambiar = true;
-    if(element == "present") dar = true;
-    if(element == "loan") prestar = true
-  });
+
+//  var name = 'NNN';
+  //var guardado = false;
+ // var imageUri: String;
+ //var arrayTratos: String[];
+
+  const [name, setName] = useState('Cargando...');
+  const [imageUri, setImageUri] = useState('https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png');
+  const [arrayTratos, setArrayTratos] = useState([]);
+
+
+
+  const APIGetInfoProduct = () =>{
+    let response = axios.get('https://app4me4u.herokuapp.com/api/product/'+ id)
+    .then(response => {
+
+      
+
+            // name = response.data.name;
+            // imageUri = response.data.image[0].url;
+            // arrayTratos = response.data.exchange;
+
+            setName(response.data.name);
+            setImageUri(response.data.img[0].url);
+     
+            setArrayTratos(response.data.exchange);
+
+            //present
+            //provide
+            //provide
+
+
+            arrayTratos.forEach(element => {
+              if(element == "exchange"){
+                intercambiar = true;
+              } 
+              if(element == "present"){
+                dar = true;
+
+              } 
+              if(element == "provide"){
+                prestar = true
+              } 
+
+
+            });
+
+
+        })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+
+};
+
+
+
+
+
   const guardarProducto = async () => {   
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
     await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
-      }).then(function(response) {
+      }, config).then(function(response) {
         console.log(response);
       })
       .catch(function(error) {
         console.log(error);
       });
+      console.log('PERRO');
+
     }
   
-  const noGuardarProducto = async () => {          
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
+  const noGuardarProducto = async () => {  
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/'+ uid +'/DeleteFromWishlist', {
         idProduct: id
-      }).then(function(response) {
+      }, config).then(function(response) {
         console.log(response);
       })
       .catch(function(error) {
         console.log(error);
       }); 
+      console.log('GATO');
+
+
   }
+
+  React.useEffect(() => {
+    APIGetInfoProduct();
+  }, []);  
+
+
   return (
+    
     <>
+
+
+
   <View style={styles.container}>            
   <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
   <View
@@ -113,10 +201,10 @@ export function ProductCard  ({ id, uid, name, guardado, imageUri, arrayTratos}:
 )
 
 }
- // console.log("hola")
+  console.log("hola")
 const styles = StyleSheet.create({
     container: {
-      width: '50%',
+      width: '100%',
       height: 310,
       borderRadius: 10,
       borderColor: '#ffffff',
@@ -161,4 +249,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default ProductCard;
+export default ProductCardId;

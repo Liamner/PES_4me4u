@@ -6,11 +6,15 @@ import { TextInput, Checkbox } from 'react-native-paper';
 import ProductCardElement from './ProductCardElement'
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import ProductCard from '../components/ProductCard';
+
+
+// import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar'
 import '../assets/i18n/i18n';
 import {useTranslation} from 'react-i18next';
 import { useState } from 'react';
+import ProductCard from './ProductCardScreen';
+
 
 interface ProductImage{
   __v: number;

@@ -167,14 +167,14 @@ exports.readLoans =  async (req, res) => {
 
   exports.increaseUsers =  async (req, res) => {
     try {
-      const adminId = req.params.id;
+      //const adminId = req.params.id;
+      const adminId = "61d8d7022ba81367f067e683";
       const admin = await Admin.findById({_id: adminId});
       admin.users += 1;
       admin.save();
   
-      res.status(200).json(admin);
-      console.log(admin);
-  
+      //res.status(200).json(admin);
+      //console.log(admin);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);

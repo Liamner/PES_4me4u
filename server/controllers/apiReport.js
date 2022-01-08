@@ -118,7 +118,7 @@ exports.closeReport = async (req, res) => {
 }
 
 exports.createReport = async (req, res) => {
-  const report = new Report();
+  let report = new Report();
   report.userReporting = req.user.id;
   report.userReported = req.body.userReported;  
   report.description = req.body.description;

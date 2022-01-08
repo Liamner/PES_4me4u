@@ -77,7 +77,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     },
     {
       id: 'construction',
-      title: 'Construcción y reformas',
+      title: t('Construcción y reformas'),
     },
     {
       id: 'games',

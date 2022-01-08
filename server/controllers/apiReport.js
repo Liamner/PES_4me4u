@@ -9,7 +9,9 @@ const { ObjectId } = require('mongodb');
 
 exports.readAllReports =  async (req, res) => {
 
-  if ('ADMIN' != req.user.role) {
+
+  const user = await User.findbyId(req.user.id);
+  if ('ADMIN' != user.role) {
     res.status(401).json({error: "Do not have permission"})
     return;
   }

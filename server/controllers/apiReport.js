@@ -4,6 +4,7 @@ const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const Report = require('../models/report.js')
 const jwt = require('jsonwebtoken');
+const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
 
 
@@ -133,6 +134,7 @@ exports.createReport = async (req, res) => {
   if (UserReported == null) res.status(404).json({error:"UserReported not found"});
     
   await report.save();
+  adminController.increaseBlockedUsers();
   res.status(201).json(report);
 
   } catch (error) {

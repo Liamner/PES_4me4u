@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //const user = require('../models/user.js');
 const app = express();
-const adminId = "61d8d7022ba81367f067e683";
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.registerAdmin = async (req, res) => {
   let body = req.body;

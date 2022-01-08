@@ -78,7 +78,7 @@ exports.readAllTradeLoan = async (req, res) => {
       res.status(401).json({error: "Do not have permission"})
       return;
     }*/
-    const user = await User.findbyId(req.user.id);
+    const user = await User.findById(req.user.id);
     if (user.role != 'ADMIN'){
       res.status(401).json({error: "Do not have permission"})
       return;

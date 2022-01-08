@@ -7,23 +7,16 @@ import navigation from "../navigation";
 import { functionExpression } from "@babel/types";
 
 type CardProps = {
+  navigation: any,
   id: string,
   uid: string,
   name: string,
   guardado: boolean,
   imageUri?: string,
   arrayTratos: string[],
-  navigation: any
 }
 
-const guardarProducto = async () => {        
-  console.log("guardar")
-  }
-const noGuardarProducto = async () => {          
-  console.log("no guardar")  
-}
-
-export function ProductCard  ({navigation, id, name, guardado, imageUri, arrayTratos}: CardProps) {    
+export function ProductCard  ({navigation, id, uid, name, guardado, imageUri, arrayTratos}: CardProps) {  
   var prestar = false;
   var intercambiar = true;
   var dar = false;
@@ -55,8 +48,10 @@ export function ProductCard  ({navigation, id, name, guardado, imageUri, arrayTr
   }
   return (
     <>
-  <View style={styles.container}>            
+  <View style={styles.container}>
+  <TouchableOpacity onPress={() => navigation.navigate("ProductRead", id)}>
   <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
+  </TouchableOpacity>
   <View
   style={{
     backgroundColor: "white",     
@@ -65,10 +60,6 @@ export function ProductCard  ({navigation, id, name, guardado, imageUri, arrayTr
     height: 30,
   }}
   >
-    <TouchableOpacity onPress={() => navigation.navigate("ProductRead", id)} style={styles.container}>
-
-    <Image  source={{ uri: imageUri }}  style={styles.cameraImage} />  
-    </TouchableOpacity>
     <View
   style={{
     backgroundColor: "#f3f1ed",     

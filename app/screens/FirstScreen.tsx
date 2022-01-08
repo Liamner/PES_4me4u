@@ -13,6 +13,7 @@ import NavigationBar from '../components/NavigationBar'
 import '../assets/i18n/i18n';
 import {useTranslation} from 'react-i18next';
 import { useState } from 'react';
+import ProductCard from './ProductCardScreen';
 
 
 interface ProductImage{

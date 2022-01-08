@@ -91,7 +91,6 @@ export function ExchangeButton  () {
       console.log("PRIMER NAME:" + firstProductName + "SECOND NAME: " + secondProductName)
 
       let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeExchange/create', {
-        userOfering  : "61a2500c9b1c6cb5e2e0aa90",
         userTaking: "61a3855a5cd77458b48896ed",
         productOfering   :"61a68d86d32c5e541ab70a14",
         productTaking: "61a68d80d32c5e541ab70a0e",

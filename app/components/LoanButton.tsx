@@ -66,7 +66,6 @@ export function LoanButton  () {
      } 
 
       let response = await axios.post('https://app4me4u.herokuapp.com/api/tradeLoan/create', {
-      userOfering  : "61a2500c9b1c6cb5e2e0aa90",
       userTaking: "61a3855a5cd77458b48896ed",
       product  : productSelected,
       returnDate : selectedDate,

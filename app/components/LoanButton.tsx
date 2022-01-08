@@ -4,6 +4,7 @@ import {Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
 import navigation from "../navigation";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import retrieveSession from '../hooks/retrieveSession'
 
 const DATA = [
   {
@@ -47,8 +48,8 @@ export function LoanButton  () {
 
   const getProducts = async () => {    
     console.log("dar procuto")
-    //61ba2a4f6bd96835a7895b33
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    const sess = await retrieveSession();
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+sess.id+'/products');
     setProducts(response.data)
     console.log("respuesta" + response.data[0])
     setModalVisible(true)

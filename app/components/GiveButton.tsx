@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {StyleSheet, View , Text, TouchableOpacity, Pressable} from "react-native";
 import { Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
+import retrieveSession from '../hooks/retrieveSession'
 import getProduct from "../hooks/getProduct";
 
 
@@ -38,12 +39,14 @@ const DATA = [
 
 export  function GiveButton  () {  
   console.log("GIVE BUTTON")
+  
   const [modalVisible, setModalVisible] = React.useState(false);
   const [products, setProducts] = React.useState();
   const getProducts = async (product: String) => {    
-    console.log("dar procuto")
+    const sess = await retrieveSession();
+    console.log("sesion id: " + sess.id)
     //61ba2a4f6bd96835a7895b33
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+sess.id+'/products');
     setProducts(response.data)
     console.log("respuesta" + response.data[0])
     setModalVisible(true)

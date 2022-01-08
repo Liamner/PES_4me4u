@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Platform,ScrollView, Image, StyleSheet,Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { Button, Platform,ScrollView, Image, StyleSheet,Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList, Pressable, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import { TextInput, Checkbox } from 'react-native-paper';
@@ -85,6 +85,9 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     },
   ];
 
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
   const Item = ({ title, id }) => (
     <TouchableOpacity onPress = {() => setCategory(title, id)}>
       <View style={styles.item}>
@@ -93,8 +96,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
       </View>
     </TouchableOpacity>
   );
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getProducts();
+    wait(500).then(() => setRefreshing(false));
+  }, []);
 
   const [name, onChangeName] = React.useState("");
+  const [refreshing, setRefreshing] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const setCategory = async (title: String, id:String) => {
     setModalVisible(false);
@@ -105,10 +114,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const renderItem = ({ item }) => (
     <Item title={item.title} id={item.id}/>
   );
-  function renderItem2({item}) {
-    return(     <ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*//>)
-
-  }
+ 
   return (
     <>
      <Modal
@@ -186,7 +192,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
         </TouchableOpacity>   
        </ScrollView>
-    <ScrollView style={{marginBottom: 30, height: '100%', backgroundColor: 'white'}}>
+    <ScrollView 
+    style={{marginBottom: 30, height: '100%', backgroundColor: 'white'}}
+    refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }>
     {isRecentlyViewedProducts &&
     <View style = {{backgroundColor: '#a2cff0'}}>
       <Text style = {styles.noProductTitle}> Visto Recientemente</Text>

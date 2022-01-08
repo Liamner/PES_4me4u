@@ -3,6 +3,7 @@ import {Alert, Button, StyleSheet, View , Text, Image, TouchableOpacity, Pressab
 import { Platform, ScrollView, Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList } from 'react-native';
 import axios from 'axios'
 import navigation from "../navigation";
+import retrieveSession from '../hooks/retrieveSession'
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DATA = [
@@ -125,8 +126,8 @@ export function ExchangeButton  () {
     </TouchableOpacity>
   );
   const exchangeProduct = async () => {     
-  
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2a4f6bd96835a7895b33/products');
+    const sess = await retrieveSession();
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+sess.id+'/products');
     setSelfProducts(response.data)
     console.log("respuesta" + response.data[0])
     setModalVisible(true)

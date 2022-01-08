@@ -186,6 +186,7 @@ const getData = async () => {
     const config = {
       headers: {
         Authorization: `Bearer ${session.token}`
+     
       }
     }
     await axios.post('https://app4me4u.herokuapp.com/api/product/create', {

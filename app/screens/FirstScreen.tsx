@@ -8,6 +8,9 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar'
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
 
 interface ProductImage{
   __v: number;
@@ -28,6 +31,10 @@ interface Product {
 export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScreen'>) {
 
   const [products, setProducts] = React.useState();
+  
+  const {t, i18n} = useTranslation();
+  const [currentLanguage,setLanguage] =useState('cat');
+
   const [noProduct, setNoProduct] = React.useState(false);
   const [recentlyViewedProducts, setRecentlyViewedProducts] = React.useState();
   const [isRecentlyViewedProducts, setIsRecentlyViewed] = React.useState(false);
@@ -40,6 +47,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     }
     
   };
+
   const getProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/product');
     setProducts(response.data);
@@ -53,19 +61,19 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const DATA = [
     {
       id: 'homeApplicances',
-      title: 'Electrodomesticos',
+      title: t('Electrodomesticos'),
     },
     {
       id: 'videogames',
-      title: 'Consolas y videojuegos',
+      title: t('Consolas y videojuegos'),
     },
     {
       id: 'movies',
-      title: 'Cine, libros, música',
+      title:  t('Cine, libros, música'),
     },
     {
       id: 'children',
-      title: 'Niños y bebés',
+      title:  t('Niños y bebés'),
     },
     {
       id: 'construction',
@@ -73,7 +81,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     },
     {
       id: 'games',
-      title: 'Juegos y juguetes',
+      title: t('Juegos y juguetes'),
     },
   ];
 
@@ -130,7 +138,8 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           </View>
       </Modal>
      <TextInput
-        label="Buscar producto..."
+        label={t('Buscar producto...')}
+
         style={styles.textInput}       
         onChangeText={onChangeName}
         value={name}
@@ -139,40 +148,40 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "fashion")}> 
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/ropa.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Moda</Text>
+          <Text style = {styles.textoCategoria}>{t('Moda')}</Text>
           </View>
 
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "computer")}>
           <View style = {styles.elementoCategoria}>
           <Image source={require('../images/informatica.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Informática</Text>
+          <Text style = {styles.textoCategoria}>{t('Informática')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "pets")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/mascotas.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Mascotas</Text>
+          <Text style = {styles.textoCategoria}>{t('Mascotas')}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "home")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/hogar.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Hogar</Text>
+          <Text style = {styles.textoCategoria}>{t('Hogar')}</Text>
           </View>
 
         </TouchableOpacity>  
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "games")}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/deporte.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Ocio</Text>
+          <Text style = {styles.textoCategoria}>{t('Ocio')}</Text>
           </View>
 
         </TouchableOpacity>    
         <TouchableOpacity onPress={() => setModalVisible(true)}>
         <View style = {styles.elementoCategoria}>
           <Image source={require('../images/otros.png')} style={styles.iconoCategoria}/>  
-          <Text style = {styles.textoCategoria}>Otros</Text>
+          <Text style = {styles.textoCategoria}>{t('Otros')}</Text>
           </View>
 
         </TouchableOpacity>   

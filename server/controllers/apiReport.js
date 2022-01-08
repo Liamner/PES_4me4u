@@ -88,10 +88,23 @@ exports.closeReport = async (req, res) => {
   }
 
     try{
-        const report = await Report.findById({_id: req.params.id});
+        let report = await Report.findById({_id: req.params.id});
         report.solved = true;
+        report.strike = req.body.strike;
+        
+        if (req.body.strike == true) {
+          
+          let user = await User.findById(report.userReported);
+          
+          if (report.relatedProduct != null) {
+          let product = await Product.findByIdAndDelete(report.relatedProduct);
+          //product.deleteProduct();
+        } 
+
+        user.strikes ++;
+       // if (user.strikes >= 3) //user.deleteUser(); 
+      }
         report.save();
-        //posar si el user te strike o no 
         res.status(200).json(report);
 
     }
@@ -103,11 +116,11 @@ exports.closeReport = async (req, res) => {
 
 exports.createReport = async (req, res) => {
   const report = new Report();
-  product.userReporting = req.user.id;
-  product.userReported = req.body.userReported;  
-  product.description = req.body.description;
-  product.publishingDate = req.body.publishingDate;
-  product.relatedProduct = req.body.relatedProduct;         
+  report.userReporting = req.user.id;
+  report.userReported = req.body.userReported;  
+  report.description = req.body.description;
+  report.publishingDate = req.body.publishingDate;
+  report.relatedProduct = req.body.relatedProduct;         
  
   try {   
   const UserReporting = await User.findOne({_id: req.user.id});
@@ -115,33 +128,9 @@ exports.createReport = async (req, res) => {
 
   const UserReported = await User.findOne({_id: req.body.userReported});
   if (userReported == null) res.status(404).json({error:"UserReported not found"});
-   
-  if (category != null && type != null) {
-    /*
-    const newProduct = await product.save();
-    // Add the product to the user 
-    const user = await User.findByIdAndUpdate(
-                            { _id: ObjectId(req.user.id) }, 
-                              {$push : {
-                                products: newProduct
-                              }
-                            });
-
-    const categories = await Category.findOneAndUpdate(
-                            { name: req.body.categories }, 
-                                {$push : {
-                                  products: newProduct
-                                }
-                              });
-
-    const types = await Type.findOneAndUpdate(
-                                { name: req.body.exchange }, 
-                                    {$push : {
-                                      products: newProduct
-                                    }
-                                  });
-           */                   
-    res.status(201).json(report);}
+    
+  await report.save();
+  res.status(201).json(report);
 
   } catch (error) {
     res.status(409).json(error.message);

@@ -46,22 +46,23 @@ exports.readAllTradeLoan = async (req, res) => {
 
         if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
        
-        const product = await Product.findById({_id:req.body.product});
+        const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
         if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
-
-      //caldrà comprovar que es tenen prous punts i que el producte pertany a ususari
-     /* const userHasProduct = await User.hasProduct(_id:req.body.userOfering, product:req.body.product)
-      if (!userHasProduct) --> error 
-      userHasEnoughtPoints --> check ---> error
-      --> cal assignar points, que sigui obligatori i que al acabar el creat faci les sumes/restes corresponents als usuaris (sum_points i checkEnoguthPoints)
-      */
-     //caldira afegir un vector de productes alquilats al usertaking i un de deixats al userofering? 
-     //caldria fer l'operacio per tornar un producte
   
+        if (userTaking.points < tradeLoan.points) res.status(404).json({error:"not enought points"});
+
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
-          const newProduct = await tradeLoan.save();
+          product.state = "reserved";
+          await product.save();
+          // UserTaking.getUserRewards();
+          // UserOfering.getUserRewards();
+          // UserTaking.getRewards();
+          // UserOfering.getRewards();
+          // UserTaking.levelManage();
+          // UserOfering.levelManage();
+          await tradeLoan.save();
           res.status(201).json(tradeLoan);  
      }
 

@@ -5,7 +5,8 @@ const User = require('../models/user.js');
 const Report = require('../models/report.js')
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
-
+const productController = require('./apiProduct.js');
+const userController = require('./apiProduct.js');
 
 exports.readAllReports =  async (req, res) => {
 
@@ -78,12 +79,15 @@ exports.closeReport = async (req, res) => {
           let user = await User.findById(report.userReported);
           
           if (report.relatedProduct != null) {
-          let product = await Product.findByIdAndDelete(report.relatedProduct);
-          //product.deleteProduct();
+          let product = await Product.findById(report.relatedProduct);
+          let req1, res1;
+          req1.user.id = report.userReported;
+          req1.params.id = report.relatedProduct;
+          productController.deleteProduct(req1,res1);
         } 
 
         user.strikes ++;
-       // if (user.strikes >= 3) //user.deleteUser(); 
+       //if (user.strikes >= 3) //user.deleteUser(); 
       }
         report.save();
         res.status(200).json(report);
@@ -129,7 +133,7 @@ exports.deleteReport = async (req, res) => {
   
   try {    
     const report = await Report.findByIdAndDelete({_id: req.params.id});
-//caldria suprimir també els links
+
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

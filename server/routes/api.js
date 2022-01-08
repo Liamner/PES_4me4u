@@ -335,8 +335,13 @@ module.exports = function(app) {
   router.route('/admin/:id/increaseEcopoints')
     .put(adminController.increaseEcopoints);
 
+  router.route('/admin/:id/increaseBlockedUsers')
+    .put(adminController.increaseBlockedUsers);
+
   router.route('/admin/:id/blockedUsers')
     .get(adminController.readBlockedUsers)
+
+  
 
 
     // get my conversations

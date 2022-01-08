@@ -145,30 +145,24 @@ exports.deleteUser = async (req, res) => {
   }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res) => {  
+    const user = await User.findById({_id : req.params.id})
 
-    const level = req.body.level;
-    const ecoPoints = req.body.ecoPoints;
-    const score = req.body.score;
-  
-    const id = req.user.id;
-    const user = await User.findById(id)
-
-    console.log("Searching for user to update: " + req.params.id);
-
-    if (level != null)  user.level = level;
-    if (ecoPoints != null) user.ecoPoints = ecoPoints;
-    if (score != null) user.score = score;
+    console.log(req.body.latitude)
+    if (req.body.name) user.userId = req.body.name;
+    if (req.body.email) user.email = req.body.email;
+    if (req.body.latitude  && req.body.longitude ) {
+      user.latitude = req.body.latitude;
+      user.longitude = req.body.longitude;
+    }
     
     console.log(user);
-    
+    console.log("Searching for user to update: " + req.body.latitude);
     try {
       await user.save();
-    
       res.status(201).json(user);
-    } catch (error) {
+    } catch (error) { 
       res.status(409).json(error.message);
-    
       console.log("Can not update the user");
     }
 

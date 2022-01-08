@@ -126,7 +126,7 @@ module.exports = function(app) {
 
   // Update user with id = id
   router.route('/user/update/:id')
-    .put(authenticateJWT, userController.updateUser);
+    .put(userController.updateUser);
 
   // Read all products
   router.route('/user/')
@@ -168,9 +168,8 @@ module.exports = function(app) {
   router.route('/user/:id/AddToWishlist')
     .post(authenticateJWT, userController.addToWishlist)
 
-    router.route('/user/:id/DeleteFromWishlist')
+  router.route('/user/:id/DeleteFromWishlist')
     .delete(authenticateJWT, userController.deleteFromWishlist)
-
   
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
@@ -178,8 +177,13 @@ module.exports = function(app) {
   router.route('/user/:id/followers')
     .get(userController.getUserFollowers)
 
-  router.route('/user/:id/follow')
+  router.route('/user/:id/productsRecentlyViewed')
+    .get(userController.getRecentlyViewed);
 
+  router.route('/user/:id/addProductsRecentlyViewed')
+    .put(userController.updateRecentlyViewed);
+
+  router.route('/user/:id/follow')
     .post(authenticateJWT, userController.follow)
 
     

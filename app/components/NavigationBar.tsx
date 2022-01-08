@@ -1,10 +1,7 @@
 import React from "react";
-import {StyleSheet, View , Text, TouchableOpacity, Pressable, Alert} from "react-native";
-import {Modal, Image, SafeAreaView, FlatList } from 'react-native';
-import axios from 'axios'
-import navigation from "../navigation";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { RootTabScreenProps } from "../types";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Image } from 'react-native';
+
 
 type Props = {
   navigation: any,

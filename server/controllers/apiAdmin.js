@@ -230,7 +230,7 @@ exports.readLoans =  async (req, res) => {
       const adminId = req.params.id;
       const points = req.body.points;
       const admin = await Admin.findById({_id: adminId});
-      admin.ecoPoints += points;
+      admin.ecoPoints += parseFloat(points);
       admin.save();
   
       res.status(200).json(admin);

@@ -99,6 +99,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getProducts();
+    getRecentlyViewedProducts();
     wait(500).then(() => setRefreshing(false));
   }, []);
 

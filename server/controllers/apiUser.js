@@ -557,8 +557,8 @@ exports.follow = async (req, res) => {
 exports.getRecentlyViewed = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("recentlyViewed");
-    
+    //const user = await User.findById({_id: userId}).populate("recentlyViewed");
+    const user = await User.findById({_id: userId}).populate({path: 'recentlyViewed', populate: {path: 'img'}});
     res.status(200).json(user.recentlyViewed)
   } catch (error) {
     res.status(400).json(error)

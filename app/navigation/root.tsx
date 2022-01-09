@@ -31,7 +31,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: true, headerBackVisible: false}} />
+      <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: true, headerBackVisible: false, title: '4me4u'}} />
       <Stack.Screen name="ProductSearch" component={ProductSearch} options={{ headerShown: true, headerBackVisible: false }} />
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: true, headerBackVisible: false }} />    
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false  }} /> 

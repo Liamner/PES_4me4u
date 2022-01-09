@@ -1,21 +1,15 @@
 import * as React from 'react';
-import { Button, Platform, ScrollView, Image, StyleSheet, Modal, SafeAreaView, SectionList, StatusBar, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
-import { TextInput, Checkbox } from 'react-native-paper';
-import ProductCardElement from './ProductCardElement'
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-
-
-// import ProductCard from '../components/ProductCard';
-import NavigationBar from '../components/NavigationBar'
-import '../assets/i18n/i18n';
-import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import ProductCard from './ProductCardScreen';
+import { Text, View, ScrollView, StyleSheet, Modal, SafeAreaView, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { RootTabScreenProps } from '../types';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
+import '../assets/i18n/i18n';
 
+import ProductCard from '../components/ProductCard';
+import MiniProductCard from '../components/MiniProductCard';
+import NavigationBar from '../components/NavigationBar'
 
 interface ProductImage {
   __v: number;
@@ -45,7 +39,6 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const [isRecentlyViewedProducts, setIsRecentlyViewed] = React.useState(false);
   const getRecentlyViewedProducts = async () => {
     const response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2e3f85c2c10306f0117a/productsRecentlyViewed');
-    console.log(" recently viewed products" + response.data)
     setRecentlyViewedProducts(response.data);
     if (response.data.lenth != 0) {
       setIsRecentlyViewed(true)
@@ -110,12 +103,9 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const renderItem = ({ item }) => (
     <Item title={item.title} id={item.id} />
   );
-  function renderItem2({ item }) {
-    return (<ProductCard name={item.name} guardado={false} arrayTratos={item.exchange} /*imageUri={item.img[0].url}*/ />)
 
-  }
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -142,7 +132,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           </Pressable>
         </View>
       </Modal>
-      <ScrollView style={styles.scrollCategorias} horizontal={true}>
+      <ScrollView style={styles.scrollCategorias} horizontal={true} showsHorizontalScrollIndicator={false}>
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch", "fashion")}>
           <View style={styles.elementoCategoria}>
             <Icon name='shirt-outline' size={40} />
@@ -184,34 +174,32 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
         </TouchableOpacity>
       </ScrollView>
-      <ScrollView style={{ marginBottom: 30, height: '100%', backgroundColor: 'white' }}>
+      <ScrollView style={{ marginBottom: 30, height: '100%', backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
         {isRecentlyViewedProducts &&
-          <View style={{ backgroundColor: '#a2cff0' }}>
+          <ScrollView style={{ backgroundColor: '#a2cff0' }}>
             <Text style={styles.noProductTitle}> Visto Recientemente</Text>
             <FlatList
-              numColumns={2}
+              numColumns={4}
               data={recentlyViewedProducts}
               renderItem={({ item }) => (
-                <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation}/*imageUri={item.img[0].url}*/ />
+                <MiniProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
               )}
               keyExtractor={item => item._id}
             />
             <View style={styles.separator} />
-          </View>}
+          </ScrollView>}
         {noProduct && <Text style={styles.noProductTitle}> No hay productos actualmente</Text>}
-        <View style={styles.fila}>
-          {!noProduct && <FlatList
-            numColumns={2}
-            data={products}
-            renderItem={({ item }) => (
-              <ProductCard id={item._id} name={item.name} guardado={false} arrayTratos={item.exchange} navigation={navigation} />
-            )}
-            keyExtractor={item => item._id}
-          />}
-        </View>
+        {!noProduct && <FlatList
+          numColumns={2}
+          data={products}
+          renderItem={({ item }) => (
+            <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+          )}
+          keyExtractor={item => item._id}
+        />}
       </ScrollView>
       <NavigationBar navigation={navigation} casa={true} />
-    </>
+    </View>
   );
 }
 
@@ -232,12 +220,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6
   },
   scrollCategorias: {
-    //borderRadius: 10,
     borderColor: '#5e5c57',
-    borderWidth: 3,
+    borderWidth: 0.5,
     backgroundColor: 'white',
     width: '100%',
-    height: 120,
+    height: 100,
     alignContent: 'space-between'
   },
   navigator: {
@@ -335,9 +322,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     left: 10,
+    backgroundColor: '#a2cff0'
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#a2cff0",
   },
   item: {
     backgroundColor: "#ffffff",

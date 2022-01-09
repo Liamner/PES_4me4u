@@ -94,10 +94,12 @@ let usuarioSchema = new Schema({
         type: String,
         required: false
     }],
-    recentlyViewed: {
-        type: [mongoose.Schema.ProductSchema],
-        required: false
-    },
+    recentlyViewed: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+        /*type: [mongoose.Schema.ProductSchema],
+        required: false*/
+    }],
     commentsRecived: [{
         // Comentarios recibidos
         type: Schema.Types.ObjectId, 

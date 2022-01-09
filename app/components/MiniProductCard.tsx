@@ -24,7 +24,7 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
   arrayTratos.forEach(element => {
     if (element == "exchange") intercambiar = true;
     if (element == "present") dar = true;
-    if (element == "loan") prestar = true
+    if (element == "provide") prestar = true
   });
   const guardarProducto = async () => {
     await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {

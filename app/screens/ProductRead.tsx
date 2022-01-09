@@ -70,7 +70,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   exchange.pop();
     let aux = response.data.exchange;
     aux.forEach(element => {
-      console.log(element);
       switch (element) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
@@ -154,6 +153,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
+    console.log(response.data)
   };
 
   
@@ -186,7 +186,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         null
       }
         <View style={styles.state}>
-          <Text style={{color: 'white'}}>{`${state}`}</Text>
+          <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>{`${state}`}</Text>
         </View>
         { hasImages ?
           <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>

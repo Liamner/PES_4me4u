@@ -36,7 +36,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
 
   return (
     <View style={styles.container}>
-      <View style={[styles.row, { marginTop: 50 }]}>
+      <View style={[styles.row]}>
         <TextInput
           style={{ width: '80%' }}
           onChangeText={onChangeText}
@@ -44,6 +44,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           placeholder="Buscar..."
         />
         <Button
+          style={{ width: '10%' }}
           onPress={getPNameInfo}
           title="Buscar"
         />
@@ -96,7 +97,6 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
     flex: 1,
   },
   row: {

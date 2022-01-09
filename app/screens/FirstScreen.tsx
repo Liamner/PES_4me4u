@@ -37,8 +37,21 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const [noProduct, setNoProduct] = React.useState(false);
   const [recentlyViewedProducts, setRecentlyViewedProducts] = React.useState();
   const [isRecentlyViewedProducts, setIsRecentlyViewed] = React.useState(false);
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
+
+  const getData = async (id) => {
+    const sess = await retrieveSession();
+    console.log(sess)
+    setSession(sess);
+  }
+
   const getRecentlyViewedProducts = async () => {
-    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/61ba2e3f85c2c10306f0117a/productsRecentlyViewed');
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+session.id+'/productsRecentlyViewed');
+    console.log(response.data)
     setRecentlyViewedProducts(response.data);
     if (response.data.lenth != 0) {
       setIsRecentlyViewed(true)

@@ -4,6 +4,7 @@ const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const Report = require('../models/report.js')
 const jwt = require('jsonwebtoken');
+const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
 const productController = require('./apiProduct.js');
 const userController = require('./apiProduct.js');
@@ -112,7 +113,7 @@ exports.closeReport = async (req, res) => {
   if (user.role != 'ADMIN'){
     res.status(401).json({error: "Do not have permission"})
     return;
-  }*/
+  }
 
     try{
         const report = await Report.findById({_id: req.params.id});
@@ -155,6 +156,7 @@ exports.createReport = async (req, res) => {
   const UserReported = await User.findOne({_id: req.body.userReported});
   if (UserReported == null) res.status(404).json({error:"UserReported not found"});
   await report.save();
+  adminController.increaseBlockedUsers();
 
   res.status(201).json(report);
 

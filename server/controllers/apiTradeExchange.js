@@ -1,6 +1,7 @@
 const TradeExchange = require('../models/tradeExchange.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
 
 exports.readAllTradeExchange = async (req, res) => {
@@ -65,6 +66,7 @@ exports.readAllTradeExchange = async (req, res) => {
           // UserTaking.levelManage();
           // UserOfering.levelManage();
           await tradeExchange.save();
+          adminController.increaseExchanges();
           res.status(201).json(tradeExchange);  
      }
 

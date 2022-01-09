@@ -52,10 +52,10 @@ let usuarioSchema = new Schema({
         type: Number,
         default: 0
     },
-    blockedUsers: [{
+    blockedUsers: {
         type: Number,
         default: 0
-    }]
+    }
 });
     
 

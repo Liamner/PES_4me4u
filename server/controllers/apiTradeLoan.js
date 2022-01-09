@@ -1,6 +1,7 @@
 const TradeLoan = require('../models/tradeLoan.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
 
 exports.readAllTradeLoan = async (req, res) => {
@@ -63,6 +64,7 @@ exports.readAllTradeLoan = async (req, res) => {
           // UserTaking.levelManage();
           // UserOfering.levelManage();
           await tradeLoan.save();
+          adminController.increaseLoans();
           res.status(201).json(tradeLoan);  
      }
 

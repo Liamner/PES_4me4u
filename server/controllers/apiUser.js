@@ -275,7 +275,7 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
-
+    console.log("llega a getRewards");
     const user = await User.findById({ _id: req.params.id });
     let ngifts = user.gifts;
     let nloans = user.loans;
@@ -317,7 +317,9 @@ exports.getRewards = async (req, res) => {
   }
 };
 
+/*
 exports.getUserRewards = async (req, res) => {
+  console.log("llega a getUserRewards");
   let {type, estimatedPoints} = req.body;
 
   let user = await User.findById({ _id: req.params.id });
@@ -350,6 +352,44 @@ exports.getUserRewards = async (req, res) => {
     res.status(400).json(error)
   }
 };
+*/
+
+function getUserRewards (type, estimatedPoints) {
+  console.log("llega a getUserRewards");
+  //let {type, estimatedPoints} = req.body;
+
+  let user = User.findById({ _id: req.params.id });
+  console.log("Searching for user to get reward: " + user.name);
+  let eco = user.ecoPoints;
+  let total = 0;
+  if (type == 'gift'){
+    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    //else res.status(400).json({error: 'Estimated points are too high'})
+  }
+
+  else if (type == 'loan') {
+    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    //else res.status(400).json({error: 'Estimated points are too high'})
+    
+  }
+  else if (type == 'exchange') {
+    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
+    //else res.status(400).json({error: 'Estimated points not accepted'})
+  }
+  //else res.status(400).json({error: 'Transaction not available'});
+  
+  
+  user.ecoPoints = total;
+  console.log("antes: ", eco, " ahora: ", total );
+/*
+  try {
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json(error)
+  }
+  */
+};
 
 exports.getUserLevel = async (req, res) => {
   try{
@@ -365,6 +405,7 @@ exports.getUserLevel = async (req, res) => {
 
 exports.levelManage = async (req, res) => {
   try {
+    console.log("llega a levelManage");
     const user = await User.findById({ _id: req.user.id });
     console.log("Level del usuario: " , user.name);
 
@@ -388,11 +429,12 @@ exports.levelManage = async (req, res) => {
       else if (nivelNuevo == '6') reward = 100;
     }
 
-    user.ecoPoints = points + reward;
+    user.ecoPoints = parseFloat(points) + parseFloat(reward);
     user.level = nivelNuevo;
 
     await user.save();
-    res.status(200).json(user);
+    //res.status(200).json(user);
+    console.log("gestion de nivel ok")
     
   } catch (error) {
 
@@ -409,6 +451,7 @@ exports.getUserPoints = async (req, res) => {
   }
 };
 
+/*
 exports.getUserRewards = async (req, res) => {
   try {
     const {type, estimatedPoints} = req.body;
@@ -427,7 +470,7 @@ exports.getUserRewards = async (req, res) => {
     res.status(400).json(error)
   }
 };
-
+*/
 
 exports.getUserWishlist = async (req, res) => {
   try {

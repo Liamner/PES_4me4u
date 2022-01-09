@@ -2,6 +2,7 @@ const TradeGive = require('../models/tradeGive.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const adminController = require ('../controllers/apiAdmin.js')
+const userController = require('../controllers/apiUser.js');
 const { ObjectId } = require('mongodb');
 
 exports.readAllTradeGive = async (req, res) => {
@@ -54,14 +55,78 @@ exports.readAllTradeGive = async (req, res) => {
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
-          // UserTaking.getUserRewards();
-          // UserOfering.getUserRewards();
-          // UserTaking.getRewards();
-          // UserOfering.getRewards();
-          // UserTaking.levelManage();
-          // UserOfering.levelManage();
           await tradeGive.save();
           adminController.increaseGifts();
+
+          // ==================
+          // get user rewards
+          // ==================
+          console.log("funcion getUserRewards")
+          let estimatedPoints = req.body.points;
+          console.log("Searching for user to get reward: " + userOfering);
+          console.log("estimatedPoints", estimatedPoints);
+          let eco = userOfering.ecoPoints;
+          let total = 0;
+          if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+          else res.status(400).json({error: 'Estimated points are too high'})
+          //user.ecoPoints = total;
+          userOfering.ecoPoints = total;
+          userOfering.save();
+          console.log("antes: ", eco, " ahora: ", total);
+
+          // ==================
+          // getRewards
+          // ==================
+
+          console.log("función getRewards");
+          let ngifts = userOfering.gifts;
+          let points = userOfering.ecoPoints;
+          console.log("userOfering.ecoPoints", userOfering.ecoPoints);
+          let rewards = 0;
+          let diez = 10;
+          let cincuenta = 50;
+          let cien = 100;
+          let cientoCincuenta = 150;
+
+          if(ngifts >= 3) {
+            if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(diez);
+            else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(cincuenta);
+            else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(cien);
+            else if(ngifts >= 10) rewards += parseFloat(cientoCincuenta);
+          }
+          userOfering.ecoPoints = parseFloat(points)+parseFloat(rewards)
+          await userOfering.save();
+
+          // ==================
+          // levelManage
+          // ==================
+          console.log("llega a levelManage");
+          console.log("Level del usuario: " , userOfering.level);
+
+          var nivelNuevo, reward;
+          var nivelAntiguo = userOfering.level;
+          var points2 = userOfering.ecoPoints;
+
+          if(points2 < 50) nivelNuevo = '1'; // seed semilla
+          else if (points2 >= 50 && points2 < 150) nivelNuevo = '2'; //brote outbreak
+          else if (points2 >= 150 && points2 < 300) nivelNuevo = '3'; // plant
+          else if (points2 >= 300 && points2 < 500) nivelNuevo = '4'; // tree
+          else if(points2 >= 500 && points2 < 750) nivelNuevo = '5'; // roble oak
+          else if (points2 >= 750) nivelNuevo = '6'; //ecologista ecologist
+
+          //si ha subido de nivel gana una recompensa
+          if(nivelAntiguo != nivelNuevo) {
+            if(nivelNuevo == '2') reward = 20;
+            else if (nivelNuevo == '3') reward = 40;
+            else if (nivelNuevo == '4') reward = 60;
+            else if (nivelNuevo == '5') reward = 80;
+            else if (nivelNuevo == '6') reward = 100;
+          }
+          userOfering.ecoPoints = parseFloat(points2) + parseFloat(reward);
+          userOfering.level = nivelNuevo;
+          await userOfering.save();
+          console.log("acaba leveManagement");
+
           res.status(201).json(tradeGive);  
      }
 

@@ -559,28 +559,32 @@ exports.updateRecentlyViewed = async (req, res) => {
   try {
     const userId = req.params.id;
     let idProduct = req.body.idProduct;
-    let ourUser;
 
-    User.findById({_id: userId}, {followers: 1}, async (erro, usersRecentViewed) => {
-      if (usersRecentViewed.recentlyViewed.length == 5) {
-        usersRecentViewed.followers.splice(1,1);
-        usersRecentViewed.save();
+    User.findById({_id: userId}, async (erro, usersRecentViewed) => {
+      const found = usersRecentViewed.recentlyViewed.includes(idProduct) 
+      console.log(found)
+      if (found) {
+        res.status(404).json({error: 'Product already in the list'});
       }
-      ourUser = usersRecentViewed;
-    }).populate('recentlyViewed');
-    
-    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
+      else {
+        console.log(usersRecentViewed.recentlyViewed.length)
+        if (usersRecentViewed.recentlyViewed.length >= 4) {          
+          console.log(usersRecentViewed.recentlyViewed)
+          console.log(usersRecentViewed.recentlyViewed[0])
+          usersRecentViewed.recentlyViewed.splice(0,1);
+          await usersRecentViewed.save();
+        }
+        Product.findById({ _id: idProduct }, async (erro, product) => {
+          if (product != null) {
+            usersRecentViewed.recentlyViewed.push(product._id);
+            await usersRecentViewed.save();
+            res.status(200).json(usersRecentViewed.recentlyViewed);
+          }
+          else res.status(404).json({error: 'Product not found'})
         })
-     }
-      ourUser.recentlyViewed.push(productDB);
-      ourUser.save();
-      res.status(200).json(ourUser.recentlyViewed);
-    });
-
+      }
+      
+    }).populate('recentlyViewed').clone()
   } catch (error) {
     res.status(400).json(error)
   }

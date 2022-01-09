@@ -1,234 +1,477 @@
 import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView, Alert, Button } from 'react-native';
-import { CustomMap, CustomMarker} from '../components/MapComponents';
+import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button, AsyncStorage } from 'react-native';
+import { CustomMap, CustomMarker } from '../components/MapComponents';
 
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+
+
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import DeleteUser from '../components/DeleteUser';
-
+import retrieveSession from '../hooks/retrieveSession'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
+import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
+import { Picker } from '@react-native-picker/picker';
 
+import '../assets/i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
-export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScreenProps<'ViewUserScreen'>) {
-  
+/*
+wishlist -> provada
+(boton te lleva a ver los productos) -> productos de un usuario en pestaña aparte
+boton para cambiar idiomas
 
-    //Datos de un usuario
-
-    const [id, setid] = useState('61952ec8adeb9693da219fc2');
-    //const [id, setid] = useState(user_id);
-    
-    const [email, setEmail] = useState('Cargando...');
-    const [location, setLocation] = useState('Cargando...');
-    const [level, setLevel] = useState('Cargando...');
-    const [postalCode, setPostalCode] = useState('Cargando...');
-    const [ecoPoints, setEcoPoints] = useState('Cargando...');
-    const [score, setScore] = useState('Cargando...');
-    const [latitude, setLatitude] = useState(39.03385);
-    const [longitude, setLongitude] = useState(125.75432);
-   /* 
-    const email = 'a@mail.algo'
-    const location = 'Pyongyang'
-    const level = '1'
-    const postalCode = '08028'
-    const ecoPoints = '10'
-    const score = '5.0'
-    const latitude = 39.03385
-    const longitude = 125.75432
 */
 
-    const [products, setproducts] = React.useState([
-      {
-        id: '61768a008b251b960db42a49',
-        name: 'HarryPotter',
-        state: 'available'
-      },
-      {
-        id: "2",
-        name: "Coche",
-        state: "reserved"
-      },
-      {
-        id: "3",
-        name: "Libro",
-        state: "provide"
+
+export default function ViewUserScreenScreen({ navigation, route }: RootTabScreenProps<'ViewUser'>) {
+
+  var userid = route.params;
+
+  //Datos de un usuario
+  const [id, setId] = useState('');
+  const [email, setEmail] = useState('Cargando...');
+  const [name, setName] = useState('Cargando...');
+  const [location, setLocation] = useState('Cargando...');
+  const [level, setLevel] = useState('Cargando...');
+  const [postalCode, setPostalCode] = useState('Cargando...');
+  const [ecoPoints, setEcoPoints] = useState('Cargando...');
+  const [score, setScore] = useState('Cargando...');
+  const [latitude, setLatitude] = useState(39.03385);
+  const [longitude, setLongitude] = useState(125.75432);
+
+  //sesion
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
+
+  const [ownProfile, setOwnProfile] = useState(true);
+  const [ownProfileAux, setOwnProfileAux] = useState('S');
+
+  const [following, setFollowing] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [followed, setFollowed] = useState([]);
+
+  const [followersSize, setFollowersSize] = useState(0);
+  const [followedSize, setFollowedSize] = useState(0);
+
+
+
+  const [selectedLanguage, setSelectedLanguage] = React.useState();
+
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setLanguage] = useState('');
+
+
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch(err => console.log(err));
+  };
+
+  var auxiliar = { id: '', ownProfileAux: '' };
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userSession')
+      if (value !== null) {
+        let aux = JSON.parse(value)
+        setSession(aux)
+        if (userid === undefined) {
+          userid = aux.id
+          setId(aux.id)
+          console.log(userid)
+        }
+        if (userid !== aux.id)
+          setOwnProfile(false); //HK -> a de ser false
+        setOwnProfileAux('N');
       }
-    ]);
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    console.log(session)
+    getUserInfo();
+  }
 
 
 
-    const userImage: string = 'https://64.media.tumblr.com/7edd9fa2812d2b50d054f3f6cd2feb6e/tumblr_inline_nso5kh0ba41si53ec_1280.png'
-    const [currentPage, setCurrentPage] = useState(1);
+
+  //    const [wishlist, setWishlist] = React.useState([]);
 
 
-    //Funciones
-    const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
-        const width = event.nativeEvent.layoutMeasurement.width;
-        const contentOffset = event.nativeEvent.contentOffset.x;
-    
-        const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
-        setCurrentPage(currentNumber);
-      };
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+
+  //Funciones
+  const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
+    const width = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.x;
+
+    const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
+    setCurrentPage(currentNumber);
+  };
 
 
   const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id );
-//    6186d4d5f501eb82cb4b2c13
-    //Datos de usuario
+    console.log('userid: ' + userid)
+    console.log(session)
+
+
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid);
 
     setEmail(response.data.email);
+    setName(response.data.userId);
 
-    if(response.data.location == null) setLocation('Desconocido');
+    console.log('nuestro perfil? ' + ownProfile);
+
+    console.log('sol ' + userid + ' sol');
+
+    if (response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
 
     setLevel(response.data.level);
 
-    if(response.data.postalCode == null) setPostalCode('Desconocido');
+    if (response.data.postalCode == null) setPostalCode('Desconocido');
     else setPostalCode(response.data.postalCode);
 
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
 
-    if(response.data.latitude == null) setLatitude(39.03385);
+    if (response.data.latitude == null) setLatitude(39.03385);
     else setLatitude(response.data.latitude);
 
-    if(response.data.longitude == null) setLongitude(125.75432);
+    if (response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
-    
-    
-    //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
 
-/*    
-   //en caso de tener datos desconocidos
+    setFollowers(response.data.followers);
+    setFollowed(response.data.followed);
+    console.log("seguidores " + followed);
+    if (response.data.followers == null) {
+      setFollowers([]);
+      setFollowersSize(0);
+    }
+    else {
+      setFollowers(response.data.followers);
+      setFollowersSize(response.data.followers.length);
+    }
 
-   if(response.data.XXX == null) setXXX('Desconocido');
-    else setXXX(response.data.XXX);
-    */
+
+    if (response.data.followed == null) {
+      setFollowed([]);
+      setFollowedSize(0);
+
+    }
+    else {
+      setFollowed(response.data.followed);
+      setFollowedSize(response.data.followed.length);
+    }
 
 
+
+    /*    
+       //en caso de tener datos desconocidos
+       if(response.data.XXX == null) setXXX('Desconocido');
+        else setXXX(response.data.XXX);
+        */
 
   };
-  
-  getUserInfo()
 
 
 
-  return(
-    <View style ={styles.container}>
+
+  async function followUser() {
+    // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
+    const body1 = { email: email }
+    let response = axios
+      .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
+      .then(function (response) {
+        console.log("siguiendo a " + response.data.userID)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    setFollowing(true);
+    // añadir follower, usuario del perfil es seguido por el usuario logueado
+  }
+
+  const onPressFollowers = () => {
+    if (followersSize == 0) {
+      Alert.alert(
+        "Error",
+        "Este usuario no tine ningún seguidor",
+        [{ text: "Aceptar" }]
+      )
+    }
+    else {
+      navigation.navigate('FollowersScreen', { list: followers });
+    }
+  };
+
+
+
+  const onPressFollowed = () => {
+    if (followedSize == 0) {
+      Alert.alert(
+        "Error",
+        "Este usuario no es seguido por nadie",
+        [{ text: "Aceptar" }]
+      )
+    }
+    else {
+      navigation.navigate('FollowedScreen', { list: followed });
+    }
+  };
+
+
+
+  React.useEffect(() => {
+    getData();
+
+    // Alert.alert(
+    //   "Desea cargar este perfil?" ,
+    //   "puede contener datos extraños?",
+    //   [{ text: 'cargar', onPress: () => getUserInfo() }]
+    //   )
+
+
+    auxiliar = { id: userid, ownProfileAux: ownProfileAux };
+    console.log('session:' + session.id + ' ' + session.token + ' ' + session.user);
+
+
+    console.log('cosa: ' + userid + ' ' + ownProfileAux);
+
+
+
+  }, []);
+
+
+
+
+  return (
+    <>
+
       <ScrollView>
-        
-        <Image
-            style={styles.image}
-            source={{
-                uri: userImage,
-            }}
-        />
-        
-        <Text style={styles.text}>
-            Correo: <Text style={styles.text2}>{email}</Text>
-        </Text>
-    
-        <Text style={styles.text}>
-            Nivel: <Text style={styles.text2}>{level}</Text>
-        </Text>
+        <View style={styles.container}>
 
-        <Text style={styles.text}>
-            Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
-        </Text>
-
-        <Text style={styles.text}>
-            Puntuación: <Text style={styles.text2}>{score}</Text> ⭐
-        </Text>
-
-        <Text style={styles.text}>
-            Localización: <Text style={styles.text2}>{location}</Text>
-        </Text>
+          {ownProfile ?
 
 
-        <CustomMap
-          style={styles.mapview}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
-          <CustomMarker
-            coordinate={{
-              latitude: latitude,
-              longitude: longitude
-            }}
-          ></CustomMarker>
-        </CustomMap>
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <TouchableOpacity
+                onPress={() => {
+                  getUserInfo();
+                }}>
+                <Text style={styles.titleText}> {t('Mi perfil')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("UserUpdate", session.id);
+                }}
+                style={{ width: 150, marginTop: 5 }}
+              >
+                <LinearGradient
+                  colors={['#a2cff0', '#ADE8F4']}
+                  style={styles.followButon}
+                >
+                  <Text style={[styles.textFollow,
+                  { color: '#fff' }]}>
+                    Editar Perfil
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+            :
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <TouchableOpacity
+                onPress={() => {
+                  getUserInfo();
+                }}>
+                <Text style={styles.titleText}> Perfil ajeno</Text>
+              </TouchableOpacity>
+            </View>
+          }
 
-        <Text style={styles.text}>
-            Código postal: <Text style={styles.text2}>{postalCode}</Text>
-        </Text>
+
+          <Text style={styles.text}>
+            {t('Correo:')} <Text style={styles.text2}>{email}</Text>
+          </Text>
+
+
+          {ownProfile ?
+            <></>
+            :
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {following ?
+                <TouchableOpacity
+                  onPress={() => {
+                    followUser();
+                  }}
+                  style={{ width: 150 }}
+                >
+                  <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                  >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                      Dejar de seguir
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity
+                  onPress={() => {
+                    followUser();
+                  }}
+                  style={{ width: 150 }}
+                >
+                  <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                  >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                      Seguir
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              }
+            </View>
+
+          }
 
 
 
-
-        <Text style={styles.titleText}>Tus productos</Text>
-
-        <FlatList
-          numColumns = {1}
-          data={products}
-          renderItem={({ item }) => ( 
-
-            <>
-
-            <Text style={styles.productText}>
-              <Text style={styles.deleteButton} onPress={() => Alert.alert(
-                    "BORRAR",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}>Borrar
-              </Text>
-              <Text>   </Text>
-              
-              <Text onPress={() => Alert.alert(
-                    "MODIFICAR ESTADO",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}>Estado: {item.state}</Text>
-              <Text>   </Text>
-              <Text onPress={() => Alert.alert(
-                    "NAVEGACION A VER PRODUCTO",
-                    "id:"+ item.id ,
-                    [{text: "Aceptar"}]
-                  )}
-              >{item.name}</Text>
+          <View style={styles.container2}>
+            <Text style={styles.text} onPress={onPressFollowers}>
+              {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
             </Text>
-            </>
+            <Text>        </Text>
+            <Text style={styles.text} onPress={onPressFollowed}>
+              {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
+            </Text>
+          </View>
+
+          <Text style={styles.text}>
+            {t('Nivel')}: <Text style={styles.text2}>{level}</Text>
+          </Text>
+
+          <Text style={styles.text}>
+            Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
+          </Text>
+
+          <Text style={styles.text}>
+            {t('Puntuación')}: <Text style={styles.text2}>{score}</Text> ⭐
+          </Text>
 
 
 
 
 
 
-          )}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={Scroll}
-        />
-        
-        {/*
+          <Button
+            onPress={() => navigation.navigate('UserProducts', id)}
+            title={t('Mis productos')}
+            color="#a2cff0" //azul iconico
+          />
+
+          {ownProfile ?
+            // ir a wishlist si es tu perfil
+            <Button
+              onPress={() => navigation.navigate('UserWishlist', userid)}
+              title={t("Productos deseados")}
+              color="#a2cff0" //azul iconico
+            />
+            : <></>}
+
+
+
+          <CustomMap
+            style={styles.mapview}
+            region={{
+              latitude: latitude,
+              longitude: longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }}
+          >
+            <CustomMarker
+              coordinate={{
+                latitude: latitude,
+                longitude: longitude
+              }}
+            ></CustomMarker>
+          </CustomMap>
+
+
+          {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
           <DeleteUser children= id></DeleteUser>>
         </Text>
         */}
-        
 
+          {ownProfile ?
+            // Cambiar de idioma
+            <>
+              {/* <Text style={styles.titlePicker}> Idioma </Text> */}
+
+              <Picker
+                selectedValue={currentLanguage}
+                style={styles.picker}
+                onValueChange={(itemValue, itemIndex) =>
+                  changeLanguage(itemValue)
+                }>
+                <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />
+                <Picker.Item label="Castellano" value="es" />
+                <Picker.Item label="Catalán" value="cat" />
+              </Picker>
+
+            </>
+            :
+
+            <Button
+              onPress={() => {
+                Alert.alert(
+                  "Denunciado",
+                  "Has reportado a este usuario",
+                  [{ text: "Aceptar" }]
+                )
+              }}
+              title="Reportar usuario"
+              color="#FF0000" //azul iconico
+            />
+
+          }
+
+        </View>
       </ScrollView>
-    </View>
+      <NavigationBar navigation={navigation} profile={true} />
+    </>
   );
 
 
@@ -236,13 +479,29 @@ export default function ViewUserScreenScreen({ navigation, user_id }: RootTabScr
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
   container2: {
-    flex: 1,
-    padding: 20
+    //    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: "row",
+    padding: 0
+
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 2,
+    margin: 10,
+    borderRadius: 4,
+    elevation: 3,
+    width: '25%',
+    backgroundColor: '#a2cff0',
   },
   item: {
     padding: 20,
@@ -253,7 +512,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     //fontFamily: "Cochin",
     fontSize: 20,
-    margin:10,
+    margin: 10,
     fontStyle: 'italic'
   },
   text2: {
@@ -270,7 +529,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     //fontFamily: "Cochin",
-    fontSize: 30,
+    fontSize: 27,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
@@ -278,7 +537,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     //fontFamily: "Cochin",
     fontSize: 20,
-    margin:10,
+    margin: 10,
   },
   deleteButton: {
     alignItems: "center",
@@ -294,6 +553,31 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-  }
+
+  },
+  followButon: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+  },
+  textFollow: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  titlePicker: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 15,
+    width: '90%',
+  },
+  picker: {
+    marginVertical: 10,
+    height: 60,
+    width: '90%',
+  },
 
 });
+
+

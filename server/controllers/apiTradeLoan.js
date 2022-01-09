@@ -50,7 +50,7 @@ exports.readAllTradeLoan = async (req, res) => {
         const product = await Product.findById({_id:req.body.product});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        if (publishingDate > returnDate) res.status(404).json({error:"returnDate invalid"});
+        if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
 
       //caldrà comprovar que es tenen prous punts i que el producte pertany a ususari
      /* const userHasProduct = await User.hasProduct(_id:req.body.userOfering, product:req.body.product)

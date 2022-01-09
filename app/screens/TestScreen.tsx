@@ -3,26 +3,35 @@ import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatL
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import ProductCardElement from '../screens/ProductCardElement'
+import * as ImagePicker from 'expo-image-picker';
+// import ProductCard from '../components/ProductCard';
+import GiveButton from '../components/GiveButton';
+import LoanButton from '../components/LoanButton';
+import ExchangeButton from '../components/ExchangeButton';
+import LogOutButton from '../components/LogOutButton';
+import NavigationBar from'../components/NavigationBar';
+import { WebView } from 'react-native-webview'; 
+import { EcommuteAPI } from '../components/EcommuteAPI';
+
 export default function TestScreen({ navigation }: RootTabScreenProps<'TestScreen'>) {
+  const gatitos = { hola: "hola", adios: "adios"}
+
   return (    
     <>
-      <View>            
-      {/* <ProductCardElement> */}
-    <Text style = {{color: 'white'}}> HOla</Text>
-      
-      </View>                    
+    <View style={styles.margin}> 
+    <GiveButton/>
+    <LoanButton/>
+    <ExchangeButton/>
+    <LogOutButton navigation={navigation}/>
+    <NavigationBar navigation={navigation}/>
+    <EcommuteAPI origin={"Lloret de Mar"} destination= "tossa de mar"/>
+    </View>
     </>
   );
 }
-
 const styles = StyleSheet.create({
-  container: {
-    width: '50%',
-    height: '50%',
-    borderRadius: 10,
-    borderColor: '#5e5c57',
-    borderWidth: 3,
-    backgroundColor: 'white',
+  margin: {
+   marginTop: 40
   }, 
   cameraImage: {
     width: '100%', 
@@ -59,4 +68,13 @@ const styles = StyleSheet.create({
     height: 60,
     width: '90%',
   },  
+  notImage: {           
+    marginHorizontal :5,    
+    width: 100,
+    height: 100 ,
+    borderRadius: 10,
+    borderColor: '#5e5c57',
+    borderWidth: 3,
+    backgroundColor: '#F0F0F0',    
+  },
 });

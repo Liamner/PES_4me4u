@@ -85,7 +85,29 @@ let usuarioSchema = new Schema({
     wishlist: {
         type: [mongoose.Schema.ProductSchema],
         required: false
-    }
+    },
+    commentsRecived: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    commentsDone: [{
+        // Comentarios recibidos
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment'
+    }],
+    rateScore: {
+        type: Number,
+        default: 0
+    },
+    totalRateScore: {
+        type: Number,
+        default: 0
+    },
+    tradesRated: {
+        type: Number,
+        default: 0
+    },
 });
     
 

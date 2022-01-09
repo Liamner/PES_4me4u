@@ -64,7 +64,7 @@ module.exports = function(app) {
 
   // Delete product with id = id
   router.route('/product/delete/:id')
-    .delete(/*authenticateJWT, */productController.deleteProduct);
+    .delete(authenticateJWT, productController.deleteProduct);
 
   // Create new category
   router.route('/category/create/')
@@ -138,6 +138,9 @@ module.exports = function(app) {
   
   router.route('/user/:id/products')
     .get(userController.getUserProducts)
+  
+  router.route('/user/:userId/rate')
+    .post(authenticateJWT, userController.rateUser);
 
   router.route('/user/:id/products')
     .get(userController.getRewards)
@@ -255,18 +258,19 @@ module.exports = function(app) {
   router.route('/image/:productId')
     .get(imageController.getProductImages)
     .post(upload.array('img',6), /*authenticateJWT, */ imageController.uploadImages)
-    .delete(upload.array('img',6),/*authenticateJWT, */ imageController.deleteImages)
+  router.route('/product/:productId/image/:imageId')
+    .delete(/*authenticateJWT, */ imageController.deleteImages)
     //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 
 
- /*router.route('/comments')
+  router.route('/comments')
     .get(userController.getAllComments)
   router.route('/comments/done')
     .get(authenticateJWT, userController.getMyCommentsDone)
   router.route('/comments/recived')
-    .get(authenticateJWT, userController.getMyCommentsRecived)*/
+    .get(authenticateJWT, userController.getMyCommentsRecived)
 
     // CONVERSATION
   router.route('/conversation')

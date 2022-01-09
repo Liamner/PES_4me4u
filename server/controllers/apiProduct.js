@@ -280,3 +280,15 @@ exports.readProductsByName = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.deleteWihtNoImages = async (req,res) => {
+  console.log('No images')
+  try {
+    Product.deleteMany({img: {$exists: true, $size: 0}}, (error, products) => {
+      console.log(products)
+      res.status(200)
+    })
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}

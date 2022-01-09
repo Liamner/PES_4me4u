@@ -108,6 +108,9 @@ module.exports = function(app) {
   router.route('/type/delete/:id')
     .delete(authenticateJWT, typeController.deleteType);
 
+  router.route('/product/noImages/')
+    .delete(productController.deleteWihtNoImages)
+
     
   // ======================
   // ---- USER  Routes ----

@@ -431,12 +431,20 @@ exports.getUserRewards = async (req, res) => {
 
 exports.getUserWishlist = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.params.id;
     User.findOne({_id: userId}, (erro, user) => {
+      let products = user.wishlist;
+
+      console.log(products)
+      Product.find({_id: { $in: products}}, (erro, wishlistProducts) => {
+        res.status(200).json(wishlistProducts)
+      }).populate('img')
+    })
+    /*User.findOne({_id: userId}, (erro, user) => {
       console.log(user.wishlist)
       console.log(user);
      res.status(200).json(user.wishlist);
-    }).populate("wishlist");
+    }).populate({path:"wishlist", populate: {path: 'products'}});*/
   } catch (error) {
     res.status(400).json(error)
   }
@@ -448,6 +456,7 @@ exports.addToWishlist = async (req, res) => {
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
     ourUser.wishlist.push(idProduct);
+    
     ourUser.save();
     res.status(200).json(ourUser.wishlist);
 

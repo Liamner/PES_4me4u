@@ -5,10 +5,10 @@ const User = require('../models/user.js');
 const Report = require('../models/report.js')
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
-
+const productController = require('./apiProduct.js');
+const userController = require('./apiProduct.js');
 
 exports.readAllReports =  async (req, res) => {
-
 
   const user = await User.findById(req.user.id);
   console.log(user.role)
@@ -77,35 +77,58 @@ exports.readNoSolvedUserReports = async (req, res) => {
     }
   };
 
+  exports.readNoSolvedReports = async (req, res) => {
+
+    /*if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }*/
+    
+    const user = await User.findById({_id: req.user.id});
+
+    if (user.role != 'ADMIN') {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+
+
+      try {
+        const report = await Report.find({solved: false});
+    
+        console.log("Reading No Solved Reports: ");
+    
+        res.status(200).json(reports);
+      } catch (error) {
+        res.status(404).json(error.message);
+        console.log(error.message);
+      }
+    };
+
 exports.closeReport = async (req, res) => {
 
-  /*if ('ADMIN' != req.user.role) {
-    res.status(401).json({error: "Do not have permission"})
-    return;
-  }*/
+
 
   const user = await User.findById(req.user.id);
   if (user.role != 'ADMIN'){
     res.status(401).json({error: "Do not have permission"})
     return;
-  }
+  }*/
 
     try{
-        let report = await Report.findById({_id: req.params.id});
+        const report = await Report.findById({_id: req.params.id});
         report.solved = true;
         report.strike = req.body.strike;
         
-        if (req.body.strike == true) {
+        if (report.strike == true) {
           
           let user = await User.findById(report.userReported);
-          
-          if (report.relatedProduct != null) {
-          let product = await Product.findByIdAndDelete(report.relatedProduct);
-          //product.deleteProduct();
+          let product = await Product.findById(report.relatedProduct);
+          if (product != null) {
+            product.delete() //modificar amb crides
         } 
 
         user.strikes ++;
-       // if (user.strikes >= 3) //user.deleteUser(); 
+       if (user.strikes >= 3) user.deleteUser(); //modificar amb crides
       }
         report.save();
         res.status(200).json(report);
@@ -124,15 +147,15 @@ exports.createReport = async (req, res) => {
   report.description = req.body.description;
   report.publishingDate = req.body.publishingDate;
   report.relatedProduct = req.body.relatedProduct;         
- 
+
   try {   
   const UserReporting = await User.findOne({_id: req.user.id});
   if (UserReporting == null) res.status(404).json({error:"UserReporting not found"});
 
   const UserReported = await User.findOne({_id: req.body.userReported});
   if (UserReported == null) res.status(404).json({error:"UserReported not found"});
-    
   await report.save();
+
   res.status(201).json(report);
 
   } catch (error) {
@@ -157,7 +180,7 @@ exports.deleteReport = async (req, res) => {
   
   try {    
     const report = await Report.findByIdAndDelete({_id: req.params.id});
-//caldria suprimir també els links
+
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

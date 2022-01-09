@@ -5,7 +5,7 @@ import { StyleSheet, ScrollView, FlatList, Text, Platform, TouchableHighlight, B
 
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import ProductCardId from '../components/ProductCardId';
+import ProductCard from '../components/ProductCard';
 
 import retrieveSession from '../hooks/retrieveSession'
 
@@ -15,54 +15,27 @@ import ProductDelete from '../components/ProductDelete';
 
 
 export default function UserProducts({ navigation, route }: RootTabScreenProps<'UserProducts'>) {
-  
+  var userid = route.params;
   const [session, setSession] = React.useState({
     id: "",
-    user:"",
-    token:""
+    user: "",
+    token: ""
   });
-
-
-
-  const [ownProfileAux,  setOwnProfileAux] = useState('');
-
-   var id = route.params;
-
-
-
+  const [ownProfileAux, setOwnProfileAux] = useState('');
   const [products, setProducts] = useState([]);
 
-  const [wishlist, setWishlist] = useState([]);
-
-  const [email, setEmail] = useState('');
-
   const getProducts = async () => {
-
-
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+session.id);
-
-      setProducts(response.data.products);//lista de ids de productos en la
-
-      
-      setEmail(response.data.email);
-     
-      
-
-      if (response.data.wishlist != null) setWishlist(response.data.wishlist);
-
-
-      
-
-    };
+    console.log(userid)
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid + '/products');
+    setProducts(response.data);//lista de ids de productos en la
+  };
 
 
   const getData = async () => {
     const sess = await retrieveSession();
-      console.log(sess)
-      setSession(sess);
-
-
-    };
+    console.log(sess)
+    setSession(sess);
+  };
 
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,125 +49,39 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
   };
 
   React.useEffect(() => {
-
-    id = route.params;
-
-
     getData();
     var aux;
-
-    
-    if ( id === session.id) {
-      aux = id
+    if (userid === session.id) {
       setOwnProfileAux('N');
-
-      
     }
     else {
       setOwnProfileAux('S');
-      aux = session.id
-
-      
-
     }
-
-    
-
     console.log('nuestro perfil? ' + ownProfileAux);
-
-    id = aux;
-
-
-
-
     getProducts();
-
- 
-
-    
-
-
   }, []);
-  
+
   return (
-    <View>
-
-      <ScrollView>
-
-      { (ownProfileAux == 'S')?
-        <Text style={styles.titleText}> Mis productos </Text>
-        :
-        <Text style={styles.titleText}> Productos de {email} </Text>
-
-      }
-
-        <Button 
-                 onPress={() => getProducts() } 
-                 title = 'Cargar'
-                 color="#a2cff0" //azul iconico
-        />
-          
-        <FlatList
-          numColumns = {2}
-          data={products}
-          renderItem={({ item }) => ( 
-            <>
-            <View style={styles.container2}>
-
-            { 
-            (wishlist == [] )?
-                  <ProductCardId 
-                  id = {item}
-                  uid = {id} 
-                  guardado = {false}
-                  token = {session.token}
-
-              />
-            :
-                  <ProductCardId 
-                  id={item}
-                  uid={id} 
-                  guardado= {wishlist.includes(item) }
-
-              />
-            }
-
- 
-              { (ownProfileAux == 'S')?
-                                <ProductDelete id= {item} token = {session.token} />
-                : <></> } 
-            </View>
-            </>
-          )}
-          horizontal={false}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={Scroll}
-        />
+    <View style={styles.container}>
+      <FlatList
+        numColumns={2}
+        data={products}
+        renderItem={({ item }) => (
+          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+        )}
+        keyExtractor={item => item._id}
+      />
 
 
-      </ScrollView>
     </View>
 
   );
 }
 
 const styles = StyleSheet.create({
-  separator:{ marginLeft: 10 },
+  separator: { marginLeft: 10 },
   container: {
-    flex: 1,
-    alignItems: 'center',
-    marginHorizontal: '0%',
-    flexDirection: 'column',
-  },
-  container2: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    marginVertical: 0,
-    
-    width: '50%',
-//    height: 310,
-
+    flex: 1
   },
   container3: {
     width: '50%',
@@ -202,7 +89,7 @@ const styles = StyleSheet.create({
     borderColor: '#ffffff',
     borderWidth: 1,
     backgroundColor: '#f3f1ed',
-  }, 
+  },
 
   titleText: {
     padding: 10,

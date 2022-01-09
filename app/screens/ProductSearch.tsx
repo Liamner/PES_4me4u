@@ -85,11 +85,11 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard id={item._id} navigation={navigation}name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url}/>
+            <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId}/>
           )}
           keyExtractor={item => item._id}
         />
-        <NavigationBar  navigation={navigation} casa={true}/>
+        <NavigationBar navigation={navigation} casa={true}/>
     </View>
   );
 }

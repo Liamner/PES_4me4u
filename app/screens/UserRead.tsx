@@ -2,7 +2,7 @@ import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button, AsyncStorage } from 'react-native';
-import { CustomMap, CustomMarker} from '../components/MapComponents';
+import { CustomMap, CustomMarker } from '../components/MapComponents';
 
 
 import EditScreenInfo from '../components/EditScreenInfo';
@@ -19,7 +19,7 @@ import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 
 import '../assets/i18n/i18n';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 /*
 wishlist -> provada
@@ -29,110 +29,106 @@ boton para cambiar idiomas
 */
 
 
-  export default function ViewUserScreenScreen({ navigation, route}: RootTabScreenProps<'ViewUser'>) {
-    
-    //id del usuario que se recibe y se desea ver
-    // var userid: string | null | undefined;
+export default function ViewUserScreenScreen({ navigation, route }: RootTabScreenProps<'ViewUser'>) {
 
-    var userid = route.params;
-    //var userid = '61c215918e402966b2c13e8d'; 
+  var userid = route.params;
 
-    //Datos de un usuario
-    const [email, setEmail] = useState('Cargando...');
-    const [name, setName]= useState('Cargando...');
-    const [location, setLocation] = useState('Cargando...');
-    const [level, setLevel] = useState('Cargando...');
-    const [postalCode, setPostalCode] = useState('Cargando...');
-    const [ecoPoints, setEcoPoints] = useState('Cargando...');
-    const [score, setScore] = useState('Cargando...');
-    const [latitude, setLatitude] = useState(39.03385);
-    const [longitude, setLongitude] = useState(125.75432);
+  //Datos de un usuario
+  const [id, setId] = useState('');
+  const [email, setEmail] = useState('Cargando...');
+  const [name, setName] = useState('Cargando...');
+  const [location, setLocation] = useState('Cargando...');
+  const [level, setLevel] = useState('Cargando...');
+  const [postalCode, setPostalCode] = useState('Cargando...');
+  const [ecoPoints, setEcoPoints] = useState('Cargando...');
+  const [score, setScore] = useState('Cargando...');
+  const [latitude, setLatitude] = useState(39.03385);
+  const [longitude, setLongitude] = useState(125.75432);
 
-    //sesion
-    const [session, setSession] = React.useState({
-      id: "",
-      user:"",
-      token:""
-    });
-    
-    const [ownProfile, setOwnProfile] = useState(true);
-    const [ownProfileAux,  setOwnProfileAux] = useState('S');
+  //sesion
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
 
-    const [following, setFollowing] = useState(false);
-    const [followers, setFollowers] = useState([]);
-    const [followed, setFollowed] = useState([]);
+  const [ownProfile, setOwnProfile] = useState(true);
+  const [ownProfileAux, setOwnProfileAux] = useState('S');
 
-    const [followersSize, setFollowersSize] = useState(0);
-    const [followedSize, setFollowedSize] = useState(0);
+  const [following, setFollowing] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [followed, setFollowed] = useState([]);
+
+  const [followersSize, setFollowersSize] = useState(0);
+  const [followedSize, setFollowedSize] = useState(0);
 
 
-    
-    const [selectedLanguage, setSelectedLanguage] = React.useState();
 
-    const {t, i18n} = useTranslation();
-    const [currentLanguage,setLanguage] =useState('');
-  
-    
-    //const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 
-  
-    const changeLanguage = value => {
-      i18n
-        .changeLanguage(value)
-        .then(() => setLanguage(value))
-        .catch(err => console.log(err));
-    };
+  const [selectedLanguage, setSelectedLanguage] = React.useState();
 
-    var auxiliar =  {id:  '', ownProfileAux:  '' } ;
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setLanguage] = useState('');
+
+
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch(err => console.log(err));
+  };
+
+  var auxiliar = { id: '', ownProfileAux: '' };
 
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('userSession')
-      if(value !== null) {
+      if (value !== null) {
         let aux = JSON.parse(value)
-          setSession(aux)
-          if (userid === undefined) {
-            userid = aux.id
-            console.log(userid)
-          }
-          if(userid !== aux.id)
-            setOwnProfile(false); //HK -> a de ser false
-            setOwnProfileAux('N');
-          }
-      else {
-          console.log("empty")
+        setSession(aux)
+        if (userid === undefined) {
+          userid = aux.id
+          setId(aux.id)
+          console.log(userid)
+        }
+        if (userid !== aux.id)
+          setOwnProfile(false); //HK -> a de ser false
+        setOwnProfileAux('N');
       }
-    } catch(e) {
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
       console.log(e)
     }
     console.log(session)
     getUserInfo();
   }
 
-  
- 
-
-//    const [wishlist, setWishlist] = React.useState([]);
 
 
 
+  //    const [wishlist, setWishlist] = React.useState([]);
 
-    const [currentPage, setCurrentPage] = useState(1);
 
 
-    //Funciones
-    const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
-        const width = event.nativeEvent.layoutMeasurement.width;
-        const contentOffset = event.nativeEvent.contentOffset.x;
-    
-        const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
-        setCurrentPage(currentNumber);
-      };
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+
+  //Funciones
+  const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
+    const width = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.x;
+
+    const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
+    setCurrentPage(currentNumber);
+  };
 
 
   const getUserInfo = async () => {
     console.log('userid: ' + userid)
     console.log(session)
-    
+
 
 
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid);
@@ -144,53 +140,53 @@ boton para cambiar idiomas
 
     console.log('sol ' + userid + ' sol');
 
-    if(response.data.location == null) setLocation('Desconocido');
+    if (response.data.location == null) setLocation('Desconocido');
     else setLocation(response.data.location);
 
     setLevel(response.data.level);
 
-    if(response.data.postalCode == null) setPostalCode('Desconocido');
+    if (response.data.postalCode == null) setPostalCode('Desconocido');
     else setPostalCode(response.data.postalCode);
 
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
 
-    if(response.data.latitude == null) setLatitude(39.03385);
+    if (response.data.latitude == null) setLatitude(39.03385);
     else setLatitude(response.data.latitude);
 
-    if(response.data.longitude == null) setLongitude(125.75432);
+    if (response.data.longitude == null) setLongitude(125.75432);
     else setLongitude(response.data.longitude);
-    
-   setFollowers(response.data.followers);
+
+    setFollowers(response.data.followers);
     setFollowed(response.data.followed);
     console.log("seguidores " + followed);
-    if (response.data.followers == null){
-       setFollowers([]);
-       setFollowersSize(0);
+    if (response.data.followers == null) {
+      setFollowers([]);
+      setFollowersSize(0);
     }
-    else{
-       setFollowers(response.data.followers);
-       setFollowersSize(response.data.followers.length);
-    }
-
-
-    if(response.data.followed == null){
-       setFollowed([]);
-       setFollowedSize(0);
-
-    }
-    else{
-        setFollowed(response.data.followed);
-        setFollowedSize(response.data.followed.length);
+    else {
+      setFollowers(response.data.followers);
+      setFollowersSize(response.data.followers.length);
     }
 
 
+    if (response.data.followed == null) {
+      setFollowed([]);
+      setFollowedSize(0);
 
-/*    
-   //en caso de tener datos desconocidos
-   if(response.data.XXX == null) setXXX('Desconocido');
-    else setXXX(response.data.XXX);
-    */
+    }
+    else {
+      setFollowed(response.data.followed);
+      setFollowedSize(response.data.followed.length);
+    }
+
+
+
+    /*    
+       //en caso de tener datos desconocidos
+       if(response.data.XXX == null) setXXX('Desconocido');
+        else setXXX(response.data.XXX);
+        */
 
   };
 
@@ -199,48 +195,48 @@ boton para cambiar idiomas
 
   async function followUser() {
     // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
-    const body1 = {email: email}
+    const body1 = { email: email }
     let response = axios
-    .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
-    .then(function (response){
-      console.log("siguiendo a " + response.data.userID)
-    })
-    .catch(function(error){
-      console.log(error);
-    });
+      .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
+      .then(function (response) {
+        console.log("siguiendo a " + response.data.userID)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     setFollowing(true);
     // añadir follower, usuario del perfil es seguido por el usuario logueado
   }
 
   const onPressFollowers = () => {
-    if (followersSize == 0){
+    if (followersSize == 0) {
       Alert.alert(
-      "Error" ,
-      "Este usuario no tine ningún seguidor",
-      [{text: "Aceptar"}]
+        "Error",
+        "Este usuario no tine ningún seguidor",
+        [{ text: "Aceptar" }]
       )
     }
-    else{
-      navigation.navigate('FollowersScreen', {list: followers} );
+    else {
+      navigation.navigate('FollowersScreen', { list: followers });
     }
   };
 
 
 
   const onPressFollowed = () => {
-    if (followedSize == 0){
+    if (followedSize == 0) {
       Alert.alert(
-      "Error" ,
-      "Este usuario no es seguido por nadie",
-      [{text: "Aceptar"}]
+        "Error",
+        "Este usuario no es seguido por nadie",
+        [{ text: "Aceptar" }]
       )
     }
-    else{
-      navigation.navigate('FollowedScreen', {list: followed} );
+    else {
+      navigation.navigate('FollowedScreen', { list: followed });
     }
   };
-  
+
 
 
   React.useEffect(() => {
@@ -253,221 +249,229 @@ boton para cambiar idiomas
     //   )
 
 
-    auxiliar =  {id:  userid, ownProfileAux:  ownProfileAux } ;
+    auxiliar = { id: userid, ownProfileAux: ownProfileAux };
     console.log('session:' + session.id + ' ' + session.token + ' ' + session.user);
 
 
-    console.log('cosa: ' +  userid + ' '+ ownProfileAux );
+    console.log('cosa: ' + userid + ' ' + ownProfileAux);
 
-    
 
-  }, []);  
 
-  
- 
+  }, []);
 
-  return(
+
+
+
+  return (
     <>
 
       <ScrollView>
-        <View style ={styles.container}>
+        <View style={styles.container}>
 
-      {ownProfile? 
-
-        
-          <View style={{ alignItems: 'center',
-          justifyContent: 'center'}}>
-            <TouchableOpacity
-            onPress={() => {
-              getUserInfo();
-          }}>
-            <Text style={styles.titleText}> {t('Mi perfil')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate("UserUpdate", session.id);
-                }}
-                style={{width: 150,  marginTop: 5}}
-              >
-                <LinearGradient
-                    colors={['#a2cff0', '#ADE8F4']}
-                    style={styles.followButon}
-                >
-                    <Text style={[styles.textFollow,
-                    { color: '#fff' }]}>
-                        Editar Perfil
-                    </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-          </View>
-          :
-          <View style={{ alignItems: 'center',
-          justifyContent: 'center'}}>
-            <TouchableOpacity
-            onPress={() => {
-              getUserInfo();
-          }}>
-            <Text style={styles.titleText}> Perfil ajeno</Text>
-            </TouchableOpacity>
-          </View>          
-        }
-        
-
-        <Text style={styles.text}>
-            {t('Correo:')} <Text style={styles.text2}>{email}</Text>
-        </Text>
+          {ownProfile ?
 
 
-        {ownProfile? 
-          <></>
-          :
-          <View style={{ alignItems: 'center',
-           justifyContent: 'center'}}>
-             {following? 
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
               <TouchableOpacity
                 onPress={() => {
-                    followUser();
+                  getUserInfo();
+                }}>
+                <Text style={styles.titleText}> {t('Mi perfil')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("UserUpdate", session.id);
                 }}
-                style={{width: 150 }}
+                style={{ width: 150, marginTop: 5 }}
               >
                 <LinearGradient
-                    colors={['#a2cff0', '#ADE8F4']}
-                    style={styles.followButon}
+                  colors={['#a2cff0', '#ADE8F4']}
+                  style={styles.followButon}
                 >
-                    <Text style={[styles.textFollow,
-                    { color: '#fff' }]}>
-                        Dejar de seguir
-                    </Text>
+                  <Text style={[styles.textFollow,
+                  { color: '#fff' }]}>
+                    Editar Perfil
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
-             :
-             <TouchableOpacity
-             onPress={() => {
-                 followUser();
-             }}
-             style={{width: 150 }}
-           >
-             <LinearGradient
-                 colors={['#a2cff0', '#ADE8F4']}
-                 style={styles.followButon}
-             >
-                 <Text style={[styles.textFollow,
-                 { color: '#fff' }]}>
-                     Seguir
-                 </Text>
-             </LinearGradient>
-           </TouchableOpacity>
-            } 
-          </View>
-          
-        }
+            </View>
+            :
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <TouchableOpacity
+                onPress={() => {
+                  getUserInfo();
+                }}>
+                <Text style={styles.titleText}> Perfil ajeno</Text>
+              </TouchableOpacity>
+            </View>
+          }
 
 
-
-        <View style={styles.container2}>
-          <Text style={styles.text} onPress={onPressFollowers}>
-              {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
+          <Text style={styles.text}>
+            {t('Correo:')} <Text style={styles.text2}>{email}</Text>
           </Text>
-          <Text>        </Text>
-          <Text style={styles.text} onPress={onPressFollowed}>
+
+
+          {ownProfile ?
+            <></>
+            :
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {following ?
+                <TouchableOpacity
+                  onPress={() => {
+                    followUser();
+                  }}
+                  style={{ width: 150 }}
+                >
+                  <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                  >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                      Dejar de seguir
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity
+                  onPress={() => {
+                    followUser();
+                  }}
+                  style={{ width: 150 }}
+                >
+                  <LinearGradient
+                    colors={['#a2cff0', '#ADE8F4']}
+                    style={styles.followButon}
+                  >
+                    <Text style={[styles.textFollow,
+                    { color: '#fff' }]}>
+                      Seguir
+                    </Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              }
+            </View>
+
+          }
+
+
+
+          <View style={styles.container2}>
+            <Text style={styles.text} onPress={onPressFollowers}>
+              {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
+            </Text>
+            <Text>        </Text>
+            <Text style={styles.text} onPress={onPressFollowed}>
               {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
-          </Text>   
-        </View>
-    
-        <Text style={styles.text}>
+            </Text>
+          </View>
+
+          <Text style={styles.text}>
             {t('Nivel')}: <Text style={styles.text2}>{level}</Text>
-        </Text>
+          </Text>
 
-        <Text style={styles.text}>
+          <Text style={styles.text}>
             Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
-        </Text>
+          </Text>
 
-        <Text style={styles.text}>
+          <Text style={styles.text}>
             {t('Puntuación')}: <Text style={styles.text2}>{score}</Text> ⭐
-        </Text>
-
-
-       
+          </Text>
 
 
 
-          <Button 
-                 onPress={() =>  navigation.navigate( 'UserProducts', {id: userid/*, ownProfileAux: ownProfileAux*/}) } 
-                 title = {t('Mis productos')}
-                 color="#a2cff0" //azul iconico
+
+
+
+          <Button
+            onPress={() => navigation.navigate('UserProducts', id)}
+            title={t('Mis productos')}
+            color="#a2cff0" //azul iconico
           />
 
-          {ownProfile?  
-          // ir a wishlist si es tu perfil
+          {ownProfile ?
+            // ir a wishlist si es tu perfil
             <Button
               onPress={() => navigation.navigate('UserWishlist', userid)}
               title={t("Productos deseados")}
               color="#a2cff0" //azul iconico
             />
-          : <></>  }
+            : <></>}
 
 
 
-        <CustomMap
-          style={styles.mapview}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
-          <CustomMarker
-            coordinate={{
+          <CustomMap
+            style={styles.mapview}
+            region={{
               latitude: latitude,
-              longitude: longitude
+              longitude: longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
             }}
-          ></CustomMarker>
-        </CustomMap>
+          >
+            <CustomMarker
+              coordinate={{
+                latitude: latitude,
+                longitude: longitude
+              }}
+            ></CustomMarker>
+          </CustomMap>
 
 
-        {/*
+          {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
           <DeleteUser children= id></DeleteUser>>
         </Text>
         */}
-        
-        {ownProfile?  
-          // Cambiar de idioma
-          <>
-            {/* <Text style={styles.titlePicker}> Idioma </Text> */}
 
-            <Picker
-                    selectedValue={currentLanguage}
-                    style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) =>
-                        changeLanguage(itemValue)
-                    }>
-                    <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />          
-                    <Picker.Item label="Castellano" value="es" />
-                    <Picker.Item label="Catalán" value="cat" />
-          </Picker>
-            
+          {ownProfile ?
+            // Cambiar de idioma
+            <>
+              {/* <Text style={styles.titlePicker}> Idioma </Text> */}
+
+              <Picker
+                selectedValue={currentLanguage}
+                style={styles.picker}
+                onValueChange={(itemValue, itemIndex) =>
+                  changeLanguage(itemValue)
+                }>
+                <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />
+                <Picker.Item label="Castellano" value="es" />
+                <Picker.Item label="Catalán" value="cat" />
+              </Picker>
+
             </>
-          : 
-          
-          <Button
-            onPress={() => {Alert.alert(
-              "Denunciado" ,
-              "Has reportado a este usuario",
-              [{text: "Aceptar"}]
-              )}}
-            title="Reportar usuario"
-            color="#FF0000" //azul iconico
-          />
-        
-        }
+            :
+
+            <Button
+              onPress={() => {
+                Alert.alert(
+                  "Denunciado",
+                  "Has reportado a este usuario",
+                  [{ text: "Aceptar" }]
+                )
+              }}
+              title="Reportar usuario"
+              color="#FF0000" //azul iconico
+            />
+
+          }
 
         </View>
       </ScrollView>
-      <NavigationBar  navigation={navigation} profile={true}/>
-      </>
+      <NavigationBar navigation={navigation} profile={true} />
+    </>
   );
 
 
@@ -475,28 +479,28 @@ boton para cambiar idiomas
 
 const styles = StyleSheet.create({
   container: {
-//    flex: 1,
+    //    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white'
   },
   container2: {
-//    flex: 1,
+    //    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: "row",
     padding: 0
-    
+
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 2,
-    margin : 10,
+    margin: 10,
     borderRadius: 4,
     elevation: 3,
-    width: '25%',    
+    width: '25%',
     backgroundColor: '#a2cff0',
   },
   item: {
@@ -508,7 +512,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     //fontFamily: "Cochin",
     fontSize: 20,
-    margin:10,
+    margin: 10,
     fontStyle: 'italic'
   },
   text2: {
@@ -533,7 +537,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     //fontFamily: "Cochin",
     fontSize: 20,
-    margin:10,
+    margin: 10,
   },
   deleteButton: {
     alignItems: "center",
@@ -549,7 +553,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-    
+
   },
   followButon: {
     width: '100%',
@@ -557,7 +561,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10
-},
+  },
   textFollow: {
     fontSize: 18,
     fontWeight: 'bold'

@@ -35,7 +35,7 @@ exports.getMyConversations = async (req, res) => {
         await Conversation.find({ members: {$in: [userId]} }, (erro, conversations) => {
             //console.log(conversations)
             res.status(200).json(conversations)
-        }).populate([{path: 'productId', populate : {path: 'img'}}, {path: 'members', select: {userId}}]).clone()
+        }).populate([{path: 'productId', populate : {path: 'img'}}, {path: 'members', select: {userId: 1}}]).clone()
        
     } catch (error) {
         res.status(404).json(error)

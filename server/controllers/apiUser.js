@@ -174,8 +174,7 @@ exports.getUserProducts = async (req, res) => {
   try {
 
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("products");
-    
+    const user = await User.findById({_id: userId}).populate({path: 'products', populate: {path: 'img'}});
     console.log(user)
     res.status(200).json(user.products)
   } catch (error) {
@@ -437,7 +436,7 @@ exports.getUserWishlist = async (req, res) => {
       console.log(user.wishlist)
       console.log(user);
      res.status(200).json(user.wishlist);
-    }).populate({path:"wishlist", populate: { path: 'img'}});
+    }).populate("wishlist");
   } catch (error) {
     res.status(400).json(error)
   }

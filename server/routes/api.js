@@ -250,9 +250,12 @@ module.exports = function(app) {
   router.route('/report/nosolved/:userReported')
   .get(authenticateJWT, reportController.readNoSolvedUserReports);
 
+  router.route('/report/nosolved/')
+  .get(authenticateJWT, reportController.readNoSolvedReports);
+
   // Close Report with id = id
   router.route('/report/close/:id')
-    .put(/*authenticateJWT,*/ reportController.closeReport);
+    .put(authenticateJWT, reportController.closeReport);
   
   // Delete Report with id = id
   router.route('/report/delete/:id')

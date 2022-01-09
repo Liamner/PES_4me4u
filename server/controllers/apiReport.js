@@ -10,10 +10,10 @@ const userController = require('./apiProduct.js');
 
 exports.readAllReports =  async (req, res) => {
 
-  if ('ADMIN' != req.user.role) {
+  /*if ('ADMIN' != req.user.role) {
     res.status(401).json({error: "Do not have permission"})
     return;
-  }
+  }*/
 
   try {
     const report = await Report.find();
@@ -62,32 +62,55 @@ exports.readNoSolvedUserReports = async (req, res) => {
     }
   };
 
+  exports.readNoSolvedReports = async (req, res) => {
+
+    /*if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }*/
+    
+    const user = await User.findById({_id: req.user.id});
+
+    if (user.role != 'ADMIN') {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+
+
+      try {
+        const report = await Report.find({solved: false});
+    
+        console.log("Reading No Solved Reports: ");
+    
+        res.status(200).json(reports);
+      } catch (error) {
+        res.status(404).json(error.message);
+        console.log(error.message);
+      }
+    };
+
 exports.closeReport = async (req, res) => {
 
-  if ('ADMIN' != req.user.role) {
+  /*if ('ADMIN' != req.user.role) {
     res.status(401).json({error: "Do not have permission"})
     return;
-  }
+  }*/
 
     try{
-        let report = await Report.findById({_id: req.params.id});
+        const report = await Report.findById({_id: req.params.id});
         report.solved = true;
         report.strike = req.body.strike;
         
-        if (req.body.strike == true) {
+        if (report.strike == true) {
           
           let user = await User.findById(report.userReported);
-          
-          if (report.relatedProduct != null) {
           let product = await Product.findById(report.relatedProduct);
-          let req1, res1;
-          req1.user.id = report.userReported;
-          req1.params.id = report.relatedProduct;
-          productController.deleteProduct(req1,res1);
+          if (product != null) {
+            product.delete() //modificar amb crides
         } 
 
         user.strikes ++;
-       //if (user.strikes >= 3) //user.deleteUser(); 
+       if (user.strikes >= 3) user.deleteUser(); //modificar amb crides
       }
         report.save();
         res.status(200).json(report);

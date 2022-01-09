@@ -31,14 +31,14 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
     console.log('llamada hecha');
   };
   React.useEffect(() => {
-    if(route.params != null )  getPNameInfo();
-  }, []);  
-  
+    if (route.params != null) getPNameInfo();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <View style={[styles.row, {marginTop: 50}]}>
+      <View style={[styles.row, { marginTop: 50 }]}>
         <TextInput
-          style={{width: '80%'}}
+          style={{ width: '80%' }}
           onChangeText={onChangeText}
           value={text}
           placeholder="Buscar..."
@@ -48,14 +48,14 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           title="Buscar"
         />
       </View>
-			<View style={styles.row}>
+      <View style={styles.row}>
         <Picker
-          style={{width: '50%'}}
+          style={{ width: '50%' }}
           selectedValue={category}
           onValueChange={(itemValue, itemIndex) =>
             setCategory(itemValue)}
         >
-          <Picker.Item label="Categoria" />          
+          <Picker.Item label="Categoria" />
           <Picker.Item label="fashion" value="fashion" />
           <Picker.Item label="computer" value="computer" />
           <Picker.Item label="homeApplicances" value="homeApplicances" />
@@ -69,27 +69,27 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           <Picker.Item label="games" value="games" />
           <Picker.Item label="other" value="other" />
         </Picker>
-				<Picker
-          style={{width: '50%'}}
+        <Picker
+          style={{ width: '50%' }}
           selectedValue={category}
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)}
         >
-          <Picker.Item label="Tipo intercambio" />          
+          <Picker.Item label="Tipo intercambio" />
           <Picker.Item label="Prestar" value="provide" />
           <Picker.Item label="Intercambiar" value="exhange" />
           <Picker.Item label="Dar" value="present" />
         </Picker>
-			</View>
-        <FlatList
-          numColumns={2}
-          data={products}
-          renderItem={({ item }) => (
-            <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId}/>
-          )}
-          keyExtractor={item => item._id}
-        />
-        <NavigationBar navigation={navigation} casa={true}/>
+      </View>
+      <FlatList
+        numColumns={2}
+        data={products}
+        renderItem={({ item }) => (
+          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+        )}
+        keyExtractor={item => item._id}
+      />
+      <NavigationBar navigation={navigation} search={true} />
     </View>
   );
 }

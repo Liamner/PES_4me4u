@@ -1,46 +1,52 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Image } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 
 type Props = {
   navigation: any,
   casa?: boolean,
-  corazon?: boolean,
+  search?: boolean,
   upload?: boolean,
   chat?: boolean,
   profile?: boolean,
 }
 
-export function NavigationBar({ navigation, casa, corazon, upload, chat, profile }: Props) {
+export function NavigationBar({ navigation, casa, search, upload, chat, profile }: Props) {
+  var highlight = '#111'
+  var normal = '#111'
   return (
     <>
       <View style={styles.navigator}>
         <TouchableOpacity onPress={() => navigation.navigate("FirstScreen")}>
-          {casa && <Image source={require('../images/selected/casa.png')} style={styles.icono} />}
-          {!casa && <Image source={require('../images/noSelected/casa.png')} style={styles.icono} />}
+          {casa && <Icon name='home' size={30} color={highlight} />}
+          {!casa && <Icon name='home-outline' size={30} color={normal} />}
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("ProductSearch")}>
-          {corazon && <Image source={require('../images/search.png')} style={styles.icono} />}
-          {!corazon && <Image source={require('../images/search.png')} style={styles.icono} />}
+          {search && <Icon name='search' size={30} color={highlight}/>}
+          {!search && <Icon name='search-outline' size={30} color={normal}/>}
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("CreateProduct")}>
-          {upload && <Image source={require('../images/selected/add.png')} style={styles.icono} />}
-          {!upload && <Image source={require('../images/noSelected/add.png')} style={styles.icono} />}
+          {upload && <Icon name='add-circle' size={30} color={highlight}/>}
+          {!upload && <Icon name='add-circle-outline' size={30} color={normal}/>}
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("TestScreen")} >
-          {chat && <Image source={require('../images/selected/chat.png')} style={styles.icono} />}
-          {!chat && <Image source={require('../images/noSelected/chat.png')} style={styles.icono} />}
+          {chat && <Icon name='chatbubble-ellipses' size={30} color={highlight}/>}
+          {!chat && <Icon name='chatbubble-ellipses-outline' size={30} color={normal}/>}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("UserProducts", { id: '' })} >
-          {chat && <Image source={require('../images/selected/chat.png')} style={styles.icono} />}
-          {!chat && <Image source={require('../images/noSelected/chat.png')} style={styles.icono} />}
+          {chat && <Icon name='chatbubble-ellipses' size={30} color={highlight}/>}
+          {!chat && <Icon name='chatbubble-ellipses-outline' size={30} color={normal}/>}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("UserRead")}>
-          {profile && <Image source={require('../images/selected/profile.png')} style={styles.icono} />}
-          {!profile && <Image source={require('../images/noSelected/profile.png')} style={styles.icono} />}
+          {profile && <Icon name='person' size={30} color={highlight}/>}
+          {!profile && <Icon name='person-outline' size={30} color={normal}/>}
         </TouchableOpacity>
       </View>
     </>
@@ -94,8 +100,8 @@ const styles = StyleSheet.create({
   navigator: {
     height: 45,
     borderColor: '#5e5c57',
+    backgroundColor: "#a2cff0",
     borderWidth: 1,
-    backgroundColor: '#e2e2e1',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

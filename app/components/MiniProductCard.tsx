@@ -19,7 +19,7 @@ type CardProps = {
 
 export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos }: CardProps) {
   var prestar = false;
-  var intercambiar = true;
+  var intercambiar = false;
   var dar = false;
   arrayTratos.forEach(element => {
     if (element == "exchange") intercambiar = true;

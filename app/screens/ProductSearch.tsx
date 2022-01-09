@@ -77,7 +77,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
         >
           <Picker.Item label="Tipo intercambio" />
           <Picker.Item label="Prestar" value="provide" />
-          <Picker.Item label="Intercambiar" value="exhange" />
+          <Picker.Item label="Intercambiar" value="exchange" />
           <Picker.Item label="Dar" value="present" />
         </Picker>
       </View>

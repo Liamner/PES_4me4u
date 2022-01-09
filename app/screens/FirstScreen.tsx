@@ -48,14 +48,14 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   const getData = async () => {
     try {
       const value = await retrieveSession()
-      if(value !== null) {
-          setSession(value)
-          getRecentlyViewedProducts(value.id)
+      if (value !== null) {
+        setSession(value)
+        getRecentlyViewedProducts(value.id)
       }
       else {
-          console.log("empty")
+        console.log("empty")
       }
-    } catch(e) {
+    } catch (e) {
       console.log(e)
     }
     console.log(session)
@@ -63,7 +63,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 
   const getRecentlyViewedProducts = async (userid) => {
     console.log('session:' + userid)
-    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid+'/productsRecentlyViewed');
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid + '/productsRecentlyViewed');
     console.log(response.data)
     if (response.data.length != 0) {
       setIsRecentlyViewed(true)

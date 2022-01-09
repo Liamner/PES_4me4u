@@ -16,7 +16,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const uid = '61b09c0f9482049de40b74f3';
   //const pid = '61b64a52d4851901d035ed57';
   const pid = route.params;
-  console.log("pid : " + pid);
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -68,9 +67,11 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
 
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
-  /*  exchange.pop();
+  exchange.pop();
     let aux = response.data.exchange;
-      switch (aux) {
+    aux.forEach(element => {
+      console.log(element);
+      switch (element) {
         case "exchange":
           exchange.push({ name:'#intercambio', key: '1'})
           break;
@@ -78,14 +79,15 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           exchange.push({ name:'#prestamo', key: '2'})
           break;
           case "6193a583e47e769eeaa7a978":
-        //case "present":
+        case "present":
           exchange.push({ name:'#regalo', key: '3'})
           break;
         default:
           exchange.push({ name:'Perritos frios', key: '0'})
           break;
-      }
-    });*/
+      }}
+    );
+      
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -127,11 +129,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     getCorrectStateType(response);
     setUserID(response.data.userId);
     setUser(response.data.username);
-    //images
 
-    // //Optional
-    // if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    // else setDescription(response.data.description);
     //Optional
     if(response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
     else setDescription("Descripción: " + response.data.description);
@@ -153,10 +151,9 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const getUserInfo = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+ userid);
     //Required
-    //setUser(response.data.userId);
+    setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
-    //console.log(userid)
   };
 
   

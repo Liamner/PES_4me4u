@@ -49,7 +49,7 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
   }
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("ProductRead", id)}>
+      <TouchableOpacity onPress={() => navigation.navigate("ProductRead", id)} style={{height: '60%'}}>
         <Image source={{ uri: imageUri }} style={styles.cameraImage} />
       </TouchableOpacity>
       <View
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   cameraImage: {
     width: '100%',
-    height: '55%',
+    height: '100%',
     borderRadius: 7,
     alignItems: 'flex-start'
 
@@ -135,11 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
     marginLeft: '5%',
-    width: '90%',
-  },
-  textInput: {
-    marginVertical: 15,
-    height: 60,
     width: '90%',
   },
 });

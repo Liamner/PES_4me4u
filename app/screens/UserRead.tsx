@@ -1,7 +1,7 @@
 import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button } from 'react-native';
+import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button, AsyncStorage } from 'react-native';
 import { CustomMap, CustomMarker} from '../components/MapComponents';
 
 
@@ -85,10 +85,28 @@ boton para cambiar idiomas
     var auxiliar =  {id:  '', ownProfileAux:  '' } ;
 
   const getData = async () => {
-    const sess = await retrieveSession();
-      console.log(sess)
-      setSession(sess);
+    try {
+      const value = await AsyncStorage.getItem('userSession')
+      if(value !== null) {
+        let aux = JSON.parse(value)
+          setSession(aux)
+          if (userid === undefined) {
+            userid = aux.id
+            console.log(userid)
+          }
+          if(userid !== aux.id)
+            setOwnProfile(false); //HK -> a de ser false
+            setOwnProfileAux('N');
+          }
+      else {
+          console.log("empty")
+      }
+    } catch(e) {
+      console.log(e)
     }
+    console.log(session)
+    getUserInfo();
+  }
 
   
  
@@ -112,24 +130,17 @@ boton para cambiar idiomas
 
 
   const getUserInfo = async () => {
-    let aux
-    if (userid != null || userid === "") {
-      aux = userid
-    }
-    else {
-      aux = session.id
-    }
+    console.log('userid: ' + userid)
+    console.log(session)
+    
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + aux);
+
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid);
 
     setEmail(response.data.email);
     setName(response.data.userId);
-    if(aux !== session.id)
-      setOwnProfile(false); //HK -> a de ser false
-      setOwnProfileAux('N');
-    console.log('nuestro perfil? ' + ownProfile);
 
-    userid = aux;
+    console.log('nuestro perfil? ' + ownProfile);
 
     console.log('sol ' + userid + ' sol');
 
@@ -234,7 +245,6 @@ boton para cambiar idiomas
 
   React.useEffect(() => {
     getData();
-    getUserInfo();
 
     // Alert.alert(
     //   "Desea cargar este perfil?" ,
@@ -244,7 +254,7 @@ boton para cambiar idiomas
 
 
     auxiliar =  {id:  userid, ownProfileAux:  ownProfileAux } ;
-    console.log(session.id + ' ' + session.token + ' ' + session.user);
+    console.log('session:' + session.id + ' ' + session.token + ' ' + session.user);
 
 
     console.log('cosa: ' +  userid + ' '+ ownProfileAux );

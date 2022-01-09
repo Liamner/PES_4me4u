@@ -4,6 +4,7 @@ const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const Report = require('../models/report.js')
 const jwt = require('jsonwebtoken');
+const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
 
 
@@ -118,7 +119,7 @@ exports.closeReport = async (req, res) => {
 }
 
 exports.createReport = async (req, res) => {
-  const report = new Report();
+  let report = new Report();
   report.userReporting = req.user.id;
   report.userReported = req.body.userReported;  
   report.description = req.body.description;
@@ -127,12 +128,13 @@ exports.createReport = async (req, res) => {
  
   try {   
   const UserReporting = await User.findOne({_id: req.user.id});
-  if (userReporting == null) res.status(404).json({error:"UserReporting not found"});
+  if (UserReporting == null) res.status(404).json({error:"UserReporting not found"});
 
   const UserReported = await User.findOne({_id: req.body.userReported});
-  if (userReported == null) res.status(404).json({error:"UserReported not found"});
+  if (UserReported == null) res.status(404).json({error:"UserReported not found"});
     
   await report.save();
+  adminController.increaseBlockedUsers();
   res.status(201).json(report);
 
   } catch (error) {

@@ -30,6 +30,8 @@ export type RootStackParamList = {
   UserUpdate:undefined;
   ProductRead: undefined;
   UserProducts: undefined;
+  ChatList: undefined;
+  ChatView: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -38,8 +40,6 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >;
 
 export type RootTabParamList = {
-  ActualizarEstadoProducto: undefined;
-  TabTwo: undefined;
   EditProduct: undefined;
   ViewProduct: undefined;
   DeleteButton: undefined;
@@ -54,13 +54,11 @@ export type RootTabParamList = {
   ProductRead: undefined;
   RateUser: undefined;
   SearchProduct: undefined;
-
+  ChatList: undefined;
+  ChatView: undefined;
   UserWishlist: undefined;
   UserProducts: undefined;
-
   UserUpdate:undefined;
-
-  
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

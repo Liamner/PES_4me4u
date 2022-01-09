@@ -34,7 +34,7 @@ export function NavigationBar({ navigation, casa, search, upload, chat, profile 
           {!upload && <Icon name='add-circle-outline' size={30} color={normal}/>}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate("TestScreen")} >
+        <TouchableOpacity onPress={() => navigation.navigate("ChatList")} >
           {chat && <Icon name='chatbubble-ellipses' size={30} color={highlight}/>}
           {!chat && <Icon name='chatbubble-ellipses-outline' size={30} color={normal}/>}
         </TouchableOpacity>

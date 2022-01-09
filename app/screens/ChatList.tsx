@@ -1,41 +1,81 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, FlatList, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, FlatList, Pressable, Image } from 'react-native';
 import axios from 'axios';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import retrieveSession from '../hooks/retrieveSession';
+import NavigationBar from '../components/NavigationBar';
 
 export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>) {
   const [chats, setChats] = useState();
-
-  const getConversation = async () => {
-    const config = {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmI4MDg2Yjc0OGU4Y2I1MTViNzk4ZiIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2NDA3OTg0NDQsImV4cCI6MTY0MDk3MTI0NH0.KIPbKJw1Bc0UF3Ld4feu3rWFEml9lD8IMl-TNVMU6dQ`
-        }
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  })
+  const getData = async () => {
+    try {
+      const value = await retrieveSession();
+      if (value !== null) {
+        setSession(value)
+        getConversation(value.token);
       }
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/user', config);
-      setChats(response.data);
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const getConversation = async (token) => {
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/mine', config);
+    setChats(response.data);
+    console.log(response.data)
   };
 
   React.useEffect(() => {
-    getConversation();
+    getData();
   }, []);
-  
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.flex}>
         <FlatList
           data={chats}
           renderItem={({ item }) => (
-            <Pressable onPress={()=>navigation.navigate('ChatView', item._id)}>
-                <><Text>{item._id}</Text><Text>{item.members[0]}</Text><Text>{item.members[1]}</Text><Text>----</Text></>
+            <Pressable onPress={() => navigation.navigate('ChatView', item._id)}>
+              <View style={styles.row}>
+                <View style={{ width: '40%' }}>
+                  <Image source={{ uri: item.productId.img[0].url }} style={styles.image} />
+                </View>
+                <View style={{ width: '46%' }}>
+                  <Text style={styles.title} numberOfLines={2}>{item.productId.name}</Text>
+                  
+                  {item.members[0]._id != session.id ?
+                    <Text>Hablando con {item.members[0].userId}</Text>
+                    :
+                    <Text>Hablando con {item.members[1].userId}</Text>
+                  }
+                  {item.productId.userId == session.id ?
+                    <Text>sobre tu producto</Text>
+                    :
+                    <Text>sobre su producto</Text>
+                  }
+                </View>
+              </View>
             </Pressable>
           )}
           keyExtractor={item => item._id}
-          />
-      </ScrollView>
+        />
+      <NavigationBar navigation={navigation} chat={true} />
     </View>
   );
 }
@@ -43,15 +83,24 @@ export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   flex: {
     flex: 1,
   },
   row: {
+    height: 140,
     flexDirection: 'row',
-    alignSelf: 'center',
-    marginHorizontal: '10%',
+    alignSelf: 'flex-start',
+    marginHorizontal: '2%',
     marginVertical: 5,
+  },
+  image: {
+    width: 140,
+    height: '100%',
+    borderRadius: 7,
+  },
+  title: {
+    fontSize: 25,
   },
 });

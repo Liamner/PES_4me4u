@@ -10,6 +10,8 @@ import '../assets/i18n/i18n';
 import ProductCard from '../components/ProductCard';
 import MiniProductCard from '../components/MiniProductCard';
 import NavigationBar from '../components/NavigationBar'
+import retrieveSession from '../hooks/retrieveSession';
+import { json } from 'express';
 
 interface ProductImage {
   __v: number;
@@ -43,18 +45,29 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     token: ""
   });
 
-  const getData = async (id) => {
-    const sess = await retrieveSession();
-    console.log(sess)
-    setSession(sess);
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if(value !== null) {
+          setSession(value)
+          getRecentlyViewedProducts(value.id)
+      }
+      else {
+          console.log("empty")
+      }
+    } catch(e) {
+      console.log(e)
+    }
+    console.log(session)
   }
 
-  const getRecentlyViewedProducts = async () => {
-    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+session.id+'/productsRecentlyViewed');
+  const getRecentlyViewedProducts = async (userid) => {
+    console.log('session:' + userid)
+    const response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid+'/productsRecentlyViewed');
     console.log(response.data)
-    setRecentlyViewedProducts(response.data);
-    if (response.data.lenth != 0) {
+    if (response.data.length != 0) {
       setIsRecentlyViewed(true)
+      setRecentlyViewedProducts(response.data);
     }
 
   };
@@ -65,8 +78,8 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     if (response.data.length == 0) setNoProduct(true)
   };
   React.useEffect(() => {
+    getData();
     getProducts();
-    getRecentlyViewedProducts();
   }, []);
 
   const DATA = [

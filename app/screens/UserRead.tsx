@@ -70,7 +70,7 @@ boton para cambiar idiomas
     const [selectedLanguage, setSelectedLanguage] = React.useState();
 
     const {t, i18n} = useTranslation();
-    const [currentLanguage,setLanguage] =i18n.language;
+    const [currentLanguage,setLanguage] =useState('');
   
     
     //const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 

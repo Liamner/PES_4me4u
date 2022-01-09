@@ -9,8 +9,7 @@ import retrieveSession from '../hooks/retrieveSession';
 
 export default function ChatView({ navigation, route }: RootTabScreenProps<'ChatView'>) {
   var converid = route.params;
-  var chatMessage
-  const [msgs, setMsgs] = useState("hola")
+  const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
     id: "",
@@ -39,6 +38,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       }
     }
     let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/' + converid, config);
+    console.log(response.data)
     setMsgs(response.data);
   };
 
@@ -47,8 +47,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     getConversation();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     console.log('Message: ' + newMessage)
     const message = {
       sender: session.id,
@@ -69,7 +68,13 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
 
   return (
     <View style={styles.container}>
-      <Text>{msgs}</Text>
+      <FlatList
+          data={msgs}
+          renderItem={({ item }) => (
+            <Text>{item.text}</Text>
+          )}
+          keyExtractor={item => item._id}
+        />
       <TextInput
         style={{ height: 40, borderWidth: 2, top: 600 }}
         autoCorrect={false}

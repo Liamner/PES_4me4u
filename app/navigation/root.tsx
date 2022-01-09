@@ -19,12 +19,12 @@ import ProductSearch from '../screens/ProductSearch';
 import WishList from '../screens/UserWishlist';
 import UserUpdate from '../screens/UserUpdate';
 import ChatList from '../screens/ChatList';
+import ChatView from '../screens/ChatView';
 
 import UserProducts from '../screens/UserProducts';
-
-import NavigationBar from '../components/NavigationBar';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -38,6 +38,7 @@ export default function RootNavigator() {
       <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: true, headerBackVisible: false }} />    
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false  }} /> 
       <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true }} /> 
+      <Stack.Screen name="ChatView" component={ChatView} options={{ headerShown: true }} /> 
       <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: true }} /> 
       <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: true }} /> 
       <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: true }} />

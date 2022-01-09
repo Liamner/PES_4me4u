@@ -362,7 +362,7 @@ module.exports = function(app) {
 
 
     // get my conversations
-    .get(authenticateJWT, conversationController.getMyConversations)
+    router.route('/conversation/mine').get(authenticateJWT, conversationController.getMyConversations)
 
 
   router.route('/message')

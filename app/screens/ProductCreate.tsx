@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { Button, Platform, ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import EditScreenInfo from '../components/EditScreenInfo';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { TextInput, Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
-import { resolvePlugin } from '@babel/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NavigationBar from '../components/NavigationBar';
+import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
+  const [pid, setProductID] = React.useState('');
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState();
@@ -23,7 +26,33 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const [image5, setImage5] = React.useState(null);
   const [image6, setImage6] = React.useState(null);
   const imageArray = [image, image2, image3, image4, image5, image6];
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+})
+
+const {t, i18n} = useTranslation();
+const [currentLanguage,setLanguage] =useState('cat');
+
+const getData = async () => {
+    try {
+        const value = await AsyncStorage.getItem('userSession')
+        if(value !== null) {
+            setSession(JSON.parse(value))
+            console.log(value)
+        }
+        else {
+            console.log("empty")
+        }
+    } catch(e) {
+        console.log(e)
+    }
+  }
+  const [newImages, setNewImages] = React.useState([]);
+
   React.useEffect(() => {
+    getData();
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -33,6 +62,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       }
     })();
   }, []);
+
   const setImageById = (id: Number, uri: string) => {
     if (uri != '') {
       if (id == 1) setImage(uri)
@@ -51,22 +81,24 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       if (id == 6) setImage6(null)
     }
   }
+
+
   const unPickImage = async (id: Number) => {
     Alert.alert(
-      '¿Que quieres hacer con tu foto?',
+     t('¿Que quieres hacer con tu foto?'),
       '',
       [
         {
-          text: 'Eliminar foto',
+          text: t('Eliminar foto'),
           onPress: () => {
             setImageById(id, '');
           },
           style: 'default',
         },
         {
-          text: 'Hacer una foto',
+          text: t('Cambiar foto'),
           onPress: () => {
-            setImageById(id, '');
+            //setImageById(id, '');
             pickImage(id);
           }
         },
@@ -75,6 +107,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     );
 
   }
+
   const pickImage = async (id?: Number) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -83,67 +116,134 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       quality: 1,
     });
 
-    console.log(result);
-
-    if (!result.cancelled) {
-      if (!image || id == 1) setImage(result.uri);
-      else if (!image2 || id == 2) setImage2(result.uri);
-      else if (!image3 || id == 3) setImage3(result.uri);
-      else if (!image4 || id == 4) setImage4(result.uri);
-      else if (!image5 || id == 5) setImage5(result.uri);
-      else if (!image6 || id == 6) setImage6(result.uri);
-
+    if (!result.cancelled ) {
+    setImageById(id, '');
+      
+    if (id == 1){
+      setImage(result.uri);
+      newImages.push(result.uri);
+    } 
+    else if(id == 2){
+      setImage2(result.uri);
+      newImages.push(result.uri);
     }
+    else if(id == 3){
+      setImage3(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 4){
+      setImage4(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 5){
+      setImage5(result.uri);
+      newImages.push(result.uri);
+    }
+    else if(id == 6){
+      setImage6(result.uri);
+      newImages.push(result.uri);
+    }  
+  }
   };
+
+  const setImages = async (response: AxiosResponse<unknown, any>) => {
+    console.log(newImages);
+
+      newImages.forEach( async (element) => {
+        console.log('Empieza post de ' + element);
+        const uri = element;
+        const uriParts = uri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        const formData = new FormData();
+        formData.append('img', {
+          uri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+        console.log(formData);
+
+        console.log('pid: ' + response.data._id);
+  
+        await axios
+          .post('https://app4me4u.herokuapp.com/api/image/' + response.data._id, formData, {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            }})
+          .then(function(response) {
+            console.log("New images posted")
+            //console.log(response)
+          })
+          .catch(function(error) {
+            console.log(error);
+        });
+      });
+  }
+
   const sendApi = async () => {
-    console.log("sending")
+    
+    console.log("sending product")
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${session.token}`
       }
     }
-    let response = await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
+    await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
       name: name,
-      categories: [selectedCategory],
+      categories: selectedCategory,
       description: description,
       exchange: "present",
       state: "available",
-      owner: "owner"
-    }, config).then(function (response) {
-      console.log(response);
-    })
-      .catch(function (error) {
-        console.log(error);
+      }, config)
+      .then(function (response) {
+        setImages(response);
+      })
+        .catch(function (error) {
+          console.log(error);
       });
+
+      
+
   }
   return (
+    <>
     <ScrollView>
       <View style={styles.container}>
         <TextInput
-          label="Nombre del Producto"
+          label= {t("Nombre del Producto")}
           style={styles.textInput}
           onChangeText={onChangeName}
           value={name}
         />
         <TextInput
-          label="Descripción"
+          label={t("Descripción")}
           style={styles.textInput}
           onChangeText={onChangeDescription}
           value={description}
         />
         <Text
-          style={styles.title}> Categorias </Text>
+           style={styles.title}> {t('Categorias')} </Text>
         <Picker
           selectedValue={selectedCategory}
           style={styles.picker}
           onValueChange={(itemValue, itemIndex) =>
             setSelectedCategory(itemValue)
           }>
-          <Picker.Item label="Selecciona un categoria..." value="default" />
-          <Picker.Item label="Tecnologia" value="tech" />
-          <Picker.Item label="Casas" value="house" />
+          <Picker.Item label={t("Seleccione un categoría...")} value="default" />          
+          <Picker.Item label="fashion" value="fashion" />
+          <Picker.Item label="computer" value="computer" />
+          <Picker.Item label="homeApplicances" value="homeApplicances" />
+          <Picker.Item label="sports" value="sports" />
+          <Picker.Item label="home" value="home" />
+          <Picker.Item label="videogames" value="videogames" />
+          <Picker.Item label="movies" value="movies" />
+          <Picker.Item label="children" value="children" />
+          <Picker.Item label="construction" value="construction" />
+          <Picker.Item label="pets" value="pets" />
+          <Picker.Item label="games" value="games" />
+          <Picker.Item label="other" value="other" />
         </Picker>
-        <Text style={[styles.title, { marginTop: 20 }]}> ¿Que quieres hacer con tu producto?</Text>
+        <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Que quieres hacer con tu producto?')}</Text>
         <View
           style={styles.checkbox}>
           <Checkbox
@@ -152,7 +252,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               setCheckedDonar(!checkedDonar);
             }}
           />
-          <Text >Donar</Text>
+          <Text >{t('Donar')}</Text>
         </View>
         <View
           style={styles.checkbox}>
@@ -162,7 +262,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               setCheckedPrestar(!checkedPrestar);
             }}
           />
-          <Text >Prestar</Text>
+          <Text >{t('Prestar')}</Text>
         </View>
         <View
           style={styles.checkbox}>
@@ -172,7 +272,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               setCheckedIntercambiar(!checkedIntercambiar);
             }}
           />
-          <Text >Intercambiar</Text>
+          <Text >{t('Intercambiar')}</Text>
         </View>
         <View
           style={{
@@ -185,7 +285,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image }} />
             </TouchableOpacity>}
           {!image &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(1)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image2 &&
@@ -193,7 +293,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image2 }} />
             </TouchableOpacity>}
           {!image2 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(2)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image3 &&
@@ -201,7 +301,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image3 }} />
             </TouchableOpacity>}
           {!image3 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(3)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </ View>
@@ -215,7 +315,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image4 }} />
             </TouchableOpacity>}
           {!image4 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(4)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image5 &&
@@ -223,7 +323,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image5 }} />
             </TouchableOpacity>}
           {!image5 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(5)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
           {image6 &&
@@ -231,14 +331,16 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               <Image style={styles.image} source={{ uri: image6 }} />
             </TouchableOpacity>}
           {!image6 &&
-            <TouchableOpacity style={styles.notImage} onPress={pickImage}>
+            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(6)}>
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </View>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> Subir Producto !</Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> Cancelar </Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Subir Producto!')}</Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> {t('Cancelar')} </Text></Pressable>
       </View>
     </ScrollView>
+    <NavigationBar  navigation={navigation} upload={true}/>
+    </>
   );
 }
 
@@ -247,6 +349,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 45
+  },
+  icono: {
+    width: 35,
+    height: 35,
+  },
+  navigator: {
+    borderRadius: 5,
+    height: 45,
+    borderColor: '#5e5c57',
+    borderWidth: 1,
+    backgroundColor: '#e2e2e1',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   button: {
     alignItems: 'center',

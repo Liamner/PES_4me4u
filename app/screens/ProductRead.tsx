@@ -1,4 +1,4 @@
-import { Entypo, Ionicons } from '@expo/vector-icons'; 
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
@@ -6,10 +6,15 @@ import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'rea
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import Layout from '../constants/Layout';
-import { CustomMap, CustomMarker} from '../components/MapComponents';
+import { CustomMap, CustomMarker } from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
+import NavigationBar from '../components/NavigationBar'
 
-export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProduct'>) {
+export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
+
+  const uid = '61b09c0f9482049de40b74f3';
+  //const pid = '61b64a52d4851901d035ed57';
+  const pid = route.params;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -18,20 +23,22 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
-  const [images] = useState([
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '1' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '2' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '3' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '4' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '5' },
-    { link: 'https://images-na.ssl-images-amazon.com/images/I/919WJsLPqUL.jpg', key: '6' },
-  ]);
+  const [images, setImages] = useState([{
+    "_id": "errorerrorerrorerro",
+    "public_id": "errorerrorerrorerror",
+    "url": "https://www.nosolohacking.info/wp-content/uploads/2017/11/error2.jpg",
+    "__v": 0
+  }]);
+  const [hasImages, SetHasImages] = useState(false);
+
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [name, setName] = useState('Cargando...') 
+  const [name, setName] = useState('Cargando...')
   //nombre usuario
-  const [exchange] = useState([{name: 'Cargando...', key: '10'}]);
-  const [categories] = useState([{name: 'Cargando...', key: '10'}]);
+  const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
+  const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
   const [description, setDescription] = useState('Cargando...')
+
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -42,40 +49,46 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    categories.pop();
+    /*categories.pop();
     let aux = response.data.categories;
-    aux.forEach((element: any) => {
-      switch (element) {
-        case "tech":
-          categories.push({name: 'Tecnologia', key: '1'})
+      element: 
+      switch (aux) {
+        case "61797e24b4a4d195aa14be8d":
+          setCategories([{name: 'Tecnologia', key: '1'}])
           break;
-        case "house":
-          categories.push({name: 'Cosas de casa', key: '2'})
+        case "61940e6f0c77883d581cede8":
+          setCategories([{name: 'Jugetes', key: '2'}])
           break;
         default:
+          setCategories([{name: 'GATITOS', key: '0'}])
           break;
       }
-    });
+    });*/
   }
+
 
   const getCorrectExchangeType = (response: AxiosResponse) => {
     exchange.pop();
     let aux = response.data.exchange;
-    aux.forEach((element: any) => {
+    aux.forEach(element => {
       switch (element) {
         case "exchange":
-          exchange.push({ name:'#intercambio', key: '1'})
+          exchange.push({ name: '#intercambio', key: '1' })
           break;
         case "provide":
-          exchange.push({ name:'#prestamo', key: '2'})
+          exchange.push({ name: '#prestamo', key: '2' })
           break;
+        case "6193a583e47e769eeaa7a978":
         case "present":
-          exchange.push({ name:'#regalo', key: '3'})
+          exchange.push({ name: '#regalo', key: '3' })
           break;
         default:
+          exchange.push({ name: 'Perritos frios', key: '0' })
           break;
       }
-    });
+    }
+    );
+
   }
 
   const getCorrectStateType = (response: AxiosResponse) => {
@@ -94,71 +107,109 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
     }
   }
 
+  const saveProduct = async () => {
+    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+      idProduct: pid
+    }).then(function (response) {
+      console.log(response);
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  }
+
 
   const getProductInfo = async () => {
 
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/61785abca305fc21df47d75f');
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
     getCorrectExchangeType(response);
     getCorrectStateType(response);
     setUserID(response.data.userId);
-    //images
-    //https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png
+    setUser(response.data.username);
+    console.log(response.data)
 
     //Optional
-    if(response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
-    else setDescription(response.data.description);
+    if (response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
+    else setDescription("Descripción: " + response.data.description);
+
+    if (response.data.img == null) {
+      SetHasImages(false);
+      setImages([{
+        "_id": "",
+        "public_id": "",
+        "url": "",
+        "__v": -1
+      }]);
+    }
+    else {
+      SetHasImages(true);
+      setImages(response.data.img);
+    }
+    getUserInfo(response.data.userId);
   };
 
-  const getUserInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/'+userid);
+  const getUserInfo = async (userId) => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userId);
     //Required
     setUser(response.data.userId);
     setLatitude(response.data.latitude);
     setLongitude(response.data.longitude);
   };
 
-  getProductInfo()
-  getUserInfo()
-  
+  React.useEffect(() => {
+    getProductInfo();
+  }, []);
+
+
   return (
     <View style={styles.container}>
       <ScrollView>
-        <FlatList
-          data={images}
-          renderItem={({ item }) => ( 
-            <Image
-              style={styles.image}
-              source={{uri: item.link}}
-            />
-          )}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={true}
-          onMomentumScrollEnd={Scroll}
-        />
+        {hasImages ?
+          <FlatList
+            data={images} //ZZZ
+            renderItem={({ item }) => (
+              <Image
+                style={styles.image}
+                source={{ uri: item.url }}
+              />
+            )}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled={true}
+            onMomentumScrollEnd={Scroll}
+          />
+          :
+          null
+        }
         <View style={styles.state}>
-          <Text style={{color: 'white'}}>{`${state}`}</Text>
+          <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>{`${state}`}</Text>
         </View>
-        <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+        {hasImages ?
+          <Text style={styles.smallText}>{`${currentPage} / ${images.length}`} </Text>
+          :
+          null
+        }
+
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText}>Publicado por: {`${user}`}</Text>
-        <FlatList 
+        <Text style={styles.smallText} onPress={() => navigation.navigate("OtherUserRead", userid)}>Publicado por: {`${user}`}</Text>
+        <FlatList
           style={styles.flatlist}
           horizontal={true}
           data={exchange}
-          renderItem={({item}) => (
-            <Text style={styles.tags}> {item.name} </Text>
+          renderItem={({ item }) => (
+            <Text style={styles.tags}>{item.name}</Text>
           )}
         />
-        <FlatList 
+        <FlatList
           style={styles.flatlist}
           horizontal={true}
           data={categories}
-          renderItem={({item}) => (
-            <Text style={styles.tags}> {item.name} </Text>
+          renderItem={({ item }) => (
+            <Text style={styles.tags}>{item.name}</Text>
           )}
         />
         <Text style={styles.mediumText}>{`${description}`}</Text>
@@ -173,7 +224,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
             <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={()=>console.log("boton guardar pulsado")}>
+        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
           <View style={styles.row}>
             <Entypo
               name="save"
@@ -189,7 +240,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
             size={24}
             color="#333"
           />
-          <Text style={styles.normalText}>Ubicación</Text> 
+          <Text style={styles.normalText}>Ubicación</Text>
         </View>
         <CustomMap
           style={styles.mapview}
@@ -208,6 +259,7 @@ export default function ViewProduct({ navigation }: RootTabScreenProps<'ViewProd
           ></CustomMarker>
         </CustomMap>
       </ScrollView>
+      <NavigationBar navigation={navigation} casa={true} />
     </View>
   );
 }

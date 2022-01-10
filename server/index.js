@@ -16,7 +16,6 @@ app.use(bodyParser.json())
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
-//app.use(cors());
 
 
 const CONNECTION_URL =

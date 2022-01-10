@@ -1,4 +1,9 @@
-import React from 'react'
+import * as React from 'react';
+import { useState } from 'react';
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
+
+
 import {StyleSheet,
     View,
     Text,
@@ -6,6 +11,8 @@ import {StyleSheet,
     Image,
     Dimensions,
     ActivityIndicator,
+    Pressable,
+    Picker,
 } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,7 +20,18 @@ import * as Google from "expo-google-app-auth";
 
 const logoImage = require('../assets/images/logo.png')
 
+
  export default function Login({navigation}) {
+    const {t, i18n} = useTranslation();
+    const [currentLanguage,setLanguage] =useState('es');
+
+
+    const changeLanguage = value => {
+        i18n
+          .changeLanguage(value)
+          .then(() => setLanguage(value))
+          .catch(err => console.log(err));
+      };
 
     const googleSignIn = () => {
         const config = {
@@ -27,7 +45,7 @@ const logoImage = require('../assets/images/logo.png')
         .then((result) => {
             const {type, user} = result;
             if (type === 'success') {
-                console.log(result.accessToken);
+                //console.log(result.accessToken);
                 let u = {
                     Id: result.user.id,
                     userId: result.user.name, 
@@ -105,6 +123,20 @@ const logoImage = require('../assets/images/logo.png')
                             <Text style = {styles.whiteText}>  Continuar con Email</Text>
                         </LinearGradient>
                 </TouchableOpacity>
+
+        
+
+                <Picker
+                    selectedValue={currentLanguage}
+                    style={styles.picker}
+                    onValueChange={(itemValue, itemIndex) =>
+                        changeLanguage(itemValue)
+                    }>
+                    <Picker.Item label={t("Seleccione un idioma...")} value="es" />          
+                    <Picker.Item label="Castellano" value="es" />
+                    <Picker.Item label="Catalán" value="cat" />
+                </Picker>
+
             </View>
         </View>
     );
@@ -141,6 +173,11 @@ const styles = StyleSheet.create({
       },
       whiteText: {
           color: '#fff'
+      },
+      picker: {
+        marginVertical: 10,
+        height: 60,
+        width: '90%',
       },
       button:{
           width: 200,

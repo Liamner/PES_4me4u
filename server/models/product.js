@@ -15,8 +15,8 @@ const ProductSchema = new mongoose.Schema({
         required: true
     },
     categories: {     
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Category',
+        type: mongoose.Schema.Types.String, 
+        ref: 'Category.name',
         required: true 
         
     },
@@ -30,8 +30,8 @@ const ProductSchema = new mongoose.Schema({
     },
     exchange: [{
           
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Type",
+        type: mongoose.Schema.Types.String, 
+        ref: "Type.name",
         required: true 
     }], 
     img: [{

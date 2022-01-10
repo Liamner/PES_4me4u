@@ -164,10 +164,10 @@ module.exports = function(app) {
 
   router.route('/user/:id/levelManage')
     .get(authenticateJWT, userController.levelManage)
-
+  /*
   router.route('/user/:id/rewards')
     .put(authenticateJWT, userController.getUserRewards)
-
+  */
   router.route('/user/:id/AddToWishlist')
     .put(authenticateJWT, userController.addToWishlist)
 

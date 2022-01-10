@@ -305,9 +305,9 @@ exports.readLoans =  async (req, res) => {
   }
 /*
   exports.numCategories = async (req, res) => {
-    await Category.find({}, {name: 1}, (error, categories) => {
-      console.log(categories)
-      //res.status(200).json(categories.name.length)
+    await Category.find({} , (error, categories) => {
+      console.log(categories.name.length)
+      res.status(200).json(categories.name.length)
     })
   }*/
 

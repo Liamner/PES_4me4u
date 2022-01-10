@@ -6,7 +6,7 @@ require('./config/config.js');
 require('dotenv').config();
  
 const app = express()
-
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -14,7 +14,6 @@ app.use(bodyParser.json())
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
-app.use(cors());
 
 // Connect to MongoDB
 

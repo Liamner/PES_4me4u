@@ -9,9 +9,6 @@ const app = express()
 const path = require('path');
 
 
-
-
-
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
@@ -19,7 +16,6 @@ const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
 app.use(cors());
-
 
 // Sockets
 const socketIO = require('socket.io')

@@ -81,10 +81,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
           </View>
           <View style={{ width: '75%' }}>
             <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
-            <View style={styles.row}>
+            <View style={[styles.row, {alignSelf: 'center'}]}>
               <TouchableOpacity
                 onPress={getConversation}
-                style={{ width: 150, marginTop: 5 }}
+                style={{ width: 160, marginTop: 5 }}
               >
                 <LinearGradient
                   colors={['#a2cff0', '#ADE8F4']}
@@ -98,11 +98,11 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={getConversation}
-                style={{ width: 150, marginTop: 5 }}
+                style={{ }}
               >
                 <LinearGradient
                   colors={['#a2cff0', '#ADE8F4']}
-                  style={styles.followButon}
+                  style={styles.refreshButton}
                 >
                   <Icon name='refresh-outline' color={'white'} size={30} />
                 </LinearGradient>
@@ -157,12 +157,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
   },
+  refreshButton: {
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 7,
+    marginTop: 5,
+    marginLeft: '10%'
+  },
   followButon: {
     width: '100%',
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10
+    borderRadius: 7
   },
   textFollow: {
     fontSize: 18,

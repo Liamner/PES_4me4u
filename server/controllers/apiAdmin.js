@@ -324,5 +324,5 @@ exports.readLoans =  async (req, res) => {
 
   }
 
-  // num ecopoints totales
+  // usuarios reportados
   // ecopoints gastados

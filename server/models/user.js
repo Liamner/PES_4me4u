@@ -39,16 +39,17 @@ let usuarioSchema = new Schema({
         default: '2.16992 41° 23′ 16″',
     },*/
     level: {
-        type: String,
-        default: '1',
+        //type: String,
+        type: Number,
+        default: 1,
     },
     ecoPoints: {
         type: Number,
-        default: '10',
+        default: 10,
     },
     score: {
         type: String,
-        default: '5.0',
+        default: 5.0,
     },
     products: [{
         type: Schema.Types.ObjectId, 

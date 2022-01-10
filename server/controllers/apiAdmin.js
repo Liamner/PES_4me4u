@@ -303,13 +303,14 @@ exports.readLoans =  async (req, res) => {
       res.status(400).json(error)
     }
   }
-/*
+
   exports.numCategories = async (req, res) => {
-    await Category.find({} , (error, categories) => {
-      console.log(categories.name.length)
-      res.status(200).json(categories.name.length)
-    })
-  }*/
+    await Category.find((error, categories) => {
+      console.log(categories.length)
+      res.status(200).json(categories.length)
+    }).clone()
+    res.status(400).json({error: 'error in the transaction'})
+  }
 
   // num productos reportados
   // num categorias

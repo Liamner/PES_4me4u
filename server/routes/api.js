@@ -251,7 +251,7 @@ module.exports = function(app) {
     .post(authenticateJWT, reportController.createReport);
 
   // Read reports from userReported = userReported
-    router.route('/report/:userReported')
+    router.route('/report/user/:userReported')
     .get(authenticateJWT, reportController.readUserReports);
   
   // Read all reports
@@ -375,7 +375,7 @@ module.exports = function(app) {
 
     // ADMIN PAGE
   router.route('/admin/transactions').get(adminController.numTransasPorTipo)
-  //router.route('/admin/categories').get(adminController.numCategories)
+  router.route('/admin/categories').get(adminController.numCategories)
   return router;
 
 

@@ -166,10 +166,10 @@ module.exports = function(app) {
 
   router.route('/user/:id/levelManage')
     .get(authenticateJWT, userController.levelManage)
-
+  /*
   router.route('/user/:id/rewards')
     .put(authenticateJWT, userController.getUserRewards)
-
+  */
   router.route('/user/:id/AddToWishlist')
     .put(authenticateJWT, userController.addToWishlist)
 
@@ -253,7 +253,7 @@ module.exports = function(app) {
     .post(authenticateJWT, reportController.createReport);
 
   // Read reports from userReported = userReported
-    router.route('/report/:userReported')
+    router.route('/report/user/:userReported')
     .get(authenticateJWT, reportController.readUserReports);
   
   // Read all reports
@@ -261,7 +261,7 @@ module.exports = function(app) {
     .get(authenticateJWT, reportController.readAllReports);
   
      // Read no solved reports from userReported = userReported
-  router.route('/report/nosolved/:userReported')
+  router.route('/report/nosolveds/:userReported')
   .get(authenticateJWT, reportController.readNoSolvedUserReports);
 
   router.route('/report/nosolved/')
@@ -374,6 +374,11 @@ module.exports = function(app) {
   router.route('/conversation/:conversationId')
     .get(authenticateJWT, messageController.getConversationMessages)
 
+
+    // ADMIN PAGE
+  router.route('/admin/transactions').get(adminController.numTransasPorTipo)
+  router.route('/admin/categories').get(adminController.numCategories)
+  router.route('/admin/productsReported').get(adminController.numPorductosReportados)
   return router;
 
 

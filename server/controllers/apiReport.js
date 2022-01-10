@@ -79,7 +79,7 @@ exports.readNoSolvedUserReports = async (req, res) => {
 
 
       try {
-        const report = await Report.find({solved: false});
+        const reports = await Report.find({solved: false});
     
         console.log("Reading No Solved Reports: ");
     

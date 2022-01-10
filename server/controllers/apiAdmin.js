@@ -1,7 +1,12 @@
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Category = require('../models/category.js');
 const Admin = require('../models/admin.js');
+const Report = require('../models/report.js');
 const Comment = require('../models/comment.js');
+const TradeLoan = require('../models/tradeLoan.js');
+const TradeExchange = require('../models/tradeExchange.js');
+const TradeGive = require('../models/tradeGive.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -272,3 +277,52 @@ exports.readLoans =  async (req, res) => {
       console.log(error.message);
     }
   };
+
+  exports.numTransasPorTipo = async (req, res) => {
+    try {
+      var loans, exchanges, gives;
+      TradeLoan.count({}, (error, sizeLoans) => {
+        loans = sizeLoans;
+        TradeExchange.count({}, (error, sizeExchanges) => {
+          exchanges = sizeExchanges;
+          TradeGive.count({}, (error, sizeGives) => {
+            gives = sizeGives;
+            var result = {
+              tradesLoans: loans,
+              tradesExchange: exchanges,
+              tradesGiven: gives,
+              totalTrades: (loans+exchanges+gives)
+            }
+            res.status(200).json(result)
+          })
+        })
+      })
+      //console.log(TradeLoan.estimatedDocumentCount())
+     
+    } catch (error) {
+      res.status(400).json(error)
+    }
+  }
+
+  exports.numCategories = async (req, res) => {
+    await Category.find((error, categories) => {
+      console.log(categories.length)
+      if (error) {
+        res.status(500).json(error)
+      }
+      res.status(200).json(categories.length)
+    }).clone()
+  }
+
+  exports.numPorductosReportados = async (req,res) => {
+    await Report.distinct('relatedProduct', (error, reports) => {
+      res.status(200).json(reports.length)
+    }).clone()
+  }
+
+  exports.totalEcopoints = async () => {
+
+  }
+
+  // usuarios reportados
+  // ecopoints gastados

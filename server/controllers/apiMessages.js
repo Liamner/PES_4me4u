@@ -30,7 +30,7 @@ exports.getConversationMessages = async (req, res) => {
         console.log('Messages')
         const conversationId = req.params.conversationId
         const messages = await Message.find({
-            convesrationId: conversationId
+            conversationId: conversationId
         });
         res.status(200).json(messages)
     } catch (error) {

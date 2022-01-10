@@ -376,6 +376,7 @@ module.exports = function(app) {
     // ADMIN PAGE
   router.route('/admin/transactions').get(adminController.numTransasPorTipo)
   router.route('/admin/categories').get(adminController.numCategories)
+  router.route('/admin/productsReported').get(adminController.numPorductosReportados)
   return router;
 
 

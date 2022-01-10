@@ -2,6 +2,7 @@ const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const Category = require('../models/category.js');
 const Admin = require('../models/admin.js');
+const Report = require('../models/report.js');
 const Comment = require('../models/comment.js');
 const TradeLoan = require('../models/tradeLoan.js');
 const TradeExchange = require('../models/tradeExchange.js');
@@ -277,7 +278,6 @@ exports.readLoans =  async (req, res) => {
     }
   };
 
-  
   exports.numTransasPorTipo = async (req, res) => {
     try {
       var loans, exchanges, gives;
@@ -307,12 +307,22 @@ exports.readLoans =  async (req, res) => {
   exports.numCategories = async (req, res) => {
     await Category.find((error, categories) => {
       console.log(categories.length)
+      if (error) {
+        res.status(500).json(error)
+      }
       res.status(200).json(categories.length)
     }).clone()
-    res.status(400).json({error: 'error in the transaction'})
   }
 
-  // num productos reportados
-  // num categorias
+  exports.numPorductosReportados = async (req,res) => {
+    await Report.distinct('relatedProduct', (error, reports) => {
+      res.status(200).json(reports.length)
+    }).clone()
+  }
+
+  exports.totalEcopoints = async () => {
+
+  }
+
   // num ecopoints totales
   // ecopoints gastados

@@ -611,28 +611,44 @@ exports.getRecentlyViewed = async (req, res) => {
   }
 };
 
+
 exports.updateRecentlyViewed = async (req, res) => {
   try {
     const userId = req.params.id;
     let idProduct = req.body.idProduct;
 
     User.findById({_id: userId}, async (erro, usersRecentViewed) => {
-      const found = usersRecentViewed.recentlyViewed.includes(idProduct) 
+      let found = false;
+      //console.log(usersRecentViewed.recentlyViewed)
+      
+      if (usersRecentViewed.recentlyViewed) {
+        for (let i = 0; i < usersRecentViewed.recentlyViewed.length; i++)  {
+
+          console.log(usersRecentViewed.recentlyViewed[i]._id)
+          if (usersRecentViewed.recentlyViewed[i]._id == idProduct) found = true;
+          
+          //if(JSON.stringify(idProduct) === JSON.stringify(usersRecentViewed.recentlyViewed[i]._id)) found = true;
+         // if ( idProduct.toString().equals(id)) found = true;
+        }
+     
+      }
       console.log(found)
       if (found) {
         res.status(404).json({error: 'Product already in the list'});
       }
       else {
-        console.log(usersRecentViewed.recentlyViewed.length)
-        if (usersRecentViewed.recentlyViewed.length >= 4) {          
-          console.log(usersRecentViewed.recentlyViewed)
-          console.log(usersRecentViewed.recentlyViewed[0])
-          usersRecentViewed.recentlyViewed.splice(0,1);
-          await usersRecentViewed.save();
-        }
+        if (usersRecentViewed.recentlyViewed) {
+          if (usersRecentViewed.recentlyViewed.length >= 4) {       
+            usersRecentViewed.recentlyViewed.splice(0,1);
+            await usersRecentViewed.save();
+          }
+        }   
         Product.findById({ _id: idProduct }, async (erro, product) => {
           if (product != null) {
-            usersRecentViewed.recentlyViewed.push(product._id);
+            usersRecentViewed.recentlyViewed.push(product);
+            
+            console.log(usersRecentViewed.recentlyViewed)
+            //else usersRecentViewed.recentlyViewed = product._id
             await usersRecentViewed.save();
             res.status(200).json(usersRecentViewed.recentlyViewed);
           }

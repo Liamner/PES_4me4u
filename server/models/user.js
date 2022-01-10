@@ -71,7 +71,7 @@ let usuarioSchema = new Schema({
         type: Number,
         default: 0,
     },
-    exchanges: {
+    changes: {
         type: Number,
         default: 0
     },

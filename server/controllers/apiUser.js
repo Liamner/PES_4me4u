@@ -279,7 +279,7 @@ exports.getRewards = async (req, res) => {
     const user = await User.findById({ _id: req.params.id });
     let ngifts = user.gifts;
     let nloans = user.loans;
-    let nexchanges = user.exchanges;
+    let nexchanges = user.changes;
     let points = user.ecoPoints;
     let rewards = 0;
     let diez = 10;

@@ -4,14 +4,12 @@ import APIService from "../services/API";
 export default class Report extends Component {
 	constructor(props) {
 		super(props);
+		this.onClickStrike = this.onClickStrike.bind(this);
+		this.onClickClose = this.onClickClose.bind(this);
 
 		this.state = {
 			report: props.report
 		}
-	}
-
-	componentDidMount() {
-
 	}
 
 	onClickStrike() {
@@ -41,7 +39,7 @@ export default class Report extends Component {
 	}
 
 	renderType(type) {
-		if (type !== undefined) {
+		if (type === undefined) {
 			return <span>Usuario</span>
 		}
 		else {
@@ -50,7 +48,7 @@ export default class Report extends Component {
 	}
 
 	renderName(product, name) {
-		if (product !== undefined){
+		if (product === undefined) {
 			return <span>{name}</span>
 		}
 		else {
@@ -70,8 +68,11 @@ export default class Report extends Component {
 					{this.renderName(report.relatedProduct, report.userReported)}
 				</td>
 				<td>
-				<span style={{color: 'red'}} onClick={ this.onClickStrike}>Strike</span>
-				<span style={{color: 'orange'}} onClick={ this.onClickClose }>Cerrar</span>
+					{report.description}
+				</td>
+				<td>
+					<span style={{ backgroundColor: 'red', borderRadius: 5, marginRight: 10, padding: 4 }} onClick={this.onClickStrike}>Strike</span>
+					<span style={{ backgroundColor: 'orange', borderRadius: 5, marginRight: 10, padding: 4 }} onClick={this.onClickClose}>Cerrar</span>
 				</td>
 			</tr>
 		);

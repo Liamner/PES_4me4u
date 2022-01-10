@@ -6,7 +6,7 @@ export default class ListCategories extends Component {
     super(props);
 
     this.state = {
-      categories: props.reports
+      categories: props.categories
     };
   }
 

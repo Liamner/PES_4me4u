@@ -24,17 +24,6 @@ class Reports extends Component {
 		);
 	}
 
-	componentDidUpdate() {
-		APIService.get('/report/nosolved/').then(
-			response => {
-				this.setState({
-					reports: response.data,
-					loading: false
-				});
-			}
-		);
-	}
-
 	render() {
 		const { loading, reports } = this.state;
 		return (

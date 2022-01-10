@@ -69,3 +69,28 @@ a:hover {
   font-size: 41px;
   color: #68a8d6;
 }
+
+.reports div {
+  padding-top: 100px;
+  width: 100%;
+}
+
+
+.reports table {
+  padding-top: 100px;
+  border-collapse: collapse;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reports td,th {
+  border: 1px solid #aaa;
+  border-collapse: collapse;
+  text-align: left;
+  padding: 8px;
+}
+
+.reports tr:nth-child(even) {
+  background-color: #dddddd;
+}

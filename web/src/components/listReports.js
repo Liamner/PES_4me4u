@@ -10,17 +10,25 @@ export default class ListPosts extends Component {
     };
   }
 
-  render() {    
+  render() {
     const { reports } = this.state;
 
-    return ( 
-      <table >
-        <tbody >
-          { reports.map(element => {
-              return  <Report key={element._id} report={element} />
-          })}
-        </tbody>
-      </table>
+    return (
+      <div className="reports">
+        <table className="reports">
+          <tbody>
+            <tr>
+              <th>Tipo</th>
+              <th>Reportado</th>
+              <th>Descripción</th>
+              <th>Acción</th>
+            </tr>
+            {reports.map(element => {
+              return <Report key={element._id} report={element} />
+            })}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

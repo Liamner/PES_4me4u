@@ -26,14 +26,7 @@ class Categories extends Component {
 	}
 
 	componentDidUpdate() {
-		APIService.get('/category/').then(
-			response => {
-				this.setState({
-					categories: response.data,
-					loading: false
-				});
-			}
-		);
+		
 	}
 
 	render() {

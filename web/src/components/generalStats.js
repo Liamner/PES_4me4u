@@ -15,32 +15,60 @@ class GeneralStats extends Component {
       numPReps: 150,
       numUsu: 250,
       numUReps: 120,
-      numCateg: 12,
+      numCateg: 10,
       numEcoPoints: 2500,
       numEPGastados: 1200,
-      loading: false
+      loading: true
     };
   }
 
   componentDidMount() {
-		APIService.get('/admin/transactions/').then(
-			response => {
-				this.setState({
-					numTrans: response.data.totalTrades,
+    APIService.get('/admin/transactions/').then(
+      response => {
+        this.setState({
+          numTrans: response.data.totalTrades,
           numPrestar: response.data.tradesLoans,
           numInter: response.data.tradesExchange,
           numDar: response.data.tradesGiven,
-					loading: false
-				});
-			}
-		);
-	}
+        });
+        APIService.get('/product/').then(
+          response => {
+            this.setState({
+              numProd: response.data.length,
+            });
+            APIService.get('/admin/productsReported/').then(
+              response => {
+                this.setState({
+                  numPReps: response.data,
+                });
+                APIService.get('/category/').then(
+                  response => {
+                    this.setState({
+                      numCateg: response.data.length,
+                    });
+                  }
+                );
+                APIService.get('/user/').then(
+                  response => {
+                    this.setState({
+                      numUsu: response.data.length,
+                      loading: false
+                    });
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  }
 
   render() {
     const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, numCateg, numEcoPoints, numEPGastados, loading } = this.state;
     return (
       loading ?
-        <div className="circularProgress">
+        <div className="circularProgress" >
           <CircularProgress color="inherit" />
         </div>
         :

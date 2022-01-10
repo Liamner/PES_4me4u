@@ -6,7 +6,7 @@ export default class Report extends Component {
 		super(props);
 
 		this.state = {
-			category: props.report
+			category: props.category
 		}
 	}
 

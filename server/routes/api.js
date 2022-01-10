@@ -123,6 +123,8 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
+  router.route('/login/admin')
+    .post(userController.loginAdmin);
 
   router.route('/deleteUser/:id')
     .delete(authenticateJWT, userController.deleteUser);

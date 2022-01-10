@@ -22,7 +22,7 @@ export default class Report extends Component {
 				<td>
 					{category.name}
 				</td>
-				<td>
+				<td className="stats-number" style={{fontSize: '20px'}}>
 					{category.products.length}
 				</td>
 			</tr>

@@ -47,6 +47,10 @@ a:hover {
   background-color: #c0daecd8;
 }
 
+.categorias {
+  font-size: 20px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: auto auto auto;

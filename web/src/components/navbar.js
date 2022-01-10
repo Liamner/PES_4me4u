@@ -7,7 +7,6 @@ class Navbar extends Component {
       <ul>
         <li><a href='/'><img src={logo}/><b> 4me4u</b></a></li>
         <li><a href='/reports'>Gestionar denuncias</a></li>
-        <li><a href='/category'>Gestionar categorias</a></li>
         <li><a style={{float: 'bottom'}} href='/user'>Hola user!</a></li>
       </ul>
     </nav>;

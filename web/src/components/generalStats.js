@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import APIService from "../services/API";
+import ListCategories from './listCategories';
 
 class GeneralStats extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class GeneralStats extends Component {
       numPReps: 150,
       numUsu: 250,
       numUReps: 120,
-      numCateg: 10,
+      Categ: undefined,
       numEcoPoints: 2500,
       numEPGastados: 1200,
       loading: true
@@ -44,7 +45,7 @@ class GeneralStats extends Component {
                 APIService.get('/category/').then(
                   response => {
                     this.setState({
-                      numCateg: response.data.length,
+                      Categ: response.data,
                     });
                   }
                 );
@@ -65,7 +66,7 @@ class GeneralStats extends Component {
   }
 
   render() {
-    const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, numCateg, numEcoPoints, numEPGastados, loading } = this.state;
+    const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, Categ, numEcoPoints, numEPGastados, loading } = this.state;
     return (
       loading ?
         <div className="circularProgress" >
@@ -141,9 +142,7 @@ class GeneralStats extends Component {
             </table>
           </div>
           <div className='grid-item'>
-            <p>Número de categorias:</p>
-            <p className={'stats-number'} >{numCateg}</p>
-            <a href='/category'>Gestionar categorias &gt;</a>
+            <ListCategories categories={Categ} />
           </div>
           <div className='grid-item'>
             <table style={{ width: '100%' }}>
@@ -168,7 +167,7 @@ class GeneralStats extends Component {
             </table>
           </div>
           <div className='grid-item'>
-            Sessiones activas
+            Productos más vistos
           </div>
         </div>)
   }

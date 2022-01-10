@@ -2,6 +2,7 @@ const TradeGive = require('../models/tradeGive.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
 const adminController = require ('../controllers/apiAdmin.js')
+const userController = require('../controllers/apiUser.js');
 const { ObjectId } = require('mongodb');
 
 exports.readAllTradeGive = async (req, res) => {
@@ -54,16 +55,64 @@ exports.readAllTradeGive = async (req, res) => {
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
-          // UserTaking.getUserRewards();
-          // UserOfering.getUserRewards();
-          // UserTaking.getRewards();
-          // UserOfering.getRewards();
-          // UserTaking.levelManage();
-          // UserOfering.levelManage();
           await tradeGive.save();
           adminController.increaseGifts();
+
+          // ==================
+          // get user rewards
+          // ==================
+          const userO = await User.findById({_id:req.user.id});
+          userO.gift += 1;
+          let estimatedPoints = req.body.points;
+          let eco = userO.ecoPoints;
+          let total = 0;
+          if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
+          else res.status(400).json({error: 'Estimated points are too high'})
+          userO.ecoPoints = total;
+          await userO.save();
+          // ==================
+          // getRewards
+          // ==================
+          const userRewards = await User.findById({_id:req.user.id});
+          let ngifts = userRewards.gifts;
+          let points = userRewards.ecoPoints;
+          let rewards = 0;
+          if(ngifts >= 3) {
+            if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(10);
+            else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(50);
+            else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(100);
+            else if(ngifts >= 10) rewards += parseFloat(150);
+
+            userRewards.ecoPoints = parseFloat(points)+parseFloat(rewards)
+            await userRewards.save();
+          }
+          
+          // ==================
+          // levelManage
+          // ==================
+          const userLevel = await User.findById({_id:req.user.id});
+          let nivelNuevo = 0, reward = 0;
+          let nivelAntiguo = userLevel.level;
+          let points2 = userLevel.ecoPoints;
+          if(points2 < 50) nivelNuevo = '1'; // seed semilla
+          else if (points2 >= 50 && points2 < 150) nivelNuevo = '2'; //brote outbreak
+          else if (points2 >= 150 && points2 < 300) nivelNuevo = '3'; // plant
+          else if (points2 >= 300 && points2 < 500) nivelNuevo = '4'; // tree
+          else if(points2 >= 500 && points2 < 750) nivelNuevo = '5'; // roble oak
+          else if (points2 >= 750) nivelNuevo = '6'; //ecologista ecologist
+          //si ha subido de nivel gana una recompensa
+          if(nivelAntiguo != nivelNuevo) {
+            if(nivelNuevo == '2') reward = 20;
+            else if (nivelNuevo == '3') reward = 40;
+            else if (nivelNuevo == '4') reward = 60;
+            else if (nivelNuevo == '5') reward = 80;
+            else if (nivelNuevo == '6') reward = 100;
+          }
+          if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
+          if (nivelNuevo != 0) userLevel.level = nivelNuevo;
+          await userLevel.save();
           res.status(201).json(tradeGive);  
-     }
+        }
 
     } catch (error) {
       res.status(409).json(error.message);

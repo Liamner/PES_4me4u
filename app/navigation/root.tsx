@@ -1,7 +1,5 @@
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -14,18 +12,15 @@ import CreateProduct from '../screens/ProductCreate';
 import ViewUser from '../screens/UserRead';	
 import FollowersScreen from '../screens/FollowersScreen';	
 import FollowedScreen from '../screens/FollowedScreen';	
-import RateUser from '../screens/UserRate';
+import UserRate from '../screens/UserRate';
 import ProductSearch from '../screens/ProductSearch';
 import WishList from '../screens/UserWishlist';
 import UserUpdate from '../screens/UserUpdate';
 import ChatList from '../screens/ChatList';
 import ChatView from '../screens/ChatView';
-
 import UserProducts from '../screens/UserProducts';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
-import LinkingConfiguration from './LinkingConfiguration';
 
-
+import { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -33,10 +28,10 @@ export default function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: '4me4u'}} />
-      <Stack.Screen name="ProductSearch" component={ProductSearch} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false }} />
-      <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false }} />
-      <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false }} />    
-      <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false  }} /> 
+      <Stack.Screen name="ProductSearch" component={ProductSearch} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Búsqueda' }} />
+      <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Añadir producto' }} />
+      <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Lista de chats' }} />    
+      <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Mi perfil'  }} /> 
       <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="ChatView" component={ChatView} options={{ headerShown: true, headerShadowVisible: false}} /> 
       <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: true, headerShadowVisible: false }} /> 

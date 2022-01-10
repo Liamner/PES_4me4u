@@ -51,7 +51,12 @@ export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>)
         <FlatList
           data={chats}
           renderItem={({ item }) => (
-            <Pressable onPress={() => navigation.navigate('ChatView', item._id)}>
+            <Pressable onPress={() => {navigation.navigate('ChatView', {
+              id: item._id,
+              productId: item.productId._id,
+              productName: item.productId.name,
+              productImg: item.productId.img[0].url
+              })}}>
               <View style={styles.row}>
                 <View style={{ width: '40%' }}>
                   <Image source={{ uri: item.productId.img[0].url }} style={styles.image} />

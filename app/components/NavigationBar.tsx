@@ -54,68 +54,18 @@ export function NavigationBar({ navigation, casa, search, upload, chat, profile 
 
 }
 const styles = StyleSheet.create({
-  modalView: {
-    backgroundColor: "white",
-    height: '100%',
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    margin: 10,
-    borderRadius: 4,
-    elevation: 3,
-    width: '90%',
-    backgroundColor: '#a2cff0',
-  },
-  itemTitle: {
-    fontSize: 22,
-    color: 'black',
-    padding: 10,
-    paddingLeft: 14,
-    fontWeight: "bold"
-  },
-  item: {
-    backgroundColor: "#ffffff",
-    borderColor: 'black',
-    marginVertical: 1
-  },
-  question: {
-    fontSize: 26,
-    color: 'black',
-    marginTop: '2%',
-    marginLeft: '3%',
-    marginBottom: '3%',
-    width: '90%',
-    fontWeight: "bold"
-  },
-  datePickerStyle: {
-    width: 200,
-    marginTop: 20,
-  },
   navigator: {
     height: 45,
-    borderColor: '#5e5c57',
+    borderTopStartRadius: 4,
+    borderTopEndRadius: 4,
     backgroundColor: "#a2cff0",
-    borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    //borderRadius: 20,
     padding: 10,
-    //elevation: 2,
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    // left: 10,
-  },
-  icono: {
-    width: 35,
-    height: 35,
   },
 });
 

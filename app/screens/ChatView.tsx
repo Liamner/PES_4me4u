@@ -1,14 +1,20 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, FlatList, Pressable, TextInput, Button } from 'react-native';
+import { StyleSheet, Image, FlatList, Pressable, TextInput, Button, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import retrieveSession from '../hooks/retrieveSession';
+import NavigationBar from '../components/NavigationBar';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ChatView({ navigation, route }: RootTabScreenProps<'ChatView'>) {
-  var converid = route.params;
+  var converid = route.params.id;
+  var prodid = route.params.productId;
+  var prodname = route.params.productName;
+  var prodimg = route.params.productImg;
   const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
@@ -21,7 +27,6 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       const value = await retrieveSession();
       if (value !== null) {
         setSession(value)
-        console.log(value)
       }
       else {
         console.log("empty")
@@ -37,8 +42,8 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
         Authorization: `Bearer ${session.token}`
       }
     }
+    console.log('converid: ' + converid)
     let response = await axios.get('https://app4me4u.herokuapp.com/api/conversation/' + converid, config);
-    console.log(response.data)
     setMsgs(response.data);
   };
 
@@ -49,16 +54,17 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
 
   const handleSubmit = async () => {
     console.log('Message: ' + newMessage)
-    const message = {
-      sender: session.id,
-      text: newMessage,
-      conversationId: converid,
-    };
-    console.log(message);
-
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
     try {
-      const res = await axios.post("https://app4me4u.herokuapp.com/api/message", message);
-      setMsgs([...msgs, res.data]);
+      const response = await axios.post("https://app4me4u.herokuapp.com/api/message", {
+        conversationId: converid,
+        text: newMessage
+      }, config);
+      setMsgs([...msgs, response.data]);
       setNewMessage("");
     } catch (err) {
       console.log(err);
@@ -68,20 +74,66 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
 
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => navigation.navigate('ProductRead', prodid)}>
+        <View style={styles.row}>
+          <View style={{ width: '25%' }}>
+            <Image source={{ uri: prodimg }} style={styles.image} />
+          </View>
+          <View style={{ width: '75%' }}>
+            <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
+            <View style={styles.row}>
+              <TouchableOpacity
+                onPress={getConversation}
+                style={{ width: 150, marginTop: 5 }}
+              >
+                <LinearGradient
+                  colors={['#a2cff0', '#ADE8F4']}
+                  style={styles.followButon}
+                >
+                  <Text style={[styles.textFollow,
+                  { color: '#fff' }]}>
+                    Hacer intercambio
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={getConversation}
+                style={{ width: 150, marginTop: 5 }}
+              >
+                <LinearGradient
+                  colors={['#a2cff0', '#ADE8F4']}
+                  style={styles.followButon}
+                >
+                  <Icon name='refresh-outline' color={'white'} size={30} />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Pressable>
       <FlatList
-          data={msgs}
-          renderItem={({ item }) => (
-            <Text>{item.text}</Text>
-          )}
-          keyExtractor={item => item._id}
-        />
-      <TextInput
-        style={{ height: 40, borderWidth: 2, top: 600 }}
-        autoCorrect={false}
-        onChangeText={setNewMessage}
-        value={newMessage}
+        data={msgs}
+        renderItem={({ item }) => (
+          <>
+            {item.sender == session.id ?
+              <Text style={styles.mine} numberOfLines={4}> {item.text} </Text>
+              :
+              <Text style={styles.other} numberOfLines={4}> {item.text} </Text>
+            }
+          </>
+        )}
+        keyExtractor={item => item._id}
       />
-      <Button title="Send" onPress={handleSubmit} />
+      <View style={[styles.row, { marginBottom: 50, height: 35 }]}>
+        <TextInput
+          style={{ color: 'black', borderRadius: 2, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#efefef', width: '85%', marginRight: '3%' }}
+          autoCorrect={true}
+          onChangeText={setNewMessage}
+          value={newMessage}
+        />
+        <Button title="Send" onPress={handleSubmit} color={'#a2cff0'} />
+      </View>
+      <NavigationBar navigation={navigation} />
     </View>
   );
 }
@@ -89,15 +141,49 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-  },
-  flex: {
-    flex: 1,
   },
   row: {
+    height: 100,
     flexDirection: 'row',
-    alignSelf: 'center',
-    marginHorizontal: '10%',
+    alignSelf: 'flex-start',
+    marginHorizontal: '2%',
     marginVertical: 5,
+  },
+  image: {
+    width: 100,
+    height: '100%',
+    borderRadius: 7,
+  },
+  title: {
+    fontSize: 25,
+  },
+  followButon: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+  },
+  textFollow: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  mine: {
+    backgroundColor: '#a2cff0',
+    alignSelf: 'flex-end',
+    maxWidth: '75%',
+    borderRadius: 7,
+    padding: 5,
+    marginHorizontal: '2%',
+    marginVertical: '1%',
+  },
+  other: {
+    backgroundColor: '#eee',
+    alignSelf: 'flex-start',
+    maxWidth: '75%',
+    borderRadius: 7,
+    padding: 5,
+    marginHorizontal: '2%',
+    marginVertical: '1%',
   },
 });

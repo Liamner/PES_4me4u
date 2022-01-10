@@ -34,7 +34,6 @@ export default function RootNavigator() {
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Mi perfil'  }} /> 
       <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="ChatView" component={ChatView} options={{ headerShown: true, headerShadowVisible: false}} /> 
-      <Stack.Screen name="TestScreen" component={TestScreen} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: true, headerShadowVisible: false }} />
       <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: true, headerShadowVisible: false }} />

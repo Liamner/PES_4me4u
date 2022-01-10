@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/navbar';
 import GeneralStats from './components/generalStats';
-import Reports from './components/reports';
+import Reports from './controllers/showReports';
 
 function App() {
   return (

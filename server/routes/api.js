@@ -259,7 +259,7 @@ module.exports = function(app) {
     .get(authenticateJWT, reportController.readAllReports);
   
      // Read no solved reports from userReported = userReported
-  router.route('/report/nosolved/:userReported')
+  router.route('/report/nosolveds/:userReported')
   .get(authenticateJWT, reportController.readNoSolvedUserReports);
 
   router.route('/report/nosolved/')
@@ -372,6 +372,10 @@ module.exports = function(app) {
   router.route('/conversation/:conversationId')
     .get(authenticateJWT, messageController.getConversationMessages)
 
+
+    // ADMIN PAGE
+  router.route('/admin/transactions').get(adminController.numTransasPorTipo)
+  //router.route('/admin/categories').get(adminController.numCategories)
   return router;
 
 

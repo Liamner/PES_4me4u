@@ -2,6 +2,12 @@
   text-align: center;
 }
 
+.circularProgress {
+  display: 'flex';
+  padding-top: 200px;
+  justify-content: center;
+}
+
 nav ul {
   list-style-type: none;
   margin: 0;

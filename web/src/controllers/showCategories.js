@@ -1,23 +1,24 @@
 import React, { Component } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import APIService from "../services/API";
-import ListReports from "../components/listReports";
+import ListCategories from "../components/listCategories";
+import AddCategory from "../components/addCategory"
 
-class Reports extends Component {
+class Categories extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			loading: true,
-			posts: []
+			categories: []
 		};
 	}
 
 	componentDidMount() {
-		APIService.get('/report/nosolved/').then(
+		APIService.get('/category/').then(
 			response => {
 				this.setState({
-					reports: response.data,
+					categories: response.data,
 					loading: false
 				});
 			}
@@ -25,10 +26,10 @@ class Reports extends Component {
 	}
 
 	componentDidUpdate() {
-		APIService.get('/report/nosolved/').then(
+		APIService.get('/category/').then(
 			response => {
 				this.setState({
-					reports: response.data,
+					categories: response.data,
 					loading: false
 				});
 			}
@@ -36,16 +37,18 @@ class Reports extends Component {
 	}
 
 	render() {
-		const { loading, reports } = this.state;
+		const { loading, categories } = this.state;
 		return (
 			loading ?
 				<div className="circularProgress">
 					<CircularProgress color="inherit" />
 				</div>
 				:
-				<ListReports reports={reports} />
+				<div className="row">
+					<ListCategories categories={categories} />
+				</div>
 		);
 	}
 }
 
-export default Reports;
+export default Categories;

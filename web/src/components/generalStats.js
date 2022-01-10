@@ -40,7 +40,7 @@ class GeneralStats extends Component {
     const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, numCateg, numEcoPoints, numEPGastados, loading } = this.state;
     return (
       loading ?
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '200px' }}>
+        <div className="circularProgress">
           <CircularProgress color="inherit" />
         </div>
         :

@@ -11,9 +11,9 @@ exports.getMessages = async (req, res) => {
 }
 
 exports.sendMessage = async (req, res) => {
-    console.log(req.body.convesrationId)
+    console.log(req.body.conversationId)
     const newMessage = new Message({
-        convesrationId: req.body.convesrationId,
+        conversationId: req.body.conversationId,
         sender: req.user.id,
         text: req.body.text
     });

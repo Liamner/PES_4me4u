@@ -61,18 +61,18 @@ export default class Report extends Component {
 		const { report } = this.state;
 		return (
 			<tr>
-				<td>
+				<td style={{width: '5%'}}>
 					{this.renderType(report.relatedProduct)}
 				</td>
-				<td>
+				<td style={{width: '15%'}}>
 					{this.renderName(report.relatedProduct, report.userReported)}
 				</td>
-				<td>
+				<td style={{width: 'auto'}}>
 					{report.description}
 				</td>
-				<td>
-					<span style={{ backgroundColor: 'red', borderRadius: 5, marginRight: 10, padding: 4 }} onClick={this.onClickStrike}>Strike</span>
-					<span style={{ backgroundColor: 'orange', borderRadius: 5, marginRight: 10, padding: 4 }} onClick={this.onClickClose}>Cerrar</span>
+				<td style={{width: '10%'}}>
+					<span style={{ backgroundColor: '#ff6961', borderRadius: 5, marginRight: 10, padding: 4 , paddingRight: 10, paddingLeft: 10, width: '45%'}} onClick={this.onClickStrike}>Strike</span>
+					<span style={{ backgroundColor: '#ffb347', borderRadius: 5, marginRight: 10, padding: 4, paddingRight: 10, paddingLeft: 10, width: '45%' }} onClick={this.onClickClose}>Cerrar</span>
 				</td>
 			</tr>
 		);

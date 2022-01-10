@@ -70,14 +70,12 @@ a:hover {
   color: #68a8d6;
 }
 
-.reports div {
-  padding-top: 100px;
+.reports {
+  padding-top: 50px;
   width: 100%;
 }
 
-
 .reports table {
-  padding-top: 100px;
   border-collapse: collapse;
   width: 95%;
   margin-left: auto;

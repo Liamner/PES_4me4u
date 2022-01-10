@@ -100,7 +100,7 @@ let usuarioSchema = new Schema({
         ref: 'Product'
         /*type: [mongoose.Schema.ProductSchema],
         required: false*/
-        }],
+    }],
     commentsRecived: [{
         // Comentarios recibidos
         type: Schema.Types.ObjectId, 

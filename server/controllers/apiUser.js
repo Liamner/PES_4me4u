@@ -618,10 +618,9 @@ exports.updateRecentlyViewed = async (req, res) => {
     let idProduct = req.body.idProduct;
 
     User.findById({_id: userId}, async (erro, usersRecentViewed) => {
-      let found = false;
       //console.log(usersRecentViewed.recentlyViewed)
       
-      if (usersRecentViewed.recentlyViewed) {
+     /* if (usersRecentViewed.recentlyViewed) {
         for (let i = 0; i < usersRecentViewed.recentlyViewed.length; i++)  {
 
           console.log(usersRecentViewed.recentlyViewed[i]._id)
@@ -636,25 +635,25 @@ exports.updateRecentlyViewed = async (req, res) => {
       if (found) {
         res.status(404).json({error: 'Product already in the list'});
       }
-      else {
-        if (usersRecentViewed.recentlyViewed) {
-          if (usersRecentViewed.recentlyViewed.length >= 4) {       
-            usersRecentViewed.recentlyViewed.splice(0,1);
-            await usersRecentViewed.save();
-          }
-        }   
-        Product.findById({ _id: idProduct }, async (erro, product) => {
-          if (product != null) {
-            usersRecentViewed.recentlyViewed.push(product);
-            
-            console.log(usersRecentViewed.recentlyViewed)
-            //else usersRecentViewed.recentlyViewed = product._id
-            await usersRecentViewed.save();
-            res.status(200).json(usersRecentViewed.recentlyViewed);
-          }
-          else res.status(404).json({error: 'Product not found'})
-        })
-      }
+      else {*/
+      if (usersRecentViewed.recentlyViewed) {
+        if (usersRecentViewed.recentlyViewed.length >= 4) {       
+          usersRecentViewed.recentlyViewed.splice(0,1);
+          await usersRecentViewed.save();
+        }
+      }   
+      Product.findById({ _id: idProduct }, async (erro, product) => {
+        if (product != null) {
+          usersRecentViewed.recentlyViewed.push(product);
+          
+          console.log(usersRecentViewed.recentlyViewed)
+          //else usersRecentViewed.recentlyViewed = product._id
+          await usersRecentViewed.save();
+          res.status(200).json(usersRecentViewed.recentlyViewed);
+        }
+        else res.status(404).json({error: 'Product not found'})
+      })
+      
       
     }).populate('recentlyViewed').clone()
   } catch (error) {

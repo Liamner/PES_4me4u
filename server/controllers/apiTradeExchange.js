@@ -57,10 +57,9 @@ exports.readAllTradeExchange = async (req, res) => {
         if (userTaking.points < tradeExchange.points) res.status(404).json({error:"not enought points"});
         
         if (userOfering != null && userTaking != null && productOfering != null && productTaking  != null && req.body.userOfering != req.body.userTaking) {
-          //product.state = "reserved";
           productOfering.state = "reserved";
           productTaking.state = "reserved";
-          //await product.save();
+
           await productOfering.save();
           await productTaking.save();
 
@@ -129,7 +128,7 @@ exports.readAllTradeExchange = async (req, res) => {
           else if (points2 >= 300 && points2 < 500) nivelNuevo = '4'; // tree
           else if(points2 >= 500 && points2 < 750) nivelNuevo = '5'; // roble oak
           else if (points2 >= 750) nivelNuevo = '6'; //ecologista ecologist
-          //si ha subido de nivel gana una recompensa
+          
           if(nivelAntiguo != nivelNuevo) {
             if(nivelNuevo == '2') reward = 20;
             else if (nivelNuevo == '3') reward = 40;
@@ -152,7 +151,7 @@ exports.readAllTradeExchange = async (req, res) => {
           else if (pointsTT >= 300 && pointsTT < 500) nivelNuevoT = '4'; // tree
           else if(pointsTT >= 500 && pointsTT < 750) nivelNuevoT = '5'; // roble oak
           else if (pointsTT >= 750) nivelNuevoT = '6'; //ecologista ecologist
-          //si ha subido de nivel gana una recompensa
+          
           if(nivelAntiguoT != nivelNuevoT) {
             if(nivelNuevoT == '2') rewardT = 20;
             else if (nivelNuevoT == '3') rewardT = 40;
@@ -163,7 +162,6 @@ exports.readAllTradeExchange = async (req, res) => {
           if (rewardT != 0) userLevelT.ecoPoints += parseFloat(rewardT);
           if (nivelNuevoT != 0) userLevelT.level = nivelNuevoT;
           await userLevelT.save();
-
 
           res.status(201).json(tradeExchange);  
      }

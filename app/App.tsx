@@ -11,43 +11,38 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  /*const [session, setSession] = React.useState({
+  const [session, setSession] = React.useState({
     id: "",
-    user:"",
-    token:""
+    token:"",
+    user:""
   });
-  const [logged, setlogged] = React.useState(true);
+  const [logged, setlogged] = React.useState(false);
 
+
+  // const getData = async () => {
+  //   let aux = null
+  //   try {
+  //     const value = await AsyncStorage.getItem('userSession')
+  //     if (value !== null) {
+  //       aux = JSON.parse(value);
+  //       console.log(aux)
+  //     }
+  //   }
+  //   catch(error) {
+  //     console.log(error)
+  //   }
+  //   if (aux == null)
+  //   {
+  //     console.log('no logueado')
+  //   }
+  //   else 
+  //       console.log('logueado ' + aux.user);
+  //   }
   
-   const getData = async () => {
-    const sess = await retrieveSession();
-      console.log("getData" + sess)
-      setSession(sess);
-    }
-
-    function isLogged () {
-      console.log(session)
-      if (session.id === "")
-        setlogged(false);
-      else
-        setlogged(true);
-    }
-
-    React.useEffect(() => {
-      getData();
-      isLogged();
-    }, []);  
-
-   
-   /* const logOut = async () => {  
-      await AsyncStorage.removeItem('userSession');
-      console.log("logout")
-    };
-
-  logOut();
-    console.log("esta logueado?" + logged);
-    */
-
+  //   React.useEffect(() => {
+  //     getData();
+  //   }, []);  
+    
   if (!isLoadingComplete) {
     return null;
   } else {

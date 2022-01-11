@@ -260,6 +260,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   }, []);
 
+  let child = {session, navigation};
 
 
 
@@ -429,10 +430,9 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
           </CustomMap>
           
           <LogOutButton navigation={navigation}></LogOutButton>
-     
-        <Text onPress={() => navigation.navigate('Login')}>     
-          <DeleteUser children={session}></DeleteUser>
-        </Text>
+         
+          <DeleteUser children={child} ></DeleteUser>
+ 
         
         
 

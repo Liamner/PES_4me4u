@@ -20,7 +20,8 @@ import { Picker } from '@react-native-picker/picker';
 
 import '../assets/i18n/i18n';
 import { useTranslation } from 'react-i18next';
-
+import DeleteUser from '../components/DeleteUser';
+import LogOutButton from '../components/LogOutButton';
 /*
 wishlist -> provada
 (boton te lleva a ver los productos) -> productos de un usuario en pestaña aparte
@@ -426,19 +427,19 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               }}
             ></CustomMarker>
           </CustomMap>
-
-
-          {/*
-        //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
+          
+          <LogOutButton navigation={navigation}></LogOutButton>
+     
         <Text onPress={() => navigation.navigate('Login')}>     
-          <DeleteUser children= id></DeleteUser>>
+          <DeleteUser children={session}></DeleteUser>
         </Text>
-        */}
+        
+        
 
           {ownProfile ?
             // Cambiar de idioma
             <>
-              {/* <Text style={styles.titlePicker}> Idioma </Text> */}
+              <Text style={styles.titlePicker}> Idioma </Text> 
 
               <Picker
                 selectedValue={currentLanguage}

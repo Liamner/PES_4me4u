@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import {Alert, Button, StyleSheet, View } from "react-native";
+import {Alert, AsyncStorage, Button, StyleSheet, View } from "react-native";
 
 import axios from 'axios'
 import { not } from "react-native-reanimated";
 import navigation from "../navigation";
-
+import retrieveSession from '../hooks/retrieveSession'
 
 // import DeleteUser from '../components/DeleteUser';
 // <DeleteUser children=  "ID-DEL-USUARIO" />
@@ -19,23 +19,34 @@ class DeleteUser extends Component {
 
     //Datos
 
-    APIDeleteUser= (id: {} | null | undefined) =>{
-        if(id != null){
+    APIDeleteUser= (session: {id: string, user:string, token: string}) =>{
+        if(session.id != null){
+            console.log('eliminar usuario: '+ session.id + ' ' + session.token)
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${session.token}`
+                }
+              }
 
             //    https://app4me4u.herokuapp.com/api/deleteUser/:id
         //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/61952ec8adeb9693da219fc2' )
-        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
-        
+        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + session.id, {
+        headers: {
+            Authorization: `Bearer ${session.token}`
+          }
+        }
+        )
             .then(res => {
             console.log(res);})
-    }
         }
+        
+    }
 
 
 
 
     //Alerta de confirmación de borrado
-    deleteUserConfirmationAlert = (id: {} | null | undefined) =>
+    deleteUserConfirmationAlert = (session: {id: string, user:string, token: string}) =>
     Alert.alert(
         "¡Importante!",
         "¿Está seguro de que desea eliminar su cuenta de usuario?\nEsta acción es irreversible.",
@@ -44,7 +55,7 @@ class DeleteUser extends Component {
             text: "No",
 //          onPress: () => console.log("Cancel Pressed"),
         },
-        { text: "Sí", onPress: () => this.APIDeleteUser(id) }
+        { text: "Sí", onPress: () => this.APIDeleteUser(session) }
         ]
     );
 

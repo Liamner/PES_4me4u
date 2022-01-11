@@ -70,7 +70,7 @@ module.exports = function(app) {
 
   // Create new category
   router.route('/category/create/')
-    .post(authenticateJWT, validateCreateCategory, categoryController.createCategory);
+    .post( categoryController.createCategory);
 
   // Read category with id = id
     router.route('/category/:id')
@@ -90,7 +90,7 @@ module.exports = function(app) {
 
   // Create new type
   router.route('/type/create/')
-    .post(authenticateJWT, validateCreateType, typeController.createType);
+    .post(typeController.createType);
 
   // Read type with id = id
   router.route('/type/:id')

@@ -30,12 +30,6 @@ exports.readAllTypes = async (req, res) => {
     const type = new Type();
     type.name = req.body.name;
 
-  const user = await User.findbyId(req.user.id);
-  if (user.role != 'ADMIN'){
-    res.status(401).json({error: "Do not have permission"})
-    return;
-  }
-    console.log(type);
   
     try {
       await type.save();

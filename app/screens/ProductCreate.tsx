@@ -184,17 +184,53 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 
   const sendApi = async () => {
 
+    var aux: string[] = [];
+    var contar = 0;
+    // if (checkedIntercambiar) aux.push("exchange");
+    // if (checkedPrestar) aux.push("provide");
+    // if (checkedDonar) aux.push("present");
+    // if (aux.length  == 0) aux.push("present");
+    
+    if (checkedIntercambiar){
+       aux.push("exchange");
+       contar = contar + 1;
+      }
+    if (checkedPrestar){
+       aux.push("provide");
+       contar = contar + 1;
+      }
+    if (checkedDonar){
+       aux.push("present");
+       contar = contar + 1;
+      }
+
+      var sendExchange;
+    if (contar  == 0){
+      sendExchange = "present";
+    } 
+    else if (contar == 1){
+      if (checkedIntercambiar) sendExchange = "exchange";
+      else if (checkedPrestar) sendExchange = "provide";
+      else if (checkedDonar)   sendExchange = "present";
+    }
+    else{
+       sendExchange = aux;
+      }
+
+    console.log(sendExchange);
+    
     console.log("sending product")
     const config = {
       headers: {
         Authorization: `Bearer ${session.token}`
       }
     }
+    
     await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
       name: name,
       categories: selectedCategory,
       description: description,
-      exchange: "present",
+      exchange: sendExchange,
       state: "available",
     }, config)
       .then(function (response) {

@@ -30,12 +30,23 @@ nav li a {
   text-decoration: none;
 }
 
+nav li span{
+  display: block;
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
 nav li a:hover {
   background-color: #111;
 }
 
 nav img {
   height: 50px;
+}
+
+.signOut {
+  background-color: rgb(209, 71, 71);
 }
 
 a {
@@ -56,6 +67,9 @@ a:hover {
   margin-top: 10px;
 }
 
+.error {
+  color: red;
+}
 
 .login {
   display: flex;

@@ -1,12 +1,19 @@
 import axios from "axios";
 
+
+
 const API_URL = "https://app4me4u.herokuapp.com/api";
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZDFkZjViZGQ4ZDViNzAwMjNhMzNlOCIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2NDE4Mjk5NTEsImV4cCI6MTY0MjAwMjc1MX0.D4EN0Cary22LJbA4dkjLwc460AyVcIryElFcIUAENCg'; //token aqui
+const token = getToken();
 const config = {
     headers: {
         Authorization: `Bearer ${token}`
       } 
 }
+
+function getToken() {
+    const tokenString = sessionStorage.getItem('token');
+    return JSON.parse(tokenString);
+  }
 
 class APIService {
     login(body){

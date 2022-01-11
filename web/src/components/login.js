@@ -2,28 +2,47 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import APIService from '../services/API';
 
-async function loginUser(credentials) {
-  return APIService.login(credentials);
+function setUser(user) {
+  sessionStorage.setItem('user', JSON.stringify(user));
 }
 
 export default function Login({ setToken }) {
   const [email, setEmail] = React.useState();
   const [password, setPassword] = React.useState();
+  const [error, setError] = React.useState('');
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const response = await loginUser({
-      email: email,
-      pwd: password
-    });
-    console.log(response)
-    setToken(response.data.token)
+    try {
+      const response = await APIService.login({
+        email: email,
+        pwd: password
+      });
+      console.log(response)
+      setToken(response.data.token)
+      setUser(response.data.user.userId)
+    }
+    catch (e) {
+      if(e.request.status == 400) {
+        setError('Email y/o contraseña incorrecta')
+      }
+      else if(e.request.status == 401) {
+        setError('No tienes permisos para entrar')
+      }
+      else {
+        setError('Ha ocurrido un error')
+      }
+    }
   }
 
   return (
     <div className="login">
       <div>
         <h1>Inicio de sessión</h1>
+        {error !== '' ?
+          <div className='error' style={{ border: 'none' }}>{error}</div>
+          :
+          <></>}
         <form onSubmit={handleSubmit}>
           <label>
             <p>Email</p>

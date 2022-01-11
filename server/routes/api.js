@@ -162,7 +162,7 @@ module.exports = function(app) {
     .get(userController.getUserPoints)
 
   router.route('/user/:id/wishlist')
-    .get(authenticateJWT, userController.getUserWishlist)
+    .get(/*authenticateJWT, */userController.getUserWishlist)
     
   router.route('/user/:id/level')
     .get(userController.getUserLevel)

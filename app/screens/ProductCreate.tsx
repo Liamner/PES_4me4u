@@ -180,6 +180,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           console.log(error);
         });
     });
+    navigation.navigate('ProductRead', response.data._id)
   }
 
   const sendApi = async () => {
@@ -235,6 +236,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
     }, config)
       .then(function (response) {
         setImages(response);
+        
       })
       .catch(function (error) {
         console.log(error);

@@ -1,4 +1,3 @@
-import { Entypo, Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
@@ -15,7 +14,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
 
   const pid = route.params.pid;
-  const reload = route.params.reload;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');

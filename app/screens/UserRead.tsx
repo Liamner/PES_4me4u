@@ -274,46 +274,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               </TouchableOpacity>
             </View>
             :
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {following ?
-                <TouchableOpacity
-                  onPress={() => {
-                    followUser();
-                  }}
-                  style={{ width: 150 }}
-                >
-                  <LinearGradient
-                    colors={['#a2cff0', '#ADE8F4']}
-                    style={styles.followButon}
-                  >
-                    <Text style={[styles.textFollow,
-                    { color: '#fff' }]}>
-                      Dejar de seguir
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-                :
-                <TouchableOpacity
-                  onPress={() => {
-                    followUser();
-                  }}
-                  style={{ width: 150 }}
-                >
-                  <LinearGradient
-                    colors={['#a2cff0', '#ADE8F4']}
-                    style={styles.followButon}
-                  >
-                    <Text style={[styles.textFollow,
-                    { color: '#fff' }]}>
-                      Seguir
-                    </Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-              }
-            </View>
+            <></>
           }
         </View>
 

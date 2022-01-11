@@ -26,7 +26,6 @@ exports.readAllProducts =  async (req, res) => {
 exports.readProduct = async (req, res) => {
   try {
     await Product.findById({ _id: req.params.id }, async (error, product) => {
-      console.log(product)
       if (product.userId != req.user.id) {
         console.log('Not my product')
         product.views =  product.views + 1;
@@ -43,7 +42,6 @@ exports.readProduct = async (req, res) => {
 
 exports.readProductsFilteredCategory = async (req, res) => {
   try {
-
     const product = await Product.find ({ categories: req.body.categories }) 
     console.log("Reading products with filter by Category: " + req.body.name);
     res.status(200).json(product);

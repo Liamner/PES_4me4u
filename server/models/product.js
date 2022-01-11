@@ -28,7 +28,6 @@ const ProductSchema = new mongoose.Schema({
         required: false
     },
     exchange: [{
-          
         type: mongoose.Schema.Types.String, 
         ref: "Type.name",
         required: true 

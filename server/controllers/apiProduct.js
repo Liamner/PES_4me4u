@@ -86,7 +86,21 @@ exports.createProduct = async (req, res) => {
   product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
-  product.exchange.push(req.body.exchange);         
+
+  if (req.body.exchange.length >= 2 && req.body.exchange.length <= 3) {
+    for (let i = 0; i < req.body.exchange.length; i++) {
+      let res = req.body.exchange[i];
+      product.exchange.push(res)
+      console.log(res)
+      //product.exchange.push(req.body.exchange[i]); 
+    }
+  }
+  else {
+    let res = req.body.exchange;
+    product.exchange.push(res)
+  }
+  
+          
   product.state = req.body.state;
   // Assign the current user to the product
 

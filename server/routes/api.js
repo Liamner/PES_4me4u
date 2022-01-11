@@ -125,7 +125,10 @@ module.exports = function(app) {
 
   router.route('/login/admin')
     .post(userController.loginAdmin);
-
+  
+  router.route('/user/delete')
+    .delete(authenticateJWT, userController.deleteMyUser);
+    
   router.route('/deleteUser/:id')
     .delete(authenticateJWT, userController.deleteUser);
 

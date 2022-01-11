@@ -155,8 +155,8 @@ module.exports = function(app) {
   router.route('/user/:userId/rate')
     .post(authenticateJWT, userController.rateUser);
 
-  router.route('/user/:id/products/rewards')
-    .put(userController.getRewards)
+  //router.route('/user/:id/products/rewards')
+    //.put(userController.getRewards)
 
   router.route('/user/:id/points')
     .get(userController.getUserPoints)
@@ -167,12 +167,12 @@ module.exports = function(app) {
   router.route('/user/:id/level')
     .get(userController.getUserLevel)
 
-  router.route('/user/:id/levelManage')
-    .get(authenticateJWT, userController.levelManage)
-  /*
-  router.route('/user/:id/rewards')
-    .put(authenticateJWT, userController.getUserRewards)
-  */
+  //router.route('/user/:id/levelManage')
+  //  .get(authenticateJWT, userController.levelManage)
+  
+  //router.route('/user/:id/rewards')
+  //  .put(authenticateJWT, userController.getUserRewards)
+  
   router.route('/user/:id/AddToWishlist')
     .put(authenticateJWT, userController.addToWishlist)
 

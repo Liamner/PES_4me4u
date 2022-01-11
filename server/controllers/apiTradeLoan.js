@@ -60,40 +60,36 @@ exports.readAllTradeLoan = async (req, res) => {
           await product.save();
           await tradeLoan.save();
           adminController.increaseLoans();
-          /*
+          
           // ==================
           // get user rewards
           // ==================
           const userO = await User.findById({_id:req.user.id});
-          console.log("1");
           userO.loans += 1;
           let estimatedPoints = req.body.points;
           let eco = userO.ecoPoints;
           let total = 0;
-          console.log("1,5");
           if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
           await userO.save();
-          console.log("2");
 
           // ==================
           // getRewards
           // ==================
           const userRewards = await User.findById({_id:req.user.id});
-          let ngifts = userRewards.gifts;
+          let nloans = userRewards.loans;
           let points = userRewards.ecoPoints;
           let rewards = 0;
           if(nloans >= 3) {
-            if(nloans >=3 && nloans <= 5) rewards += parseFloat(diez);
-            else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(cincuenta);
-            else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(cien);
-            else if(nloans >= 10) rewards += parseFloat(cientoCincuenta);
+            if(nloans >=3 && nloans <= 5) rewards += parseFloat(10);
+            else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(50);
+            else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(100);
+            else if(nloans >= 10) rewards += parseFloat(150);
 
             userRewards.ecoPoints = parseFloat(points)+parseFloat(rewards)
             await userRewards.save();
           }
-          console.log("3");
           // ==================
           // levelManage
           // ==================
@@ -118,8 +114,7 @@ exports.readAllTradeLoan = async (req, res) => {
           if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
           await userLevel.save();
-          console.log("4");
-          */
+        
           res.status(201).json(tradeLoan);  
      }
 

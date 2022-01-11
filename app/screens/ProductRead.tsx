@@ -9,10 +9,11 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker } from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 import NavigationBar from '../components/NavigationBar'
+import retrieveSession from '../hooks/retrieveSession'
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
 
-  const uid = '61b09c0f9482049de40b74f3';
+  const uid = '61d1ebbfaa8e09aa5f530d5e';
   //const pid = '61b64a52d4851901d035ed57';
   const pid = route.params;
   //Variables de las respuestas API
@@ -39,6 +40,24 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
   const [description, setDescription] = useState('Cargando...')
 
+  const [ownProfile, setOwnProfile] = useState(true);
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+  });
+
+  const getData = async (id) => {
+    const sess = await retrieveSession();
+      console.log(sess)
+      setSession(sess);
+      console.log(id);
+      console.log('session:' + session.id);
+      if(id != session.id) {setOwnProfile(false);}
+      else {setOwnProfile(true)} //HK -> a de ser false
+      console.log('nuestro perfil? ' + ownProfile);
+
+    }
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -149,7 +168,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
-    getUserInfo(response.data.userId);
+    getData(response.data.userId);
   };
 
   const getUserInfo = async (userId) => {
@@ -234,6 +253,29 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
             <Text style={styles.normalText}>Guardar en la lista</Text>
           </View>
         </TouchableHighlight>
+
+        {ownProfile?  
+            <>
+          {}
+            </>
+          : <>
+          <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate('ReportProduct', {
+            prodId: pid,
+            userName: user
+          })}}>
+
+          <View style={styles.row}>
+            <Entypo
+              name="save"
+              size={24}
+              color="#333"
+            />
+            <Text style={styles.normalText}>Denunciar producto</Text>
+          </View>
+          </TouchableHighlight>
+          </>  }
+
+
         <View style={styles.row}>
           <Entypo
             name="location"

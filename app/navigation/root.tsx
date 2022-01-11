@@ -20,6 +20,7 @@ import WishList from '../screens/UserWishlist';
 import UserUpdate from '../screens/UserUpdate';
 import ChatList from '../screens/ChatList';
 import ChatView from '../screens/ChatView';
+import ReportProduct from '../screens/ReportProduct';
 
 import UserProducts from '../screens/UserProducts';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';

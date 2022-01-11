@@ -39,6 +39,7 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
       idProduct: id
     }, config).then(function (response) {
       console.log(response);
+      guardado = true;
     })
       .catch(function (error) {
         console.log(error);
@@ -57,6 +58,7 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
       idProduct: id
     }, config).then(function (response) {
       console.log(response);
+      guardado = false;
     })
       .catch(function (error) {
         console.log(error);
@@ -97,7 +99,8 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
               width: '20%',
               height: '100%',
             }} >
-            {guardado && <TouchableOpacity style={{
+            
+            {/*guardado && <TouchableOpacity style={{
               width: 30,
               height: '100%',
 
@@ -109,7 +112,24 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
               height: '100%',
             }} onPress={guardarProducto}>
               <Icon name='heart-outline' size={30} color={'black'} />
-            </TouchableOpacity>}
+            </TouchableOpacity>*/}
+
+            {guardado?
+              <TouchableOpacity style={{
+                width: 30,
+                height: '100%',
+              }} onPress={noGuardarProducto}>
+                <Icon name='heart' size={30} color={'red'} />
+              </TouchableOpacity>
+            :
+              <TouchableOpacity style={{
+                width: 30,
+                height: '100%',
+              }} onPress={guardarProducto}>
+                <Icon name='heart-outline' size={30} color={'black'} />
+              </TouchableOpacity>
+            }
+
           </View>
         </View>
         <Text style={styles.title}>{name}</Text>

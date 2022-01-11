@@ -341,6 +341,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               </TouchableOpacity>}
           </View>
           <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Subir Producto!')}</Text></Pressable>
+          <Text> </Text>
         </ScrollView>
         <NavigationBar navigation={navigation} upload={true} />
       </View>
@@ -378,7 +379,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    margin: 10,
+    marginTop: 20,
+    marginBottom: 80,
     borderRadius: 4,
     elevation: 3,
     width: '90%',

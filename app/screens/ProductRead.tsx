@@ -51,7 +51,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       const value = await retrieveSession()
       if (value !== null) {
         setSession(value)
-        console.log('user: '+user)
+        console.log('user: ' + user)
         if (user == value.id) {
           setOwnProduct(true);
           console.log(ownProduct)
@@ -75,21 +75,52 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    /*categories.pop();
+    categories.pop();
     let aux = response.data.categories;
-      element: 
-      switch (aux) {
-        case "61797e24b4a4d195aa14be8d":
-          setCategories([{name: 'Tecnologia', key: '1'}])
-          break;
-        case "61940e6f0c77883d581cede8":
-          setCategories([{name: 'Jugetes', key: '2'}])
-          break;
-        default:
-          setCategories([{name: 'GATITOS', key: '0'}])
-          break;
-      }
-    });*/
+    switch (aux) {
+      case "fashion":
+        setCategories([{ name: 'Moda', key: '1' }])
+        break;
+      case "computer":
+        setCategories([{ name: 'Computación', key: '2' }])
+        break;
+      case "homeApplicances":
+        setCategories([{ name: 'Electrodomesticos', key: '3' }])
+        break;
+      case "sports":
+        setCategories([{ name: 'Deporte', key: '4' }])
+        break;
+      case "home":
+        setCategories([{ name: 'Hogar', key: '5' }])
+        break;
+      case "videogames":
+        setCategories([{ name: 'Videojuegos', key: '6' }])
+        break;
+      case "fashion":
+        setCategories([{ name: 'Moda', key: '7' }])
+        break;
+      case "movies":
+        setCategories([{ name: 'Peliculas', key: '8' }])
+        break;
+      case "children":
+        setCategories([{ name: 'Infantil', key: '9' }])
+        break;
+      case "contruction":
+        setCategories([{ name: 'Construción y renovación', key: '10' }])
+        break;
+      case "pets":
+        setCategories([{ name: 'Mascotas', key: '11' }])
+        break;
+      case "games":
+        setCategories([{ name: 'Ocio', key: '12' }])
+        break;
+      case "other":
+        setCategories([{ name: 'Otro', key: '13' }])
+        break;
+      default:
+        setCategories([{ name: 'GATITOS', key: '0' }])
+        break;
+    }
   }
 
 
@@ -104,7 +135,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         case "provide":
           exchange.push({ name: '#prestamo', key: '2' })
           break;
-        case "6193a583e47e769eeaa7a978":
         case "present":
           exchange.push({ name: '#regalo', key: '3' })
           break;
@@ -218,9 +248,9 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   React.useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', () => {
       getProductInfo();
-  });
+    });
 
-  return willFocusSubscription;
+    return willFocusSubscription;
   }, []);
 
 
@@ -290,7 +320,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           </>
           :
           <>
-          <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
               <View style={styles.row}>
                 <Icon name='pencil' size={24} color={'#333'} />
                 <Text style={styles.normalText}>Editar producto</Text>

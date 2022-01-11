@@ -188,6 +188,19 @@ exports.loginAdmin = async (req, res) => {
   }
 }
 
+exports.deleteMyUser = async (req, res) => {
+  try{
+    let usr = await User.findById(req.user.id)
+    usr.delete();
+    res.status(200).json(usr);
+  }
+  catch(err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}
+
+
 exports.deleteUser = async (req, res) => {
   let usr = await User.findById({_id: req.params.id})
   //let email = req.params.email; 

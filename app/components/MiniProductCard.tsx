@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Alert, Button, StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 import axios from 'axios'
@@ -12,25 +12,54 @@ type CardProps = {
   id: string,
   uid: string,
   name: string,
-  guardado: boolean,
+  wishlist: boolean,
   imageUri?: string,
   arrayTratos: string[],
+  token: string
 }
 
-export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos }: CardProps) {
+export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTratos, token, wishlist}: CardProps) {
   var prestar = false;
   var intercambiar = false;
   var dar = false;
+  const [guardado, setGuardado] = useState();
   arrayTratos.forEach(element => {
     if (element == "exchange") intercambiar = true;
     if (element == "present") dar = true;
     if (element == "provide") prestar = true
   });
+
+  const isWishlist = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid)
+
+    response.data.wishlist.forEach(element => {
+      console.log(element)
+      if (element == id) {
+        setGuardado(true)
+      }
+      else {
+        setGuardado(false)
+      }
+    });
+      
+
+  }
+  isWishlist();
+
+
   const guardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.put('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
       idProduct: id
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
+      setGuardado(true)
     })
       .catch(function (error) {
         console.log(error);
@@ -38,10 +67,23 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
   }
 
   const noGuardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
-      idProduct: id
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
+      data: {
+        idProduct: id
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     }).then(function (response) {
       console.log(response);
+      setGuardado(false)
     })
       .catch(function (error) {
         console.log(error);
@@ -81,7 +123,7 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
             width: '25%',
             height: '100%',
           }} >
-          {guardado && <TouchableOpacity style={{
+          {/*guardado && <TouchableOpacity style={{
             width: 22,
             height: '100%',
 
@@ -93,7 +135,24 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
             height: '100%',
           }} onPress={guardarProducto}>
             <Icon name='heart-outline' size={22} />
-          </TouchableOpacity>}
+          </TouchableOpacity>*/}
+
+          {guardado?
+            <TouchableOpacity style={{
+              width: 30,
+              height: '100%',
+            }} onPress={noGuardarProducto}>
+              <Icon name='heart' size={30} color={'red'} />
+            </TouchableOpacity>
+          :
+            <TouchableOpacity style={{
+              width: 30,
+              height: '100%',
+            }} onPress={guardarProducto}>
+              <Icon name='heart-outline' size={30} color={'black'} />
+            </TouchableOpacity>
+          }
+
         </View>
       </View>
       <Text style={styles.title}>{name}</Text>

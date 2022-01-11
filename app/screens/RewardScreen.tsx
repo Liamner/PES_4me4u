@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Button, Platform,ScrollView, Image, StyleSheet,Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import ProductCardElement from './ProductCardElement'
 
 
 import axios from 'axios';

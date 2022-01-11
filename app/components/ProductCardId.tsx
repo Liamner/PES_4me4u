@@ -6,6 +6,7 @@ import axios from 'axios'
 import { not } from "react-native-reanimated";
 import navigation from "../navigation";
 import { functionExpression } from "@babel/types";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type CardProps = {
   id: string,
@@ -92,10 +93,11 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
       }
     }
 
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
+    await axios.put('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
       }, config).then(function(response) {
         console.log(response);
+        guardado = true;
       })
       .catch(function(error) {
         console.log(error);
@@ -116,6 +118,7 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
         idProduct: id
       }, config).then(function(response) {
         console.log(response);
+        guardado = false;
       })
       .catch(function(error) {
         console.log(error);
@@ -171,7 +174,7 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
     width: '20%',
     height: '100%',
   }} > 
-  {guardado &&   <TouchableOpacity  style={{
+  {/*guardado &&   <TouchableOpacity  style={{
           width: 30, 
           height: '100%',                             
         
@@ -192,7 +195,24 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
         height: '100%',                     
         
         }} />  
-      </TouchableOpacity>  }    
+      </TouchableOpacity>  */}    
+
+      {guardado?
+        <TouchableOpacity style={{
+          width: 30,
+          height: '100%',
+        }} onPress={noGuardarProducto}>
+          <Icon name='heart' size={30} color={'red'} />
+        </TouchableOpacity>
+      :
+        <TouchableOpacity style={{
+          width: 30,
+          height: '100%',
+        }} onPress={guardarProducto}>
+          <Icon name='heart-outline' size={30} color={'black'} />
+        </TouchableOpacity>
+      }
+
   </View>     
   </View>                          
   <Text style={styles.title}>{name}</Text>   

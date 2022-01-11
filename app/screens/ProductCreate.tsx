@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Button, Platform, ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { Button, Platform, ScrollView, Image, StyleSheet, Modal, Dimensions, FlatList, Pressable, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios, { AxiosResponse } from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
-import { TextInput, Checkbox } from 'react-native-paper';
+import { Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationBar from '../components/NavigationBar';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import retrieveSession from '../hooks/retrieveSession';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [pid, setProductID] = React.useState('');
@@ -28,25 +29,25 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   const imageArray = [image, image2, image3, image4, image5, image6];
   const [session, setSession] = React.useState({
     id: "",
-    user:"",
-    token:""
-})
+    user: "",
+    token: ""
+  })
 
-const {t, i18n} = useTranslation();
-const [currentLanguage,setLanguage] =useState('cat');
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setLanguage] = useState('cat');
 
-const getData = async () => {
+  const getData = async () => {
     try {
-        const value = await AsyncStorage.getItem('userSession')
-        if(value !== null) {
-            setSession(JSON.parse(value))
-            console.log(value)
-        }
-        else {
-            console.log("empty")
-        }
-    } catch(e) {
-        console.log(e)
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+        console.log(value)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
   const [newImages, setNewImages] = React.useState([]);
@@ -85,7 +86,7 @@ const getData = async () => {
 
   const unPickImage = async (id: Number) => {
     Alert.alert(
-     t('¿Que quieres hacer con tu foto?'),
+      t('¿Que quieres hacer con tu foto?'),
       '',
       [
         {
@@ -116,71 +117,107 @@ const getData = async () => {
       quality: 1,
     });
 
-    if (!result.cancelled ) {
-    setImageById(id, '');
-      
-    if (id == 1){
-      setImage(result.uri);
-      newImages.push(result.uri);
-    } 
-    else if(id == 2){
-      setImage2(result.uri);
-      newImages.push(result.uri);
+    if (!result.cancelled) {
+      setImageById(id, '');
+
+      if (id == 1) {
+        setImage(result.uri);
+        newImages.push(result.uri);
+      }
+      else if (id == 2) {
+        setImage2(result.uri);
+        newImages.push(result.uri);
+      }
+      else if (id == 3) {
+        setImage3(result.uri);
+        newImages.push(result.uri);
+      }
+      else if (id == 4) {
+        setImage4(result.uri);
+        newImages.push(result.uri);
+      }
+      else if (id == 5) {
+        setImage5(result.uri);
+        newImages.push(result.uri);
+      }
+      else if (id == 6) {
+        setImage6(result.uri);
+        newImages.push(result.uri);
+      }
     }
-    else if(id == 3){
-      setImage3(result.uri);
-      newImages.push(result.uri);
-    }
-    else if(id == 4){
-      setImage4(result.uri);
-      newImages.push(result.uri);
-    }
-    else if(id == 5){
-      setImage5(result.uri);
-      newImages.push(result.uri);
-    }
-    else if(id == 6){
-      setImage6(result.uri);
-      newImages.push(result.uri);
-    }  
-  }
   };
 
   const setImages = async (response: AxiosResponse<unknown, any>) => {
     console.log(newImages);
 
-      newImages.forEach( async (element) => {
-        console.log('Empieza post de ' + element);
-        const uri = element;
-        const uriParts = uri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
-        const formData = new FormData();
-        formData.append('img', {
-          uri,
-          name: `photo.${fileType}`,
-          type: `image/${fileType}`,
-        });
-        console.log(formData);
-
-        console.log('pid: ' + response.data._id);
-  
-        await axios
-          .post('https://app4me4u.herokuapp.com/api/image/' + response.data._id, formData, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            }})
-          .then(function(response) {
-            console.log("New images posted")
-            //console.log(response)
-          })
-          .catch(function(error) {
-            console.log(error);
-        });
+    newImages.forEach(async (element) => {
+      console.log('Empieza post de ' + element);
+      const uri = element;
+      const uriParts = uri.split('.');
+      const fileType = uriParts[uriParts.length - 1];
+      const formData = new FormData();
+      formData.append('img', {
+        uri,
+        name: `photo.${fileType}`,
+        type: `image/${fileType}`,
       });
+      console.log(formData);
+
+      console.log('pid: ' + response.data._id);
+
+      await axios
+        .post('https://app4me4u.herokuapp.com/api/image/' + response.data._id, formData, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          }
+        })
+        .then(function (response) {
+          console.log("New images posted")
+          //console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
   }
 
   const sendApi = async () => {
+
+    var aux: string[] = [];
+    var contar = 0;
+    // if (checkedIntercambiar) aux.push("exchange");
+    // if (checkedPrestar) aux.push("provide");
+    // if (checkedDonar) aux.push("present");
+    // if (aux.length  == 0) aux.push("present");
+    
+    if (checkedIntercambiar){
+       aux.push("exchange");
+       contar = contar + 1;
+      }
+    if (checkedPrestar){
+       aux.push("provide");
+       contar = contar + 1;
+      }
+    if (checkedDonar){
+       aux.push("present");
+       contar = contar + 1;
+      }
+
+      var sendExchange;
+    if (contar  == 0){
+      sendExchange = "present";
+    } 
+    else if (contar == 1){
+      if (checkedIntercambiar) sendExchange = "exchange";
+      else if (checkedPrestar) sendExchange = "provide";
+      else if (checkedDonar)   sendExchange = "present";
+    }
+    else{
+       sendExchange = aux;
+      }
+
+    console.log(sendExchange);
     
     console.log("sending product")
     const config = {
@@ -188,159 +225,162 @@ const getData = async () => {
         Authorization: `Bearer ${session.token}`
       }
     }
+    
     await axios.post('https://app4me4u.herokuapp.com/api/product/create', {
       name: name,
       categories: selectedCategory,
       description: description,
-      exchange: "present",
+      exchange: sendExchange,
       state: "available",
-      }, config)
+    }, config)
       .then(function (response) {
         setImages(response);
       })
-        .catch(function (error) {
-          console.log(error);
+      .catch(function (error) {
+        console.log(error);
       });
 
-      
+
 
   }
   return (
-    <>
-    <ScrollView>
       <View style={styles.container}>
-        <TextInput
-          label= {t("Nombre del Producto")}
-          style={styles.textInput}
-          onChangeText={onChangeName}
-          value={name}
-        />
-        <TextInput
-          label={t("Descripción")}
-          style={styles.textInput}
-          onChangeText={onChangeDescription}
-          value={description}
-        />
-        <Text
-           style={styles.title}> {t('Categorias')} </Text>
-        <Picker
-          selectedValue={selectedCategory}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedCategory(itemValue)
-          }>
-          <Picker.Item label={t("Seleccione un categoría...")} value="default" />          
-          <Picker.Item label="fashion" value="fashion" />
-          <Picker.Item label="computer" value="computer" />
-          <Picker.Item label="homeApplicances" value="homeApplicances" />
-          <Picker.Item label="sports" value="sports" />
-          <Picker.Item label="home" value="home" />
-          <Picker.Item label="videogames" value="videogames" />
-          <Picker.Item label="movies" value="movies" />
-          <Picker.Item label="children" value="children" />
-          <Picker.Item label="construction" value="construction" />
-          <Picker.Item label="pets" value="pets" />
-          <Picker.Item label="games" value="games" />
-          <Picker.Item label="other" value="other" />
-        </Picker>
-        <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Que quieres hacer con tu producto?')}</Text>
-        <View
-          style={styles.checkbox}>
-          <Checkbox
-            status={checkedDonar ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setCheckedDonar(!checkedDonar);
-            }}
+        <ScrollView style={{ flex: 1 }}>
+          <TextInput
+            placeholder={t("Nombre del Producto")}
+            style={styles.textInput}
+            onChangeText={onChangeName}
+            value={name}
           />
-          <Text >{t('Donar')}</Text>
-        </View>
-        <View
-          style={styles.checkbox}>
-          <Checkbox
-            status={checkedPrestar ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setCheckedPrestar(!checkedPrestar);
-            }}
+          <TextInput
+            placeholder={t("Descripción")}
+            style={styles.textInput}
+            onChangeText={onChangeDescription}
+            value={description}
           />
-          <Text >{t('Prestar')}</Text>
-        </View>
-        <View
-          style={styles.checkbox}>
-          <Checkbox
-            status={checkedIntercambiar ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setCheckedIntercambiar(!checkedIntercambiar);
-            }}
-          />
-          <Text >{t('Intercambiar')}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: 30
-          }}>
+          <Text
+            style={styles.title}> {t('Categorias')} </Text>
+          <Picker
+            selectedValue={selectedCategory}
+            style={styles.picker}
+            onValueChange={(itemValue) =>
+              setSelectedCategory(itemValue)
+            }>
+            <Picker.Item label={t("Seleccione un categoría...")} value="default" />
+            <Picker.Item label="fashion" value="fashion" />
+            <Picker.Item label="computer" value="computer" />
+            <Picker.Item label="homeApplicances" value="homeApplicances" />
+            <Picker.Item label="sports" value="sports" />
+            <Picker.Item label="home" value="home" />
+            <Picker.Item label="videogames" value="videogames" />
+            <Picker.Item label="movies" value="movies" />
+            <Picker.Item label="children" value="children" />
+            <Picker.Item label="construction" value="construction" />
+            <Picker.Item label="pets" value="pets" />
+            <Picker.Item label="games" value="games" />
+            <Picker.Item label="other" value="other" />
+          </Picker>
+          <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Que quieres hacer con tu producto?')}</Text>
+          <View style={styles.row}>
+            <View
+              style={styles.checkbox}>
+              <Checkbox
+                status={checkedDonar ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setCheckedDonar(!checkedDonar);
+                }}
+              />
+              <Text >{t('Donar')}</Text>
+            </View>
+            <View
+              style={styles.checkbox}>
+              <Checkbox
+                status={checkedPrestar ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setCheckedPrestar(!checkedPrestar);
+                }}
+              />
+              <Text >{t('Prestar')}</Text>
+            </View>
+            <View
+              style={styles.checkbox}>
+              <Checkbox
+                status={checkedIntercambiar ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setCheckedIntercambiar(!checkedIntercambiar);
+                }}
+              />
+              <Text >{t('Intercambiar')}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: "row",
+              marginTop: 1
+            }}>
 
-          {image &&
-            <TouchableOpacity onPress={() => unPickImage(1)}>
-              <Image style={styles.image} source={{ uri: image }} />
-            </TouchableOpacity>}
-          {!image &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(1)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-          {image2 &&
-            <TouchableOpacity onPress={() => unPickImage(2)}>
-              <Image style={styles.image} source={{ uri: image2 }} />
-            </TouchableOpacity>}
-          {!image2 &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(2)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-          {image3 &&
-            <TouchableOpacity onPress={() => unPickImage(3)}>
-              <Image style={styles.image} source={{ uri: image3 }} />
-            </TouchableOpacity>}
-          {!image3 &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(3)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-        </ View>
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: 10
-          }}>
-          {image4 &&
-            <TouchableOpacity onPress={() => unPickImage(4)}>
-              <Image style={styles.image} source={{ uri: image4 }} />
-            </TouchableOpacity>}
-          {!image4 &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(4)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-          {image5 &&
-            <TouchableOpacity onPress={() => unPickImage(5)}>
-              <Image style={styles.image} source={{ uri: image5 }} />
-            </TouchableOpacity>}
-          {!image5 &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(5)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-          {image6 &&
-            <TouchableOpacity onPress={() => unPickImage(6)}>
-              <Image style={styles.image} source={{ uri: image6 }} />
-            </TouchableOpacity>}
-          {!image6 &&
-            <TouchableOpacity style={styles.notImage} onPress={() => pickImage(6)}>
-              <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
-            </TouchableOpacity>}
-        </View>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Subir Producto!')}</Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]}><Text> {t('Cancelar')} </Text></Pressable>
+            {image &&
+              <TouchableOpacity onPress={() => unPickImage(1)}>
+                <Image style={styles.image} source={{ uri: image }} />
+              </TouchableOpacity>}
+            {!image &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(1)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+            {image2 &&
+              <TouchableOpacity onPress={() => unPickImage(2)}>
+                <Image style={styles.image} source={{ uri: image2 }} />
+              </TouchableOpacity>}
+            {!image2 &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(2)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+            {image3 &&
+              <TouchableOpacity onPress={() => unPickImage(3)}>
+                <Image style={styles.image} source={{ uri: image3 }} />
+              </TouchableOpacity>}
+            {!image3 &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(3)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+          </ View>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: "row",
+              marginTop: 10
+            }}>
+            {image4 &&
+              <TouchableOpacity onPress={() => unPickImage(4)}>
+                <Image style={styles.image} source={{ uri: image4 }} />
+              </TouchableOpacity>}
+            {!image4 &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(4)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+            {image5 &&
+              <TouchableOpacity onPress={() => unPickImage(5)}>
+                <Image style={styles.image} source={{ uri: image5 }} />
+              </TouchableOpacity>}
+            {!image5 &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(5)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+            {image6 &&
+              <TouchableOpacity onPress={() => unPickImage(6)}>
+                <Image style={styles.image} source={{ uri: image6 }} />
+              </TouchableOpacity>}
+            {!image6 &&
+              <TouchableOpacity style={styles.notImage} onPress={() => pickImage(6)}>
+                <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
+              </TouchableOpacity>}
+          </View>
+          <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Subir Producto!')}</Text></Pressable>
+          <Text> </Text>
+        </ScrollView>
+        <NavigationBar navigation={navigation} upload={true} />
       </View>
-    </ScrollView>
-    <NavigationBar  navigation={navigation} upload={true}/>
-    </>
   );
 }
 
@@ -349,7 +389,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 45
   },
   icono: {
     width: 35,
@@ -365,12 +404,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center'
   },
+  row: {
+    height: 100,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
   button: {
     alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    margin: 10,
+    marginTop: 20,
+    marginBottom: 80,
     borderRadius: 4,
     elevation: 3,
     width: '90%',
@@ -378,9 +424,8 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     flexDirection: "row",
-    marginTop: 10,
     alignItems: 'center',
-    width: '80%',
+    width: '30%'
   },
   image: {
     marginHorizontal: 5,
@@ -409,22 +454,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 15,
-    width: '90%',
+    marginTop: 5,
+    width: '98%',
   },
   picker: {
-    marginVertical: 10,
+    marginVertical: 2,
     height: 60,
-    width: '90%',
+    width: '98%',
+    alignSelf: 'center',
   },
   textInput: {
-    marginVertical: 15,
+    alignSelf: 'center',
+    color: 'black',
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#efefef',
+    marginVertical: 8,
     height: 60,
-    width: '90%',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+    padding: 5,
+    width: '98%',
   },
 });

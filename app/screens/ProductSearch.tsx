@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Button, Alert, Modal, Pressable, Text } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Button, Alert, Modal, Pressable, Text, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 import { View } from '../components/Themed';
@@ -9,13 +9,35 @@ import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar';
+import { LinearGradient } from 'expo-linear-gradient';
+import retrieveSession from '../hooks/retrieveSession';
 
 
 export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState(null);
   const [text, onChangeText] = useState(null);
   const [category, setCategory] = useState(route.params);
-  const [type, setType] = useState(null);
+  const [type, setType] = useState();
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
+
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    console.log(session)
+  }
   console.log("categoria: " + route.params)
   const getPNameInfo = async () => {
     console.log('haciendo llamada ...');
@@ -31,11 +53,14 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
     console.log('llamada hecha');
   };
   React.useEffect(() => {
+    getData()
     if (route.params != null) getPNameInfo();
   }, []);
 
   return (
     <View style={styles.container}>
+    <ScrollView style={{ flex: 1 }}>
+
       <View style={[styles.row]}>
         <TextInput
           style={{ width: '80%' }}
@@ -43,11 +68,27 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           value={text}
           placeholder="Buscar..."
         />
-        <Button
+{/*}        <Button
           style={{ width: '10%' }}
           onPress={getPNameInfo}
           title="Buscar"
-        />
+        />*/}
+
+        <TouchableOpacity
+          onPress={getPNameInfo}
+          style={{ width: '20%', marginTop: 5 }}
+        >
+          <LinearGradient
+            colors={['#a2cff0', '#ADE8F4']}
+            style={styles.followButon}
+          >
+            <Text style={[styles.textFollow,
+            { color: '#fff' }]}>
+              Buscar
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
       </View>
       <View style={styles.row}>
         <Picker
@@ -70,9 +111,10 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           <Picker.Item label="games" value="games" />
           <Picker.Item label="other" value="other" />
         </Picker>
+        
         <Picker
           style={{ width: '50%' }}
-          selectedValue={category}
+          selectedValue={type}
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)}
         >
@@ -86,10 +128,12 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
         numColumns={2}
         data={products}
         renderItem={({ item }) => (
-          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
         )}
         keyExtractor={item => item._id}
       />
+    </ScrollView>
+
       <NavigationBar navigation={navigation} search={true} />
     </View>
   );
@@ -103,6 +147,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: '5%',
     marginVertical: 5,
+  },
+  followButon: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 7
+  },
+  textFollow: {
+    fontSize: 18,
+    fontWeight: 'bold'
   },
 });
 

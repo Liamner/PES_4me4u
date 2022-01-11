@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 
 
@@ -35,11 +34,6 @@ export function NavigationBar({ navigation, casa, search, upload, chat, profile 
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate("ChatList")} >
-          {chat && <Icon name='chatbubble-ellipses' size={30} color={highlight}/>}
-          {!chat && <Icon name='chatbubble-ellipses-outline' size={30} color={normal}/>}
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("UserProducts", { id: '' })} >
           {chat && <Icon name='chatbubble-ellipses' size={30} color={highlight}/>}
           {!chat && <Icon name='chatbubble-ellipses-outline' size={30} color={normal}/>}
         </TouchableOpacity>

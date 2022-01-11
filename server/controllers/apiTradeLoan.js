@@ -65,6 +65,7 @@ exports.readAllTradeLoan = async (req, res) => {
           // get user rewards
           // ==================
           const userO = await User.findById({_id:req.user.id});
+          const userTak = await User.findById({_id:req.body.userTaking});
           userO.loans += 1;
           let estimatedPoints = req.body.points;
           let eco = userO.ecoPoints;
@@ -72,7 +73,9 @@ exports.readAllTradeLoan = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
+          userTak.ecoPoints -= parseFloat(estimatedPoints);
           await userO.save();
+          await userTak.save();
 
           // ==================
           // getRewards

@@ -366,14 +366,29 @@ exports.getUserPoints = async (req, res) => {
 exports.getUserWishlist = async (req, res) => {
   try {
     const userId = req.params.id;
-    User.findOne({ _id: userId }, (erro, user) => {
+    console.log(userId)
+    
+    User.findById({ _id: userId }, async (erro, user) => {
+      await Product.find({ _id: { $in: user.wishlist } }, (erro, products) => {
+        console.log(products)
+        res.status(200).json(products)
+      }).populate('img').clone()
+    }).clone()
+  
+    /*
+    await User.findById({_id: userId}, (error, user) => {
+      console.log(user)
+      res.status(200).json(user)
+    }).populate('img')
+*/
+    /*User.findOne({ _id: userId }, (erro, user) => {
       let products = user.wishlist;
 
       console.log(products)
       Product.find({ _id: { $in: products } }, (erro, wishlistProducts) => {
         res.status(200).json(wishlistProducts)
       }).populate('img')
-    })
+    })*/
   } catch (error) {
     res.status(400).json(error)
   }
@@ -382,13 +397,21 @@ exports.getUserWishlist = async (req, res) => {
 exports.addToWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    const ourUser = await User.findById({ _id: userId });
+   
     let idProduct = req.body.idProduct;
-    ourUser.wishlist.push(idProduct);
+    //const product = await Product.findById(idProduct)
 
-    ourUser.save();
-    res.status(200).json(ourUser.wishlist);
-
+    await Product.findById({_id: idProduct}, async (erro, product) => {
+      console.log('product ' + product)
+      if (product) {
+        User.findById({ _id: userId }, async (erro, user) => {
+          user.wishlist.push(product);
+          await user.save()
+          res.status(200).json(user.wishlist);
+        }).clone()
+      }
+      else res.status(404).json({error: 'Product not found'});
+    }).clone()
   } catch (error) {
     res.status(400).json(error)
   }

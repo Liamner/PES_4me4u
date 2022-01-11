@@ -75,8 +75,10 @@ let usuarioSchema = new Schema({
         required: false
     }],*/
     wishlist: [{
-        type: String,
-        required: false
+        type: Schema.Types.ObjectId, 
+        ref: 'Product'
+        //type: String,
+        //required: false
     }],
     recentlyViewed: [{
         type: Schema.Types.ObjectId, 

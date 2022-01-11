@@ -92,7 +92,7 @@ export function ProductCardId  ({ id, uid/*, name*/, guardado/*, imageUri, array
       }
     }
 
-    await axios.post('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
+    await axios.put('https://app4me4u.herokuapp.com/api/user/'+ uid +'/AddToWishlist', {
         idProduct: id
       }, config).then(function(response) {
         console.log(response);

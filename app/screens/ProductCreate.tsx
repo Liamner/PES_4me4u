@@ -207,7 +207,6 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 
   }
   return (
-    <>
       <View style={styles.container}>
         <ScrollView style={{ flex: 1 }}>
           <TextInput
@@ -344,7 +343,6 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         </ScrollView>
         <NavigationBar navigation={navigation} upload={true} />
       </View>
-    </>
   );
 }
 

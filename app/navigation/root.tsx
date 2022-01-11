@@ -30,6 +30,7 @@ export default function RootNavigator() {
       <Stack.Screen name="FirstScreen" component={FirstScreen} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: '4me4u'}} />
       <Stack.Screen name="ProductSearch" component={ProductSearch} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Búsqueda' }} />
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Añadir producto' }} />
+      <Stack.Screen name="EditProduct" component={EditProduct} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Editar' }} />
       <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Lista de chats' }} />    
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Mi perfil'  }} /> 
       <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true, headerShadowVisible: false }} /> 

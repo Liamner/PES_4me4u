@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/navbar'
@@ -7,7 +8,7 @@ import GeneralStats from './components/generalStats';
 import Reports from './controllers/showReports';
 
 function App() {
-  const [token, setToken] = useState();
+  const [token, setToken] = React.useState();
   if(!token) {
     return <Login setToken={setToken}/>
   }

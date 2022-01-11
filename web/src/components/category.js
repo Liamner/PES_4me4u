@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import APIService from "../services/API";
 
 export default class Report extends Component {
 	constructor(props) {

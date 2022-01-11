@@ -9,6 +9,10 @@ const config = {
 }
 
 class APIService {
+    login(body){
+        return axios.post(API_URL + '/login/admin', body);
+    }
+    
     get(route) {
         return axios.get(API_URL + route, config);
     }

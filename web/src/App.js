@@ -1,11 +1,16 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Navbar from './components/navbar';
+import Navbar from './components/navbar'
+import Login from './components/login'
 import GeneralStats from './components/generalStats';
 import Reports from './controllers/showReports';
 
 function App() {
+  const [token, setToken] = useState();
+  if(!token) {
+    return <Login setToken={setToken}/>
+  }
   return (
     <div className="App">
       <Navbar />

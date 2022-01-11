@@ -310,7 +310,16 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         />
         <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        {!ownProduct ?
+        {ownProduct ?
+          <>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
+              <View style={styles.row}>
+                <Icon name='pencil' size={24} color={'#333'} />
+                <Text style={styles.normalText}>Editar producto</Text>
+              </View>
+            </TouchableHighlight>
+          </>
+          :
           <>
             <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
               <View style={styles.row}>
@@ -322,15 +331,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
               <View style={styles.row}>
                 <Icon name='bookmark' size={24} color={'#333'} />
                 <Text style={styles.normalText}>Guardar en la lista</Text>
-              </View>
-            </TouchableHighlight>
-          </>
-          :
-          <>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
-              <View style={styles.row}>
-                <Icon name='pencil' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Editar producto</Text>
               </View>
             </TouchableHighlight>
           </>

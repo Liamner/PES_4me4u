@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import {Alert, Button, StyleSheet, View } from "react-native";
+import {Alert, AsyncStorage, Button, StyleSheet, View } from "react-native";
 
 import axios from 'axios'
 import { not } from "react-native-reanimated";
-import navigation from "../navigation";
 
 
 // import DeleteUser from '../components/DeleteUser';
@@ -17,25 +16,36 @@ import navigation from "../navigation";
 class DeleteUser extends Component {
       state = { isHungry: true };
 
+      logOut = async (navigation:any) => {  
+        await AsyncStorage.removeItem('userSession');
+        navigation.navigate('Login');
+      };
+
     //Datos
 
-    APIDeleteUser= (id: {} | null | undefined) =>{
-        if(id != null){
+    APIDeleteUser= (child: {session: {id: string, user:string, token: string}, navigation: any}) =>{
+        if(child.session.id != null){
+            console.log('eliminar usuario: '+ child.session.id + ' ' + child.session.token)
+            const config = {
+                headers: {
+                  Authorization: `Bearer ${child.session.token}`
+                }
+              }
 
             //    https://app4me4u.herokuapp.com/api/deleteUser/:id
         //const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/61952ec8adeb9693da219fc2' )
-        const response = axios.delete('https://app4me4u.herokuapp.com/api/deleteUser/' + id )
-        
+        const response = axios.delete('https://app4me4u.herokuapp.com/api/user/delete', config)
             .then(res => {
+            this.logOut(child.navigation);
             console.log(res);})
+        }    
     }
-        }
 
 
 
 
     //Alerta de confirmación de borrado
-    deleteUserConfirmationAlert = (id: {} | null | undefined) =>
+    deleteUserConfirmationAlert = (child: {session: {id: string, user:string, token: string}, navigation: any}) =>
     Alert.alert(
         "¡Importante!",
         "¿Está seguro de que desea eliminar su cuenta de usuario?\nEsta acción es irreversible.",
@@ -44,7 +54,7 @@ class DeleteUser extends Component {
             text: "No",
 //          onPress: () => console.log("Cancel Pressed"),
         },
-        { text: "Sí", onPress: () => this.APIDeleteUser(id) }
+        { text: "Sí", onPress: () => this.APIDeleteUser(child) }
         ]
     );
 

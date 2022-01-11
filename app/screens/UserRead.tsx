@@ -19,7 +19,10 @@ import UserProducts from './UserProducts';
 
 import '../assets/i18n/i18n';
 import { useTranslation } from 'react-i18next';
+import DeleteUser from '../components/DeleteUser';
+import LogOutButton from '../components/LogOutButton';
 import ProductCard from '../components/ProductCard';
+import { color } from 'react-native-reanimated';
 
 /*
 wishlist -> provada
@@ -246,6 +249,10 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   }, []);
 
+  let child = {session, navigation};
+
+
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -396,6 +403,13 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
           />
 
         }
+
+        <View style={{ marginBottom: 80}}>
+        <LogOutButton navigation={navigation}></LogOutButton>
+         
+        <DeleteUser children={child} ></DeleteUser>
+        </View>
+
       </ScrollView>
       {ownProfile ?
         <NavigationBar navigation={navigation} profile={true} />

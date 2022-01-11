@@ -39,7 +39,7 @@ module.exports = function(app) {
 
   // Read Product with id = id
   router.route('/product/:id')
-    .get(productController.readProduct);
+    .get(authenticateJWT, productController.readProduct);
   
   // Read all products
   router.route('/product/')
@@ -379,6 +379,7 @@ module.exports = function(app) {
   router.route('/admin/transactions').get(adminController.numTransasPorTipo)
   router.route('/admin/categories').get(adminController.numCategories)
   router.route('/admin/productsReported').get(adminController.numPorductosReportados)
+  router.route('/admin/topProducts').get(adminController.topProducts)
   return router;
 
 

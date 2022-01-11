@@ -48,6 +48,10 @@ const ProductSchema = new mongoose.Schema({
     },
     username: {
         type: String
+    },
+    views: {
+        type: Number,
+        default: 0
     }
 });
 

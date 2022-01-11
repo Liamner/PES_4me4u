@@ -323,9 +323,13 @@ exports.readLoans =  async (req, res) => {
     }).clone()
   }
 
+  exports.topProducts = async (req, res) => {
+    const products = await Product.find().sort({views:-1}).limit(10) // for MAX
+    if (products) res.status(200).json(products)
+    else res.status(500)
+  }
 
   /*
-  - la llamada de login admin siempre devuelve 400 y no se puede saber desde front si es porque la contra es incorrecta o no es admin
   - he visto que hay un poco de spaninglish en las categorias, es algo provisional o se quedara asi?
   - he pensado en que la ultima llamada del web admin podria ser los productos más vistos, como lo ves?
   - he estado testando lo de los followers y creo que definidamente no funciona el back

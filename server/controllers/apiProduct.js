@@ -25,11 +25,16 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.id }).populate("img");
-
-    console.log("Reading product: " + req.params.id);
-
-    res.status(200).json(product);
+    await Product.findById({ _id: req.params.id }, async (error, product) => {
+      console.log(product)
+      if (product.userId != req.user.id) {
+        console.log('Not my product')
+        product.views =  product.views + 1;
+        await product.save();
+      }
+      res.status(200).json(product);
+    }).populate("img").clone()
+    
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);

@@ -374,21 +374,6 @@ exports.getUserWishlist = async (req, res) => {
         res.status(200).json(products)
       }).populate('img').clone()
     }).clone()
-  
-    /*
-    await User.findById({_id: userId}, (error, user) => {
-      console.log(user)
-      res.status(200).json(user)
-    }).populate('img')
-*/
-    /*User.findOne({ _id: userId }, (erro, user) => {
-      let products = user.wishlist;
-
-      console.log(products)
-      Product.find({ _id: { $in: products } }, (erro, wishlistProducts) => {
-        res.status(200).json(wishlistProducts)
-      }).populate('img')
-    })*/
   } catch (error) {
     res.status(400).json(error)
   }

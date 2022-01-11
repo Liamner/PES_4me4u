@@ -9,11 +9,6 @@ export default class Report extends Component {
 		}
 	}
 
-	componentDidMount() {
-
-	}
-
-
 	render() {
 		const { category } = this.state;
 		return (

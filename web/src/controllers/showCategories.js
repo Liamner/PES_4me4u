@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import APIService from "../services/API";
 import ListCategories from "../components/listCategories";
-import AddCategory from "../components/addCategory"
 
 class Categories extends Component {
 	constructor(props) {
@@ -23,10 +22,6 @@ class Categories extends Component {
 				});
 			}
 		);
-	}
-
-	componentDidUpdate() {
-		
 	}
 
 	render() {

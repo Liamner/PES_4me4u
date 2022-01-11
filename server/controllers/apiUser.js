@@ -189,8 +189,7 @@ exports.loginAdmin = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  let usr = await User.findById({_id: req.params.id})
-  //let email = req.params.email; 
+  let usr = await User.findById({_id: req.params.id}) 
 
   if (usr.userId != req.user.id || usr.role != 'ADMIN')  {
     res.status(401).json({error: "Do not have permission"})
@@ -243,7 +242,6 @@ exports.getUserProducts = async (req, res) => {
 };
 
 exports.rateUser = async (req, res) => {
-  // Id usuario a valorar
   const userId = req.params.id;
   const rateScore = req.body.rateScore;
   const comment = req.body.comment;
@@ -324,132 +322,12 @@ exports.getMyCommentsDone = async (req, res) => {
 exports.getMyCommentsRecived = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsRecived', populate:{path: 'user', select: { 'name': 1} }});
-    //const comments = user.commentsDone.populate(user)
     res.status(200).json(user.commentsRecived);
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
   }
 }
-
-
-exports.getRewards = async (req, res) => {
-  try {
-    console.log("llega a getRewards");
-    const user = await User.findById({ _id: req.params.id });
-    let ngifts = user.gifts;
-    let nloans = user.loans;
-    let nexchanges = user.changes;
-    let points = user.ecoPoints;
-    let rewards = 0;
-    let diez = 10;
-    let cincuenta = 50;
-    let cien = 100;
-    let cientoCincuenta = 150;
-
-    if(ngifts >= 3) {
-      if(ngifts >=3 && ngifts <= 5) rewards += parseFloat(diez);
-      else if(ngifts >= 5 && ngifts <= 7) rewards += parseFloat(cincuenta);
-      else if (ngifts >= 7 && ngifts <= 10) rewards += parseFloat(cien);
-      else if(ngifts >= 10) rewards += parseFloat(cientoCincuenta);
-    }
-
-    if(nloans >= 3) {
-      if(nloans >=3 && nloans <= 5) rewards += parseFloat(diez);
-      else if(nloans >= 5 && nloans <= 7) rewards += parseFloat(cincuenta);
-      else if (nloans >= 7 && nloans <= 10) rewards += parseFloat(cien);
-      else if(nloans >= 10) rewards += parseFloat(cientoCincuenta);
-    }
-
-    if(nexchanges >= 3) {
-      if(nexchanges >=3 && nexchanges <= 5) rewards += parseFloat(diez);
-      else if(nexchanges >= 5 && nexchanges <= 7) rewards += parseFloat(cincuenta);
-      else if (nexchanges >= 7 && nexchanges <= 10) rewards += parseFloat(cien);
-      else if(nexchanges >= 10) rewards += parseFloat(cientoCincuenta);
-    }
-    user.ecoPoints = parseFloat(points)+parseFloat(rewards)
-    //user.ecoPoints += rewards;
-    await user.save();
-    res.status(200).json(user);
-    
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-/*
-exports.getUserRewards = async (req, res) => {
-  console.log("llega a getUserRewards");
-  let {type, estimatedPoints} = req.body;
-
-  let user = await User.findById({ _id: req.params.id });
-  console.log("Searching for user to get reward: " + user.name);
-  let eco = user.ecoPoints;
-  let total = 0;
-  if (type == 'gift'){
-    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    else res.status(400).json({error: 'Estimated points are too high'})
-  }
-
-  else if (type == 'loan') {
-    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    else res.status(400).json({error: 'Estimated points are too high'})
-    
-  }
-  else if (type == 'exchange') {
-    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    else res.status(400).json({error: 'Estimated points not accepted'})
-  }
-  else res.status(400).json({error: 'Transaction not available'});
-  
-  
-  user.ecoPoints = total;
-
-  try {
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-*/
-
-function getUserRewards (type, estimatedPoints) {
-  console.log("llega a getUserRewards");
-  //let {type, estimatedPoints} = req.body;
-
-  let user = User.findById({ _id: req.params.id });
-  console.log("Searching for user to get reward: " + user.name);
-  let eco = user.ecoPoints;
-  let total = 0;
-  if (type == 'gift'){
-    if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    //else res.status(400).json({error: 'Estimated points are too high'})
-  }
-
-  else if (type == 'loan') {
-    if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    //else res.status(400).json({error: 'Estimated points are too high'})
-    
-  }
-  else if (type == 'exchange') {
-    if(estimatedPoints == 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
-    //else res.status(400).json({error: 'Estimated points not accepted'})
-  }
-  //else res.status(400).json({error: 'Transaction not available'});
-  
-  
-  user.ecoPoints = total;
-  console.log("antes: ", eco, " ahora: ", total );
-/*
-  try {
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-  */
-};
 
 exports.getUserLevel = async (req, res) => {
   try{
@@ -463,44 +341,6 @@ exports.getUserLevel = async (req, res) => {
   }
 }
 
-exports.levelManage = async (req, res) => {
-  try {
-    console.log("llega a levelManage");
-    const user = await User.findById({ _id: req.user.id });
-    console.log("Level del usuario: " , user.name);
-
-    var nivelAntiguo = user.level;
-    var nivelNuevo, reward;
-    var points = user.ecoPoints;
-
-    if(points < 50) nivelNuevo = '1'; // seed semilla
-    else if (points >= 50 && points < 150) nivelNuevo = '2'; //brote outbreak
-    else if (points >= 150 && points < 300) nivelNuevo = '3'; // plant
-    else if (points >= 300 && points < 500) nivelNuevo = '4'; // tree
-    else if(points >= 500 && points < 750) nivelNuevo = '5'; // roble oak
-    else if (points >= 750) nivelNuevo = '6'; //ecologista ecologist
-
-    //si ha subido de nivel gana una recompensa
-    if(nivelAntiguo != nivelNuevo) {
-      if(nivelNuevo == '2') reward = 20;
-      else if (nivelNuevo == '3') reward = 40;
-      else if (nivelNuevo == '4') reward = 60;
-      else if (nivelNuevo == '5') reward = 80;
-      else if (nivelNuevo == '6') reward = 100;
-    }
-
-    user.ecoPoints = parseFloat(points) + parseFloat(reward);
-    user.level = nivelNuevo;
-
-    await user.save();
-    //res.status(200).json(user);
-    console.log("gestion de nivel ok")
-    
-  } catch (error) {
-
-  }
-}
-
 exports.getUserPoints = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
@@ -510,27 +350,6 @@ exports.getUserPoints = async (req, res) => {
     res.status(400).json(error)
   }
 };
-
-/*
-exports.getUserRewards = async (req, res) => {
-  try {
-    const {type, estimatedPoints} = req.body;
-
-    const id = req.user.id;
-    const user = await User.findById(id)
-    console.log("Searching for user to get reward: " + user.name);
-    
-    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
-    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
-    if (type != 'exchange') user.ecoPoints += 15;
-
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-*/
 
 exports.getUserWishlist = async (req, res) => {
   try {
@@ -543,11 +362,6 @@ exports.getUserWishlist = async (req, res) => {
         res.status(200).json(wishlistProducts)
       }).populate('img')
     })
-    /*User.findOne({_id: userId}, (erro, user) => {
-      console.log(user.wishlist)
-      console.log(user);
-     res.status(200).json(user.wishlist);
-    }).populate({path:"wishlist", populate: {path: 'products'}});*/
   } catch (error) {
     res.status(400).json(error)
   }
@@ -678,24 +492,6 @@ exports.updateRecentlyViewed = async (req, res) => {
     let idProduct = req.body.idProduct;
 
     User.findById({_id: userId}, async (erro, usersRecentViewed) => {
-      //console.log(usersRecentViewed.recentlyViewed)
-      
-     /* if (usersRecentViewed.recentlyViewed) {
-        for (let i = 0; i < usersRecentViewed.recentlyViewed.length; i++)  {
-
-          console.log(usersRecentViewed.recentlyViewed[i]._id)
-          if (usersRecentViewed.recentlyViewed[i]._id == idProduct) found = true;
-          
-          //if(JSON.stringify(idProduct) === JSON.stringify(usersRecentViewed.recentlyViewed[i]._id)) found = true;
-         // if ( idProduct.toString().equals(id)) found = true;
-        }
-     
-      }
-      console.log(found)
-      if (found) {
-        res.status(404).json({error: 'Product already in the list'});
-      }
-      else {*/
       if (usersRecentViewed.recentlyViewed) {
         if (usersRecentViewed.recentlyViewed.length >= 4) {       
           usersRecentViewed.recentlyViewed.splice(0,1);

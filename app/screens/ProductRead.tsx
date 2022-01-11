@@ -9,11 +9,12 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker } from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 import NavigationBar from '../components/NavigationBar'
+import retrieveSession from '../hooks/retrieveSession';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
 
   const uid = '61b09c0f9482049de40b74f3';
-  //const pid = '61b64a52d4851901d035ed57';
   const pid = route.params;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
@@ -37,7 +38,30 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   //nombre usuario
   const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
-  const [description, setDescription] = useState('Cargando...')
+  const [description, setDescription] = useState('Cargando...');
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  })
+  const [ownProduct, setOwnProduct] = React.useState(false)
+
+  const getData = async (user) => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+        if (user == value.id) {
+          setOwnProduct(true);
+        }
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -108,9 +132,14 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   }
 
   const saveProduct = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
+    await axios.put('https://app4me4u.herokuapp.com/api/user/' + session.id + '/AddToWishlist', {
       idProduct: pid
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
     })
       .catch(function (error) {
@@ -121,7 +150,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
 
 
   const getProductInfo = async () => {
-
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
     //Required
     setName(response.data.name);
@@ -149,6 +177,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
+    getData(response.data.userId);
     getUserInfo(response.data.userId);
   };
 
@@ -167,7 +196,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 45 }}>
         {hasImages ?
           <FlatList
             data={images} //ZZZ
@@ -216,48 +245,42 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
         <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={/*()=>console.log("boton chat pulsado")*/getProductInfo}>
           <View style={styles.row}>
-            <Ionicons
-              name="chatbox"
-              size={24}
-              color="#333"
-            />
+            <Icon name='chatbubble' size={24} color={'#333'} />
             <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
           <View style={styles.row}>
-            <Entypo
-              name="save"
-              size={24}
-              color="#333"
-            />
+            <Icon name='bookmark' size={24} color={'#333'} />
             <Text style={styles.normalText}>Guardar en la lista</Text>
           </View>
         </TouchableHighlight>
-        <View style={styles.row}>
-          <Entypo
-            name="location"
-            size={24}
-            color="#333"
-          />
-          <Text style={styles.normalText}>Ubicación</Text>
-        </View>
-        <CustomMap
-          style={styles.mapview}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <CustomMarker
-            coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-            }}
-          ></CustomMarker>
-        </CustomMap>
+        {latitude === undefined ?
+          <>
+            <View style={styles.row}>
+              <Icon name='compass' size={24} color={'#333'} />
+              <Text style={styles.normalText}>Ubicación</Text>
+            </View>
+            <CustomMap
+              style={styles.mapview}
+              region={{
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <CustomMarker
+                coordinate={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                }}
+              ></CustomMarker>
+            </CustomMap>
+          </>
+          :
+          <></>
+        }
       </ScrollView>
       <NavigationBar navigation={navigation} casa={true} />
     </View>
@@ -271,6 +294,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     backgroundColor: 'red',
+
   },
   separator: {
     marginVertical: 15,

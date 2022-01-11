@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationBar from '../components/NavigationBar';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import retrieveSession from '../hooks/retrieveSession';
 
 export default function CreateProduct({ navigation }: RootTabScreenProps<'CreateProduct'>) {
   const [pid, setProductID] = React.useState('');
@@ -37,9 +38,9 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('userSession')
+      const value = await retrieveSession()
       if (value !== null) {
-        setSession(JSON.parse(value))
+        setSession(value)
         console.log(value)
       }
       else {

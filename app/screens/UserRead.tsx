@@ -249,7 +249,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   }, []);
 
-  let child = {session, navigation};
+  let child = { session, navigation };
 
 
 
@@ -295,15 +295,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
           </View>
         }
-        <View style={styles.row}>
-          <Text style={styles.text} onPress={onPressFollowers}>
-            {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
-          </Text>
-          <Text>        </Text>
-          <Text style={styles.text} onPress={onPressFollowed}>
-            {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
-          </Text>
-        </View>
         <View style={styles.row}>
           {ownProfile ?
             <Text style={styles.text}>
@@ -404,10 +395,10 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
         }
 
-        <View style={{ marginBottom: 80}}>
-        <LogOutButton navigation={navigation}></LogOutButton>
-         
-        <DeleteUser children={child} ></DeleteUser>
+        <View style={{ marginBottom: 80 }}>
+          <LogOutButton navigation={navigation}></LogOutButton>
+
+          <DeleteUser children={child} ></DeleteUser>
         </View>
 
       </ScrollView>

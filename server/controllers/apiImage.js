@@ -8,8 +8,6 @@ exports.getAllImages = async (req, res) => {
     const image = await Image.find();
 
     res.status(200).json(image);
-
-    console.log(image);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);

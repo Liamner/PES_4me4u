@@ -9,7 +9,6 @@ exports.readAllTradeGive = async (req, res) => {
   
       res.status(200).json(tradeGive);
       
-      console.log(tradeGive);
     } catch (error) {
       res.status(400).json(error.message);
       console.log(error.message);
@@ -32,34 +31,35 @@ exports.readAllTradeGive = async (req, res) => {
   exports.createTradeGive = async (req, res) => {
     const tradeGive = new TradeGive();
 
-    tradeGive.userOfering = req.body.userOfering;
+    tradeGive.userOfering = req.user.id;
     tradeGive.userTaking = req.body.userTaking;
     tradeGive.product = req.body.product;
-   tradeGive.publishingDate = req.body.publishingDate;
-     
+    tradeGive.publishingDate = req.body.publishingDate;
+    tradeGive.points = req.body.points;
     try {
-        const userOfering = await User.findById({_id:req.body.userOfering});
+        const userOfering = await User.findById({_id:req.user.id});
         if (userOfering == null) res.status(404).json({error:"userOfering not found"});
       
         const userTaking = await User.findById({_id:req.body.userTaking});
         if (userTaking == null) res.status(404).json({error:"userTaking not found"});
 
-        if (req.body.userOfering == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
+        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
        
-        const product = await Product.findById({_id:req.body.product});
+        const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
+        if (userTaking.points < tradeGive.points) res.status(404).json({error:"not enought points"});
         
-
-      //caldrà comprovar que es tenen prous punts i que el producte pertany a ususari
-     /* const userHasProduct = await User.hasProduct(_id:req.body.userOfering, product:req.body.product)
-      if (!userHasProduct) --> error 
-      userHasEnoughtPoints --> check ---> error
-      --> cal assignar points, que sigui obligatori i que al acabar el creat faci les sumes/restes corresponents als usuaris (sum_points i checkEnoguthPoints)
-      */
-  
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
-          const newProduct = await tradeGive.save();
+          product.state = "reserved";
+          await product.save();
+          // UserTaking.getUserRewards();
+          // UserOfering.getUserRewards();
+          // UserTaking.getRewards();
+          // UserOfering.getRewards();
+          // UserTaking.levelManage();
+          // UserOfering.levelManage();
+          await tradeGive.save();
           res.status(201).json(tradeGive);  
      }
 
@@ -70,12 +70,13 @@ exports.readAllTradeGive = async (req, res) => {
     }
 };
   
-  exports.updateTradeGive = async (req, res) => {
-  
-};
-
   exports.deleteTradeGive = async (req, res) => {
-  
+
+    if ('ADMIN' != req.user.role) {
+      res.status(401).json({error: "Do not have permission"})
+      return;
+    }
+    
       try {
         const tradeGive = await TradeGive.findByIdAndDelete({_id: req.params.id});
     

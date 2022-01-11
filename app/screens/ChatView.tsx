@@ -126,7 +126,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       />
       <View style={[styles.row, { marginBottom: 50, height: 35 }]}>
         <TextInput
-          style={{ color: 'black', borderRadius: 2, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#efefef', width: '85%', marginRight: '3%' }}
+          style={{ color: 'black', borderRadius: 2, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#efefef', width: '85%', marginRight: '3%', padding: 5 }}
           autoCorrect={true}
           onChangeText={setNewMessage}
           value={newMessage}

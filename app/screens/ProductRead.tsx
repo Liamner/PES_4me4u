@@ -9,12 +9,13 @@ import Layout from '../constants/Layout';
 import { CustomMap, CustomMarker } from '../components/MapComponents';
 import axios, { AxiosResponse } from 'axios';
 import NavigationBar from '../components/NavigationBar'
+import retrieveSession from '../hooks/retrieveSession';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
 
-  const uid = '61b09c0f9482049de40b74f3';
-  //const pid = '61b64a52d4851901d035ed57';
-  const pid = route.params;
+  const pid = route.params.pid;
+  const reload = route.params.reload;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -37,7 +38,32 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   //nombre usuario
   const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
-  const [description, setDescription] = useState('Cargando...')
+  const [description, setDescription] = useState('Cargando...');
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  })
+  const [ownProduct, setOwnProduct] = React.useState(false)
+
+  const getData = async (user) => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+        console.log('user: ' + user)
+        if (user == value.id) {
+          setOwnProduct(true);
+          console.log(ownProduct)
+        }
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -49,21 +75,52 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   };
 
   const getCorrectCategoriesType = (response: AxiosResponse) => {
-    /*categories.pop();
+    categories.pop();
     let aux = response.data.categories;
-      element: 
-      switch (aux) {
-        case "61797e24b4a4d195aa14be8d":
-          setCategories([{name: 'Tecnologia', key: '1'}])
-          break;
-        case "61940e6f0c77883d581cede8":
-          setCategories([{name: 'Jugetes', key: '2'}])
-          break;
-        default:
-          setCategories([{name: 'GATITOS', key: '0'}])
-          break;
-      }
-    });*/
+    switch (aux) {
+      case "fashion":
+        setCategories([{ name: 'Moda', key: '1' }])
+        break;
+      case "computer":
+        setCategories([{ name: 'Computación', key: '2' }])
+        break;
+      case "homeApplicances":
+        setCategories([{ name: 'Electrodomesticos', key: '3' }])
+        break;
+      case "sports":
+        setCategories([{ name: 'Deporte', key: '4' }])
+        break;
+      case "home":
+        setCategories([{ name: 'Hogar', key: '5' }])
+        break;
+      case "videogames":
+        setCategories([{ name: 'Videojuegos', key: '6' }])
+        break;
+      case "fashion":
+        setCategories([{ name: 'Moda', key: '7' }])
+        break;
+      case "movies":
+        setCategories([{ name: 'Peliculas', key: '8' }])
+        break;
+      case "children":
+        setCategories([{ name: 'Infantil', key: '9' }])
+        break;
+      case "contruction":
+        setCategories([{ name: 'Construción y renovación', key: '10' }])
+        break;
+      case "pets":
+        setCategories([{ name: 'Mascotas', key: '11' }])
+        break;
+      case "games":
+        setCategories([{ name: 'Ocio', key: '12' }])
+        break;
+      case "other":
+        setCategories([{ name: 'Otro', key: '13' }])
+        break;
+      default:
+        setCategories([{ name: 'GATITOS', key: '0' }])
+        break;
+    }
   }
 
 
@@ -78,7 +135,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         case "provide":
           exchange.push({ name: '#prestamo', key: '2' })
           break;
-        case "6193a583e47e769eeaa7a978":
         case "present":
           exchange.push({ name: '#regalo', key: '3' })
           break;
@@ -107,10 +163,38 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     }
   }
 
+  const openChat = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
+    await axios.post('https://app4me4u.herokuapp.com/api/conversation', {
+      reciverId: userid,
+      productId: pid
+    }, config).then(function (response) {
+      console.log(response);
+      navigation.navigate('ChatView', {
+        id: response._id,
+        productId: pid,
+        productName: name,
+        productImg: images[0].url
+      })
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   const saveProduct = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
+    await axios.put('https://app4me4u.herokuapp.com/api/user/' + session.id + '/AddToWishlist', {
       idProduct: pid
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
     })
       .catch(function (error) {
@@ -121,7 +205,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
 
 
   const getProductInfo = async () => {
-
     let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
     //Required
     setName(response.data.name);
@@ -133,8 +216,8 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     console.log(response.data)
 
     //Optional
-    if (response.data.description == null) setDescription('Descripción: El usuario no nos ha dado una descripción...');
-    else setDescription("Descripción: " + response.data.description);
+    if (response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    else setDescription(response.data.description);
 
     if (response.data.img == null) {
       SetHasImages(false);
@@ -149,7 +232,9 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
+    getData(response.data.userId);
     getUserInfo(response.data.userId);
+
   };
 
   const getUserInfo = async (userId) => {
@@ -161,13 +246,17 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   };
 
   React.useEffect(() => {
-    getProductInfo();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      getProductInfo();
+    });
+
+    return willFocusSubscription;
   }, []);
 
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 45 }}>
         {hasImages ?
           <FlatList
             data={images} //ZZZ
@@ -214,50 +303,57 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         />
         <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={/*()=>console.log("boton chat pulsado")*/getProductInfo}>
-          <View style={styles.row}>
-            <Ionicons
-              name="chatbox"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
-          <View style={styles.row}>
-            <Entypo
-              name="save"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>Guardar en la lista</Text>
-          </View>
-        </TouchableHighlight>
-        <View style={styles.row}>
-          <Entypo
-            name="location"
-            size={24}
-            color="#333"
-          />
-          <Text style={styles.normalText}>Ubicación</Text>
-        </View>
-        <CustomMap
-          style={styles.mapview}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <CustomMarker
-            coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-            }}
-          ></CustomMarker>
-        </CustomMap>
+        {!ownProduct ?
+          <>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
+              <View style={styles.row}>
+                <Icon name='chatbubble' size={24} color={'#333'} />
+                <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
+              <View style={styles.row}>
+                <Icon name='bookmark' size={24} color={'#333'} />
+                <Text style={styles.normalText}>Guardar en la lista</Text>
+              </View>
+            </TouchableHighlight>
+          </>
+          :
+          <>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
+              <View style={styles.row}>
+                <Icon name='pencil' size={24} color={'#333'} />
+                <Text style={styles.normalText}>Editar producto</Text>
+              </View>
+            </TouchableHighlight>
+          </>
+        }
+        {latitude === undefined ?
+          <>
+            <View style={styles.row}>
+              <Icon name='compass' size={24} color={'#333'} />
+              <Text style={styles.normalText}>Ubicación</Text>
+            </View>
+            <CustomMap
+              style={styles.mapview}
+              region={{
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            >
+              <CustomMarker
+                coordinate={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                }}
+              ></CustomMarker>
+            </CustomMap>
+          </>
+          :
+          <></>
+        }
       </ScrollView>
       <NavigationBar navigation={navigation} casa={true} />
     </View>
@@ -271,6 +367,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     backgroundColor: 'red',
+
   },
   separator: {
     marginVertical: 15,

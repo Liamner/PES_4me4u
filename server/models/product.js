@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Category = require('./category.js');
 const Type = require('./type.js');
 var Schema = mongoose.Schema;
-/* consulta aixoo!: https://cathow.dev/mangosos-con-modelado-de-datos-de-objetos-nodejs/*/
 
 const stateTypes = {
     values: ['available', 'reserved', 'provide']

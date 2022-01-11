@@ -17,8 +17,8 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
-  const [latitude, setLatitude] = useState(0.0);
-  const [longitude, setLongitude] = useState(0.0);
+  const [latitude, setLatitude] = useState(undefined);
+  const [longitude, setLongitude] = useState(undefined);
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');

@@ -45,8 +45,8 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
   const [ecoPoints, setEcoPoints] = useState('Cargando...');
   const [score, setScore] = useState('Cargando...');
   const [products, setProducts] = useState([]);
-  const [latitude, setLatitude] = useState(39.03385);
-  const [longitude, setLongitude] = useState(125.75432);
+  const [latitude, setLatitude] = useState(undefined);
+  const [longitude, setLongitude] = useState(undefined);
 
   //sesion
   const [session, setSession] = React.useState({
@@ -154,10 +154,10 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
 
-    if (response.data.latitude == null) setLatitude(39.03385);
+    if (response.data.latitude == null) setLatitude(undefined);
     else setLatitude(response.data.latitude);
 
-    if (response.data.longitude == null) setLongitude(125.75432);
+    if (response.data.longitude == null) setLongitude(undefined);
     else setLongitude(response.data.longitude);
 
     setFollowers(response.data.followers);

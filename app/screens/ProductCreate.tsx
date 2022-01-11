@@ -180,7 +180,8 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           console.log(error);
         });
     });
-    navigation.navigate('ProductRead', response.data._id)
+   // navigation.navigate('ProductRead', response.data._id)
+   navigation.navigate('FirstScreen')
   }
 
   const sendApi = async () => {

@@ -8,8 +8,10 @@ import { Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
 import { useTranslation } from 'react-i18next';
 import NavigationBar from '../components/NavigationBar';
+import retrieveSession from '../hooks/retrieveSession';
 
-export default function EditProduct({ navigation }: RootTabScreenProps<'EditProduct'>) {
+export default function EditProduct({ navigation, route }: RootTabScreenProps<'EditProduct'>) {
+  const pid = route.params;
   const [name, onChangeName] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState();
@@ -51,8 +53,25 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
     pdescription: "",
     pexchange: []
   });
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  })
 
-  const pid = '61b64a52d4851901d035ed57';
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const { t, i18n } = useTranslation();
   const [currentLanguage, setLanguage] = React.useState('cat');
@@ -61,6 +80,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
 
   React.useEffect(() => {
     getInfo();
+    getData();
   }, []);
 
   const getInfo = async () => {
@@ -230,9 +250,14 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
       description: description,
       exchange: ex
     };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
 
     await axios
-      .put('https://app4me4u.herokuapp.com/api/product/update/' + pid, newInfo)
+      .put('https://app4me4u.herokuapp.com/api/product/update/' + pid, newInfo, config)
       .then(function (response) {
         const result = response.data
         console.log(result.name + ' edited')
@@ -251,6 +276,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
 
       });
     editImages();
+    navigation.navigate('ProductRead', {pid: pid, reload: true});
   }
 
 
@@ -382,7 +408,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{marginBottom: 45,}} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ marginBottom: 45, }} showsVerticalScrollIndicator={false}>
         <TextInput
           placeholder={t("Nombre del Producto")}
           style={styles.textInput}
@@ -513,7 +539,7 @@ export default function EditProduct({ navigation }: RootTabScreenProps<'EditProd
               <Image source={require('../images/camara2.png')} style={styles.cameraImage} />
             </TouchableOpacity>}
         </View>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={editImages} ><Text>¡Actualizar!</Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={editProduct} ><Text>¡Actualizar!</Text></Pressable>
         <Pressable style={[styles.button, { backgroundColor: '#dcf9fc' }]} onPress={reloadProduct}><Text>Cancelar</Text></Pressable>
       </ScrollView>
       <NavigationBar navigation={navigation} upload={true} />

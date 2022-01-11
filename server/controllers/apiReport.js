@@ -131,7 +131,7 @@ exports.createReport = async (req, res) => {
   report.userReporting = req.user.id;
   report.userReported = req.body.userReported;  
   report.description = req.body.description;
-  report.publishingDate = req.body.publishingDate;
+  report.publishingDate = Date.now();
   report.relatedProduct = req.body.relatedProduct;         
 
   try {   
@@ -141,7 +141,7 @@ exports.createReport = async (req, res) => {
   const UserReported = await User.findOne({_id: req.body.userReported});
   if (UserReported == null) res.status(404).json({error:"UserReported not found"});
   await report.save();
-  adminController.increaseBlockedUsers();
+  //adminController.increaseBlockedUsers();
 
   res.status(201).json(report);
 

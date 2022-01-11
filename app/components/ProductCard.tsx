@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Alert, Button, StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 import axios from 'axios'
@@ -12,25 +12,57 @@ type CardProps = {
   id: string,
   uid: string,
   name: string,
-  guardado: boolean,
   imageUri?: string,
   arrayTratos: string[],
+  token: string
 }
 
-export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos }: CardProps) {
+export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, token }: CardProps) {
   var prestar = false;
   var intercambiar = false;
   var dar = false;
+  const [guardado, setGuardado] = useState();
   arrayTratos.forEach(element => {
     if (element == "exchange") intercambiar = true;
     if (element == "present") dar = true;
     if (element == "provide") prestar = true
   });
+
+
+
+  const isWishlist = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid + '/wishlist', config)
+    if (response.data.wishlist.includes(id)) {
+      setGuardado(true)
+    }
+    else {
+      setGuardado(false)
+    }
+
+  }
+  isWishlist();
+
+
+
+
   const guardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.put('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
       idProduct: id
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
+      setGuardado(true)
     })
       .catch(function (error) {
         console.log(error);
@@ -38,10 +70,17 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
   }
 
   const noGuardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
-      idProduct: id
+
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
+      data:{
+        idProduct: id
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     }).then(function (response) {
       console.log(response);
+      setGuardado(false)
     })
       .catch(function (error) {
         console.log(error);
@@ -50,7 +89,7 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProductRead", {pid: id, reload: false})}>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductRead", { pid: id, reload: false })}>
           <Image source={{ uri: imageUri }} style={styles.cameraImage} />
         </TouchableOpacity>
         <View
@@ -82,19 +121,17 @@ export function ProductCard({ navigation, id, uid, name, guardado, imageUri, arr
               width: '20%',
               height: '100%',
             }} >
-            {guardado && <TouchableOpacity style={{
-              width: 30,
-              height: '100%',
 
-            }} onPress={noGuardarProducto}>
-              <Icon name='heart' size={30} color={'red'} />
-            </TouchableOpacity>}
-            {!guardado && <TouchableOpacity style={{
-              width: 30,
-              height: '100%',
-            }} onPress={guardarProducto}>
-              <Icon name='heart-outline' size={30} color={'black'} />
-            </TouchableOpacity>}
+            {guardado ?
+              <TouchableOpacity style={{ width: 30, height: '100%',}} onPress={noGuardarProducto}>
+                <Icon name='heart' size={30} color={'red'} />
+              </TouchableOpacity>
+              :
+              <TouchableOpacity style={{ width: 30, height: '100%',}} onPress={guardarProducto}>
+                <Icon name='heart-outline' size={30} color={'black'} />
+              </TouchableOpacity>
+            }
+
           </View>
         </View>
         <Text style={styles.title}>{name}</Text>

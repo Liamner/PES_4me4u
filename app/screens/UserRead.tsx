@@ -1,11 +1,9 @@
-import { isTemplateElement } from '@babel/types';
 import * as React from 'react';
 import { useState } from 'react';
-import { StyleSheet, TouchableHighlight, ScrollView, Alert, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, ScrollView, Alert, Button, AsyncStorage, FlatList } from 'react-native';
 import { CustomMap, CustomMarker } from '../components/MapComponents';
 
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
 
@@ -17,9 +15,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import NavigationBar from '../components/NavigationBar'
 import axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
+import UserProducts from './UserProducts';
 
 import '../assets/i18n/i18n';
 import { useTranslation } from 'react-i18next';
+import ProductCard from '../components/ProductCard';
 
 /*
 wishlist -> provada
@@ -37,11 +37,11 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
   const [id, setId] = useState('');
   const [email, setEmail] = useState('Cargando...');
   const [name, setName] = useState('Cargando...');
-  const [location, setLocation] = useState('Cargando...');
   const [level, setLevel] = useState('Cargando...');
-  const [postalCode, setPostalCode] = useState('Cargando...');
+
   const [ecoPoints, setEcoPoints] = useState('Cargando...');
   const [score, setScore] = useState('Cargando...');
+  const [products, setProducts] = useState([]);
   const [latitude, setLatitude] = useState(39.03385);
   const [longitude, setLongitude] = useState(125.75432);
 
@@ -81,16 +81,15 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('userSession')
+      const value = await retrieveSession()
       if (value !== null) {
-        let aux = JSON.parse(value)
-        setSession(aux)
+        setSession(value)
         if (userid === undefined) {
-          userid = aux.id
-          setId(aux.id)
+          userid = value.id
+          setId(value.id)
           console.log(userid)
         }
-        if (userid !== aux.id)
+        if (userid !== value.id)
           setOwnProfile(false); //HK -> a de ser false
         setOwnProfileAux('N');
       }
@@ -102,6 +101,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
     }
     console.log(session)
     getUserInfo();
+    getProducts();
   }
 
 
@@ -124,6 +124,12 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
     setCurrentPage(currentNumber);
   };
 
+  const getProducts = async () => {
+    console.log(userid)
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid + '/products');
+    setProducts(response.data);
+  };
+
 
   const getUserInfo = async () => {
     console.log('userid: ' + userid)
@@ -140,13 +146,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
     console.log('sol ' + userid + ' sol');
 
-    if (response.data.location == null) setLocation('Desconocido');
-    else setLocation(response.data.location);
-
     setLevel(response.data.level);
-
-    if (response.data.postalCode == null) setPostalCode('Desconocido');
-    else setPostalCode(response.data.postalCode);
 
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
@@ -241,35 +241,16 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
     }
   };
 
-
-
   React.useEffect(() => {
     getData();
 
-    // Alert.alert(
-    //   "Desea cargar este perfil?" ,
-    //   "puede contener datos extraños?",
-    //   [{ text: 'cargar', onPress: () => getUserInfo() }]
-    //   )
-
-
-    auxiliar = { id: userid, ownProfileAux: ownProfileAux };
-    console.log('session:' + session.id + ' ' + session.token + ' ' + session.user);
-
-
-    console.log('cosa: ' + userid + ' ' + ownProfileAux);
-
-
-
   }, []);
 
-
-
-
   return (
-    <>
+    <View style={styles.container}>
       <ScrollView>
-        <View style={styles.container}>
+        <View style={styles.row}>
+          <Text style={styles.text2}>{name}    {t('Nivel')}:{level}   </Text>
           {ownProfile ?
             <View style={{
               alignItems: 'center',
@@ -334,50 +315,52 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               }
             </View>
           }
-          <Text style={styles.text}>
-            {t('Correo:')} <Text style={styles.text2}>{name}</Text>
-          </Text>
-          {ownProfile ?
-            <></>
-            :
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              
-            </View>
-          }
-          <View style={styles.container2}>
-            <Text style={styles.text} onPress={onPressFollowers}>
-              {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
-            </Text>
-            <Text>        </Text>
-            <Text style={styles.text} onPress={onPressFollowed}>
-              {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
-            </Text>
+        </View>
+
+        {ownProfile ?
+          <></>
+          :
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+
           </View>
-          <Text style={styles.text}>
-            {t('Nivel')}: <Text style={styles.text2}>{level}</Text>
+        }
+        <View style={styles.row}>
+          <Text style={styles.text} onPress={onPressFollowers}>
+            {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
           </Text>
-          <Text style={styles.text}>
-            Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
+          <Text>        </Text>
+          <Text style={styles.text} onPress={onPressFollowed}>
+            {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
           </Text>
+        </View>
+        <View style={styles.row}>
+          {ownProfile ?
+            <Text style={styles.text}>
+              Ecos: <Text style={styles.text2}>{ecoPoints} 🍃  </Text>
+            </Text>
+            :
+            <></>
+          }
+
           <Text style={styles.text}>
-            {t('Puntuación')}: <Text style={styles.text2}>{score}</Text> ⭐
+            {t('Puntuación')}: <Text style={styles.text2}>{score} ⭐</Text>
           </Text>
+        </View>
+        {ownProfile ?
+          // ir a wishlist si es tu perfil
           <Button
-            onPress={() => navigation.navigate('UserProducts', id)}
-            title={t('Mis productos')}
+            onPress={() => navigation.navigate('UserWishlist', id)}
+            title={t("Productos deseados")}
             color="#a2cff0" //azul iconico
           />
-          {ownProfile ?
-            // ir a wishlist si es tu perfil
-            <Button
-              onPress={() => navigation.navigate('UserWishlist', userid)}
-              title={t("Productos deseados")}
-              color="#a2cff0" //azul iconico
-            />
-            : <></>}
+          :
+          <></>}
+
+        {latitude !== undefined ?
+        <>
           <CustomMap
             style={styles.mapview}
             region={{
@@ -394,51 +377,63 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               }}
             ></CustomMarker>
           </CustomMap>
+        </>
+        :
+        <></>
+        }
 
-          {/*
+        <Text style={styles.text}>{t('Mis productos')}</Text>
+        <FlatList
+          numColumns={2}
+          data={products}
+          renderItem={({ item }) => (
+            <ProductCard id={item._id} navigation={navigation} name={item.name} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
+          )}
+          keyExtractor={item => item._id}
+        />
+
+        {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,
         <Text onPress={() => navigation.navigate('Login')}>     
           <DeleteUser children= id></DeleteUser>>
         </Text>
         */}
 
-          {ownProfile ?
-            // Cambiar de idioma
-            <>
-              {/* <Text style={styles.titlePicker}> Idioma </Text> */}
+        {ownProfile ?
+          // Cambiar de idioma
+          <Picker
+            selectedValue={currentLanguage}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              changeLanguage(itemValue)
+            }>
+            <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />
+            <Picker.Item label="Castellano" value="es" />
+            <Picker.Item label="Catalán" value="cat" />
+          </Picker>
+          :
 
-              <Picker
-                selectedValue={currentLanguage}
-                style={styles.picker}
-                onValueChange={(itemValue, itemIndex) =>
-                  changeLanguage(itemValue)
-                }>
-                <Picker.Item label={t("Cambiar el idioma...")} value={i18n.language} />
-                <Picker.Item label="Castellano" value="es" />
-                <Picker.Item label="Catalán" value="cat" />
-              </Picker>
+          <Button
+            onPress={() => {
+              Alert.alert(
+                "Denunciado",
+                "Has reportado a este usuario",
+                [{ text: "Aceptar" }]
+              )
+            }}
+            title="Reportar usuario"
+            color="#FF0000" //azul iconico
+          />
 
-            </>
-            :
-
-            <Button
-              onPress={() => {
-                Alert.alert(
-                  "Denunciado",
-                  "Has reportado a este usuario",
-                  [{ text: "Aceptar" }]
-                )
-              }}
-              title="Reportar usuario"
-              color="#FF0000" //azul iconico
-            />
-
-          }
-
-        </View>
+        }
       </ScrollView>
-      <NavigationBar navigation={navigation} profile={true} />
-    </>
+      {ownProfile ?
+        <NavigationBar navigation={navigation} profile={true} />
+        :
+        <NavigationBar navigation={navigation} />
+      }
+
+    </View>
   );
 
 
@@ -446,10 +441,18 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
 const styles = StyleSheet.create({
   container: {
-    //    flex: 1,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    marginHorizontal: '5%',
+    marginVertical: 5,
   },
   container2: {
     //    flex: 1,
@@ -477,14 +480,12 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    //fontFamily: "Cochin",
     fontSize: 20,
-    margin: 10,
-    fontStyle: 'italic'
+    fontStyle: "normal"
   },
   text2: {
+    fontSize: 20,
     fontWeight: "bold",
-    fontStyle: "normal"
   },
 
   image: {

@@ -10,9 +10,6 @@ import ProductCard from '../components/ProductCard';
 import retrieveSession from '../hooks/retrieveSession'
 
 
-import ProductDelete from '../components/ProductDelete';
-
-
 
 export default function UserProducts({ navigation, route }: RootTabScreenProps<'UserProducts'>) {
   var userid = route.params;
@@ -67,7 +64,7 @@ export default function UserProducts({ navigation, route }: RootTabScreenProps<'
         numColumns={2}
         data={products}
         renderItem={({ item }) => (
-          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+          <ProductCard id={item._id} navigation={navigation} name={item.name} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
         )}
         keyExtractor={item => item._id}
       />
@@ -94,14 +91,12 @@ const styles = StyleSheet.create({
   titleText: {
     padding: 10,
     textAlign: "center",
-    //fontFamily: "Cochin",
     fontSize: 27,
     fontWeight: "bold",
     textDecorationLine: "underline"
   },
   productText: {
     textAlign: 'left',
-    //fontFamily: "Cochin",
     fontSize: 20,
   },
 });

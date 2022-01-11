@@ -1,56 +1,42 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
-
-import ProductCardId from '../components/ProductCardId';
-
-
-
-
-import { StyleSheet, ScrollView, FlatList, TouchableOpacity, Text, Button } from 'react-native';
+import { StyleSheet, ScrollView, FlatList, Text, Platform, TouchableHighlight, Button } from 'react-native';
 
 import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import NavigationBar from '../components/NavigationBar';
-import retrieveSession from '../hooks/retrieveSession';
+import ProductCard from '../components/ProductCard';
 
-export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
+import retrieveSession from '../hooks/retrieveSession'
 
+
+
+export default function UserProducts({ navigation, route }: RootTabScreenProps<'UserProducts'>) {
+  var userid = route.params;
   const [session, setSession] = React.useState({
     id: "",
-    user:"",
-    token:""
+    user: "",
+    token: ""
   });
+  const [ownProfileAux, setOwnProfileAux] = useState('');
+  const [products, setProducts] = useState([]);
 
-  
-  const [productsId, setProductsId] = useState([]);
-
-  var [uid, setUid] = useState('');
-
-  const getWishlist = async () => {
-      
-      setUid(session.id);  
-
-
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid + '/wishlist');
-      // setProductsId(response.data.wishlist); //lista de ids de productos en la
-
-
-
-      
-
-      setProductsId(response.data); //lista de ids de productos en la
-
-
-
-    };
+  const getProducts = async () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + userid + '/wishlist', config);
+    setProducts(response.data);//lista de ids de productos en la
+  };
 
 
   const getData = async () => {
     const sess = await retrieveSession();
-      console.log(sess)
-      setSession(sess);
-    };
+    console.log(sess)
+    setSession(sess);
+  };
 
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,96 +47,50 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
 
     const currentNumber = Math.floor((contentOffset + 1) / width) + 1;
     setCurrentPage(currentNumber);
-
   };
-
-
 
   React.useEffect(() => {
     getData();
-
-
-    getWishlist();
-
-
-
-    
+    if (userid === session.id) {
+      setOwnProfileAux('N');
+    }
+    else {
+      setOwnProfileAux('S');
+    }
+    console.log('nuestro perfil? ' + ownProfileAux);
+    getProducts();
   }, []);
-  
+
   return (
-
-    <View>
-      <ScrollView>
-
-
-    
-        <Text style={styles.titleText}> Productos deseados</Text>
-    
-        <Button 
-                 onPress={() => getWishlist() } 
-                 title = 'Cargar'
-                 color="#a2cff0" //azul iconico
-        />
+    <View style={styles.container}>
+      <FlatList
+        numColumns={2}
+        data={products}
+        renderItem={({ item }) => (
+          <ProductCard id={item._id} navigation={navigation} name={item.name} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
+        )}
+        keyExtractor={item => item._id}
+      />
 
 
-        <Text style={styles.titleText}>   </Text>
-
-
-          <FlatList
-            numColumns = {2}
-            data={productsId}
-            renderItem={({ item }) => ( 
-  
-              <View style={styles.container2}>
-            
-                <ProductCardId
-                  id={item}
-                  uid={uid} 
-                  guardado={true}
-                  token = {session.token}
-                />
-
-
-              </View>
-            
-            )}
-            horizontal={false}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled={true}
-            onMomentumScrollEnd={Scroll}
-
-            
-          />
-
-          <Text style={styles.titleText}>   </Text>
-
-
-      </ScrollView>
-      <NavigationBar  navigation={navigation} casa={true}/>
     </View>
 
   );
 }
 
 const styles = StyleSheet.create({
+  separator: { marginLeft: 10 },
   container: {
-    flex: 1,
-    alignItems: 'center',
+    flex: 1
   },
-  container2: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    marginVertical: 0,
+  container3: {
     width: '50%',
-//    height: 310,
+    borderRadius: 10,
+    borderColor: '#ffffff',
+    borderWidth: 1,
+    backgroundColor: '#f3f1ed',
   },
 
-  row: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    marginHorizontal: '10%',
-    marginVertical: 5,
-  },
   titleText: {
     padding: 10,
     textAlign: "center",
@@ -161,8 +101,5 @@ const styles = StyleSheet.create({
   productText: {
     textAlign: 'left',
     fontSize: 20,
-    margin: 10
   },
 });
-
-

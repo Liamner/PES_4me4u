@@ -9,12 +9,17 @@ import retrieveSession from '../hooks/retrieveSession';
 import NavigationBar from '../components/NavigationBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ExchangeButton from '../components/ExchangeButton';
+import { set } from 'react-native-reanimated';
+import GiveButton from '../components/GiveButton';
+import LoanButton from '../components/LoanButton';
 
 export default function ChatView({ navigation, route }: RootTabScreenProps<'ChatView'>) {
   var converid = route.params.id;
   var prodid = route.params.productId;
   var prodname = route.params.productName;
   var prodimg = route.params.productImg;
+  var exchange = route.params.exchange;
   const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
@@ -22,6 +27,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     user: "",
     token: ""
   })
+  const [exch, setExchange] = useState(false);
+  const [provide, setProvide] = useState(false);
+  const [present, setPresent] = useState(false);
+
   const getData = async () => {
     try {
       const value = await retrieveSession();
@@ -34,7 +43,26 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     } catch (e) {
       console.log(e)
     }
+    setTransactions();
   }
+
+ function setTransactions() {
+  console.log(exchange);
+
+  exchange.forEach(e => {
+    console.log(e + ' loop');
+    if (e === "exchange")
+      setExchange(true);
+    if (e === "provide")
+      setProvide(true);
+    if (e === "present")
+      setPresent(true);
+  });
+
+  console.log(exch)
+  console.log(provide)
+  console.log(present)
+ }
 
   const getConversation = async () => {
     const config = {
@@ -71,7 +99,6 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     }
   };
 
-
   return (
     <View style={styles.container}>
       <Pressable onPress={() => navigation.navigate('ProductRead', prodid)}>
@@ -82,7 +109,21 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
           <View style={{ width: '75%' }}>
             <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
             <View style={[styles.row, {alignSelf: 'center'}]}>
-              <TouchableOpacity
+              <View style={{alignItems: 'center'}}>
+              {exch ?
+              <ExchangeButton></ExchangeButton>
+              :
+               null}
+              {provide ?
+              <LoanButton></LoanButton>
+              :
+               null}
+              {present ?
+              <GiveButton></GiveButton>
+              :
+               null}
+               </View>
+              {/* <TouchableOpacity
                 onPress={getConversation}
                 style={{ width: 160, marginTop: 5 }}
               >
@@ -95,7 +136,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
                     Hacer intercambio
                   </Text>
                 </LinearGradient>
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
               <TouchableOpacity
                 onPress={getConversation}
                 style={{ }}

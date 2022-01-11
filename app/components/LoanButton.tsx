@@ -152,7 +152,7 @@ export function LoanButton  () {
             </Pressable>
           </View>}
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts()} ><Text>Prestar Producto!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts()} ><Text>Prestar</Text></Pressable>
     </>
 )
 
@@ -168,12 +168,13 @@ const styles = StyleSheet.create({
     button: {
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 12,
-      paddingHorizontal: 32,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
       margin : 10,
       borderRadius: 4,
       elevation: 3,
-      width: '90%',    
+      width: 100, 
+      height: 30,   
       backgroundColor: '#a2cff0',
     },
     itemTitle: {

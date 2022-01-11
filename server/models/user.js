@@ -26,20 +26,9 @@ let usuarioSchema = new Schema({
     role: {
         type: String,
         default: 'USER',
-        //required: [true],
         enum: rolesValidos,
     },
-    /*latitude: {
-        type: String,
-        default: '41.3879',
-        //required: [true],
-    },
-    longitude: {
-        type: String,
-        default: '2.16992 41° 23′ 16″',
-    },*/
     level: {
-        //type: String,
         type: Number,
         default: 1,
     },
@@ -85,12 +74,6 @@ let usuarioSchema = new Schema({
         ref:"Usuario",
         required: false
     }],
-    /*
-    wishlist: {
-        type: [mongoose.Schema.ProductSchema],
-        required: false
-    },
-    */
     wishlist: [{
         type: String,
         required: false
@@ -98,16 +81,13 @@ let usuarioSchema = new Schema({
     recentlyViewed: [{
         type: Schema.Types.ObjectId, 
         ref: 'Product'
-        /*type: [mongoose.Schema.ProductSchema],
-        required: false*/
     }],
     commentsRecived: [{
-        // Comentarios recibidos
         type: Schema.Types.ObjectId, 
         ref: 'Comment'
     }],
     commentsDone: [{
-        // Comentarios recibidos
+
         type: Schema.Types.ObjectId, 
         ref: 'Comment'
     }],
@@ -139,10 +119,4 @@ usuarioSchema.methods.toJSON = function() {
     return userObject;
  }
 
-//agregamos el plugin de validación única y exportamos el modelo recién creado
-/*
-usuarioSchema.plugin(uniqueValidator, {
-    message: '{PATH} debe de ser único'
-})
-*/
 module.exports = mongoose.model('Usuario', usuarioSchema);

@@ -50,7 +50,7 @@ exports.readAllTradeGive = async (req, res) => {
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        if (userTaking.points < tradeGive.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
         
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";

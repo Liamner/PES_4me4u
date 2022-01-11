@@ -29,7 +29,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
+    .post(upload.array('img', 6)/*, (validateCreateProduct)*/, authenticateJWT, productController.createProduct);
 
   router.route('/product/name/:name')
     .get(productController.readProductsByName)

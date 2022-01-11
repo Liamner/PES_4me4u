@@ -303,7 +303,7 @@ exports.deleteWihtNoImages = async (req,res) => {
   try {
     Product.deleteMany({img: {$exists: true, $size: 0}}, (error, products) => {
       console.log(products)
-      res.status(200)
+      res.status(201).json(products)
     })
   } catch (error) {
     res.status(400).json(error)

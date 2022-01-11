@@ -140,7 +140,7 @@ exports.loginAdmin = async (req, res) => {
        }
         // Verifica que exista un usuario con el mail escrita por el usuario.
         if (!usuarioDB) {
-            return res.status(400).json({
+            return res.status(404).json({
             ok: false,
             err: {
                 message: "Usuario o contraseña incorrectos: no existe el usuario"
@@ -149,7 +149,7 @@ exports.loginAdmin = async (req, res) => {
         }
         // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
         if (!bcrypt.compareSync(body.pwd, usuarioDB.pwd)){
-            return res.status(400).json({
+            return res.status(401).json({
                 ok: false,
                 err: {
                     message: "Usuario o contraseña incorrectos: la contraseña es incorrecta"
@@ -158,7 +158,7 @@ exports.loginAdmin = async (req, res) => {
         }
 
         if (usuarioDB.role != 'ADMIN'){
-          return res.status(400).json({
+          return res.status(403).json({
               ok: false,
               err: {
                   message: "Usuario no autorizado"

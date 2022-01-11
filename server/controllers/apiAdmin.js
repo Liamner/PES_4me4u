@@ -316,13 +316,20 @@ exports.readLoans =  async (req, res) => {
 
   exports.numPorductosReportados = async (req,res) => {
     await Report.distinct('relatedProduct', (error, reports) => {
+      if (error) {
+        res.status(500).json(error)
+      }
       res.status(200).json(reports.length)
     }).clone()
   }
 
-  exports.totalEcopoints = async () => {
 
-  }
+  /*
+  - la llamada de login admin siempre devuelve 400 y no se puede saber desde front si es porque la contra es incorrecta o no es admin
+  - he visto que hay un poco de spaninglish en las categorias, es algo provisional o se quedara asi?
+  - he pensado en que la ultima llamada del web admin podria ser los productos más vistos, como lo ves?
+  - he estado testando lo de los followers y creo que definidamente no funciona el back
+*/
 
   // usuarios reportados
   // ecopoints gastados

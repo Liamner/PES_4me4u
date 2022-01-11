@@ -208,7 +208,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
               numColumns={4}
               data={recentlyViewedProducts}
               renderItem={({ item }) => (
-                <MiniProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+                <MiniProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
               )}
               keyExtractor={item => item._id}
             />
@@ -219,7 +219,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           numColumns={2}
           data={products}
           renderItem={({ item }) => (
-            <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+            <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
           )}
           keyExtractor={item => item._id}
         />}

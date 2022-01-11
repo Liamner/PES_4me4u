@@ -9,6 +9,7 @@ import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar';
+import retrieveSession from '../hooks/retrieveSession';
 
 
 export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
@@ -16,6 +17,26 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
   const [text, onChangeText] = useState(null);
   const [category, setCategory] = useState(route.params);
   const [type, setType] = useState(null);
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
+
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    console.log(session)
+  }
   console.log("categoria: " + route.params)
   const getPNameInfo = async () => {
     console.log('haciendo llamada ...');
@@ -31,6 +52,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
     console.log('llamada hecha');
   };
   React.useEffect(() => {
+    getData()
     if (route.params != null) getPNameInfo();
   }, []);
 
@@ -86,7 +108,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
         numColumns={2}
         data={products}
         renderItem={({ item }) => (
-          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={item.userId} />
+          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={false} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
         )}
         keyExtractor={item => item._id}
       />

@@ -6,7 +6,6 @@ import Navbar from './components/navbar'
 import Login from './components/login'
 import GeneralStats from './components/generalStats';
 import Reports from './controllers/showReports';
-import { isLabelWithInternallyDisabledControl } from '@testing-library/user-event/dist/utils';
 
 function setToken(userToken) {
   sessionStorage.setItem('token', JSON.stringify(userToken));

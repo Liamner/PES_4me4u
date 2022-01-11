@@ -57,11 +57,11 @@ let usuarioSchema = new Schema({
     }],
     latitude: {
         type: mongoose.Schema.Types.Double,
-        //default: 37.78825
+        default: null
     },
     longitude: {
         type: mongoose.Schema.Types.Double,
-        //default: -122.4324
+        default: null
     },
     gift: {
         type: Number,

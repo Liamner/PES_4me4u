@@ -189,3 +189,14 @@ exports.deleteReport = async (req, res) => {
   }
 };
 
+/**
+- la llamada de login admin siempre devuelve 400 y no se puede saber desde front si es porque la contra es incorrecta o no es admin
+- en la llamada de la cantidad de productos reportados se tienen en cuenta los usuarios reportados (rteleatedProduct == undefined)
+- -------------------------------- la localización de los usuarios deberia ser undefined al principio porque no lo obligamos a poner al hacer login
+- he visto que hay un poco de spaninglish en las categorias, es algo provisional o se quedara asi?
+- he pensado en que la ultima llamada del web admin podria ser los productos más vistos, como lo ves?
+- he estado testando lo de los followers y creo que definidamente no funciona el back
+- quieres más faena? la wishlist nunca elimina productos solo añade todo el rato más aparte de que añade duplicados
+
+
+ */

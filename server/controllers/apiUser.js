@@ -140,7 +140,7 @@ exports.loginAdmin = async (req, res) => {
        }
         // Verifica que exista un usuario con el mail escrita por el usuario.
         if (!usuarioDB) {
-            return res.status(401).json({
+            return res.status(404).json({
             ok: false,
             err: {
                 message: "Usuario o contraseña incorrectos: no existe el usuario"

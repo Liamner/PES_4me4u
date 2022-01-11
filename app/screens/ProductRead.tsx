@@ -46,7 +46,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   })
   const [ownProduct, setOwnProduct] = React.useState(false)
 
-  const getData = async (user) => {
+  const getData = async () => {
     try {
       const value = await retrieveSession()
       if (value !== null) {
@@ -56,6 +56,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           setOwnProduct(true);
           console.log(ownProduct)
         }
+        getProductInfo(value.token);
       }
       else {
         console.log("empty")
@@ -204,8 +205,14 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   }
 
 
-  const getProductInfo = async () => {
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid);
+  const getProductInfo = async (token) => {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/product/' + pid, config);
     //Required
     setName(response.data.name);
     getCorrectCategoriesType(response);
@@ -232,8 +239,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
-    getData(response.data.userId);
     getUserInfo(response.data.userId);
+    let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/'+ response.data.userId +'/addProductsRecentlyViewed', {
+      idProduct: pid,
+    })
 
   };
 
@@ -247,7 +256,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
 
   React.useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', () => {
-      getProductInfo();
+      getData();
     });
 
     return willFocusSubscription;

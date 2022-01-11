@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Alert, Button, StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
 import axios from 'axios'
@@ -12,21 +12,41 @@ type CardProps = {
   id: string,
   uid: string,
   name: string,
-  guardado: boolean,
+  wishlist: boolean,
   imageUri?: string,
   arrayTratos: string[],
   token: string
 }
 
-export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos, token}: CardProps) {
+export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTratos, token, wishlist}: CardProps) {
   var prestar = false;
   var intercambiar = false;
   var dar = false;
+  const [guardado, setGuardado] = useState();
   arrayTratos.forEach(element => {
     if (element == "exchange") intercambiar = true;
     if (element == "present") dar = true;
     if (element == "provide") prestar = true
   });
+
+  const isWishlist = async () => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid)
+
+    response.data.wishlist.forEach(element => {
+      console.log(element)
+      if (element == id) {
+        setGuardado(true)
+      }
+      else {
+        setGuardado(false)
+      }
+    });
+      
+
+  }
+  isWishlist();
+
+
   const guardarProducto = async () => {
 
     const config = {
@@ -39,7 +59,7 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
       idProduct: id
     }, config).then(function (response) {
       console.log(response);
-      guardado = true;
+      setGuardado(true)
     })
       .catch(function (error) {
         console.log(error);
@@ -55,10 +75,15 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
     }
 
     await axios.delete('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
-      idProduct: id
-    }, config).then(function (response) {
+      data: {
+        idProduct: id
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(function (response) {
       console.log(response);
-      guardado = false
+      setGuardado(false)
     })
       .catch(function (error) {
         console.log(error);

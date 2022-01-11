@@ -351,35 +351,44 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
         </View>
         {ownProfile ?
           // ir a wishlist si es tu perfil
-          <Button
+          <TouchableOpacity
             onPress={() => navigation.navigate('UserWishlist', id)}
-            title={t("Productos deseados")}
-            color="#a2cff0" //azul iconico
-          />
+            style={{ width: '90%', marginTop: 5 }}
+          >
+            <LinearGradient
+              colors={['#a2cff0', '#ADE8F4']}
+              style={styles.wishlistButon}
+            >
+              <Text style={[styles.textFollow,
+              { color: '#fff' }]}>
+                Productos deseados
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
           :
           <></>}
 
         {latitude !== undefined ?
-        <>
-          <CustomMap
-            style={styles.mapview}
-            region={{
-              latitude: latitude,
-              longitude: longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
-            }}
-          >
-            <CustomMarker
-              coordinate={{
+          <>
+            <CustomMap
+              style={styles.mapview}
+              region={{
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421
               }}
-            ></CustomMarker>
-          </CustomMap>
-        </>
-        :
-        <></>
+            >
+              <CustomMarker
+                coordinate={{
+                  latitude: latitude,
+                  longitude: longitude
+                }}
+              ></CustomMarker>
+            </CustomMap>
+          </>
+          :
+          <></>
         }
 
         <Text style={styles.text}>{t('Mis productos')}</Text>
@@ -521,7 +530,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     marginBottom: 20,
-
   },
   followButon: {
     width: '100%',
@@ -530,7 +538,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10
   },
+  wishlistButon: {
+    width: '100%',
+    height: 40,
+    textAlign: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+  },
   textFollow: {
+    textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold'
   },

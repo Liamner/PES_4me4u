@@ -14,10 +14,11 @@ type CardProps = {
   name: string,
   imageUri?: string,
   arrayTratos: string[],
-  token: string
+  token: string,
+  wishlist: undefined
 }
 
-export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, token }: CardProps) {
+export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, token, wishlist }: CardProps) {
   var prestar = false;
   var intercambiar = false;
   var dar = false;
@@ -36,13 +37,18 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
         Authorization: `Bearer ${token}`
       }
     }
-    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid + '/wishlist', config)
-    if (response.data.wishlist.includes(id)) {
-      setGuardado(true)
-    }
-    else {
-      setGuardado(false)
-    }
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid)
+
+    response.data.wishlist.forEach(element => {
+      console.log(element)
+      if (element == id) {
+        setGuardado(true)
+      }
+      else {
+        setGuardado(false)
+      }
+    });
+      
 
   }
   isWishlist();
@@ -72,7 +78,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
   const noGuardarProducto = async () => {
 
     await axios.delete('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
-      data:{
+      data: {
         idProduct: id
       },
       headers: {
@@ -123,11 +129,11 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
             }} >
 
             {guardado ?
-              <TouchableOpacity style={{ width: 30, height: '100%',}} onPress={noGuardarProducto}>
+              <TouchableOpacity style={{ width: 30, height: '100%', }} onPress={noGuardarProducto}>
                 <Icon name='heart' size={30} color={'red'} />
               </TouchableOpacity>
               :
-              <TouchableOpacity style={{ width: 30, height: '100%',}} onPress={guardarProducto}>
+              <TouchableOpacity style={{ width: 30, height: '100%', }} onPress={guardarProducto}>
                 <Icon name='heart-outline' size={30} color={'black'} />
               </TouchableOpacity>
             }

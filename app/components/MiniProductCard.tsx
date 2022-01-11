@@ -15,9 +15,10 @@ type CardProps = {
   guardado: boolean,
   imageUri?: string,
   arrayTratos: string[],
+  token: string
 }
 
-export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos }: CardProps) {
+export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri, arrayTratos, token}: CardProps) {
   var prestar = false;
   var intercambiar = false;
   var dar = false;
@@ -27,10 +28,18 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
     if (element == "provide") prestar = true
   });
   const guardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.put('https://app4me4u.herokuapp.com/api/user/' + uid + '/AddToWishlist', {
       idProduct: id
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
+      guardado = true;
     })
       .catch(function (error) {
         console.log(error);
@@ -38,10 +47,18 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
   }
 
   const noGuardarProducto = async () => {
-    await axios.post('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + uid + '/DeleteFromWishlist', {
       idProduct: id
-    }).then(function (response) {
+    }, config).then(function (response) {
       console.log(response);
+      guardado = false
     })
       .catch(function (error) {
         console.log(error);
@@ -81,7 +98,7 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
             width: '25%',
             height: '100%',
           }} >
-          {guardado && <TouchableOpacity style={{
+          {/*guardado && <TouchableOpacity style={{
             width: 22,
             height: '100%',
 
@@ -93,7 +110,24 @@ export function MiniProductCard({ navigation, id, uid, name, guardado, imageUri,
             height: '100%',
           }} onPress={guardarProducto}>
             <Icon name='heart-outline' size={22} />
-          </TouchableOpacity>}
+          </TouchableOpacity>*/}
+
+          {guardado?
+            <TouchableOpacity style={{
+              width: 30,
+              height: '100%',
+            }} onPress={noGuardarProducto}>
+              <Icon name='heart' size={30} color={'red'} />
+            </TouchableOpacity>
+          :
+            <TouchableOpacity style={{
+              width: 30,
+              height: '100%',
+            }} onPress={guardarProducto}>
+              <Icon name='heart-outline' size={30} color={'black'} />
+            </TouchableOpacity>
+          }
+
         </View>
       </View>
       <Text style={styles.title}>{name}</Text>

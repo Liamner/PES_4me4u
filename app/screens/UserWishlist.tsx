@@ -2,7 +2,6 @@ import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
 
-import ProductCardId from '../components/ProductCardId';
 
 
 
@@ -13,6 +12,7 @@ import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import NavigationBar from '../components/NavigationBar';
 import retrieveSession from '../hooks/retrieveSession';
+import ProductCard from '../components/ProductCard';
 
 export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWishlist'>) {
 
@@ -31,8 +31,13 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
       
       setUid(session.id);  
 
+      const config = {
+        headers: {
+          Authorization: `Bearer ${session.token}`
+        }
+      }
 
-      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid + '/wishlist');
+      let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + session.id + '/wishlist', config);
       // setProductsId(response.data.wishlist); //lista de ids de productos en la
 
 
@@ -41,7 +46,10 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
 
       setProductsId(response.data); //lista de ids de productos en la
 
-
+      console.log(response.data);
+      console.log('uid; ' + uid);
+      console.log('session id; ' + session.id);
+      console.log('token; ' + session.token);
 
     };
 
@@ -96,31 +104,16 @@ export default function UserWishlist({ navigation }: RootTabScreenProps<'UserWis
         <Text style={styles.titleText}>   </Text>
 
 
-          <FlatList
-            numColumns = {2}
-            data={productsId}
-            renderItem={({ item }) => ( 
-  
-              <View style={styles.container2}>
-            
-                <ProductCardId
-                  id={item}
-                  uid={uid} 
-                  guardado={true}
-                  token = {session.token}
-                />
 
+      <FlatList
+        numColumns={2}
+        data={productsId}
+        renderItem={({ item }) => (
+          <ProductCard id={item._id} navigation={navigation} name={item.name} guardado={true} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />
+        )}
+        keyExtractor={item => item._id}
+      />
 
-              </View>
-            
-            )}
-            horizontal={false}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled={true}
-            onMomentumScrollEnd={Scroll}
-
-            
-          />
 
           <Text style={styles.titleText}>   </Text>
 

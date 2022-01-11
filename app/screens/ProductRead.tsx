@@ -40,11 +40,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
   const [description, setDescription] = useState('Cargando...');
-  const [session, setSession] = React.useState({
-    id: "",
-    user: "",
-    token: ""
-  })
+
   const [ownProduct, setOwnProduct] = React.useState(false)
 
   const getData = async () => {
@@ -58,6 +54,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           console.log(ownProduct)
         }
         getProductInfo(value.token);
+        console.log("TOKENNNNN" + value.token);
       }
       else {
         console.log("empty")
@@ -74,17 +71,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     token:""
   });
 
-  const getData = async (id) => {
-    const sess = await retrieveSession();
-      console.log(sess)
-      setSession(sess);
-      console.log(id);
-      console.log('session:' + session.id);
-      if(id != session.id) {setOwnProfile(false);}
-      else {setOwnProfile(true)} //HK -> a de ser false
-      console.log('nuestro perfil? ' + ownProfile);
-
-    }
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
     const width = event.nativeEvent.layoutMeasurement.width;
@@ -258,15 +244,12 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
-<<<<<<< HEAD
-    getData(response.data.userId);
-=======
+    //getData(response.data.userId);
     getUserInfo(response.data.userId);
-    let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/'+ response.data.userId +'/addProductsRecentlyViewed', {
-      idProduct: pid,
-    })
+    //let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/'+ response.data.userId +'/addProductsRecentlyViewed', {
+    //  idProduct: pid,
+    //})
 
->>>>>>> origin/develop
   };
 
   const getUserInfo = async (userId) => {
@@ -335,75 +318,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         />
         <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-<<<<<<< HEAD
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={/*()=>console.log("boton chat pulsado")*/getProductInfo}>
-          <View style={styles.row}>
-            <Ionicons
-              name="chatbox"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
-          <View style={styles.row}>
-            <Entypo
-              name="save"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>Guardar en la lista</Text>
-          </View>
-        </TouchableHighlight>
-
-        {ownProfile?  
-            <>
-          {}
-            </>
-          : <>
-          <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate('ReportProduct', {
-            prodId: pid,
-            userName: user
-          })}}>
-
-          <View style={styles.row}>
-            <Entypo
-              name="save"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>Denunciar producto</Text>
-          </View>
-          </TouchableHighlight>
-          </>  }
-
-
-        <View style={styles.row}>
-          <Entypo
-            name="location"
-            size={24}
-            color="#333"
-          />
-          <Text style={styles.normalText}>Ubicación</Text>
-        </View>
-        <CustomMap
-          style={styles.mapview}
-          region={{
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <CustomMarker
-            coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-            }}
-          ></CustomMarker>
-        </CustomMap>
-=======
         {!ownProduct ?
           <>
             <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
@@ -418,6 +332,20 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
                 <Text style={styles.normalText}>Guardar en la lista</Text>
               </View>
             </TouchableHighlight>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate("ReportProduct", {
+              prodId: pid,
+              userId: userid
+             })}}>
+
+          <View style={styles.row}>
+            <Entypo
+              name="save"
+              size={24}
+              color="#333"
+            />
+            <Text style={styles.normalText}>Denunciar producto</Text>
+          </View>
+          </TouchableHighlight>
           </>
           :
           <>
@@ -429,6 +357,8 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
             </TouchableHighlight>
           </>
         }
+
+        
         {latitude === undefined ?
           <>
             <View style={styles.row}>
@@ -455,7 +385,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           :
           <></>
         }
->>>>>>> origin/develop
       </ScrollView>
       <NavigationBar navigation={navigation} casa={true} />
     </View>

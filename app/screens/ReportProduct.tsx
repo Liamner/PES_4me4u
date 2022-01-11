@@ -10,10 +10,11 @@ import { resolvePlugin } from '@babel/core';
 import '../assets/i18n/i18n';
 import {useTranslation} from 'react-i18next';
 import NavigationBar from '../components/NavigationBar';
+import retrieveSession from '../hooks/retrieveSession';
 
 
 export default function ReportProduct({ navigation, route }: RootTabScreenProps<'ReportProduct'>) {
-  const [commentRate, onChangeComment] = React.useState("");
+  const [descripcion, onChangeComment] = React.useState("");
   const [sliderValue] = React.useState(4)
   const [sliderRate, setSliderRate] = React.useState(sliderValue);
 
@@ -21,7 +22,7 @@ export default function ReportProduct({ navigation, route }: RootTabScreenProps<
   const [currentLanguage,setLanguage] =useState('cat');
 
   
-  const { prodId, userName } = route.params;
+  const { prodId, userId } = route.params;
   
 
   const changeLanguage = value => {
@@ -31,18 +32,50 @@ export default function ReportProduct({ navigation, route }: RootTabScreenProps<
       .catch(err => console.log(err));
   };
   
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+  });
+
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+        console.log('user: ' + session.user)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  React.useEffect(() => {
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      getData();
+    });
+
+    return willFocusSubscription;
+  }, []);
 
   const sendApi = async () => {
     console.log("sending")
     const config = {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmEyZTNmODVjMmMxMDMwNmYwMTE3YSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2Mzk1OTE1MjUsImV4cCI6MTYzOTc2NDMyNX0.5GKJ_rNnRZvZyO-72q71BdD97-R5E1Pgzj2TlOPT28M`
+        Authorization: `Bearer ${session.token}`
       }
     }
+
+    console.log(userId);
+    console.log(prodId);
    
     let response = await axios.post('https://app4me4u.herokuapp.com/api/report/create', {
-      userReported: userName,
-      description: descReport,
+      userReported: userId,
+     
+      description: descripcion,
       relatedProduct: prodId
     }, config).then(function (response) {
       console.log(response);
@@ -50,6 +83,7 @@ export default function ReportProduct({ navigation, route }: RootTabScreenProps<
       .catch(function (error) {
         console.log(error);
       });
+    navigation.goBack()
   }
   
   return (
@@ -63,7 +97,7 @@ export default function ReportProduct({ navigation, route }: RootTabScreenProps<
                 label="Comentario"
                 style={styles.textInput}
                 onChangeText={onChangeComment}
-                value={commentRate}
+                value={descripcion}
             />
         
 
@@ -76,7 +110,7 @@ export default function ReportProduct({ navigation, route }: RootTabScreenProps<
         </ View>
 
         <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar denuncia!')} </Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> {t('Cancelar')} </Text></Pressable>
+        {/* <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]} onPress={sendApi} ><Text> {t('Cancelar')} </Text></Pressable> */}
       </View>
     </ScrollView>
     <NavigationBar  navigation={navigation} upload={true}/>

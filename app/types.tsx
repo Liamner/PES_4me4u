@@ -33,6 +33,7 @@ export type RootStackParamList = {
   ChatList: undefined;
   ChatView: undefined;
   EditProduct: undefined;
+  ReportProduct: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -60,6 +61,7 @@ export type RootTabParamList = {
   UserWishlist: undefined;
   UserProducts: undefined;
   UserUpdate:undefined;
+  ReportProduct: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

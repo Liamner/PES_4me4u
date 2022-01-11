@@ -32,6 +32,9 @@ const TradeLoanSchema = new mongoose.Schema({
     returned: {
         type: Boolean,
         default: false
+    },
+    points:{
+        type:Number
     }
 });
 

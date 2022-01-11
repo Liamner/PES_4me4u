@@ -13,7 +13,6 @@ exports.readAllUsers =  async (req, res) => {
 
     res.status(200).json(user);
 
-    console.log(user);
   } catch (error) {
     res.status(400).json(error.message);
     console.log(error.message);
@@ -25,6 +24,18 @@ exports.readUser = async (req, res) => {
     //const user = await User.findById({ _id: req.params.id }, {uderId: 1, followed : {userId: 1},  followers : {userId: 1}});
     const user = await User.findById({ _id: req.params.id });
     console.log("Reading user: " + req.params.id);
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json(error.message);
+    console.log(error.message);
+  }
+};
+
+exports.readUserByName = async (req, res) => {
+  try {
+    const user = await User.find({ userId: {$regex: req.params.userId} });
+    console.log("Reading users: " + req.params.userId);
 
     res.status(200).json(user);
   } catch (error) {
@@ -118,6 +129,11 @@ exports.loginUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   let usr = await User.findById({_id: req.params.id})
   //let email = req.params.email; 
+
+  if (usr.userId == req.user.id) {
+    res.status(401).json({error: "Do not have permission"})
+    return;
+  }
   try{
     let usr = await User.findById({_id: req.params.id})
     usr.delete();
@@ -135,8 +151,9 @@ exports.updateUser = async (req, res) => {
     const ecoPoints = req.body.ecoPoints;
     const score = req.body.score;
   
-    const id = req.params.id;
+    const id = req.user.id;
     const user = await User.findById(id)
+
     console.log("Searching for user to update: " + req.params.id);
 
     if (level != null)  user.level = level;
@@ -172,7 +189,7 @@ exports.getUserProducts = async (req, res) => {
 
 exports.rateUser = async (req, res) => {
   // Id usuario a valorar
-  const userId = req.params.userId;
+  const userId = req.params.id;
   const rateScore = req.body.rateScore;
   const comment = req.body.comment;
 
@@ -263,7 +280,7 @@ exports.getMyCommentsRecived = async (req, res) => {
 
 exports.getRewards = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.params.id });
+    const user = await User.findById({ _id: req.user.id });
     var ngifts = user.gifts;
     var nloans = user.loans;
     var nexchanges = user.exchanges;
@@ -313,7 +330,7 @@ exports.getUserLevel = async (req, res) => {
 
 exports.levelManage = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.params.id });
+    const user = await User.findById({ _id: req.user.id });
     console.log("Level del usuario: " , user.name);
 
     var nivelAntiguo = user.level;
@@ -361,7 +378,7 @@ exports.getUserRewards = async (req, res) => {
   try {
     const {type, estimatedPoints} = req.body;
 
-    const id = req.params.id;
+    const id = req.user.id;
     const user = await User.findById(id)
     console.log("Searching for user to get reward: " + user.name);
     
@@ -378,7 +395,7 @@ exports.getUserRewards = async (req, res) => {
 
 exports.getUserWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     User.findOne({_id: userId}, (erro, user) => {
       console.log(user.wishlist)
       console.log(user);
@@ -393,7 +410,7 @@ exports.getUserWishlist = async (req, res) => {
     
 exports.addToWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const ourUser = await User.findById({_id: userId});
     let idProduct = req.body.idProduct;
     
@@ -415,7 +432,7 @@ exports.addToWishlist = async (req, res) => {
 
 exports.deleteFromWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     let idProduct = req.body.idProduct;
     User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
         let find = 0;
@@ -464,109 +481,44 @@ exports.getUserFollowers = async (req, res) => {
   }
 };
 
-exports.addUserFollowed = async (req, res) => {
+exports.follow = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const ourUser = await User.findById({_id: userId});
-    
+    const userId = req.user.id;
     let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.followed.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followed);
-    });
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.addUserFollower = async (req, res) => {
-  try {
-    const userId = req.params.id;
     const ourUser = await User.findById({_id: userId});
-    
-    let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.followers.push(usuarioDB);
-     ourUser.save();
-     res.status(200).json(ourUser.followers);
-    });
-  } catch (error) {
-    res.status(400).json(error)
-  }
-}
-
-exports.unfollow = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followed: 1}, async (erro, usersFollowed) => {
+    const userFollowed = await User.findOne ({email: body.email});
         let find = 0;
         let i;
-        for (i = 0;(find == 0) && (i < usersFollowed.followed.length) ; i++) {
-          if (mail == usersFollowed.followed[i].email ) {find = 1;}
+        let aux2 = userFollowed._id.toString();
+        for (i = 0;(find == 0) && (i < ourUser.followed.length) ; i++) {
+          let aux1 = ourUser.followed[i].toString();
+          if (aux1 == aux2) {find = 1;}
         }
         if (find == 0) {
-          res.status(400).json({error: 'User not followed'})
+          ourUser.followed.push(userFollowed._id);
+          await ourUser.save();
+          userFollowed.followers.push(ourUser._id);
+          await userFollowed.save();
+           res.status(200).json(ourUser.followered);
         }
         else {
           i = i-1;
-          const idUser = usersFollowed.followed[i]._id;
-          usersFollowed.followed.splice(i, 1);
-          usersFollowed.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowed);
-
+          ourUser.followed.splice(i, 1);
+          await ourUser.save();
+          find = 0;
+          aux2 = ourUser._id.toString();
+          for (i = 0;(find == 0) && (i < userFollowed.followers.length) ; i++) {
+            aux1 = userFollowed.followers[i].toString();
+            if(aux1 == aux2){
+              find = 1;
+            }
+          }
+          i = i - 1; 
+          userFollowed.followers.splice(i,1);
+          await userFollowed.save();
+         res.status(200).json(ourUser.followered);
         }
-    }).populate('followed');
-
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.loseFollower = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    let mail = req.body.email;
-
-    User.findById({_id: userId}, {followers: 1}, async (erro, usersFollowers) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersFollowers.followers.length) ; i++) {
-          if (mail == usersFollowers.followers[i].email ) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not follower'})
-        }
-        else {
-          i = i-1;
-          const idUser = usersFollowers.followers[i]._id;
-          usersFollowers.followers.splice(i, 1);
-          usersFollowers.save();
-
-          const user = await User.findById({_id: idUser});
-          res.status(200).json(usersFollowers);
-
-        }
-    }).populate('followers');
-
-  } catch (error) {
+    } catch (error) {
     res.status(400).json(error)
   }
 };

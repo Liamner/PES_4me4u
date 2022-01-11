@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, Modal, SafeAreaView, FlatList, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, StyleSheet, Modal, SafeAreaView, FlatList, Pressable, TouchableOpacity, Alert, PermissionsAndroid } from 'react-native';
 import { RootTabScreenProps } from '../types';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -12,6 +12,7 @@ import MiniProductCard from '../components/MiniProductCard';
 import NavigationBar from '../components/NavigationBar'
 import retrieveSession from '../hooks/retrieveSession';
 import { json } from 'express';
+import { View, Text } from '../components/Themed';
 
 interface ProductImage {
   __v: number;
@@ -131,7 +132,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -141,7 +142,6 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
           setModalVisible(!modalVisible);
         }}
       >
-
         <View style={styles.modalView}>
           <SafeAreaView>
             <FlatList
@@ -230,10 +230,8 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
 }
 
 const styles = StyleSheet.create({
-  flatList: {
-  },
-  fila: {
-    backgroundColor: 'white'
+  container: {
+    flex: 1,
   },
   noProductTitle: {
     color: 'white',
@@ -246,12 +244,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6
   },
   scrollCategorias: {
-    borderColor: '#5e5c57',
-    borderWidth: 0.5,
-    backgroundColor: 'white',
-    width: '100%',
+    borderColor: '#dfdfdf',
+    borderWidth: 1,
+    borderRadius: 7,
+    width: '98%',
     height: 100,
-    alignContent: 'space-between'
+    alignContent: 'space-between',
+    margin: '1%'
   },
   navigator: {
     borderRadius: 5,
@@ -262,14 +261,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center'
-  },
-  container: {
-    width: '50%',
-    height: '50%',
-    borderRadius: 10,
-    borderColor: '#5e5c57',
-    borderWidth: 3,
-    backgroundColor: 'white',
   },
   icono: {
     width: 35,
@@ -289,14 +280,12 @@ const styles = StyleSheet.create({
   elementoCategoria: {
     width: 80,
     height: 120,
-    backgroundColor: 'white',
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: 3,
     marginTop: 8,
   },
   touchable: {
     width: '20%',
-    // height: '100%',
     borderRadius: 10,
     borderColor: 'green',
     alignItems: 'flex-start'
@@ -318,15 +307,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 14,
 
-  },
-  textInput: {
-    height: 45,
-    borderRadius: 10,
-    borderColor: '#5e5c57',
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
-    borderRightWidth: 3,
-    backgroundColor: 'white'
   },
   notImage: {
     marginHorizontal: 5,

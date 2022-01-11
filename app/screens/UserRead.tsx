@@ -195,17 +195,21 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   async function followUser() {
     // añadir followed (a quien sigues), usuario logueado sigue al usuario del perfil
-    const body1 = { email: email }
+    const body = { email: email }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
     let response = axios
-      .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body1)
+      .post("https://app4me4u.herokuapp.com/api/user/" + session.id + "/follow", body, config)
       .then(function (response) {
         console.log("siguiendo a " + response.data.userID)
       })
       .catch(function (error) {
         console.log(error);
       });
-
-    setFollowing(true);
+    setFollowing(!following);
     // añadir follower, usuario del perfil es seguido por el usuario logueado
   }
 
@@ -264,23 +268,13 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   return (
     <>
-
       <ScrollView>
         <View style={styles.container}>
-
           {ownProfile ?
-
-
             <View style={{
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <TouchableOpacity
-                onPress={() => {
-                  getUserInfo();
-                }}>
-                <Text style={styles.titleText}> {t('Mi perfil')}</Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("UserUpdate", session.id);
@@ -298,28 +292,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            :
-            <View style={{
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <TouchableOpacity
-                onPress={() => {
-                  getUserInfo();
-                }}>
-                <Text style={styles.titleText}> Perfil ajeno</Text>
-              </TouchableOpacity>
-            </View>
-          }
-
-
-          <Text style={styles.text}>
-            {t('Correo:')} <Text style={styles.text2}>{email}</Text>
-          </Text>
-
-
-          {ownProfile ?
-            <></>
             :
             <View style={{
               alignItems: 'center',
@@ -361,11 +333,20 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
                 </TouchableOpacity>
               }
             </View>
-
           }
-
-
-
+          <Text style={styles.text}>
+            {t('Correo:')} <Text style={styles.text2}>{name}</Text>
+          </Text>
+          {ownProfile ?
+            <></>
+            :
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              
+            </View>
+          }
           <View style={styles.container2}>
             <Text style={styles.text} onPress={onPressFollowers}>
               {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
@@ -375,30 +356,20 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
             </Text>
           </View>
-
           <Text style={styles.text}>
             {t('Nivel')}: <Text style={styles.text2}>{level}</Text>
           </Text>
-
           <Text style={styles.text}>
             Ecos: <Text style={styles.text2}>{ecoPoints}</Text> 🍃
           </Text>
-
           <Text style={styles.text}>
             {t('Puntuación')}: <Text style={styles.text2}>{score}</Text> ⭐
           </Text>
-
-
-
-
-
-
           <Button
             onPress={() => navigation.navigate('UserProducts', id)}
             title={t('Mis productos')}
             color="#a2cff0" //azul iconico
           />
-
           {ownProfile ?
             // ir a wishlist si es tu perfil
             <Button
@@ -407,9 +378,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               color="#a2cff0" //azul iconico
             />
             : <></>}
-
-
-
           <CustomMap
             style={styles.mapview}
             region={{
@@ -426,7 +394,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
               }}
             ></CustomMarker>
           </CustomMap>
-
 
           {/*
         //Descomentarizar cuando se haga merge con HU 49_Borrar_mi_Usuario,

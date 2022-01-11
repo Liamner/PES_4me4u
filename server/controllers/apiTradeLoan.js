@@ -53,7 +53,7 @@ exports.readAllTradeLoan = async (req, res) => {
 
         if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
   
-        if (userTaking.points < tradeLoan.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeLoan.points) res.status(404).json({error:"not enought points"});
 
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";

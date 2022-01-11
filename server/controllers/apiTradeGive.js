@@ -50,7 +50,7 @@ exports.readAllTradeGive = async (req, res) => {
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        if (userTaking.points < tradeGive.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
         
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
@@ -62,6 +62,7 @@ exports.readAllTradeGive = async (req, res) => {
           // get user rewards
           // ==================
           const userO = await User.findById({_id:req.user.id});
+          const userTak = await User.findById({_id:req.body.userTaking});
           userO.gift += 1;
           let estimatedPoints = req.body.points;
           let eco = userO.ecoPoints;
@@ -69,7 +70,9 @@ exports.readAllTradeGive = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
+          userTak.ecoPoints -= parseFloat(estimatedPoints);
           await userO.save();
+          await userTak.save();
           // ==================
           // getRewards
           // ==================
@@ -100,7 +103,7 @@ exports.readAllTradeGive = async (req, res) => {
           else if (points2 >= 300 && points2 < 500) nivelNuevo = '4'; // tree
           else if(points2 >= 500 && points2 < 750) nivelNuevo = '5'; // roble oak
           else if (points2 >= 750) nivelNuevo = '6'; //ecologista ecologist
-          //si ha subido de nivel gana una recompensa
+          
           if(nivelAntiguo != nivelNuevo) {
             if(nivelNuevo == '2') reward = 20;
             else if (nivelNuevo == '3') reward = 40;

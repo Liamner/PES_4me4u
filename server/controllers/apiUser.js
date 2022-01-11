@@ -22,7 +22,6 @@ exports.readAllUsers = async (req, res) => {
 
 exports.readUser = async (req, res) => {
   try {
-    //const user = await User.findById({ _id: req.params.id }, {uderId: 1, followed : {userId: 1},  followers : {userId: 1}});
     const user = await User.findById({ _id: req.params.id });
     console.log("Reading user: " + req.params.id);
 
@@ -423,7 +422,7 @@ exports.deleteFromWishlist = async (req, res) => {
 exports.getUserFollowed = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({ _id: userId }).populate("followed");
+    const user = await User.findById({ _id: userId })//.populate("followed");
 
     res.status(200).json(user.followed)
   } catch (error) {
@@ -434,7 +433,7 @@ exports.getUserFollowed = async (req, res) => {
 exports.getUserFollowers = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({ _id: userId }).populate("followers");
+    const user = await User.findById({ _id: userId })//.populate("followers");
 
     res.status(200).json(user.followers)
   } catch (error) {
@@ -442,19 +441,23 @@ exports.getUserFollowers = async (req, res) => {
   }
 };
 
+/*
 exports.follow = async (req, res) => {
   try {
     const userId = req.user.id;
-    let body = req.body;
     const ourUser = await User.findById({ _id: userId });
-    const userFollowed = await User.findOne({ email: body.email });
+    console.log(req.body.following)
+    const userFollowed = await User.findById({ _id: req.body.following });
     let find = 0;
     let i;
     let aux2 = userFollowed._id.toString();
+    
     for (i = 0; (find == 0) && (i < ourUser.followed.length); i++) {
+      console.log(i)
       let aux1 = ourUser.followed[i].toString();
       if (aux1 == aux2) { find = 1; }
     }
+    
     if (find == 0) {
       ourUser.followed.push(userFollowed._id);
       await ourUser.save();
@@ -462,7 +465,9 @@ exports.follow = async (req, res) => {
       await userFollowed.save();
       res.status(200).json(ourUser.followered);
     }
+    
     else {
+      console.log('--5--')
       i = i - 1;
       ourUser.followed.splice(i, 1);
       await ourUser.save();
@@ -482,7 +487,7 @@ exports.follow = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
-};
+};*/
 
 exports.getRecentlyViewed = async (req, res) => {
   try {

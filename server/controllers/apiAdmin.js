@@ -328,12 +328,3 @@ exports.readLoans =  async (req, res) => {
     if (products) res.status(200).json(products)
     else res.status(500)
   }
-
-  /*
-  - he visto que hay un poco de spaninglish en las categorias, es algo provisional o se quedara asi?
-  - he pensado en que la ultima llamada del web admin podria ser los productos más vistos, como lo ves?
-  - he estado testando lo de los followers y creo que definidamente no funciona el back
-*/
-
-  // usuarios reportados
-  // ecopoints gastados

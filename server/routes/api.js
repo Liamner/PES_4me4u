@@ -344,8 +344,8 @@ module.exports = function(app) {
   router.route('/admin/:id/users')
     .get(adminController.readUsers)
 
-  router.route('/admin/:id/increaseUsers')
-    .put(adminController.increaseUsers);
+  //router.route('/admin/:id/increaseUsers')
+  //  .put(adminController.increaseUsers);
 
   router.route('/admin/:id/products')
     .get(adminController.readProducts)

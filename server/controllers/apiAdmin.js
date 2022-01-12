@@ -170,6 +170,7 @@ exports.readLoans =  async (req, res) => {
     }
   };
 
+  /*
   exports.increaseUsers =  async (req, res) => {
     try {
       //const adminId = req.params.id;
@@ -184,7 +185,7 @@ exports.readLoans =  async (req, res) => {
       res.status(400).json(error.message);
       console.log(error.message);
     }
-  };
+  };*/
 
   exports.readProducts =  async (req, res) => {
     try {

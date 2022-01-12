@@ -69,7 +69,7 @@ exports.registerUser = async (req, res) => {
   });
   try {
     await usuario.save();
-    adminController.increaseUsers();
+    //adminController.increaseUsers();
     res.status(200).json(usuario);
   }
   catch (err) {

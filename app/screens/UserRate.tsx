@@ -26,13 +26,6 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
   
   const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 
-
-  const changeLanguage = value => {
-    i18n
-      .changeLanguage(value)
-      .then(() => setLanguage(value))
-      .catch(err => console.log(err));
-  };
   
 
   const sendApi = async () => {
@@ -99,17 +92,6 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
             }}>
 
         </ View>
-
-        <Picker
-                    selectedValue={currentLanguage}
-                    style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) =>
-                        changeLanguage(itemValue)
-                    }>
-                    <Picker.Item label={t("Seleccione un idioma...")} value="es" />          
-                    <Picker.Item label="Castellano" value="es" />
-                    <Picker.Item label="Catalán" value="cat" />
-        </Picker>
 
         <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar valoración!')} </Text></Pressable>
         <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> {t('Cancelar')} </Text></Pressable>

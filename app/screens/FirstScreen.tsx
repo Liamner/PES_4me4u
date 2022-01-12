@@ -143,7 +143,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          //Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
@@ -159,7 +159,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
           >
-            <Text style={styles.textStyle}> Atrás</Text>
+            <Text style={styles.textStyle}> {t('Atrás...')}</Text>
           </Pressable>
         </View>
       </Modal>
@@ -208,7 +208,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
       <ScrollView style={{ marginBottom: 30, height: '100%', backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
         {isRecentlyViewedProducts &&
           <ScrollView style={{ backgroundColor: '#a2cff0' }}>
-            <Text style={styles.noProductTitle}> Visto Recientemente</Text>
+            <Text style={styles.noProductTitle}> {t('Visto Recientemente')}</Text>
             <FlatList
               numColumns={4}
               data={recentlyViewedProducts}
@@ -219,7 +219,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
             />
             <View style={styles.separator} />
           </ScrollView>}
-        {noProduct && <Text style={styles.noProductTitle}> No hay productos actualmente</Text>}
+        {noProduct && <Text style={styles.noProductTitle}> {t('No hay productos actualmente')}</Text>}
         {!noProduct && <FlatList
           numColumns={2}
           initialNumToRender={4}

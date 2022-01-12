@@ -71,7 +71,7 @@ const logoImage = require('../assets/images/logo.png')
                 <Image style= {styles.logo} 
                 source = {logoImage}
                 />
-                <Text style = {styles.title}>Presta, Intercambia y Regala</Text>
+                <Text style = {styles.title}>{t('Presta, Intercambia y Regala')}</Text>
             </View>
 
             <View style = {styles.footer}>
@@ -88,7 +88,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "facebook"
                         size = {20}
                         />
-                            <Text style = {styles.whiteText}>  Continuar con Facebook</Text>
+                            <Text style = {styles.whiteText}>{t(' Continuar con Facebook')}</Text>
                         </LinearGradient>
                 </TouchableOpacity>
 
@@ -104,7 +104,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "google"
                         size = {20}
                         />
-                            <Text style = {styles.google}>  Continuar con Google</Text>
+                            <Text style = {styles.google}>{t(' Continuar con Google')}</Text>
                         </LinearGradient>
                 </TouchableOpacity>
 
@@ -120,7 +120,7 @@ const logoImage = require('../assets/images/logo.png')
                         name = "email"
                         size = {20}
                         />
-                            <Text style = {styles.whiteText}>  Continuar con Email</Text>
+                            <Text style = {styles.whiteText}>{t(' Continuar con Email')}</Text>
                         </LinearGradient>
                 </TouchableOpacity>
 

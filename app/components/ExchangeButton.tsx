@@ -178,7 +178,7 @@ export function ExchangeButton  () {
             </Pressable>
           </View>}
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={exchangeProduct} ><Text>Intercambiar Productos!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={exchangeProduct} ><Text>Intercambiar</Text></Pressable>
     </>
 )
 
@@ -209,12 +209,13 @@ const styles = StyleSheet.create({
     button: {
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 12,
-      paddingHorizontal: 32,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
       margin : 10,
       borderRadius: 4,
       elevation: 3,
-      width: '90%',    
+      width: 100, 
+      height: 30,   
       backgroundColor: '#a2cff0',
     },
     itemTitle: {

@@ -179,7 +179,9 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           console.log(error);
         });
     });
+
     navigation.navigate('FirstScreen')
+
   }
 
   const sendApi = async () => {

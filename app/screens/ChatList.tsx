@@ -60,7 +60,9 @@ export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>)
               id: item._id,
               productId: item.productId._id,
               productName: item.productId.name,
-              productImg: item.productId.img[0].url
+              productImg: item.productId.img[0].url,
+              exchange: item.productId.exchange,
+              members: item.members
               })}}>
               <View style={styles.row}>
                 <View style={{ width: '40%' }}>

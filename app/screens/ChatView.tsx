@@ -9,12 +9,18 @@ import retrieveSession from '../hooks/retrieveSession';
 import NavigationBar from '../components/NavigationBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ExchangeButton from '../components/ExchangeButton';
+import { set } from 'react-native-reanimated';
+import GiveButton from '../components/GiveButton';
+import LoanButton from '../components/LoanButton';
 
 export default function ChatView({ navigation, route }: RootTabScreenProps<'ChatView'>) {
   var converid = route.params.id;
   var prodid = route.params.productId;
   var prodname = route.params.productName;
   var prodimg = route.params.productImg;
+  var exchange = route.params.exchange;
+  var memb = route.params.members;
   const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
@@ -22,11 +28,21 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     user: "",
     token: ""
   })
+  const [exch, setExchange] = useState(false);
+  const [provide, setProvide] = useState(false);
+  const [present, setPresent] = useState(false);
+  const [owner, setOwner] = useState("");
+  const [user2, setUser2] = useState("");
+
   const getData = async () => {
     try {
       const value = await retrieveSession();
       if (value !== null) {
         setSession(value)
+        if (value.id === memb[1]._id)
+          setUser2(memb[0]._id)
+        else 
+          setUser2(memb[1]._id)
       }
       else {
         console.log("empty")
@@ -34,7 +50,35 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     } catch (e) {
       console.log(e)
     }
+    setTransactions();
   }
+
+ function setTransactions() {
+  console.log(exchange);
+
+  exchange.forEach(e => {
+    console.log(e + ' loop');
+    if (e === "exchange")
+      setExchange(true);
+    if (e === "provide")
+      setProvide(true);
+    if (e === "present")
+      setPresent(true);
+  });
+
+  
+  console.log(exch)
+  console.log(provide)
+  console.log(present)
+
+  console.log(memb)
+
+  console.log(memb[0]._id)
+  console.log(memb[1]._id)
+ 
+  console.log("usuario actual: " + session.id)
+
+ }
 
   const getConversation = async () => {
     const config = {
@@ -71,7 +115,6 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     }
   };
 
-
   return (
     <View style={styles.container}>
       <Pressable onPress={() => navigation.navigate('ProductRead', prodid)}>
@@ -82,7 +125,24 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
           <View style={{ width: '75%' }}>
             <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
             <View style={[styles.row, {alignSelf: 'center'}]}>
-              <TouchableOpacity
+              <View style={{alignItems: 'center'}}>
+              {present?
+              <GiveButton navigation={navigation} 
+              productId={prodid}
+              token={session.token}
+              receiver={user2}></GiveButton>
+              :
+               null}
+              {exch?
+              <ExchangeButton></ExchangeButton>
+              :
+               null}
+              {provide?
+              <LoanButton></LoanButton>
+              :
+               null}
+               </View>
+              {/* <TouchableOpacity
                 onPress={getConversation}
                 style={{ width: 160, marginTop: 5 }}
               >
@@ -95,7 +155,9 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
                     Hacer intercambio
                   </Text>
                 </LinearGradient>
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
+
+         
               <TouchableOpacity
                 onPress={getConversation}
                 style={{ }}
@@ -107,8 +169,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
                   <Icon name='refresh-outline' color={'white'} size={30} />
                 </LinearGradient>
               </TouchableOpacity>
+
             </View>
           </View>
+         
         </View>
       </Pressable>
       <FlatList

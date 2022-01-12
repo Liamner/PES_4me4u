@@ -33,8 +33,10 @@ export type RootStackParamList = {
   ChatList: undefined;
   ChatView: undefined;
   EditProduct: undefined;
+  UserRate: undefined;
   ReportProduct: undefined;
   ReportUser: undefined;
+
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

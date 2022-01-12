@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {StyleSheet, View , Text, TouchableOpacity, Pressable} from "react-native";
+import {StyleSheet, View , Text, TouchableOpacity, Pressable, Alert} from "react-native";
 import { Modal, SafeAreaView, FlatList } from 'react-native';
 import axios from 'axios'
 import getProduct from "../hooks/getProduct";
@@ -36,8 +36,15 @@ const DATA = [
   },
 ];
 
-export  function GiveButton  () {  
-  console.log("GIVE BUTTON")
+type Props = {
+  navigation: any,
+  productId: string,
+  token: string,
+  receiver: any
+}
+
+export  function GiveButton  ({navigation, productId, token, receiver}: Props) {  
+ // console.log("GIVE BUTTON")
   const [modalVisible, setModalVisible] = React.useState(false);
   const [products, setProducts] = React.useState();
   const getProducts = async (product: String) => {    
@@ -63,6 +70,7 @@ export  function GiveButton  () {
     });
     setModalVisible(false);
   };
+
   React.useEffect(() => {
    // getProducts("");
   }, []);
@@ -77,6 +85,42 @@ export  function GiveButton  () {
   const renderItem = ({ item }) => (
     <Item title={item.name} id = {item._id}/>
   );
+
+  async function giveProduct() {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+    await axios.post('https://app4me4u.herokuapp.com/api/tradeGive/create', {
+      userTaking: receiver,
+      product: productId,
+      points: 50,
+    }, config)
+    .then(function (response) {
+      console.log("response: " + response.status);
+      navigation.navigate("UserRate")
+    })
+    .catch(function (error) {
+      console.log("error: " + error);
+    });
+    
+  }
+
+    const giveAlert=() => 
+      Alert.alert(
+        "Confirmar regalo",
+        "¿Está seguro de que quieres regalar este producto?",
+        [
+        {
+            text: "No",
+//          onPress: () => console.log("Cancel Pressed"),
+        },
+        //{ text: "Sí", onPress: () => console.log("regalo cancelado " + productId + " " + receiver + " " + token) }
+        { text: "Sí", onPress: () => giveProduct() }
+        //{ text: "Sí", onPress: () => navigation.navigate("UserRate") }
+        ]
+      );
 
   return (
     <>   
@@ -105,7 +149,7 @@ export  function GiveButton  () {
             </Pressable>
           </View>
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts("")} ><Text>Dar Producto!</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => giveAlert()} ><Text>Regalar</Text></Pressable>
     </>
 )
 
@@ -122,12 +166,13 @@ const styles = StyleSheet.create({
     button: {
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: 12,
-      paddingHorizontal: 32,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
       margin : 10,
       borderRadius: 4,
       elevation: 3,
-      width: '90%',    
+      width: 100, 
+      height: 30,   
       backgroundColor: '#a2cff0',
     },
     itemTitle: {

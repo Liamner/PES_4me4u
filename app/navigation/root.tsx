@@ -24,6 +24,7 @@ import ReportUser from '../screens/ReportUser';
 
 import { RootStackParamList } from '../types';
 
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
@@ -43,7 +44,8 @@ export default function RootNavigator() {
       <Stack.Screen name="UserUpdate" component={UserUpdate} options={{ headerShown: true, headerShadowVisible: false, title: 'Editar usuario' }} />
       <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: true, headerShadowVisible: false, title: 'Detalles del producto' }} /> 
       <Stack.Screen name="UserProducts" component={UserProducts} options={{ headerShown: true, headerShadowVisible: false }} /> 
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} /> 
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
+      <Stack.Screen name="UserRate" component={UserRate} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Valorar Usuario' }} />
       <Stack.Screen name="ReportProduct" component={ReportProduct} options={{ headerShown: true, headerShadowVisible: false, title: 'Denunciar producto' }} />
       <Stack.Screen name="ReportUser" component={ReportUser} options={{ headerShown: true, headerShadowVisible: false, title: 'Denunciar Usuario' }} />     
 

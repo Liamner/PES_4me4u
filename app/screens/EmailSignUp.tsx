@@ -130,7 +130,7 @@ export default function SignUp({navigation}) {
                 .then(function (response) {
                     const result = response.data
                     //sconsole.log(result.userId)
-                    navigation.navigate("Main", result)
+                    navigation.navigate("SignIn")
                 })
                 .catch(function (error) {
                     console.log(error);

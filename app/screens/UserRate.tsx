@@ -17,6 +17,7 @@ import NavigationBar from '../components/NavigationBar';
 
 
 export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>) {
+ 
   const [commentRate, onChangeComment] = React.useState("");
   const [sliderValue] = React.useState(4)
   const [sliderRate, setSliderRate] = React.useState(sliderValue);
@@ -30,7 +31,8 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
   const sendApi = async () => {
     console.log("sending")
-    const config = {
+    navigation.navigate("FirstScreen");
+    /*const config = {
       headers: {
         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmEyZTNmODVjMmMxMDMwNmYwMTE3YSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2Mzk1OTE1MjUsImV4cCI6MTYzOTc2NDMyNX0.5GKJ_rNnRZvZyO-72q71BdD97-R5E1Pgzj2TlOPT28M`
       }
@@ -45,7 +47,7 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
     })
       .catch(function (error) {
         console.log(error);
-      });
+      });*/
   }
   
   return (
@@ -63,8 +65,8 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
                 style={{width: 250, height: 40}}
                 minimumValue={0}
                 maximumValue={5}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
+                minimumTrackTintColor="#0FFFFF"
+                maximumTrackTintColor="#FFFFFF"
 
                 onValueChange={(sliderValue) => {
                     console.log(sliderRate);

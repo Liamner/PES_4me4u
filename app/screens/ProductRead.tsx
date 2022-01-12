@@ -1,3 +1,4 @@
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';

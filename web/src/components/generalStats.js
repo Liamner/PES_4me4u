@@ -19,6 +19,7 @@ class GeneralStats extends Component {
       Categ: undefined,
       numEcoPoints: 2500,
       numEPGastados: 1200,
+      Prod: undefined,
       loading: true
     };
   }
@@ -53,8 +54,22 @@ class GeneralStats extends Component {
                   response => {
                     this.setState({
                       numUsu: response.data.length,
-                      loading: false
                     });
+                    APIService.get('/admin/ecopoints').then(
+                      response => {
+                        this.setState({
+                          numEcoPoints: response.data,
+                        });
+                        APIService.get('/admin/topProducts').then(
+                          response => {
+                            this.setState({
+                              Prod: response.data,
+                              loading: false
+                            });
+                          }
+                        );
+                      }
+                    );
                   }
                 );
               }

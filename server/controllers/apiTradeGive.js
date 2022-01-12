@@ -52,7 +52,7 @@ exports.readAllTradeGive = async (req, res) => {
 
         if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
         
-        if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
+        if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking && userTaking.ecoPoints >= tradeGive.points) {
           product.state = "reserved";
           await product.save();
           await tradeGive.save();

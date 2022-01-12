@@ -4,10 +4,11 @@ const Comment = require('../models/comment.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const adminController = require('../controllers/apiAdmin.js')
 //const user = require('../models/user.js');
 const app = express();
 
-exports.readAllUsers =  async (req, res) => {
+exports.readAllUsers = async (req, res) => {
   try {
     const user = await User.find();
 
@@ -21,7 +22,6 @@ exports.readAllUsers =  async (req, res) => {
 
 exports.readUser = async (req, res) => {
   try {
-    //const user = await User.findById({ _id: req.params.id }, {uderId: 1, followed : {userId: 1},  followers : {userId: 1}});
     const user = await User.findById({ _id: req.params.id });
     console.log("Reading user: " + req.params.id);
 
@@ -34,7 +34,7 @@ exports.readUser = async (req, res) => {
 
 exports.readUserByName = async (req, res) => {
   try {
-    const user = await User.find({ userId: {$regex: req.params.userId} });
+    const user = await User.find({ userId: { $regex: req.params.userId } });
     console.log("Reading users: " + req.params.userId);
 
     res.status(200).json(user);
@@ -46,7 +46,7 @@ exports.readUserByName = async (req, res) => {
 
 exports.readUsersId = async (req, res) => {
   try {
-    const user = await User.find({}, {_id: 1 });
+    const user = await User.find({}, { _id: 1 });
 
     res.status(200).json(user);
   } catch (error) {
@@ -64,13 +64,14 @@ exports.registerUser = async (req, res) => {
     email,
     pwd: bcrypt.hashSync(pwd, 10),
     role,
-    
+
   });
   try {
     await usuario.save();
+    adminController.increaseUsers();
     res.status(200).json(usuario);
   }
-  catch (err){
+  catch (err) {
     res.status(400).json(err.message);
     console.log("Can not register the user");
   }
@@ -79,98 +80,164 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     let body = req.body;
-    User.findOne({ email: body.email }, (erro, usuarioDB)=>{
-        if (erro) {
-          return res.status(500).json({
-             ok: false,
-             err: erro
-          })
-       }
-        // Verifica que exista un usuario con el mail escrita por el usuario.
-        if (!usuarioDB) {
-            return res.status(400).json({
-            ok: false,
-            err: {
-                message: "Usuario o contraseña incorrectos: no existe el usuario"
-            }
-            })
-        }
-        // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
-        if (!bcrypt.compareSync(body.pwd, usuarioDB.pwd)){
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: "Usuario o contraseña incorrectos: la contraseña es incorrecta"
-                }
-            });
-        }
-        // Genera el token de autenticación
-        const userToken = {
-          id: usuarioDB._id,
-          username: usuarioDB.userId,
-          //products: usuarioDB.products
-        }
-        let token = jwt.sign(userToken, process.env.SECRET, {
-            expiresIn: process.env.TOKEN_EXPIRES
+    User.findOne({ email: body.email }, (erro, usuarioDB) => {
+      if (erro) {
+        return res.status(500).json({
+          ok: false,
+          err: erro
         })
-        res.json({
-            ok: true,
-            user: usuarioDB,
-            token,
+      }
+      // Verifica que exista un usuario con el mail escrita por el usuario.
+      if (!usuarioDB) {
+        return res.status(400).json({
+          ok: false,
+          err: {
+            message: "Usuario o contraseña incorrectos: no existe el usuario"
+          }
         })
+      }
+      // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
+      if (!bcrypt.compareSync(body.pwd, usuarioDB.pwd)) {
+        return res.status(400).json({
+          ok: false,
+          err: {
+            message: "Usuario o contraseña incorrectos: la contraseña es incorrecta"
+          }
+        });
+      }
+      // Genera el token de autenticación
+      const userToken = {
+        id: usuarioDB._id,
+        username: usuarioDB.userId,
+        //products: usuarioDB.products
+      }
+      let token = jwt.sign(userToken, process.env.SECRET, {
+        expiresIn: process.env.TOKEN_EXPIRES
+      })
+      res.json({
+        ok: true,
+        user: usuarioDB,
+        token,
+      })
     })
   }
-  catch(err) {
+  catch (err) {
     res.status(400).json(err.message);
     console.log("Can not login the user");
   }
 }
 
-exports.deleteUser = async (req, res) => {
-  let usr = await User.findById({_id: req.params.id})
-  //let email = req.params.email; 
+exports.loginAdmin = async (req, res) => {
+  try {
+    let body = req.body;
+    User.findOne({ email: body.email }, (erro, usuarioDB) => {
+      if (erro) {
+        return res.status(500).json({
+          ok: false,
+          err: erro
+        })
+      }
+      // Verifica que exista un usuario con el mail escrita por el usuario.
+      if (!usuarioDB) {
+        return res.status(404).json({
+          ok: false,
+          err: {
+            message: "Usuario o contraseña incorrectos: no existe el usuario"
+          }
+        })
+      }
+      // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
+      if (!bcrypt.compareSync(body.pwd, usuarioDB.pwd)) {
+        return res.status(401).json({
+          ok: false,
+          err: {
+            message: "Usuario o contraseña incorrectos: la contraseña es incorrecta"
+          }
+        });
+      }
 
-  if (usr.userId == req.user.id) {
-    res.status(401).json({error: "Do not have permission"})
-    return;
+      if (usuarioDB.role != 'ADMIN') {
+        return res.status(403).json({
+          ok: false,
+          err: {
+            message: "Usuario no autorizado"
+          }
+        });
+      }
+
+      // Genera el token de autenticación
+      const userToken = {
+        id: usuarioDB._id,
+        username: usuarioDB.userId,
+        //products: usuarioDB.products
+      }
+      let token = jwt.sign(userToken, process.env.SECRET, {
+        expiresIn: process.env.TOKEN_EXPIRES
+      })
+      res.json({
+        ok: true,
+        user: usuarioDB,
+        token,
+      })
+    })
   }
-  try{
-    let usr = await User.findById({_id: req.params.id})
+  catch (err) {
+    res.status(400).json(err.message);
+    console.log("Can not login the user");
+  }
+}
+
+exports.deleteMyUser = async (req, res) => {
+  try {
+    let usr = await User.findById(req.user.id)
     usr.delete();
     res.status(200).json(usr);
   }
-  catch(err) {
+  catch (err) {
+    res.status(400).json(err.message);
+    console.log("Can not delete the user");
+  }
+}
+
+
+exports.deleteUser = async (req, res) => {
+  let usr = await User.findById({ _id: req.params.id })
+
+  if (usr.userId != req.user.id || usr.role != 'ADMIN') {
+    res.status(401).json({ error: "Do not have permission" })
+    return;
+  }
+  try {
+    let usr = await User.findById({ _id: req.params.id })
+    usr.delete();
+    res.status(200).json(usr);
+  }
+  catch (err) {
     res.status(400).json(err.message);
     console.log("Can not delete the user");
   }
 }
 
 exports.updateUser = async (req, res) => {
+  const user = await User.findById({ _id: req.params.id })
 
-    const level = req.body.level;
-    const ecoPoints = req.body.ecoPoints;
-    const score = req.body.score;
-  
-    const id = req.user.id;
-    const user = await User.findById(id)
+  console.log(req.body.latitude)
+  if (req.body.name) user.userId = req.body.name;
+  if (req.body.email) user.email = req.body.email;
+  if (req.body.latitude && req.body.longitude) {
+    user.latitude = req.body.latitude;
+    user.longitude = req.body.longitude;
+  }
 
-    console.log("Searching for user to update: " + req.params.id);
-
-    if (level != null)  user.level = level;
-    if (ecoPoints != null) user.ecoPoints = ecoPoints;
-    if (score != null) user.score = score;
-    
-    console.log(user);
-    
-    try {
-      await user.save();
-    
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(409).json(error.message);
-    
-      console.log("Can not update the user");
-    }
+  console.log(user);
+  console.log("Searching for user to update: " + req.body.latitude);
+  try {
+    await user.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(409).json(error.message);
+    console.log("Can not update the user");
+  }
 
 }
 
@@ -178,8 +245,7 @@ exports.getUserProducts = async (req, res) => {
   try {
 
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("products");
-    
+    const user = await User.findById({ _id: userId }).populate({ path: 'products', populate: { path: 'img' } });
     console.log(user)
     res.status(200).json(user.products)
   } catch (error) {
@@ -188,23 +254,22 @@ exports.getUserProducts = async (req, res) => {
 };
 
 exports.rateUser = async (req, res) => {
-  // Id usuario a valorar
   const userId = req.params.id;
   const rateScore = req.body.rateScore;
   const comment = req.body.comment;
 
-  if (rateScore == null || rateScore < 0 || rateScore > 5 || req.user.id == userId) res.status(400).json({error: 'Invalid input'})
+  if (rateScore == null || rateScore < 0 || rateScore > 5 || req.user.id == userId) res.status(400).json({ error: 'Invalid input' })
   else {
-    await User.findById({_id: userId}, async (err, userRated) => {
+    await User.findById({ _id: userId }, async (err, userRated) => {
       if (userRated == null || err || userRated == undefined) {
-        res.status(404).json({error: 'User not found'})
+        res.status(404).json({ error: 'User not found' })
       }
       else {
         // Calculate new user rate
         let newTotalRateScore = 0;
         console.log(userRated)
-        if (userRated.totalRateScore != null) newTotalRateScore = parseFloat(userRated.totalRateScore)+parseFloat(rateScore);
-        let tradesRated = userRated.tradesRated +1;
+        if (userRated.totalRateScore != null) newTotalRateScore = parseFloat(userRated.totalRateScore) + parseFloat(rateScore);
+        let tradesRated = userRated.tradesRated + 1;
         let newRateScore = calculateUserScore(newTotalRateScore, tradesRated)
 
         // Create comment
@@ -223,24 +288,24 @@ exports.rateUser = async (req, res) => {
         userRated.tradesRated = tradesRated;
         userRated.commentsRecived.push(newComment)
         console.log(userRated)
-        const myUser = await User.findById({_id: req.user.id})
+        const myUser = await User.findById({ _id: req.user.id })
         myUser.commentsDone.push(newComment)
         try {
           await userRated.save();
           await myUser.save();
-        
+
           res.status(201).json(userRated);
         } catch (error) {
           res.status(409).json(error.message);
-        
+
           console.log("Can not update the user");
         }
-      }  
+      }
     }).clone()//.catch(function(err){ res.status(404).json({error: 'User not found'}); console.log(err)})
   }
 }
 function calculateUserScore(totalRateScore, tradesRated) {
-  return totalRateScore/tradesRated;
+  return totalRateScore / tradesRated;
 }
 
 exports.getAllComments = async (req, res) => {
@@ -258,7 +323,7 @@ exports.getAllComments = async (req, res) => {
 
 exports.getMyCommentsDone = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsDone', populate:{path: 'user', select: { 'name': 1} }});
+    const user = await User.findById({ _id: req.user.id }).populate({ path: 'commentsDone', populate: { path: 'user', select: { 'name': 1 } } });
     res.status(200).json(user.commentsDone);
   } catch (error) {
     res.status(404).json(error.message);
@@ -268,8 +333,7 @@ exports.getMyCommentsDone = async (req, res) => {
 
 exports.getMyCommentsRecived = async (req, res) => {
   try {
-    const user = await User.findById({ _id: req.user.id}).populate({path: 'commentsRecived', populate:{path: 'user', select: { 'name': 1} }});
-    //const comments = user.commentsDone.populate(user)
+    const user = await User.findById({ _id: req.user.id }).populate({ path: 'commentsRecived', populate: { path: 'user', select: { 'name': 1 } } });
     res.status(200).json(user.commentsRecived);
   } catch (error) {
     res.status(404).json(error.message);
@@ -277,117 +341,23 @@ exports.getMyCommentsRecived = async (req, res) => {
   }
 }
 
-
-exports.getRewards = async (req, res) => {
-  try {
-    const user = await User.findById({ _id: req.user.id });
-    var ngifts = user.gifts;
-    var nloans = user.loans;
-    var nexchanges = user.exchanges;
-    var points = user.ecoPoints;
-    var rewards = 0;
-    if(ngifts >= 3) {
-      if(ngifts >=3) rewards += 10;
-      if(ngifts >= 5) rewards += 50;
-      else if (ngifts >= 7) rewards += 100;
-      else if(ngifts >= 10) rewards += 150;
-    }
-
-    else if(nloans >= 3) {
-      if(nloans >=3) rewards += 10;
-      if(nloans >= 5) rewards += 50;
-      else if (nloans >= 7) rewards += 100;
-      else if(nloans >= 10) rewards += 150;
-    }
-
-    else if(nexchanges >= 3) {
-      if(nexchanges >=3) rewards += 10;
-      if(nexchanges >= 5) rewards += 50;
-      else if (nexchanges >= 7) rewards += 100;
-      else if(nexchanges >= 10) rewards += 150;
-    }
-
-    user.ecoPoints = points + rewards;
-    user.save();
-    res.status(200).json(user);
-    
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
 exports.getUserLevel = async (req, res) => {
-  try{
+  try {
     const user = await User.findById({ _id: req.params.id });
-    console.log("Level del usuario: " , user.level);
+    console.log("Level del usuario: ", user.level);
     res.status(200).json(user.level);
   }
-  catch(err) {
+  catch (err) {
     res.status(400).json(err.message);
     console.log("Can not delete the user");
-  }
-}
-
-exports.levelManage = async (req, res) => {
-  try {
-    const user = await User.findById({ _id: req.user.id });
-    console.log("Level del usuario: " , user.name);
-
-    var nivelAntiguo = user.level;
-    var nivelNuevo, reward;
-    var points = user.ecoPoints;
-
-    if(points < 50) nivelNuevo = '1'; // seed semilla
-    else if (points >= 50 && points < 150) nivelNuevo = '2'; //brote outbreak
-    else if (points >= 150 && points < 300) nivelNuevo = '3'; // plant
-    else if (points >= 300 && points < 500) nivelNuevo = '4'; // tree
-    else if(points >= 500 && points < 750) nivelNuevo = '5'; // roble oak
-    else if (points >= 750) nivelNuevo = '6'; //ecologista ecologist
-
-    //si ha subido de nivel gana una recompensa
-    if(nivelAntiguo != nivelNuevo) {
-      if(nivelNuevo == '2') reward = 20;
-      else if (nivelNuevo == '3') reward = 40;
-      else if (nivelNuevo == '4') reward = 60;
-      else if (nivelNuevo == '5') reward = 80;
-      else if (nivelNuevo == '6') reward = 100;
-    }
-
-    user.ecoPoints = points + reward;
-    user.level = nivelNuevo;
-
-    await user.save();
-    res.status(200).json(user);
-    
-  } catch (error) {
-
   }
 }
 
 exports.getUserPoints = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
-    console.log("Puntos del usuario: " , user.ecoPoints);
+    console.log("Puntos del usuario: ", user.ecoPoints);
     res.status(200).json(user.ecoPoints);
-  } catch (error) {
-    res.status(400).json(error)
-  }
-};
-
-exports.getUserRewards = async (req, res) => {
-  try {
-    const {type, estimatedPoints} = req.body;
-
-    const id = req.user.id;
-    const user = await User.findById(id)
-    console.log("Searching for user to get reward: " + user.name);
-    
-    if (type != 'gift' && estimatedPoints >= 1 && estimatedPoints <= 100) user.ecoPoints += estimatedPoints;
-    if (type != 'loan' && estimatedPoints >= 1 && estimatedPoints <= 15) user.ecoPoints += estimatedPoints;
-    if (type != 'exchange') user.ecoPoints += 15;
-
-    await user.save();
-    res.status(201).json(user);
   } catch (error) {
     res.status(400).json(error)
   }
@@ -395,36 +365,38 @@ exports.getUserRewards = async (req, res) => {
 
 exports.getUserWishlist = async (req, res) => {
   try {
-    const userId = req.user.id;
-    User.findOne({_id: userId}, (erro, user) => {
-      console.log(user.wishlist)
-      console.log(user);
-     res.status(200).json(user.wishlist);
-    }).populate({path:"wishlist", populate: { path: 'img'}});
+    const userId = req.params.id;
+    console.log(userId)
     
-    
+    User.findById({ _id: userId }, async (erro, user) => {
+      await Product.find({ _id: { $in: user.wishlist } }, (erro, products) => {
+        console.log(products)
+        res.status(200).json(products)
+      }).populate('img').clone()
+    }).clone()
   } catch (error) {
     res.status(400).json(error)
   }
-};  
-    
+};
+
 exports.addToWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    const ourUser = await User.findById({_id: userId});
+   
     let idProduct = req.body.idProduct;
-    
-    Product.findOne({ _id: idProduct }, (erro, productDB)=>{
-      if (erro) {
-        return res.status(500).json({
-           ok: false,
-           err: erro
-        })
-     }
-     ourUser.wishlist.push(productDB);
-     ourUser.save();
-     res.status(200).json(ourUser.wishlist);
-    });
+    //const product = await Product.findById(idProduct)
+
+    await Product.findById({_id: idProduct}, async (erro, product) => {
+      console.log('product ' + product)
+      if (product) {
+        User.findById({ _id: userId }, async (erro, user) => {
+          user.wishlist.push(product);
+          await user.save()
+          res.status(200).json(user.wishlist);
+        }).clone()
+      }
+      else res.status(404).json({error: 'Product not found'});
+    }).clone()
   } catch (error) {
     res.status(400).json(error)
   }
@@ -434,26 +406,22 @@ exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
     let idProduct = req.body.idProduct;
-    User.findById({_id: userId}, {wishlist: 1}, async (erro, usersProducts) => {
-        let find = 0;
-        let i;
-        for (i = 0;(find == 0) && (i < usersProducts.wishlist.length) ; i++) {
-          if (idProduct == usersProducts.wishlist[i]._id) {find = 1;}
-        }
-        if (find == 0) {
-          res.status(400).json({error: 'User not wishlist'})
-        }
-        else {
-          i = i-1;
-          usersProducts.wishlist.splice(i, 1);
-          usersProducts.save();
-          const user = await User.findById({_id: userId});
-          console.log(user.wishlist)
-          res.status(200).json(usersProducts);
+    const ourUser = await User.findById({ _id: userId }).populate("wishlist");
+    let i = 0, find = 0;
 
-        }
-    }).populate('wishlist');
-
+    for (i = 0; (find == 0) && (i < ourUser.wishlist.length); i++) {
+      if (idProduct == ourUser.wishlist[i]) find = 1;
+    }
+    if (find == 0) {
+      res.status(400).json({ error: 'The product is not in the wishlist' })
+    }
+    else {
+      i = i - 1;
+      ourUser.wishlist.splice(i, 1);
+      ourUser.save();
+      console.log(ourUser.wishlist)
+      res.status(200).json(ourUser);
+    }
   } catch (error) {
     res.status(400).json(error)
   }
@@ -462,8 +430,8 @@ exports.deleteFromWishlist = async (req, res) => {
 exports.getUserFollowed = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("followed");
-    
+    const user = await User.findById({ _id: userId })//.populate("followed");
+
     res.status(200).json(user.followed)
   } catch (error) {
     res.status(400).json(error)
@@ -473,52 +441,111 @@ exports.getUserFollowed = async (req, res) => {
 exports.getUserFollowers = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await User.findById({_id: userId}).populate("followers");
-    
+    const user = await User.findById({ _id: userId })//.populate("followers");
+
     res.status(200).json(user.followers)
   } catch (error) {
     res.status(400).json(error)
   }
 };
 
+/*
 exports.follow = async (req, res) => {
   try {
     const userId = req.user.id;
-    let body = req.body;
-    const ourUser = await User.findById({_id: userId});
-    const userFollowed = await User.findOne ({email: body.email});
-        let find = 0;
-        let i;
-        let aux2 = userFollowed._id.toString();
-        for (i = 0;(find == 0) && (i < ourUser.followed.length) ; i++) {
-          let aux1 = ourUser.followed[i].toString();
-          if (aux1 == aux2) {find = 1;}
+    const ourUser = await User.findById({ _id: userId });
+    console.log(req.body.following)
+    const userFollowed = await User.findById({ _id: req.body.following });
+    let find = 0;
+    let i;
+    let aux2 = userFollowed._id.toString();
+    
+    for (i = 0; (find == 0) && (i < ourUser.followed.length); i++) {
+      console.log(i)
+      let aux1 = ourUser.followed[i].toString();
+      if (aux1 == aux2) { find = 1; }
+    }
+    
+    if (find == 0) {
+      ourUser.followed.push(userFollowed._id);
+      await ourUser.save();
+      userFollowed.followers.push(ourUser._id);
+      await userFollowed.save();
+      res.status(200).json(ourUser.followered);
+    }
+    
+    else {
+      console.log('--5--')
+      i = i - 1;
+      ourUser.followed.splice(i, 1);
+      await ourUser.save();
+      find = 0;
+      aux2 = ourUser._id.toString();
+      for (i = 0; (find == 0) && (i < userFollowed.followers.length); i++) {
+        aux1 = userFollowed.followers[i].toString();
+        if (aux1 == aux2) {
+          find = 1;
         }
-        if (find == 0) {
-          ourUser.followed.push(userFollowed._id);
-          await ourUser.save();
-          userFollowed.followers.push(ourUser._id);
-          await userFollowed.save();
-           res.status(200).json(ourUser.followered);
-        }
-        else {
-          i = i-1;
-          ourUser.followed.splice(i, 1);
-          await ourUser.save();
-          find = 0;
-          aux2 = ourUser._id.toString();
-          for (i = 0;(find == 0) && (i < userFollowed.followers.length) ; i++) {
-            aux1 = userFollowed.followers[i].toString();
-            if(aux1 == aux2){
-              find = 1;
-            }
-          }
-          i = i - 1; 
-          userFollowed.followers.splice(i,1);
-          await userFollowed.save();
-         res.status(200).json(ourUser.followered);
-        }
-    } catch (error) {
+      }
+      i = i - 1;
+      userFollowed.followers.splice(i, 1);
+      await userFollowed.save();
+      res.status(200).json(ourUser.followered);
+    }
+  } catch (error) {
+    res.status(400).json(error)
+  }
+};*/
+
+exports.getRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    await User.findById({ _id: userId }, { recentlyViewed: 1 }, (erro, user) => {
+      
+      res.status(200).json(user.recentlyViewed)
+    }).populate({ path: 'recentlyViewed', populate: { path: 'img' } }).clone()
+
+
+  } catch (error) {
     res.status(400).json(error)
   }
 };
+
+exports.updateRecentlyViewed = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let idProduct = req.body.idProduct;
+
+    User.findById({ _id: userId }, async (erro, usersRecentViewed) => {
+      let found = false;
+      Product.findById({ _id: idProduct }, async (erro, product) => {
+        if (usersRecentViewed.recentlyViewed) {
+
+          for (let i = 0; i < usersRecentViewed.recentlyViewed.length; i++) {
+            if (usersRecentViewed.recentlyViewed[i]._id == idProduct) {
+              found = true;
+              console.log(usersRecentViewed.recentlyViewed[i]._id + ' ' + i)
+            }
+          }
+          if (usersRecentViewed.recentlyViewed.length >= 4 && !found) {
+            usersRecentViewed.recentlyViewed.splice(0, 1);
+            await usersRecentViewed.save();
+          }
+        }
+
+        if (product != null) {
+          if (!found) {
+            usersRecentViewed.recentlyViewed.push(product);
+            await usersRecentViewed.save();
+          }
+          res.status(200).json(usersRecentViewed.recentlyViewed);
+        }
+        else res.status(404).json({ error: 'Product not found' })
+      })
+
+
+    }).populate('recentlyViewed').clone()
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}

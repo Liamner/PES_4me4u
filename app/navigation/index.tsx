@@ -3,14 +3,12 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-
 import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
-
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -24,7 +22,7 @@ import SignUp from '../screens/EmailSignUp';
 import SignIn from '../screens/EmailSignIn'
 import Main from '../screens/MainScreen'
 import EditProduct from '../screens/ProductEdit';
-import ProductRead from '../screens/ProductRead';
+import ViewProduct from '../screens/ProductRead';
 import DeleteButton from '../screens/DeleteButtonScreen';
 import ActualizarEstadoProducto from '../screens/ActualizarEstadoProducto';
 import ProductCardId from '../screens/ProductCardScreen';
@@ -110,7 +108,6 @@ function LoginNavigator() {
     </LoginStack.Navigator>
   );
 }
-
 
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.

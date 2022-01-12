@@ -1,31 +1,19 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
 require('./config/config.js');
-require('dotenv').config()
+require('dotenv').config();
  
 const app = express()
-const path = require('path');
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
-
 const apiRoutes =  require('./routes/api.js')(app);
 app.use("/api", apiRoutes);
 
-
-
-const CONNECTION_URL =
-  "mongodb+srv://admin:1234@4me4u.4lr2m.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-
-
-
-app.get('/', function(req, res) {
-  res.sendFile(renderHTML);
-})
 
 // Connect to MongoDB
 

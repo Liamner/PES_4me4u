@@ -9,6 +9,7 @@ const tradeExchangeController = require('../controllers/apiTradeExchange.js');
 const tradeLoanController = require('../controllers/apiTradeLoan.js');
 const reportController = require('../controllers/apiReport.js');
 const conversationController = require ('../controllers/apiConvesration.js')
+const adminController = require ('../controllers/apiAdmin.js')
 const messageController = require ('../controllers/apiMessages.js')
 const jwt = require('jsonwebtoken')
 
@@ -28,7 +29,7 @@ module.exports = function(app) {
 
   // Create new product
   router.route('/product/create/')
-    .post(upload.array('img', 6), (validateCreateProduct), authenticateJWT, productController.createProduct);
+    .post(upload.array('img', 6)/*, (validateCreateProduct)*/, authenticateJWT, productController.createProduct);
 
   router.route('/product/name/:name')
     .get(productController.readProductsByName)
@@ -38,7 +39,7 @@ module.exports = function(app) {
 
   // Read Product with id = id
   router.route('/product/:id')
-    .get(productController.readProduct);
+    .get(authenticateJWT, productController.readProduct);
   
   // Read all products
   router.route('/product/')
@@ -69,7 +70,7 @@ module.exports = function(app) {
 
   // Create new category
   router.route('/category/create/')
-    .post(authenticateJWT, validateCreateCategory, categoryController.createCategory);
+    .post( categoryController.createCategory);
 
   // Read category with id = id
     router.route('/category/:id')
@@ -89,7 +90,7 @@ module.exports = function(app) {
 
   // Create new type
   router.route('/type/create/')
-    .post(authenticateJWT, validateCreateType, typeController.createType);
+    .post(typeController.createType);
 
   // Read type with id = id
   router.route('/type/:id')
@@ -107,6 +108,9 @@ module.exports = function(app) {
   router.route('/type/delete/:id')
     .delete(authenticateJWT, typeController.deleteType);
 
+  router.route('/product/noImages/')
+    .delete(productController.deleteWihtNoImages)
+
     
   // ======================
   // ---- USER  Routes ----
@@ -119,13 +123,18 @@ module.exports = function(app) {
   router.route('/login')
     .post(userController.loginUser);
 
-
+  router.route('/login/admin')
+    .post(userController.loginAdmin);
+  
+  router.route('/user/delete')
+    .delete(authenticateJWT, userController.deleteMyUser);
+    
   router.route('/deleteUser/:id')
     .delete(authenticateJWT, userController.deleteUser);
 
   // Update user with id = id
   router.route('/user/update/:id')
-    .put(authenticateJWT, userController.updateUser);
+    .put(userController.updateUser);
 
   // Read all products
   router.route('/user/')
@@ -146,38 +155,46 @@ module.exports = function(app) {
   router.route('/user/:userId/rate')
     .post(authenticateJWT, userController.rateUser);
 
-  router.route('/user/:id/products/rewards')
-    .get(userController.getRewards)
+  //router.route('/user/:id/products/rewards')
+    //.put(userController.getRewards)
 
   router.route('/user/:id/points')
     .get(userController.getUserPoints)
 
   router.route('/user/:id/wishlist')
-    .get(authenticateJWT, userController.getUserWishlist)
+    .get(/*authenticateJWT, */userController.getUserWishlist)
     
   router.route('/user/:id/level')
     .get(userController.getUserLevel)
 
-  router.route('/user/:id/levelManage')
-    .get(authenticateJWT, userController.levelManage)
-
-  router.route('/user/:id/rewards')
-    .get(authenticateJWT, userController.getUserRewards)
-
+  //router.route('/user/:id/levelManage')
+  //  .get(authenticateJWT, userController.levelManage)
+  
+  //router.route('/user/:id/rewards')
+  //  .put(authenticateJWT, userController.getUserRewards)
+  
   router.route('/user/:id/AddToWishlist')
-    .post(authenticateJWT, userController.addToWishlist)
+    .put(authenticateJWT, userController.addToWishlist)
 
-    router.route('/user/:id/DeleteFromWishlist')
-    .post(authenticateJWT, userController.deleteFromWishlist)
+  router.route('/user/:id/DeleteFromWishlist')
+    .delete(authenticateJWT, userController.deleteFromWishlist)
   
   router.route('/user/:id/followed')
     .get(userController.getUserFollowed)
 
-  router.route('/user/:id/followers')
-    .get(userController.getUserFollowers)
 
-  router.route('/user/:id/follow')
-    .post(authenticateJWT, userController.follow)
+  //router.route('/user/:id/followers')
+  //  .get(userController.getUserFollowers)
+
+  router.route('/user/:id/productsRecentlyViewed')
+    .get(userController.getRecentlyViewed);
+
+  router.route('/user/:id/addProductsRecentlyViewed')
+    .put(userController.updateRecentlyViewed);
+
+  //router.route('/user/:id/follow')
+  //  .post(authenticateJWT, userController.follow)
+
     
   // ======================
   // ---- Trade Routes ----
@@ -240,7 +257,7 @@ module.exports = function(app) {
     .post(authenticateJWT, reportController.createReport);
 
   // Read reports from userReported = userReported
-    router.route('/report/:userReported')
+    router.route('/report/user/:userReported')
     .get(authenticateJWT, reportController.readUserReports);
   
   // Read all reports
@@ -248,7 +265,7 @@ module.exports = function(app) {
     .get(authenticateJWT, reportController.readAllReports);
   
      // Read no solved reports from userReported = userReported
-  router.route('/report/nosolved/:userReported')
+  router.route('/report/nosolveds/:userReported')
   .get(authenticateJWT, reportController.readNoSolvedUserReports);
 
   router.route('/report/nosolved/')
@@ -275,6 +292,9 @@ module.exports = function(app) {
   router.route('/product/:productId/image/:imageId')
     .delete(/*authenticateJWT, */ imageController.deleteImages)
     //.put(upload.array('img',6), /*authenticateJWT, */ imageController.updateImages)
+
+  router.route('/filter/products')
+    .get(categoryController.getProductCategory2)
   router.route('/filter/product')
     .get(categoryController.getProductCategory)
 
@@ -292,8 +312,63 @@ module.exports = function(app) {
     .post(authenticateJWT, conversationController.newConversation)
 
   router.route('/conversation/user')
+    .get(authenticateJWT, conversationController.getConversations)
+
+  // ======================
+  // ---- Admin Routes ----
+  // ======================
+
+  router.route('/registerAdmin')
+    .post(adminController.registerAdmin);
+  
+  router.route('/deleteAdmin/:id')
+    .delete(adminController.deleteAdmin);
+
+  router.route('/admin/:id/gifts')
+    .get(adminController.readGifts);
+
+  router.route('/admin/:id/increaseGifts')
+    .put(adminController.increaseGifts);
+
+  router.route('/admin/:id/loans')
+    .get(adminController.readLoans);
+
+  router.route('/admin/:id/increaseLoans')
+    .put(adminController.increaseLoans);
+
+  router.route('/admin/:id/exchanges')
+    .get(adminController.readExchanges);
+
+  router.route('/admin/:id/increaseExchanges')
+    .put(adminController.increaseExchanges);
+  
+  router.route('/admin/:id/users')
+    .get(adminController.readUsers)
+
+  router.route('/admin/:id/increaseUsers')
+    .put(adminController.increaseUsers);
+
+  router.route('/admin/:id/products')
+    .get(adminController.readProducts)
+
+  router.route('/admin/:id/increaseProducts')
+    .put(adminController.increaseProducts);
+
+  router.route('/admin/:id/ecoPoints')
+    .get(adminController.readEcoPoints)
+
+  router.route('/admin/:id/increaseEcopoints')
+    .put(adminController.increaseEcopoints);
+
+  router.route('/admin/:id/increaseBlockedUsers')
+    .put(adminController.increaseBlockedUsers);
+
+  router.route('/admin/:id/blockedUsers')
+    .get(adminController.readBlockedUsers)
+
+
     // get my conversations
-    .get(authenticateJWT, conversationController.getMyConversations)
+    router.route('/conversation/mine').get(authenticateJWT, conversationController.getMyConversations)
 
 
   router.route('/message')
@@ -302,5 +377,15 @@ module.exports = function(app) {
   
   router.route('/conversation/:conversationId')
     .get(authenticateJWT, messageController.getConversationMessages)
+
+
+    // ADMIN PAGE
+  router.route('/admin/transactions').get(adminController.numTransasPorTipo)
+  router.route('/admin/categories').get(adminController.numCategories)
+  router.route('/admin/productsReported').get(adminController.numPorductosReportados)
+  router.route('/admin/topProducts').get(adminController.topProducts)
   return router;
+
+
 }
+

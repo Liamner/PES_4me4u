@@ -77,8 +77,7 @@ export default function SignInScreen({ navigation }) {
                             "token": result.token
                         }
                         storeData(session)
-                        navigation.navigate("BottomTab");
-                      //navigation.navigate("Main", result);
+                       navigation.navigate("BottomTab");
                     }
                 })
                 .catch(function (error) {

@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Text, View } from '../components/Themed';
 import { Checkbox } from 'react-native-paper';
 import { RootTabScreenProps } from '../types';
+import { resolvePlugin } from '@babel/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationBar from '../components/NavigationBar';
 import { useTranslation } from 'react-i18next';
@@ -49,7 +50,6 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       console.log(e)
     }
   }
-  const [newImages, setNewImages] = React.useState([]);
 
   React.useEffect(() => {
     getData();

@@ -6,6 +6,7 @@ const Image = require('../models/image.js');
 const User = require('../models/user.js');
 const Type = require('../models/type.js');
 const validateCreateProduct = require('../validators/product.js');
+const adminController = require ('../controllers/apiAdmin.js')
 const cloudinary = require("../config/cloudinary");
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
@@ -24,11 +25,15 @@ exports.readAllProducts =  async (req, res) => {
 
 exports.readProduct = async (req, res) => {
   try {
-    const product = await Product.findById({ _id: req.params.id }).populate("img");
-
-    console.log("Reading product: " + req.params.id);
-
-    res.status(200).json(product);
+    await Product.findById({ _id: req.params.id }, async (error, product) => {
+      if (product.userId != req.user.id) {
+        console.log('Not my product')
+        product.views =  product.views + 1;
+        await product.save();
+      }
+      res.status(200).json(product);
+    }).populate("img").clone()
+    
   } catch (error) {
     res.status(404).json(error.message);
     console.log(error.message);
@@ -37,7 +42,6 @@ exports.readProduct = async (req, res) => {
 
 exports.readProductsFilteredCategory = async (req, res) => {
   try {
-
     const product = await Product.find ({ categories: req.body.categories }) 
     console.log("Reading products with filter by Category: " + req.body.name);
     res.status(200).json(product);
@@ -82,7 +86,21 @@ exports.createProduct = async (req, res) => {
   product.categories = req.body.categories  
   product.description = req.body.description;
   product.publishingDate = req.body.publishingDate;
-  product.exchange.push(req.body.exchange);         
+
+  if (req.body.exchange.length >= 2 && req.body.exchange.length <= 3) {
+    for (let i = 0; i < req.body.exchange.length; i++) {
+      let res = req.body.exchange[i];
+      product.exchange.push(res)
+      console.log(res)
+      //product.exchange.push(req.body.exchange[i]); 
+    }
+  }
+  else {
+    let res = req.body.exchange;
+    product.exchange.push(res)
+  }
+  
+          
   product.state = req.body.state;
   // Assign the current user to the product
 
@@ -133,7 +151,7 @@ exports.createProduct = async (req, res) => {
                                       products: newProduct
                                     }
                                   });
-                              
+    adminController.increaseProducts();                          
     res.status(201).json(product);}
 
   } catch (error) {
@@ -279,3 +297,15 @@ exports.readProductsByName = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.deleteWihtNoImages = async (req,res) => {
+  console.log('No images')
+  try {
+    Product.deleteMany({img: {$exists: true, $size: 0}}, (error, products) => {
+      console.log(products)
+      res.status(201).json(products)
+    })
+  } catch (error) {
+    res.status(400).json(error)
+  }
+}

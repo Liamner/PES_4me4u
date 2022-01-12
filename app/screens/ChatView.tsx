@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, Pressable, TextInput, Button, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { io } from "socket.io-client";
 
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';

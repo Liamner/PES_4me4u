@@ -30,12 +30,6 @@ exports.readAllTypes = async (req, res) => {
     const type = new Type();
     type.name = req.body.name;
 
-    if ('ADMIN' != req.user.role) {
-      res.status(401).json({error: "Do not have permission"})
-      return;
-    }
-
-    console.log(type);
   
     try {
       await type.save();
@@ -51,7 +45,8 @@ exports.readAllTypes = async (req, res) => {
   
   exports.updateType = async (req, res) => {
 
-    if ('ADMIN' != req.user.role) {
+    const user = await User.findbyId(req.user.id);
+    if (user.role != 'ADMIN'){
       res.status(401).json({error: "Do not have permission"})
       return;
     }
@@ -59,9 +54,9 @@ exports.readAllTypes = async (req, res) => {
   }
   
   exports.deleteType = async (req, res) => {
-  
-
-    if ('ADMIN' != req.user.role) {
+      
+    const user = await User.findbyId(req.user.id);
+    if (user.role != 'ADMIN'){
       res.status(401).json({error: "Do not have permission"})
       return;
     }

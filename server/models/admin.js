@@ -25,34 +25,10 @@ let usuarioSchema = new Schema({
     },
     role: {
         type: String,
-        default: 'USER',
+        default: 'ADMIN',
         enum: rolesValidos,
     },
-    level: {
-        type: Number,
-        default: 1,
-    },
-    ecoPoints: {
-        type: Number,
-        default: 10,
-    },
-    score: {
-        type: String,
-        default: 5.0,
-    },
-    products: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Product'
-    }],
-    latitude: {
-        type: mongoose.Schema.Types.Double,
-        default: null
-    },
-    longitude: {
-        type: mongoose.Schema.Types.Double,
-        default: null
-    },
-    gift: {
+    gifts: {
         type: Number,
         default: 0,
     },
@@ -64,49 +40,20 @@ let usuarioSchema = new Schema({
         type: Number,
         default: 0
     },
-    /*followers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Usuario",
-        required: false
-    }],
-    followed: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"Usuario",
-        required: false
-    }],*/
-    wishlist: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Product'
-        //type: String,
-        //required: false
-    }],
-    recentlyViewed: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Product'
-    }],
-    commentsRecived: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Comment'
-    }],
-    commentsDone: [{
-
-        type: Schema.Types.ObjectId, 
-        ref: 'Comment'
-    }],
-    rateScore: {
+    users: {
         type: Number,
         default: 0
     },
-    totalRateScore: {
+    products: {
         type: Number,
         default: 0
     },
-    tradesRated: {
+    ecoPoints: {
         type: Number,
         default: 0
     },
-    strikes: {
-        type:Number,
+    blockedUsers: {
+        type: Number,
         default: 0
     }
 });
@@ -121,4 +68,10 @@ usuarioSchema.methods.toJSON = function() {
     return userObject;
  }
 
-module.exports = mongoose.model('Usuario', usuarioSchema);
+//agregamos el plugin de validación única y exportamos el modelo recién creado
+/*
+usuarioSchema.plugin(uniqueValidator, {
+    message: '{PATH} debe de ser único'
+})
+*/
+module.exports = mongoose.model('Admin', usuarioSchema);

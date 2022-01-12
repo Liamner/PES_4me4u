@@ -16,7 +16,10 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
   const [name, onChangeName] = React.useState("");
   const [email, onChangeEmail] = React.useState("");
   const [image, setImage] = React.useState(null);
-  const [latlon, setlatlon] = React.useState();
+  const [latlon, setlatlon] = React.useState({
+    lat: null,
+    lon: null,
+  });
   const [session, setSession] = React.useState({
     id: "",
     user: "",
@@ -52,13 +55,15 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
 
 
   const getLatLon = async (place: string) => {
-    console.clear();
-    GeocoderOsm.getGeoAddress(place).then((res) => {
-      setlatlon(res);
+    if (place != '') {
+      console.clear();
+      GeocoderOsm.getGeoAddress(place).then((res) => {
+        setlatlon(res[1]);
 
-    }).catch((e: any) => {
-      console.log('getGeoAddress error', e);
-    });
+      }).catch((e: any) => {
+        console.log('getGeoAddress error', e);
+      });
+    }
   }
 
   const getInfo = async () => {
@@ -73,8 +78,8 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
     const newInfo = {
       name: name,
       email: email,
-      latitude: latlon[1].lat,
-      longitude: latlon[1].lon,
+      latitude: latlon.lat,
+      longitude: latlon.lon,
     };
     const config = {
       headers: {
@@ -88,6 +93,11 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
     )
 
   };
+
+  React.useEffect(() => {
+    getData();
+
+  }, []);
 
   return (
     <View style={styles.container}>

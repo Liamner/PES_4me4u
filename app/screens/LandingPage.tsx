@@ -77,22 +77,6 @@ const logoImage = require('../assets/images/logo.png')
             <View style = {styles.footer}>
 
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate("BottomTab") }
-                >
-                    <LinearGradient
-                        colors={['#4c669f', '#3b5998', '#192f6a']}
-                        style={styles.button}
-                    >
-                       <FontAwesome
-                        color = '#fff'
-                        name = "facebook"
-                        size = {20}
-                        />
-                            <Text style = {styles.whiteText}>{t(' Continuar con Facebook')}</Text>
-                        </LinearGradient>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
                 onPress={()=>googleSignIn()}
                 >
                     <LinearGradient

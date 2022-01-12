@@ -34,18 +34,18 @@ export default function RootNavigator() {
       <Stack.Screen name="CreateProduct" component={CreateProduct} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Añadir producto' }} />
       <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Lista de chats' }} />    
       <Stack.Screen name="UserRead" component={ViewUser} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Mi perfil'  }} /> 
-      <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true, headerShadowVisible: false }} /> 
+      <Stack.Screen name="OtherUserRead" component={ViewUser} options={{ headerShown: true, headerShadowVisible: false, title: 'Perfil de usuario' }} /> 
       <Stack.Screen name="EditProduct" component={EditProduct} options={{ headerShown: true, headerShadowVisible: false, title: 'Editar Producto' }} />
-      <Stack.Screen name="ChatView" component={ChatView} options={{ headerShown: true, headerShadowVisible: false}} /> 
-      <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: true, headerShadowVisible: false }} /> 
+      <Stack.Screen name="ChatView" component={ChatView} options={{ headerShown: true, headerShadowVisible: false, title: 'Chat'}} /> 
+      <Stack.Screen name="UserWishlist" component={WishList} options={{ headerShown: true, headerShadowVisible: false, title: 'Lista de deseados' }} /> 
       <Stack.Screen name="FollowedScreen" component={FollowedScreen} options={{ headerShown: true, headerShadowVisible: false }} />
       <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: true, headerShadowVisible: false }} />
-      <Stack.Screen name="UserUpdate" component={UserUpdate} options={{ headerShown: true, headerShadowVisible: false }} />
-      <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: true, headerShadowVisible: false }} /> 
+      <Stack.Screen name="UserUpdate" component={UserUpdate} options={{ headerShown: true, headerShadowVisible: false, title: 'Editar usuario' }} />
+      <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: true, headerShadowVisible: false, title: 'Detalles del producto' }} /> 
       <Stack.Screen name="UserProducts" component={UserProducts} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} /> 
-      <Stack.Screen name="ReportProduct" component={ReportProduct} options={{ headerShown: true, headerShadowVisible: false }} />
-      <Stack.Screen name="ReportUser" component={ReportUser} options={{ headerShown: true, headerShadowVisible: false }} />     
+      <Stack.Screen name="ReportProduct" component={ReportProduct} options={{ headerShown: true, headerShadowVisible: false, title: 'Denunciar producto' }} />
+      <Stack.Screen name="ReportUser" component={ReportUser} options={{ headerShown: true, headerShadowVisible: false, title: 'Denunciar Usuario' }} />     
 
 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>

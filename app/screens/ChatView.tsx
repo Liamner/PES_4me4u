@@ -20,6 +20,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   var prodname = route.params.productName;
   var prodimg = route.params.productImg;
   var exchange = route.params.exchange;
+  var prodOwner = route.params.productOwner;
   const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
@@ -30,6 +31,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   const [exch, setExchange] = useState(false);
   const [provide, setProvide] = useState(false);
   const [present, setPresent] = useState(false);
+  const [owner, setOwner] = useState(false);
 
   const getData = async () => {
     try {
@@ -58,6 +60,11 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
     if (e === "present")
       setPresent(true);
   });
+
+  if (prodOwner === session.id)
+    setOwner(true);
+  else
+    setOwner(false);
 
   console.log(exch)
   console.log(provide)
@@ -110,15 +117,15 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
             <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
             <View style={[styles.row, {alignSelf: 'center'}]}>
               <View style={{alignItems: 'center'}}>
-              {exch ?
+              {exch?
               <ExchangeButton></ExchangeButton>
               :
                null}
-              {provide ?
+              {provide?
               <LoanButton></LoanButton>
               :
                null}
-              {present ?
+              {present?
               <GiveButton></GiveButton>
               :
                null}

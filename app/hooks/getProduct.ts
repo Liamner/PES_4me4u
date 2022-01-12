@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios, { AxiosResponse } from 'axios';
 
-const url = 'https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca'
+//const url = 'https://app4me4u.herokuapp.com/api/product/619e6fd140d15287ffe42aca'
 
 export default function getProduct() {
     //const [data, setData] = React.useState({});

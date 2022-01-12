@@ -53,6 +53,7 @@ export function LoanButton  () {
     console.log("respuesta" + response.data[0])
     setModalVisible(true)
     };
+    
   const selectDate = async(event: any, selectedDate: Date) => {
   console.log("selected:" + selectedDate)
   console.log("PRODUCT NAME: " +  + "ID: " + productSelected)
@@ -152,7 +153,7 @@ export function LoanButton  () {
             </Pressable>
           </View>}
       </Modal>     
-    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => getProducts()} ><Text>Prestar</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: '#a2cff0'}]} onPress ={() => console.log("intercambio")} ><Text>Prestar</Text></Pressable>
     </>
 )
 

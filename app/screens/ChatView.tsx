@@ -39,6 +39,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       const value = await retrieveSession();
       if (value !== null) {
         setSession(value)
+        if (value.id === memb[1]._id)
+          setUser2(memb[0]._id)
+        else 
+          setUser2(memb[1]._id)
       }
       else {
         console.log("empty")
@@ -122,19 +126,19 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
             <Text style={styles.title} numberOfLines={2}>{prodname}</Text>
             <View style={[styles.row, {alignSelf: 'center'}]}>
               <View style={{alignItems: 'center'}}>
+              {present?
+              <GiveButton navigation={navigation} 
+              productId={prodid}
+              token={session.token}
+              receiver={user2}></GiveButton>
+              :
+               null}
               {exch?
               <ExchangeButton></ExchangeButton>
               :
                null}
               {provide?
               <LoanButton></LoanButton>
-              :
-               null}
-              {present?
-              <GiveButton navigation={navigation} 
-              productId={prodid}
-              token={session.token}
-              receiver={memb[0]._id}></GiveButton>
               :
                null}
                </View>

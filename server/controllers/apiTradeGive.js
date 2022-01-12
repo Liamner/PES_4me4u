@@ -61,7 +61,7 @@ exports.readAllTradeGive = async (req, res) => {
           // ==================
           // get user rewards
           // ==================
-          /*const userO = await User.findById({_id:req.user.id});
+          const userO = await User.findById({_id:req.user.id});
           const userTak = await User.findById({_id:req.body.userTaking});
           userO.gift += 1;
           let estimatedPoints = req.body.points;
@@ -77,7 +77,7 @@ exports.readAllTradeGive = async (req, res) => {
           // ==================
           // getRewards
           // ==================
-          const userRewards = await User.findById({_id:req.user.id});
+         /*const userRewards = await User.findById({_id:req.user.id});
           let ngifts = userRewards.gifts;
           let points = userRewards.ecoPoints;
           let rewards = 0;

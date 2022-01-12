@@ -29,7 +29,7 @@ export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTrat
     if (element == "provide") prestar = true
   });
 
-  const isWishlist = async () => {
+  /*const isWishlist = async () => {
     let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + uid)
 
     response.data.wishlist.forEach(element => {
@@ -44,7 +44,7 @@ export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTrat
       
 
   }
-  isWishlist();
+  isWishlist();*/
 
 
   const guardarProducto = async () => {
@@ -137,7 +137,7 @@ export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTrat
             <Icon name='heart-outline' size={22} />
           </TouchableOpacity>*/}
 
-          {guardado?
+          {/*guardado?
             <TouchableOpacity style={{
               width: 30,
               height: '100%',
@@ -151,7 +151,7 @@ export function MiniProductCard({ navigation, id, uid, name, imageUri, arrayTrat
             }} onPress={guardarProducto}>
               <Icon name='heart-outline' size={30} color={'black'} />
             </TouchableOpacity>
-          }
+          */}
 
         </View>
       </View>

@@ -79,8 +79,13 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
     if (response.data.length == 0) setNoProduct(true)
   };
   React.useEffect(() => {
-    getData();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      getData();
     getProducts();
+    });
+
+    return willFocusSubscription;
+    
   }, []);
 
   const DATA = [
@@ -217,6 +222,7 @@ export default function FirstScreen({ navigation }: RootTabScreenProps<'FirstScr
         {noProduct && <Text style={styles.noProductTitle}> {t('No hay productos actualmente')}</Text>}
         {!noProduct && <FlatList
           numColumns={2}
+          initialNumToRender={4}
           data={products}
           renderItem={({ item }) => (
             <ProductCard id={item._id} navigation={navigation} name={item.name} arrayTratos={item.exchange} imageUri={item.img[0].url} uid={session.id} token={session.token} />

@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
   const uid = '61d1ebbfaa8e09aa5f530d5e';
 
-  const pid = route.params.pid;
+  const pid = route.params;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
@@ -43,21 +43,21 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
   const [description, setDescription] = useState('Cargando...');
-
-  const [ownProduct, setOwnProduct] = React.useState(false)
+  const [saved, setSaved] = React.useState(true);
+  const [ownProduct, setOwnProduct] = React.useState(false);
 
   const getData = async () => {
     try {
       const value = await retrieveSession()
       if (value !== null) {
         setSession(value)
-        console.log('user: ' + user)
         if (user == value.id) {
           setOwnProduct(true);
           console.log(ownProduct)
+
         }
         getProductInfo(value.token);
-        console.log("TOKENNNNN" + value.token);
+        isWishlist(value.id);
       }
       else {
         console.log("empty")
@@ -70,9 +70,25 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [ownProfile, setOwnProfile] = useState(true);
   const [session, setSession] = React.useState({
     id: "",
-    user:"",
-    token:""
+    user: "",
+    token: ""
   });
+
+  const isWishlist = async (id) => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id)
+    console.log('wishlist: ' + response.data.wishlist);
+    response.data.wishlist.forEach(element => {
+      console.log(element + ' ' + pid)
+      if (element == pid) {
+        setSaved(false)
+      }
+      else {
+        setSaved(true)
+      }
+    });
+
+
+  }
 
 
   const Scroll = (event: { nativeEvent: { layoutMeasurement: { width: any; }; contentOffset: { x: any; }; }; }) => {
@@ -193,20 +209,36 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   }
 
   const saveProduct = async () => {
+
     const config = {
       headers: {
         Authorization: `Bearer ${session.token}`
       }
     }
+
     await axios.put('https://app4me4u.herokuapp.com/api/user/' + session.id + '/AddToWishlist', {
       idProduct: pid
     }, config).then(function (response) {
       console.log(response);
+      setSaved(false)
     })
       .catch(function (error) {
         console.log(error);
       });
+  }
 
+  const deleteSaveProduct = async () => {
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + session.id + '/DeleteFromWishlist/'+ pid, {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      },
+    }).then(function (response) {
+      console.log(response);
+      setSaved(true)
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
 
@@ -225,7 +257,6 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     getCorrectStateType(response);
     setUserID(response.data.userId);
     setUser(response.data.username);
-    console.log(response.data)
 
     //Optional
     if (response.data.description == null) setDescription(t('El usuario no nos ha dado una descripción...'));
@@ -244,11 +275,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       SetHasImages(true);
       setImages(response.data.img);
     }
-    //getData(response.data.userId);
     getUserInfo(response.data.userId);
-    //let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/'+ response.data.userId +'/addProductsRecentlyViewed', {
-    //  idProduct: pid,
-    //})
+    /*let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/' + response.data.userId + '/addProductsRecentlyViewed', {
+      idProduct: pid,
+    })*/
 
   };
 
@@ -263,6 +293,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   React.useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', () => {
       getData();
+
     });
 
     return willFocusSubscription;
@@ -333,10 +364,33 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
               <View style={styles.row}>
                 <Icon name='chatbubble' size={24} color={'#333'} />
                 <Text style={styles.normalText}>{t('Abrir chat con el usuario')}</Text>
+
               </View>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
+            {saved ?
+              <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
+                <View style={styles.row}>
+                  <Icon name='bookmark-outline' size={24} color={'#333'} />
+                  <Text style={styles.normalText}>Guardar en la lista</Text>
+                </View>
+              </TouchableHighlight>
+              :
+              <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={deleteSaveProduct}>
+                <View style={styles.row}>
+                  <Icon name='bookmark' size={24} color={'#333'} />
+                  <Text style={styles.normalText}>Quitar de la lista</Text>
+                </View>
+              </TouchableHighlight>
+            }
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => {
+              navigation.navigate("ReportProduct", {
+                prodId: pid,
+                userId: userid
+              })
+            }}>
+
               <View style={styles.row}>
+
                 <Icon name='bookmark' size={24} color={'#333'} />
                 <Text style={styles.normalText}>{t('Guardar en la lista')}</Text>
               </View>
@@ -358,7 +412,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           </>
         }
 
-        
+
         {latitude === undefined ?
           <>
             <View style={styles.row}>

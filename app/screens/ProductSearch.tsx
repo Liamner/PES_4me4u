@@ -11,6 +11,8 @@ import ProductCard from '../components/ProductCard';
 import NavigationBar from '../components/NavigationBar';
 import { LinearGradient } from 'expo-linear-gradient';
 import retrieveSession from '../hooks/retrieveSession';
+import '../assets/i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 
 export default function ProductSearch({ navigation, route }: RootTabScreenProps<'ProductSearch'>) {
@@ -24,6 +26,8 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
     token: ""
   });
 
+  const { t, i18n } = useTranslation();
+  
   const getData = async () => {
     try {
       const value = await retrieveSession()
@@ -84,7 +88,7 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           >
             <Text style={[styles.textFollow,
             { color: '#fff' }]}>
-              Buscar
+              {t('Buscar')}
             </Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -97,19 +101,19 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           onValueChange={(itemValue, itemIndex) =>
             setCategory(itemValue)}
         >
-          <Picker.Item label="Categoria" />
-          <Picker.Item label="fashion" value="fashion" />
-          <Picker.Item label="computer" value="computer" />
-          <Picker.Item label="homeApplicances" value="homeApplicances" />
-          <Picker.Item label="sports" value="sports" />
-          <Picker.Item label="home" value="home" />
-          <Picker.Item label="videogames" value="videogames" />
-          <Picker.Item label="movies" value="movies" />
-          <Picker.Item label="children" value="children" />
-          <Picker.Item label="construction" value="construction" />
-          <Picker.Item label="pets" value="pets" />
-          <Picker.Item label="games" value="games" />
-          <Picker.Item label="other" value="other" />
+          <Picker.Item label={t("Seleccione un categoría...")} value="default" />
+            <Picker.Item label={t("Moda")} value="fashion" />
+            <Picker.Item label={t("Informática")} value="computer" />
+            <Picker.Item label={t("Electrodomesticos")} value="homeApplicances" />
+            <Picker.Item label={t("Ocio")} value="sports" />
+            <Picker.Item label={t("Hogar")} value="home" />
+            <Picker.Item label={t("Consolas y videojuegos")} value="videogames" />
+            <Picker.Item label={t("Cine, libros, música")} value="movies" />
+            <Picker.Item label={t("Niños y bebés")} value="children" />
+            <Picker.Item label={t("Construcción y reformas")} value="construction" />
+            <Picker.Item label={t("Mascotas")} value="pets" />
+            <Picker.Item label={t("Juegos y juguetes")} value="games" />
+            <Picker.Item label={t("Otros")} value="other" />
         </Picker>
         
         <Picker
@@ -118,10 +122,10 @@ export default function ProductSearch({ navigation, route }: RootTabScreenProps<
           onValueChange={(itemValue, itemIndex) =>
             setType(itemValue)}
         >
-          <Picker.Item label="Tipo intercambio" />
-          <Picker.Item label="Prestar" value="provide" />
-          <Picker.Item label="Intercambiar" value="exchange" />
-          <Picker.Item label="Dar" value="present" />
+          <Picker.Item label={t("Tipo intercambio")} />
+          <Picker.Item label={t("Prestar")} value="provide" />
+          <Picker.Item label={t("Intercambiar")} value="exchange" />
+          <Picker.Item label={t("Donar")} value="present" />
         </Picker>
       </View>
       <FlatList

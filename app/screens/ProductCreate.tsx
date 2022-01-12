@@ -34,7 +34,6 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
   })
 
   const { t, i18n } = useTranslation();
-  const [currentLanguage, setLanguage] = useState('cat');
 
   const getData = async () => {
     try {
@@ -58,7 +57,7 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          alert('Lo sentimos, necesitamos los permisos de la cámara para que esto funcione!');
         }
       }
     })();
@@ -180,8 +179,9 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
           console.log(error);
         });
     });
-   // navigation.navigate('ProductRead', response.data._id)
-   navigation.navigate('FirstScreen')
+
+    navigation.navigate('FirstScreen')
+
   }
 
   const sendApi = async () => {
@@ -270,18 +270,18 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
               setSelectedCategory(itemValue)
             }>
             <Picker.Item label={t("Seleccione un categoría...")} value="default" />
-            <Picker.Item label="fashion" value="fashion" />
-            <Picker.Item label="computer" value="computer" />
-            <Picker.Item label="homeApplicances" value="homeApplicances" />
-            <Picker.Item label="sports" value="sports" />
-            <Picker.Item label="home" value="home" />
-            <Picker.Item label="videogames" value="videogames" />
-            <Picker.Item label="movies" value="movies" />
-            <Picker.Item label="children" value="children" />
-            <Picker.Item label="construction" value="construction" />
-            <Picker.Item label="pets" value="pets" />
-            <Picker.Item label="games" value="games" />
-            <Picker.Item label="other" value="other" />
+            <Picker.Item label={t("Moda")} value="fashion" />
+            <Picker.Item label={t("Informática")} value="computer" />
+            <Picker.Item label={t("Electrodomesticos")} value="homeApplicances" />
+            <Picker.Item label={t("Ocio")} value="sports" />
+            <Picker.Item label={t("Hogar")} value="home" />
+            <Picker.Item label={t("Consolas y videojuegos")} value="videogames" />
+            <Picker.Item label={t("Cine, libros, música")} value="movies" />
+            <Picker.Item label={t("Niños y bebés")} value="children" />
+            <Picker.Item label={t("Construcción y reformas")} value="construction" />
+            <Picker.Item label={t("Mascotas")} value="pets" />
+            <Picker.Item label={t("Juegos y juguetes")} value="games" />
+            <Picker.Item label={t("Otros")} value="other" />
           </Picker>
           <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Que quieres hacer con tu producto?')}</Text>
           <View style={styles.row}>

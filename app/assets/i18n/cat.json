@@ -14,6 +14,7 @@
       "Niños y bebés": "Nens i nadons",
       "Construcción y reformas": "Construcció i reformes",
       "Ocio": "Oci",
+      "Juegos y juguetes": "Jocs i joguines",
       "Nombre del Producto" : "Nom del producte",
       "Descripción" : "Descripció",
       "Categorias" : "Categories",
@@ -36,7 +37,44 @@
       "Nivel": "Nivell",
       "Puntuación": "Puntuació",
       "Mis productos": "Els meus productes",
-      "Productos deseados": "Productes desitjats"
+      "Productos deseados": "Productes desitjats",
+      "Productos publicados": "Productes publicats",
+      "Hablando con ": "Parlant amb ",
+      "sobre tu producto ": "sobre el teu producte ",
+      "sobre su producto ": "sobre el seu producte ",
+      "Atrás...": "Enrere...",
+      "Visto Recientemente": "Vist recentment",
+      "No hay productos actualmente": "No hi ha productes atualment",
+      "Presta, Intercambia y Regala": "Presta, intercanvia i Regala",
+      " Continuar con Facebook": " Continuar amb Facebook",
+      " Continuar con Google": " Continuar amb Google",
+      " Continuar con Email": " Continuar amb Email",
+      "Lo sentimos, necesitamos los permisos de la cámara para que esto funcione!" : "Ho sentim, necessitem els permisos de la càmera perquè això funcioni!",
+      "No se puede borrar la última fotografia de un producto.": "L'última fotografia d'un producte no es pot esborrar.",
+      "Hacer una foto": "Fer una foto",
+      "#intercambio": "#intercanvi",
+      "#préstamo": "#préstec",
+      "#regalo": "#regal",
+      "Reservado": "Reservat",
+      "Prestado": "Prestat",
+      "El usuario no nos ha dado una descripción...": "L'usuari no ens ha donat una descripció...",
+      "Publicado por: " : "Publicat per: ",
+      "Editar producto": "Editar producte",
+      "Abrir chat con el usuario": "Obrir xat amb l'usuari",
+      "Guardar en la lista": "Desar a la llista",
+      "Denunciar producto": "Denunciar producte",
+      "Ubicación": "Ubicació",
+      "Buscar": "Cercar",
+      "Tipo intercambio": "Tipus d'intercanvi",
+      "Nombre": "Nom",
+      "Aceptar": "Acceptar"
+
+
+
+
+
+
+
 
     }
   }

@@ -29,6 +29,9 @@ const TradeExchangeSchema = new mongoose.Schema({
         type: 'Date',
         default: Date.now(),
         required: false
+    },
+    points:{
+        type:Number
     }
 });
 

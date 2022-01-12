@@ -7,9 +7,14 @@ import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 import retrieveSession from '../hooks/retrieveSession';
 import NavigationBar from '../components/NavigationBar';
+import '../assets/i18n/i18n';
+import {useTranslation} from 'react-i18next';
 
 export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>) {
   const [chats, setChats] = useState();
+
+  const { t, i18n } = useTranslation();
+
   const [session, setSession] = React.useState({
     id: "",
     user: "",
@@ -67,14 +72,14 @@ export default function ChatList({ navigation }: RootTabScreenProps<'ChatList'>)
                   <Text style={styles.title} numberOfLines={2}>{item.productId.name}</Text>
                   
                   {item.members[0]._id != session.id ?
-                    <Text>Hablando con {item.members[0].userId}</Text>
+                    <Text>{t('Hablando con ')}{item.members[0].userId}</Text>
                     :
-                    <Text>Hablando con {item.members[1].userId}</Text>
+                    <Text>{t('Hablando con ')} {item.members[1].userId}</Text>
                   }
                   {item.productId.userId == session.id ?
-                    <Text>sobre tu producto</Text>
+                    <Text>{t('sobre tu producto ')}</Text>
                     :
-                    <Text>sobre su producto</Text>
+                    <Text>{t('sobre su producto ')}</Text>
                   }
                 </View>
               </View>

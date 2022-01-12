@@ -1,3 +1,4 @@
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import * as React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Image, FlatList, TouchableHighlight, ScrollView } from 'react-native';
@@ -10,15 +11,21 @@ import axios, { AxiosResponse } from 'axios';
 import NavigationBar from '../components/NavigationBar'
 import retrieveSession from '../hooks/retrieveSession';
 import Icon from 'react-native-vector-icons/Ionicons';
+import '../assets/i18n/i18n';
+import { useTranslation } from 'react-i18next';
+import EcommuteAPI from '../components/EcommuteAPI';
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
+  const uid = '61d1ebbfaa8e09aa5f530d5e';
 
   const pid = route.params;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
-  const [latitude, setLatitude] = useState(0.0);
-  const [longitude, setLongitude] = useState(0.0);
+  const [latitude, setLatitude] = useState(undefined);
+  const [longitude, setLongitude] = useState(undefined);
+
+  const { t, i18n } = useTranslation();
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
@@ -37,24 +44,21 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [exchange] = useState([{ name: 'Cargando...', key: '10' }]);
   const [categories, setCategories] = useState([{ name: 'Cargando...', key: '10' }]);
   const [description, setDescription] = useState('Cargando...');
-  const [session, setSession] = React.useState({
-    id: "",
-    user: "",
-    token: ""
-  })
-  const [ownProduct, setOwnProduct] = React.useState(false)
+  const [saved, setSaved] = React.useState(true);
+  const [ownProduct, setOwnProduct] = React.useState(false);
 
   const getData = async () => {
     try {
       const value = await retrieveSession()
       if (value !== null) {
         setSession(value)
-        console.log('user: ' + user)
         if (user == value.id) {
           setOwnProduct(true);
           console.log(ownProduct)
+
         }
         getProductInfo(value.token);
+        isWishlist(value.id);
       }
       else {
         console.log("empty")
@@ -62,6 +66,29 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     } catch (e) {
       console.log(e)
     }
+  }
+
+  const [ownProfile, setOwnProfile] = useState(true);
+  const [session, setSession] = React.useState({
+    id: "",
+    user: "",
+    token: ""
+  });
+
+  const isWishlist = async (id) => {
+    let response = await axios.get('https://app4me4u.herokuapp.com/api/user/' + id)
+    console.log('wishlist: ' + response.data.wishlist);
+    response.data.wishlist.forEach(element => {
+      console.log(element + ' ' + pid)
+      if (element == pid) {
+        setSaved(false)
+      }
+      else {
+        setSaved(true)
+      }
+    });
+
+
   }
 
 
@@ -78,43 +105,40 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     let aux = response.data.categories;
     switch (aux) {
       case "fashion":
-        setCategories([{ name: 'Moda', key: '1' }])
+        setCategories([{ name: t('Moda'), key: '1' }])
         break;
       case "computer":
-        setCategories([{ name: 'Computación', key: '2' }])
+        setCategories([{ name: t('Informática'), key: '2' }])
         break;
       case "homeApplicances":
-        setCategories([{ name: 'Electrodomesticos', key: '3' }])
+        setCategories([{ name: t('Electrodomesticos'), key: '3' }])
         break;
       case "sports":
-        setCategories([{ name: 'Deporte', key: '4' }])
+        setCategories([{ name: t('Ocio'), key: '4' }])
         break;
       case "home":
-        setCategories([{ name: 'Hogar', key: '5' }])
+        setCategories([{ name: t('Hogar'), key: '5' }])
         break;
       case "videogames":
-        setCategories([{ name: 'Videojuegos', key: '6' }])
-        break;
-      case "fashion":
-        setCategories([{ name: 'Moda', key: '7' }])
+        setCategories([{ name: t('Consolas y videojuegos'), key: '6' }])
         break;
       case "movies":
-        setCategories([{ name: 'Peliculas', key: '8' }])
+        setCategories([{ name: t('Cine, libros, música'), key: '7' }])
         break;
       case "children":
-        setCategories([{ name: 'Infantil', key: '9' }])
+        setCategories([{ name: t('Niños y bebés'), key: '8' }])
         break;
       case "contruction":
-        setCategories([{ name: 'Construción y renovación', key: '10' }])
+        setCategories([{ name: t('Construcción y reformas'), key: '9' }])
         break;
       case "pets":
-        setCategories([{ name: 'Mascotas', key: '11' }])
+        setCategories([{ name: t('Mascotas'), key: '10' }])
         break;
       case "games":
-        setCategories([{ name: 'Ocio', key: '12' }])
+        setCategories([{ name: t('Juegos y juguetes'), key: '11' }])
         break;
       case "other":
-        setCategories([{ name: 'Otro', key: '13' }])
+        setCategories([{ name: t('Otros'), key: '12' }])
         break;
       default:
         setCategories([{ name: 'GATITOS', key: '0' }])
@@ -129,10 +153,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     aux.forEach(element => {
       switch (element) {
         case "exchange":
-          exchange.push({ name: '#intercambio', key: '1' })
+          exchange.push({ name: t('#intercambio'), key: '1' })
           break;
         case "provide":
-          exchange.push({ name: '#prestamo', key: '2' })
+          exchange.push({ name: t('#préstamo'), key: '2' })
           break;
         case "present":
           exchange.push({ name: '#regalo', key: '3' })
@@ -152,10 +176,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         setState("Disponible");
         break;
       case "reserved":
-        setState("Reservado");
+        setState(t("Reservado"));
         break;
       case "provide":
-        setState("Prestado");
+        setState(t("Prestado"));
         break;
       default:
         break;
@@ -186,20 +210,36 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   }
 
   const saveProduct = async () => {
+
     const config = {
       headers: {
         Authorization: `Bearer ${session.token}`
       }
     }
+
     await axios.put('https://app4me4u.herokuapp.com/api/user/' + session.id + '/AddToWishlist', {
       idProduct: pid
     }, config).then(function (response) {
       console.log(response);
+      setSaved(false)
     })
       .catch(function (error) {
         console.log(error);
       });
+  }
 
+  const deleteSaveProduct = async () => {
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + session.id + '/DeleteFromWishlist/' + pid, {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      },
+    }).then(function (response) {
+      console.log(response);
+      setSaved(true)
+    })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
 
@@ -218,10 +258,9 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     getCorrectStateType(response);
     setUserID(response.data.userId);
     setUser(response.data.username);
-    console.log(response.data)
 
     //Optional
-    if (response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    if (response.data.description == null) setDescription(t('El usuario no nos ha dado una descripción...'));
     else setDescription(response.data.description);
 
     if (response.data.img == null) {
@@ -238,9 +277,9 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
       setImages(response.data.img);
     }
     getUserInfo(response.data.userId);
-    let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/'+ response.data.userId +'/addProductsRecentlyViewed', {
+    /*let response2 = await axios.put('https://app4me4u.herokuapp.com/api/user/' + response.data.userId + '/addProductsRecentlyViewed', {
       idProduct: pid,
-    })
+    })*/
 
   };
 
@@ -255,6 +294,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   React.useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', () => {
       getData();
+
     });
 
     return willFocusSubscription;
@@ -291,7 +331,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         }
 
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText} onPress={() => navigation.navigate("OtherUserRead", userid)}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText} onPress={() => navigation.navigate("OtherUserRead", userid)}>{t('Publicado por: ')}{`${user}`}</Text>
         <FlatList
           style={styles.flatlist}
           horizontal={true}
@@ -310,36 +350,79 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         />
         <Text style={styles.mediumText}>{`${description}`}</Text>
         <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-        {!ownProduct ?
+        {ownProduct ?
           <>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
               <View style={styles.row}>
-                <Icon name='chatbubble' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
-              <View style={styles.row}>
-                <Icon name='bookmark' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Guardar en la lista</Text>
+                <Icon name='pencil' size={24} color={'#333'} />
+                <Text style={styles.normalText}>{t('Editar producto')}</Text>
               </View>
             </TouchableHighlight>
           </>
           :
           <>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
               <View style={styles.row}>
-                <Icon name='pencil' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Editar producto</Text>
+                <Icon name='chatbubble' size={24} color={'#333'} />
+                <Text style={styles.normalText}>{t('Abrir chat con el usuario')}</Text>
+
               </View>
             </TouchableHighlight>
+            {saved ?
+              <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
+                <View style={styles.row}>
+                  <Icon name='bookmark-outline' size={24} color={'#333'} />
+                  <Text style={styles.normalText}>{t('Guardar en la lista')}</Text>
+                </View>
+              </TouchableHighlight>
+              :
+              <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={deleteSaveProduct}>
+                <View style={styles.row}>
+                  <Icon name='bookmark' size={24} color={'#333'} />
+                  <Text style={styles.normalText}>Quitar de la lista</Text>
+                </View>
+              </TouchableHighlight>
+            }
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => {
+              navigation.navigate("ReportProduct", {
+                prodId: pid,
+                userId: userid
+              })
+            }}>
+              <View style={styles.row}>
+                <Entypo
+                  name="save"
+                  size={24}
+                  color="#333"
+                />
+                <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate("ReportProduct", {
+              prodId: pid,
+              userId: userid
+             })}}>
+
+          <View style={styles.row}>
+            <Entypo
+              name="save"
+              size={24}
+              color="#333"
+            />
+            <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
+          </View>
+          </TouchableHighlight>
+          <EcommuteAPI origin = {"Madrid"} destination = {"Barcelona"} />
           </>
         }
+
+
         {latitude === undefined ?
           <>
             <View style={styles.row}>
               <Icon name='compass' size={24} color={'#333'} />
-              <Text style={styles.normalText}>Ubicación</Text>
+              <Text style={styles.normalText}>{t('Ubicación')}</Text>
             </View>
             <CustomMap
               style={styles.mapview}

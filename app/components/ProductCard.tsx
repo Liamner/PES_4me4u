@@ -31,7 +31,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
 
 
 
-  const isWishlist = async () => {
+  /*const isWishlist = async () => {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
@@ -51,7 +51,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
       
 
   }
-  isWishlist();
+  isWishlist();*/
 
 
 
@@ -128,7 +128,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
               height: '100%',
             }} >
 
-            {guardado ?
+            {/*guardado ?
               <TouchableOpacity style={{ width: 30, height: '100%', }} onPress={noGuardarProducto}>
                 <Icon name='heart' size={30} color={'red'} />
               </TouchableOpacity>
@@ -136,7 +136,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
               <TouchableOpacity style={{ width: 30, height: '100%', }} onPress={guardarProducto}>
                 <Icon name='heart-outline' size={30} color={'black'} />
               </TouchableOpacity>
-            }
+            */}
 
           </View>
         </View>

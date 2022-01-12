@@ -10,15 +10,11 @@ import { resolvePlugin } from '@babel/core';
 import '../assets/i18n/i18n';
 import {useTranslation} from 'react-i18next';
 import NavigationBar from '../components/NavigationBar';
+import retrieveSession from '../hooks/retrieveSession';
 
 
-
-
-
-
-export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>) {
- 
-  const [commentRate, onChangeComment] = React.useState("");
+export default function ReportProduct({ navigation, route }: RootTabScreenProps<'ReportProduct'>) {
+  const [descripcion, onChangeComment] = React.useState("");
   const [sliderValue] = React.useState(4)
   const [sliderRate, setSliderRate] = React.useState(sliderValue);
 
@@ -26,64 +22,82 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
   const [currentLanguage,setLanguage] =useState('cat');
 
   
-  const [id, setid] = useState('61ba2a4f6bd96835a7895b33'); 
+  const { prodId, userId } = route.params;
   
+
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => setLanguage(value))
+      .catch(err => console.log(err));
+  };
+  
+  const [session, setSession] = React.useState({
+    id: "",
+    user:"",
+    token:""
+  });
+
+  const getData = async () => {
+    try {
+      const value = await retrieveSession()
+      if (value !== null) {
+        setSession(value)
+        console.log('user: ' + session.user)
+      }
+      else {
+        console.log("empty")
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  React.useEffect(() => {
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      getData();
+    });
+
+    return willFocusSubscription;
+  }, []);
 
   const sendApi = async () => {
     console.log("sending")
-    navigation.navigate("FirstScreen");
-    /*const config = {
+    const config = {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYmEyZTNmODVjMmMxMDMwNmYwMTE3YSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE2Mzk1OTE1MjUsImV4cCI6MTYzOTc2NDMyNX0.5GKJ_rNnRZvZyO-72q71BdD97-R5E1Pgzj2TlOPT28M`
+        Authorization: `Bearer ${session.token}`
       }
     }
+
+    console.log(userId);
+    console.log(prodId);
    
-    let response = await axios.post('https://app4me4u.herokuapp.com/api/user/' + id + '/rate', {
-      userId: id,
-      rateScore: sliderRate,
-      comment: commentRate
+    let response = await axios.post('https://app4me4u.herokuapp.com/api/report/create', {
+      userReported: userId,
+     
+      description: descripcion,
+      relatedProduct: prodId
     }, config).then(function (response) {
       console.log(response);
     })
       .catch(function (error) {
         console.log(error);
-      });*/
+      });
+    navigation.goBack()
   }
   
   return (
     <>
     <ScrollView>
         <View style={styles.container}>
-            <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Cómo evaluas esta transacción?')}</Text>
+            <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Cuál es el problema con este producto?')}</Text>
 
-            <View
-            style={styles.checkbox}>
-            <Text >0</Text>
-
-            <Slider
-                step={1}
-                style={{width: 250, height: 40}}
-                minimumValue={0}
-                maximumValue={5}
-                minimumTrackTintColor="#0FFFFF"
-                maximumTrackTintColor="#FFFFFF"
-
-                onValueChange={(sliderValue) => {
-                    console.log(sliderRate);
-                    setSliderRate(sliderValue);
-                    }}
-                 
-            />
-            <Text >5</Text>
-
-            </View>
-            <Text style={[styles.title, { marginTop: 20 }]}> {t('¿Deseas añadir un comentario?')}</Text>
 
             <TextInput
                 label="Comentario"
                 style={styles.textInput}
                 onChangeText={onChangeComment}
-                value={commentRate}
+                value={descripcion}
             />
         
 
@@ -95,8 +109,8 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
         </ View>
 
-        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar valoración!')} </Text></Pressable>
-        <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> {t('Cancelar')} </Text></Pressable>
+        <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar denuncia!')} </Text></Pressable>
+        {/* <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]} onPress={sendApi} ><Text> {t('Cancelar')} </Text></Pressable> */}
       </View>
     </ScrollView>
     <NavigationBar  navigation={navigation} upload={true}/>

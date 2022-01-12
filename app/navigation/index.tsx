@@ -36,6 +36,8 @@ import FollowersScreen from '../screens/FollowersScreen';
 import FollowedScreen from '../screens/FollowedScreen';	
 import RateUser from '../screens/UserRate';
 import SearchProduct from '../screens/SearchProduct';
+import ReportProduct from '../screens/ReportProduct';
+import ReportUser from '../screens/ReportUser';
 
 
 //to incorporar

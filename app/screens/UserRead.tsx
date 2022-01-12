@@ -45,8 +45,8 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
   const [ecoPoints, setEcoPoints] = useState('Cargando...');
   const [score, setScore] = useState('Cargando...');
   const [products, setProducts] = useState([]);
-  const [latitude, setLatitude] = useState(39.03385);
-  const [longitude, setLongitude] = useState(125.75432);
+  const [latitude, setLatitude] = useState(undefined);
+  const [longitude, setLongitude] = useState(undefined);
 
   //sesion
   const [session, setSession] = React.useState({
@@ -154,10 +154,10 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
     setEcoPoints(response.data.ecoPoints);
     setScore(response.data.score);
 
-    if (response.data.latitude == null) setLatitude(39.03385);
+    if (response.data.latitude == null) setLatitude(undefined);
     else setLatitude(response.data.latitude);
 
-    if (response.data.longitude == null) setLongitude(125.75432);
+    if (response.data.longitude == null) setLongitude(undefined);
     else setLongitude(response.data.longitude);
 
     setFollowers(response.data.followers);
@@ -249,7 +249,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
 
   }, []);
 
-  let child = {session, navigation};
+  let child = { session, navigation };
 
 
 
@@ -296,15 +296,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
           </View>
         }
         <View style={styles.row}>
-          <Text style={styles.text} onPress={onPressFollowers}>
-            {t('Seguidores')}: <Text style={styles.text2}>{followersSize}</Text>
-          </Text>
-          <Text>        </Text>
-          <Text style={styles.text} onPress={onPressFollowed}>
-            {t('Seguidos')}: <Text style={styles.text2}>{followedSize}</Text>
-          </Text>
-        </View>
-        <View style={styles.row}>
           {ownProfile ?
             <Text style={styles.text}>
               Ecos: <Text style={styles.text2}>{ecoPoints} 🍃  </Text>
@@ -329,7 +320,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
             >
               <Text style={[styles.textFollow,
               { color: '#fff' }]}>
-                Productos deseados
+                {t('Productos deseados')}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -359,7 +350,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
           <></>
         }
 
-        <Text style={styles.text}>{t('Mis productos')}</Text>
+        <Text style={styles.text}>{t('Productos publicados')}</Text>
         <FlatList
           numColumns={2}
           data={products}
@@ -377,7 +368,8 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
         */}
 
         {ownProfile ?
-          // Cambiar de idioma
+        <>
+         {/* Cambiar de idioma */}
           <Picker
             selectedValue={currentLanguage}
             style={styles.picker}
@@ -388,27 +380,24 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
             <Picker.Item label="Castellano" value="es" />
             <Picker.Item label="Catalán" value="cat" />
           </Picker>
-          :
+          <View style={{ marginBottom: 80 }}>
+          <LogOutButton navigation={navigation}></LogOutButton>
 
-          <Button
-            onPress={() => {
-              Alert.alert(
-                "Denunciado",
-                "Has reportado a este usuario",
-                [{ text: "Aceptar" }]
-              )
-            }}
+          <DeleteUser children={child} ></DeleteUser>
+        </View>
+          </>
+          :
+            <>
+          <Button onPress={() => {
+            navigation.navigate("ReportUser", {
+              userId: userid
+             })}
+          }
             title="Reportar usuario"
             color="#FF0000" //azul iconico
           />
-
+          </>
         }
-
-        <View style={{ marginBottom: 80}}>
-        <LogOutButton navigation={navigation}></LogOutButton>
-         
-        <DeleteUser children={child} ></DeleteUser>
-        </View>
 
       </ScrollView>
       {ownProfile ?
@@ -416,7 +405,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
         :
         <NavigationBar navigation={navigation} />
       }
-
     </View>
   );
 

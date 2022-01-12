@@ -1,0 +1,36 @@
+{
+    "name": "4me4u",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "cd server && npx nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "heroku-postbuild": "npm install && cd server && npm install"
+    },
+    "author": "",
+    "license": "ISC",
+    "engines": {
+        "node": ">=10.16.0"
+    },
+    "dependencies": {
+        "@shelf/jest-mongodb": "^2.1.0",
+        "bcrypt": "^5.0.1",
+        "cloudinary": "^1.27.1",
+        "cors": "^2.8.5",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.2",
+        "express-validator": "^6.13.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.0.13",
+        "mongoose-double": "0.0.1",
+        "mongoose-unique-validator": "^3.0.0",
+        "multer": "^1.4.3",
+        "raw-body": "^2.4.2",
+        "react-native-safe-area-context": "^3.3.2",
+        "react-native-screens": "^3.10.1",
+        "realm": "^10.9.1",
+        "socket.io": "^4.4.0",
+        "unpipe": "^1.0.0"
+    }
+}

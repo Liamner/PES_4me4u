@@ -1,0 +1,137 @@
+.App {
+  text-align: center;
+}
+
+.circularProgress {
+  display: 'flex';
+  padding-top: 200px;
+  justify-content: center;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 10%;
+  background-color: #333;
+  height: 100%;
+  position: fixed;
+  overflow: auto;
+}
+
+nav li {
+  text-align: left;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li span{
+  display: block;
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #111;
+}
+
+nav img {
+  height: 50px;
+}
+
+.signOut {
+  background-color: rgb(209, 71, 71);
+}
+
+a {
+  color: #5284a8;
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: #c0daecd8;
+}
+
+.button {
+  width: 95%;
+  background-color: #a2cff0;
+  border: 0.3px solid rgb(236, 236, 236);
+  border-radius: 5px;
+  padding: 5px 0px;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.login div {
+  background-color: rgb(245, 245, 245);
+  border: 0.3px solid rgb(236, 236, 236);
+  border-radius: 10px;
+  padding: 10px 15px;
+}
+
+
+.categorias {
+  font-size: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgb(245, 245, 245);
+  border: 0.3px solid rgb(236, 236, 236);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+  height: 95%;
+}
+
+.stats-number {
+  font-size: 41px;
+  color: #68a8d6;
+}
+
+.reports {
+  padding-top: 50px;
+  width: 100%;
+}
+
+.reports table {
+  border-collapse: collapse;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reports td,th {
+  border: 1px solid #aaa;
+  border-collapse: collapse;
+  text-align: left;
+  padding: 8px;
+}
+
+.reports tr:nth-child(even) {
+  background-color: #dddddd;
+}

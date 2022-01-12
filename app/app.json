@@ -4,7 +4,7 @@
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -25,6 +25,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+<<<<<<< HEAD
+=======
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC7JAeKR-u7CBU9vmztBqz-BIuhA8qu270"
+        }
+>>>>>>> develop
       }
     },
     "web": {

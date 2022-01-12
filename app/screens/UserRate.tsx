@@ -70,8 +70,8 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
                 style={{width: 250, height: 40}}
                 minimumValue={0}
                 maximumValue={5}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
+                minimumTrackTintColor="#0FFFFF"
+                maximumTrackTintColor="#FFFFFF"
 
                 onValueChange={(sliderValue) => {
                     console.log(sliderRate);
@@ -100,16 +100,6 @@ export default function RateUser({ navigation }: RootTabScreenProps<'RateUser'>)
 
         </ View>
 
-        <Picker
-                    selectedValue={currentLanguage}
-                    style={styles.picker}
-                    onValueChange={(itemValue, itemIndex) =>
-                        changeLanguage(itemValue)
-                    }>
-                    <Picker.Item label={t("Seleccione un idioma...")} value="es" />          
-                    <Picker.Item label="Castellano" value="es" />
-                    <Picker.Item label="Catalán" value="cat" />
-        </Picker>
 
         <Pressable style={[styles.button, { backgroundColor: '#a2cff0' }]} onPress={sendApi} ><Text> {t('Guardar valoración!')} </Text></Pressable>
         <Pressable style={[styles.button, { backgroundColor: '#a2cfff' }]}><Text> {t('Cancelar')} </Text></Pressable>

@@ -20,7 +20,7 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   var prodname = route.params.productName;
   var prodimg = route.params.productImg;
   var exchange = route.params.exchange;
-  var prodOwner = route.params.productOwner;
+  var memb = route.params.members;
   const [msgs, setMsgs] = useState([])
   const [newMessage, setNewMessage] = useState("");
   const [session, setSession] = React.useState({
@@ -31,7 +31,8 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
   const [exch, setExchange] = useState(false);
   const [provide, setProvide] = useState(false);
   const [present, setPresent] = useState(false);
-  const [owner, setOwner] = useState(false);
+  const [owner, setOwner] = useState("");
+  const [user2, setUser2] = useState("");
 
   const getData = async () => {
     try {
@@ -61,14 +62,18 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
       setPresent(true);
   });
 
-  if (prodOwner === session.id)
-    setOwner(true);
-  else
-    setOwner(false);
-
+  
   console.log(exch)
   console.log(provide)
   console.log(present)
+
+  console.log(memb)
+
+  console.log(memb[0]._id)
+  console.log(memb[1]._id)
+ 
+  console.log("usuario actual: " + session.id)
+
  }
 
   const getConversation = async () => {
@@ -126,7 +131,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
               :
                null}
               {present?
-              <GiveButton></GiveButton>
+              <GiveButton navigation={navigation} 
+              productId={prodid}
+              token={session.token}
+              receiver={memb[0]._id}></GiveButton>
               :
                null}
                </View>
@@ -144,6 +152,8 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>*/}
+
+         
               <TouchableOpacity
                 onPress={getConversation}
                 style={{ }}
@@ -155,8 +165,10 @@ export default function ChatView({ navigation, route }: RootTabScreenProps<'Chat
                   <Icon name='refresh-outline' color={'white'} size={30} />
                 </LinearGradient>
               </TouchableOpacity>
+
             </View>
           </View>
+         
         </View>
       </Pressable>
       <FlatList

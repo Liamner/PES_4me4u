@@ -22,6 +22,7 @@ import UserProducts from '../screens/UserProducts';
 
 import { RootStackParamList } from '../types';
 
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
@@ -42,7 +43,7 @@ export default function RootNavigator() {
       <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="UserProducts" component={UserProducts} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />     
-
+      <Stack.Screen name="UserRate" component={UserRate} options={{ headerShown: true, headerBackVisible: false, headerShadowVisible: false, title: 'Valorar Usuario' }} />
 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />

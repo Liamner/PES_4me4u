@@ -320,7 +320,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
             >
               <Text style={[styles.textFollow,
               { color: '#fff' }]}>
-                Productos deseados
+                {t('Productos deseados')}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

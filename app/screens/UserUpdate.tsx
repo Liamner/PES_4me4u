@@ -8,6 +8,8 @@ import axios from 'axios';
 import GeocoderOsm from 'react-native-geocoder-osm';
 import NavigationBar from '../components/NavigationBar'
 import retrieveSession from '../hooks/retrieveSession';
+import '../assets/i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 export default function UserUpdateScreen({ navigation, route }: RootTabScreenProps<'UserUpdate'>) {
   const userid = route.params;
@@ -20,7 +22,7 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
     user: "",
     token: ""
   })
-
+  const { t, i18n } = useTranslation();
   const getData = async () => {
     try {
       const value = await retrieveSession()
@@ -92,7 +94,7 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
       <ScrollView keyboardShouldPersistTaps='always' >
         <View style={styles.container}>
           <TextInput
-            placeholder="Nombre"
+            placeholder={t("Nombre")}
             style={styles.textInput}
             onChangeText={onChangeName}
             value={name}
@@ -106,7 +108,7 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
           <GooglePlacesAutocomplete
             styles={styles.textInput}
             ref={ref}
-            placeholder='Ubicación'
+            placeholder={t('Ubicación')}
             query={{
               key: 'AIzaSyC7JAeKR-u7CBU9vmztBqz-BIuhA8qu270',
               language: 'es',
@@ -114,7 +116,7 @@ export default function UserUpdateScreen({ navigation, route }: RootTabScreenPro
           />
           <Button
             onPress={editUser}
-            title={"Acceptar"}
+            title={t("Aceptar")}
           />
         </View>
       </ScrollView>

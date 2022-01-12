@@ -11,6 +11,8 @@ import axios, { AxiosResponse } from 'axios';
 import NavigationBar from '../components/NavigationBar'
 import retrieveSession from '../hooks/retrieveSession';
 import Icon from 'react-native-vector-icons/Ionicons';
+import '../assets/i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
   const uid = '61d1ebbfaa8e09aa5f530d5e';
@@ -21,6 +23,8 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   const [userid, setUserID] = useState('');
   const [latitude, setLatitude] = useState(undefined);
   const [longitude, setLongitude] = useState(undefined);
+
+  const { t, i18n } = useTranslation();
 
   //Variables de la vista
   const [state, setState] = useState('Cargando');
@@ -84,43 +88,40 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     let aux = response.data.categories;
     switch (aux) {
       case "fashion":
-        setCategories([{ name: 'Moda', key: '1' }])
+        setCategories([{ name: t('Moda'), key: '1' }])
         break;
       case "computer":
-        setCategories([{ name: 'Computación', key: '2' }])
+        setCategories([{ name: t('Informática'), key: '2' }])
         break;
       case "homeApplicances":
-        setCategories([{ name: 'Electrodomesticos', key: '3' }])
+        setCategories([{ name: t('Electrodomesticos'), key: '3' }])
         break;
       case "sports":
-        setCategories([{ name: 'Deporte', key: '4' }])
+        setCategories([{ name: t('Ocio'), key: '4' }])
         break;
       case "home":
-        setCategories([{ name: 'Hogar', key: '5' }])
+        setCategories([{ name: t('Hogar'), key: '5' }])
         break;
       case "videogames":
-        setCategories([{ name: 'Videojuegos', key: '6' }])
-        break;
-      case "fashion":
-        setCategories([{ name: 'Moda', key: '7' }])
+        setCategories([{ name: t('Consolas y videojuegos'), key: '6' }])
         break;
       case "movies":
-        setCategories([{ name: 'Peliculas', key: '8' }])
+        setCategories([{ name: t('Cine, libros, música'), key: '7' }])
         break;
       case "children":
-        setCategories([{ name: 'Infantil', key: '9' }])
+        setCategories([{ name: t('Niños y bebés'), key: '8' }])
         break;
       case "contruction":
-        setCategories([{ name: 'Construción y renovación', key: '10' }])
+        setCategories([{ name: t('Construcción y reformas'), key: '9' }])
         break;
       case "pets":
-        setCategories([{ name: 'Mascotas', key: '11' }])
+        setCategories([{ name: t('Mascotas'), key: '10' }])
         break;
       case "games":
-        setCategories([{ name: 'Ocio', key: '12' }])
+        setCategories([{ name: t('Juegos y juguetes'), key: '11' }])
         break;
       case "other":
-        setCategories([{ name: 'Otro', key: '13' }])
+        setCategories([{ name: t('Otros'), key: '12' }])
         break;
       default:
         setCategories([{ name: 'GATITOS', key: '0' }])
@@ -135,10 +136,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     aux.forEach(element => {
       switch (element) {
         case "exchange":
-          exchange.push({ name: '#intercambio', key: '1' })
+          exchange.push({ name: t('#intercambio'), key: '1' })
           break;
         case "provide":
-          exchange.push({ name: '#prestamo', key: '2' })
+          exchange.push({ name: t('#préstamo'), key: '2' })
           break;
         case "present":
           exchange.push({ name: '#regalo', key: '3' })
@@ -158,10 +159,10 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         setState("Disponible");
         break;
       case "reserved":
-        setState("Reservado");
+        setState(t("Reservado"));
         break;
       case "provide":
-        setState("Prestado");
+        setState(t("Prestado"));
         break;
       default:
         break;
@@ -227,7 +228,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
     console.log(response.data)
 
     //Optional
-    if (response.data.description == null) setDescription('El usuario no nos ha dado una descripción...');
+    if (response.data.description == null) setDescription(t('El usuario no nos ha dado una descripción...'));
     else setDescription(response.data.description);
 
     if (response.data.img == null) {
@@ -298,7 +299,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
         }
 
         <Text style={styles.title}>{`${name}`}</Text>
-        <Text style={styles.smallText} onPress={() => navigation.navigate("OtherUserRead", userid)}>Publicado por: {`${user}`}</Text>
+        <Text style={styles.smallText} onPress={() => navigation.navigate("OtherUserRead", userid)}>{t('Publicado por: ')}{`${user}`}</Text>
         <FlatList
           style={styles.flatlist}
           horizontal={true}
@@ -322,7 +323,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
             <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={() => navigation.navigate('EditProduct', pid)}>
               <View style={styles.row}>
                 <Icon name='pencil' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Editar producto</Text>
+                <Text style={styles.normalText}>{t('Editar producto')}</Text>
               </View>
             </TouchableHighlight>
           </>
@@ -331,13 +332,13 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
             <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={openChat}>
               <View style={styles.row}>
                 <Icon name='chatbubble' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Abrir chat con @Usuario</Text>
+                <Text style={styles.normalText}>{t('Abrir chat con el usuario')}</Text>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
               <View style={styles.row}>
                 <Icon name='bookmark' size={24} color={'#333'} />
-                <Text style={styles.normalText}>Guardar en la lista</Text>
+                <Text style={styles.normalText}>{t('Guardar en la lista')}</Text>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate("ReportProduct", {
@@ -351,7 +352,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
               size={24}
               color="#333"
             />
-            <Text style={styles.normalText}>Denunciar producto</Text>
+            <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
           </View>
           </TouchableHighlight>
           </>
@@ -362,7 +363,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
           <>
             <View style={styles.row}>
               <Icon name='compass' size={24} color={'#333'} />
-              <Text style={styles.normalText}>Ubicación</Text>
+              <Text style={styles.normalText}>{t('Ubicación')}</Text>
             </View>
             <CustomMap
               style={styles.mapview}

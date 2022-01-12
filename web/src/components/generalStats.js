@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import APIService from "../services/API";
 import ListCategories from './listCategories';
+import ListCProducts from './listProduct';
 
 class GeneralStats extends Component {
   constructor(props) {
@@ -64,9 +65,24 @@ class GeneralStats extends Component {
                           response => {
                             this.setState({
                               Prod: response.data,
-                              loading: false
                             });
+                            APIService.get('/admin/tradesEcopoints').then(
+                              response => {
+                                this.setState({
+                                  numEPGastados: response.data,
+                                });
+                                APIService.get('/admin/usersReported').then(
+                                  response => {
+                                    this.setState({
+                                      numUReps: response.data,
+                                      loading: false
+                                    });
+                                  }
+                                );
+                              }
+                            );
                           }
+                          
                         );
                       }
                     );
@@ -81,7 +97,7 @@ class GeneralStats extends Component {
   }
 
   render() {
-    const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, Categ, numEcoPoints, numEPGastados, loading } = this.state;
+    const { numTrans, numPrestar, numInter, numDar, numProd, numPReps, numUsu, numUReps, Categ, Prod, numEcoPoints, numEPGastados, loading } = this.state;
     return (
       loading ?
         <div className="circularProgress" >
@@ -182,7 +198,7 @@ class GeneralStats extends Component {
             </table>
           </div>
           <div className='grid-item'>
-            Productos más vistos
+            <ListCProducts products={Prod} />
           </div>
         </div>)
   }

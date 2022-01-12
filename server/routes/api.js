@@ -176,7 +176,7 @@ module.exports = function(app) {
   router.route('/user/:id/AddToWishlist')
     .put(authenticateJWT, userController.addToWishlist)
 
-  router.route('/user/:id/DeleteFromWishlist')
+  router.route('/user/:id/DeleteFromWishlist/:idProduct')
     .delete(authenticateJWT, userController.deleteFromWishlist)
   
   router.route('/user/:id/followed')

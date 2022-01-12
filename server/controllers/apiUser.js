@@ -405,7 +405,8 @@ exports.addToWishlist = async (req, res) => {
 exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    let idProduct = req.body.idProduct;
+    //let idProduct = req.body.idProduct;
+    const idProduct = req.params.idProduct;
     const ourUser = await User.findById({ _id: userId }).populate("wishlist");
     let i = 0, find = 0;
 

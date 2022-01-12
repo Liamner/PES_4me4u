@@ -350,7 +350,7 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
           <></>
         }
 
-        <Text style={styles.text}>{t('Mis productos')}</Text>
+        <Text style={styles.text}>{t('Productos publicados')}</Text>
         <FlatList
           numColumns={2}
           data={products}
@@ -368,7 +368,8 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
         */}
 
         {ownProfile ?
-          // Cambiar de idioma
+        <>
+         {/* Cambiar de idioma */}
           <Picker
             selectedValue={currentLanguage}
             style={styles.picker}
@@ -379,27 +380,24 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
             <Picker.Item label="Castellano" value="es" />
             <Picker.Item label="Catalán" value="cat" />
           </Picker>
-          :
-
-          <Button
-            onPress={() => {
-              Alert.alert(
-                "Denunciado",
-                "Has reportado a este usuario",
-                [{ text: "Aceptar" }]
-              )
-            }}
-            title="Reportar usuario"
-            color="#FF0000" //azul iconico
-          />
-
-        }
-
-        <View style={{ marginBottom: 80 }}>
+          <View style={{ marginBottom: 80 }}>
           <LogOutButton navigation={navigation}></LogOutButton>
 
           <DeleteUser children={child} ></DeleteUser>
         </View>
+          </>
+          :
+            <>
+          <Button onPress={() => {
+            navigation.navigate("ReportUser", {
+              userId: userid
+             })}
+          }
+            title="Reportar usuario"
+            color="#FF0000" //azul iconico
+          />
+          </>
+        }
 
       </ScrollView>
       {ownProfile ?
@@ -407,7 +405,6 @@ export default function ViewUserScreenScreen({ navigation, route }: RootTabScree
         :
         <NavigationBar navigation={navigation} />
       }
-
     </View>
   );
 

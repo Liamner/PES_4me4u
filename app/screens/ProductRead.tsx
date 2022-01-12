@@ -228,7 +228,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
   }
 
   const deleteSaveProduct = async () => {
-    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + session.id + '/DeleteFromWishlist/'+ pid, {
+    await axios.delete('https://app4me4u.herokuapp.com/api/user/' + session.id + '/DeleteFromWishlist/' + pid, {
       headers: {
         Authorization: `Bearer ${session.token}`
       },
@@ -371,7 +371,7 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
               <TouchableHighlight style={styles.button} underlayColor={'#fff'} onPress={saveProduct}>
                 <View style={styles.row}>
                   <Icon name='bookmark-outline' size={24} color={'#333'} />
-                  <Text style={styles.normalText}>Guardar en la lista</Text>
+                  <Text style={styles.normalText}>{t('Guardar en la lista')}</Text>
                 </View>
               </TouchableHighlight>
               :
@@ -388,27 +388,15 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
                 userId: userid
               })
             }}>
-
               <View style={styles.row}>
-
-                <Icon name='bookmark' size={24} color={'#333'} />
-                <Text style={styles.normalText}>{t('Guardar en la lista')}</Text>
+                <Entypo
+                  name="save"
+                  size={24}
+                  color="#333"
+                />
+                <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate("ReportProduct", {
-              prodId: pid,
-              userId: userid
-             })}}>
-
-          <View style={styles.row}>
-            <Entypo
-              name="save"
-              size={24}
-              color="#333"
-            />
-            <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
-          </View>
-          </TouchableHighlight>
           </>
         }
 

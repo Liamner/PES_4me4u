@@ -54,7 +54,7 @@ exports.readAllTradeExchange = async (req, res) => {
         const productTaking = await Product.findById({_id:req.body.productTaking, userId: req.body.userTaking});
         if (productTaking == null) res.status(404).json({error:"productTaking not found"}); 
         
-        if (userTaking.ecoPoints < tradeExchange.points) res.status(404).json({error:"not enought points"});
+        //if (userTaking.ecoPoints < tradeExchange.points) res.status(404).json({error:"not enought points"});
         
         if (userOfering != null && userTaking != null && productOfering != null && productTaking  != null && req.body.userOfering != req.body.userTaking) {
           productOfering.state = "reserved";
@@ -64,7 +64,7 @@ exports.readAllTradeExchange = async (req, res) => {
           await productTaking.save();
 
           await tradeExchange.save();
-          adminController.increaseExchanges();
+          //adminController.increaseExchanges();
 
           // ==================
           // get user rewards
@@ -87,7 +87,7 @@ exports.readAllTradeExchange = async (req, res) => {
           // ==================
           // getRewards
           // ==================
-          const userRewards = await User.findById({_id:req.user.id});
+         /* const userRewards = await User.findById({_id:req.user.id});
           let nexchanges = userRewards.changes;
           let points = userRewards.ecoPoints;
           let rewards = 0;
@@ -161,7 +161,7 @@ exports.readAllTradeExchange = async (req, res) => {
           }
           if (rewardT != 0) userLevelT.ecoPoints += parseFloat(rewardT);
           if (nivelNuevoT != 0) userLevelT.level = nivelNuevoT;
-          await userLevelT.save();
+          await userLevelT.save();*/
 
           res.status(201).json(tradeExchange);  
      }

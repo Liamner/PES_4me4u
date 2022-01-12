@@ -53,13 +53,13 @@ exports.readAllTradeLoan = async (req, res) => {
 
         if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
   
-        if (userTaking.ecoPoints < tradeLoan.points) res.status(404).json({error:"not enought points"});
+        //if (userTaking.ecoPoints < tradeLoan.points) res.status(404).json({error:"not enought points"});
 
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
           await tradeLoan.save();
-          adminController.increaseLoans();
+         // adminController.increaseLoans();
           
           // ==================
           // get user rewards
@@ -73,14 +73,15 @@ exports.readAllTradeLoan = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
-          userTak.ecoPoints -= parseFloat(estimatedPoints);
+          //userTak.ecoPoints -= parseFloat(estimatedPoints);
+          userTak.ecoPoints += parseFloat(estimatedPoints);
           await userO.save();
           await userTak.save();
 
           // ==================
           // getRewards
           // ==================
-          const userRewards = await User.findById({_id:req.user.id});
+          /*const userRewards = await User.findById({_id:req.user.id});
           let nloans = userRewards.loans;
           let points = userRewards.ecoPoints;
           let rewards = 0;
@@ -117,7 +118,7 @@ exports.readAllTradeLoan = async (req, res) => {
           if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
           await userLevel.save();
-        
+        */
           res.status(201).json(tradeLoan);  
      }
 

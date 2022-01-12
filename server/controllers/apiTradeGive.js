@@ -1,9 +1,12 @@
 const TradeGive = require('../models/tradeGive.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
 const adminController = require ('../controllers/apiAdmin.js')
 const userController = require('../controllers/apiUser.js');
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeGive = async (req, res) => {
     try {
@@ -36,8 +39,15 @@ exports.readAllTradeGive = async (req, res) => {
     tradeGive.userOfering = req.user.id;
     tradeGive.userTaking = req.body.userTaking;
     tradeGive.product = req.body.product;
-    tradeGive.publishingDate = req.body.publishingDate;
+    tradeGive.publishingDate = Date.now();
     tradeGive.points = req.body.points;
+
+    await Admin.findById({_id: adminId}, async (error, admin) => {
+      console.log(admin)
+      admin.ecoPoints = parseFloat(admin.ecoPoints) + parseFloat(req.body.points)
+      await admin.save();  
+    }).clone()
+    
     try {
         const userOfering = await User.findById({_id:req.user.id});
         if (userOfering == null) res.status(404).json({error:"userOfering not found"});

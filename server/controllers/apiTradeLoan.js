@@ -1,8 +1,12 @@
 const TradeLoan = require('../models/tradeLoan.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
+
 const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeLoan = async (req, res) => {
     try {
@@ -35,11 +39,14 @@ exports.readAllTradeLoan = async (req, res) => {
     tradeLoan.userOfering = req.user.id;
     tradeLoan.userTaking = req.body.userTaking;
     tradeLoan.product = req.body.product;
-    tradeLoan.publishingDate = req.body.publishingDate;
+    tradeLoan.publishingDate = Date.now();
     tradeLoan.returnDate = req.body.returnDate;
     tradeLoan.points = req.body.points;
-     
+    const points = req.body.points;
+
+   
     try {
+      console.log('---1----')
         const userOfering = await User.findById({_id:req.user.id});
         if (userOfering == null) res.status(404).json({error:"userOfering not found"});
       
@@ -118,9 +125,14 @@ exports.readAllTradeLoan = async (req, res) => {
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
           await userLevel.save();
         
+          /*await Admin.findById({_id: adminId}, async (error, admin) => {
+            admin.ecoPoints = parseFloat(points) + parseFloat(admin.ecoPoints);
+            console.log(admin.ecoPoints)
+            await admin.save();  
+          })*/
+               
           res.status(201).json(tradeLoan);  
      }
-
     } catch (error) {
       res.status(409).json(error.message);
       

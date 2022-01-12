@@ -1,9 +1,12 @@
 const TradeGive = require('../models/tradeGive.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
 const adminController = require ('../controllers/apiAdmin.js')
 const userController = require('../controllers/apiUser.js');
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeGive = async (req, res) => {
     try {
@@ -36,8 +39,15 @@ exports.readAllTradeGive = async (req, res) => {
     tradeGive.userOfering = req.user.id;
     tradeGive.userTaking = req.body.userTaking;
     tradeGive.product = req.body.product;
-    tradeGive.publishingDate = req.body.publishingDate;
+    tradeGive.publishingDate = Date.now();
     tradeGive.points = req.body.points;
+/*
+    await Admin.findById({_id: adminId}, async (error, admin) => {
+      console.log(admin)
+      admin.ecoPoints = parseFloat(admin.ecoPoints) + parseFloat(req.body.points)
+      await admin.save();  
+    }).clone()*/
+    
     try {
         const userOfering = await User.findById({_id:req.user.id});
         if (userOfering == null) res.status(404).json({error:"userOfering not found"});
@@ -50,13 +60,13 @@ exports.readAllTradeGive = async (req, res) => {
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        //if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
         
-        if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking /*&& /*userTaking.ecoPoints >= tradeGive.points*/) {
+        if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
           await tradeGive.save();
-         // adminController.increaseGifts();
+          adminController.increaseGifts();
 
           // ==================
           // get user rewards
@@ -70,14 +80,13 @@ exports.readAllTradeGive = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
-          //userTak.ecoPoints -= parseFloat(estimatedPoints);
-          userTak.ecoPoints += parseFloat(estimatedPoints);
+          userTak.ecoPoints -= parseFloat(estimatedPoints);
           await userO.save();
           await userTak.save();
           // ==================
           // getRewards
           // ==================
-         /*const userRewards = await User.findById({_id:req.user.id});
+          const userRewards = await User.findById({_id:req.user.id});
           let ngifts = userRewards.gifts;
           let points = userRewards.ecoPoints;
           let rewards = 0;
@@ -114,7 +123,7 @@ exports.readAllTradeGive = async (req, res) => {
           }
           if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
-          await userLevel.save();*/
+          await userLevel.save();
           res.status(201).json(tradeGive);  
         }
 

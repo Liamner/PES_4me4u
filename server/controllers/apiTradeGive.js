@@ -50,7 +50,7 @@ exports.readAllTradeGive = async (req, res) => {
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
         if (product == null) res.status(404).json({error:"product not found"});
 
-        if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
+        //if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
         
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking && userTaking.ecoPoints >= tradeGive.points) {
           product.state = "reserved";
@@ -70,7 +70,8 @@ exports.readAllTradeGive = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 100) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
-          userTak.ecoPoints -= parseFloat(estimatedPoints);
+          //userTak.ecoPoints -= parseFloat(estimatedPoints);
+          userTak.ecoPoints += parseFloat(estimatedPoints);
           await userO.save();
           await userTak.save();
           // ==================

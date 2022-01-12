@@ -24,9 +24,7 @@ const authenticateJWT = (req, res, next) => {
            /* const decodedData = jwt.decode(token);
             console.log(decodedData)
             req.user = decodedData?.sub;*/
-
-            
-            
+     
             const CLIENT_ID = "700340636144-h5ir9ee69dehl0q91etirkojfqflq6s6.apps.googleusercontent.com"
             const client = new OAuth2Client(CLIENT_ID);
             async function verify() {

@@ -323,8 +323,43 @@ exports.readLoans =  async (req, res) => {
     }).clone()
   }
 
+  exports.numUsuariosReportados = async (req,res) => {
+    await Report.distinct('userReported', (error, reports) => {
+      if (error) {
+        res.status(500).json(error)
+      }
+      res.status(200).json(reports.length)
+    }).clone()
+  }
+
   exports.topProducts = async (req, res) => {
     const products = await Product.find().sort({views:-1}).limit(10) // for MAX
     if (products) res.status(200).json(products)
     else res.status(500)
+  }
+  
+  exports.getTradeEcopoints = async (req, res) => {
+    await TradeExchange.find({}, {points: 1}, async (error, exchanges) => {
+      let totalEcopoints = 0;
+      for (let i = 0; i< exchanges.length; i++) {
+        if (exchanges[i].points) {
+          totalEcopoints =  parseFloat(totalEcopoints)+parseFloat(exchanges[i].points)
+        }
+      }
+      await TradeGive.find({}, {points: 1}, async (error, give) => {
+        for (let i = 0; i< give.length; i++) {
+          if (give[i].points) {
+            totalEcopoints =  parseFloat(totalEcopoints)+parseFloat(give[i].points)
+          }
+        }
+        await TradeLoan.find({}, {points: 1}, async (error, loans) => {
+          for (let i = 0; i< loans.length; i++) {
+            if (loans[i].points) {
+              totalEcopoints =  parseFloat(totalEcopoints)+parseFloat(loans[i].points)
+            }
+          }
+          res.status(200).json(totalEcopoints)
+        }).clone()
+      }).clone()
+    }).clone()
   }

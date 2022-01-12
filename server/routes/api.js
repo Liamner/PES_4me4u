@@ -382,8 +382,10 @@ module.exports = function(app) {
   router.route('/admin/transactions').get(adminController.numTransasPorTipo)
   router.route('/admin/categories').get(adminController.numCategories)
   router.route('/admin/productsReported').get(adminController.numPorductosReportados)
+  router.route('/admin/usersReported').get(adminController.numUsuariosReportados)
   router.route('/admin/topProducts').get(adminController.topProducts)
   router.route('/admin/ecopoints').get(userController.getAllEcopoints)
+  router.route('/admin/tradesEcopoints').get(adminController.getTradeEcopoints)
   return router;
 
 

@@ -13,6 +13,7 @@ import retrieveSession from '../hooks/retrieveSession';
 import Icon from 'react-native-vector-icons/Ionicons';
 import '../assets/i18n/i18n';
 import { useTranslation } from 'react-i18next';
+import EcommuteAPI from '../components/EcommuteAPI';
 
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
   const uid = '61d1ebbfaa8e09aa5f530d5e';
@@ -397,6 +398,22 @@ export default function ViewProduct({ navigation, route }: RootTabScreenProps<'V
                 <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
               </View>
             </TouchableHighlight>
+
+            <TouchableHighlight style={styles.button} underlayColor={'#fff'}  onPress={() => {navigation.navigate("ReportProduct", {
+              prodId: pid,
+              userId: userid
+             })}}>
+
+          <View style={styles.row}>
+            <Entypo
+              name="save"
+              size={24}
+              color="#333"
+            />
+            <Text style={styles.normalText}>{t('Denunciar producto')}</Text>
+          </View>
+          </TouchableHighlight>
+          <EcommuteAPI origin = {"Madrid"} destination = {"Barcelona"} />
           </>
         }
 

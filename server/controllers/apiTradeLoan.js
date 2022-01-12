@@ -1,8 +1,12 @@
 const TradeLoan = require('../models/tradeLoan.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
+
 const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeLoan = async (req, res) => {
     try {
@@ -35,31 +39,53 @@ exports.readAllTradeLoan = async (req, res) => {
     tradeLoan.userOfering = req.user.id;
     tradeLoan.userTaking = req.body.userTaking;
     tradeLoan.product = req.body.product;
-    tradeLoan.publishingDate = req.body.publishingDate;
+    tradeLoan.publishingDate = Date.now();
     tradeLoan.returnDate = req.body.returnDate;
     tradeLoan.points = req.body.points;
-     
+    const points = req.body.points;
+
+   
     try {
+      console.log('---1----')
         const userOfering = await User.findById({_id:req.user.id});
-        if (userOfering == null) res.status(404).json({error:"userOfering not found"});
+        if (userOfering == null) {
+          res.status(404).json({error:"userOfering not found"});
+        return
+        }
       
         const userTaking = await User.findById({_id:req.body.userTaking});
-        if (userTaking == null) res.status(404).json({error:"userTaking not found"});
+        if (userTaking == null){
+          res.status(404).json({error:"userTaking not found"});
+          return
+        } 
+   
+        if (req.user.id == req.body.userTaking){ 
+          res.status(404).json({error:"userTaking == userOfering"});
+          return
+       }
 
-        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
-       
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
-        if (product == null) res.status(404).json({error:"product not found"});
 
-        if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
+        if (product == null){ 
+          res.status(404).json({error:"product not found"});
+          return
+        }
+
+        if (tradeLoan.publishingDate > req.body.returnDate){
+          res.status(404).json({error:"returnDate invalid"});
+          return
+        } 
   
-        if (userTaking.ecoPoints < tradeLoan.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeLoan.points){
+           res.status(404).json({error:"not enought points"});
+           return
+        }
 
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
           await tradeLoan.save();
-          adminController.increaseLoans();
+         // adminController.increaseLoans();
           
           // ==================
           // get user rewards
@@ -74,13 +100,14 @@ exports.readAllTradeLoan = async (req, res) => {
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
           userTak.ecoPoints -= parseFloat(estimatedPoints);
+          //userTak.ecoPoints += parseFloat(estimatedPoints);
           await userO.save();
           await userTak.save();
 
           // ==================
           // getRewards
           // ==================
-          const userRewards = await User.findById({_id:req.user.id});
+          /*const userRewards = await User.findById({_id:req.user.id});
           let nloans = userRewards.loans;
           let points = userRewards.ecoPoints;
           let rewards = 0;
@@ -117,10 +144,15 @@ exports.readAllTradeLoan = async (req, res) => {
           if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
           await userLevel.save();
-        
+
+          /*await Admin.findById({_id: adminId}, async (error, admin) => {
+            admin.ecoPoints = parseFloat(points) + parseFloat(admin.ecoPoints);
+            console.log(admin.ecoPoints)
+            await admin.save();  
+          })*/
+               
           res.status(201).json(tradeLoan);  
      }
-
     } catch (error) {
       res.status(409).json(error.message);
       

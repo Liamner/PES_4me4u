@@ -176,7 +176,7 @@ module.exports = function(app) {
   router.route('/user/:id/AddToWishlist')
     .put(authenticateJWT, userController.addToWishlist)
 
-  router.route('/user/:id/DeleteFromWishlist')
+  router.route('/user/:id/DeleteFromWishlist/:idProduct')
     .delete(authenticateJWT, userController.deleteFromWishlist)
   
   router.route('/user/:id/followed')
@@ -195,7 +195,6 @@ module.exports = function(app) {
   //router.route('/user/:id/follow')
   //  .post(authenticateJWT, userController.follow)
 
-    
   // ======================
   // ---- Trade Routes ----
   // ======================
@@ -345,8 +344,8 @@ module.exports = function(app) {
   router.route('/admin/:id/users')
     .get(adminController.readUsers)
 
-  router.route('/admin/:id/increaseUsers')
-    .put(adminController.increaseUsers);
+  //router.route('/admin/:id/increaseUsers')
+  //  .put(adminController.increaseUsers);
 
   router.route('/admin/:id/products')
     .get(adminController.readProducts)
@@ -357,8 +356,8 @@ module.exports = function(app) {
   router.route('/admin/:id/ecoPoints')
     .get(adminController.readEcoPoints)
 
-  router.route('/admin/:id/increaseEcopoints')
-    .put(adminController.increaseEcopoints);
+  //router.route('/admin/:id/increaseEcopoints')
+  //  .put(adminController.increaseEcopoints);
 
   router.route('/admin/:id/increaseBlockedUsers')
     .put(adminController.increaseBlockedUsers);
@@ -383,7 +382,10 @@ module.exports = function(app) {
   router.route('/admin/transactions').get(adminController.numTransasPorTipo)
   router.route('/admin/categories').get(adminController.numCategories)
   router.route('/admin/productsReported').get(adminController.numPorductosReportados)
+  router.route('/admin/usersReported').get(adminController.numUsuariosReportados)
   router.route('/admin/topProducts').get(adminController.topProducts)
+  router.route('/admin/ecopoints').get(userController.getAllEcopoints)
+  router.route('/admin/tradesEcopoints').get(adminController.getTradeEcopoints)
   return router;
 
 

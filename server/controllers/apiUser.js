@@ -4,7 +4,8 @@ const Comment = require('../models/comment.js');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const adminController = require('../controllers/apiAdmin.js')
+const adminController = require('../controllers/apiAdmin.js');
+const user = require('../models/user.js');
 //const user = require('../models/user.js');
 const app = express();
 
@@ -68,7 +69,7 @@ exports.registerUser = async (req, res) => {
   });
   try {
     await usuario.save();
-    adminController.increaseUsers();
+    //adminController.increaseUsers();
     res.status(200).json(usuario);
   }
   catch (err) {
@@ -405,7 +406,8 @@ exports.addToWishlist = async (req, res) => {
 exports.deleteFromWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    let idProduct = req.body.idProduct;
+    //let idProduct = req.body.idProduct;
+    const idProduct = req.params.idProduct;
     const ourUser = await User.findById({ _id: userId }).populate("wishlist");
     let i = 0, find = 0;
 
@@ -548,4 +550,14 @@ exports.updateRecentlyViewed = async (req, res) => {
   } catch (error) {
     res.status(400).json(error)
   }
+}
+
+exports.getAllEcopoints = async (req, res) => {
+  await User.find({}, {ecoPoints: 1}, (error, users) => {
+    let totalEcopoints = 0;
+    for (let i = 0; i< users.length; i++) {
+      totalEcopoints =  parseFloat(totalEcopoints)+parseFloat(users[i].ecoPoints)
+    }
+    res.status(200).json(totalEcopoints)
+  }).clone()
 }

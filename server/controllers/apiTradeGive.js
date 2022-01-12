@@ -1,9 +1,12 @@
 const TradeGive = require('../models/tradeGive.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
 const adminController = require ('../controllers/apiAdmin.js')
 const userController = require('../controllers/apiUser.js');
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeGive = async (req, res) => {
     try {
@@ -36,27 +39,48 @@ exports.readAllTradeGive = async (req, res) => {
     tradeGive.userOfering = req.user.id;
     tradeGive.userTaking = req.body.userTaking;
     tradeGive.product = req.body.product;
-    tradeGive.publishingDate = req.body.publishingDate;
+    tradeGive.publishingDate = Date.now();
     tradeGive.points = req.body.points;
+/*
+    await Admin.findById({_id: adminId}, async (error, admin) => {
+      console.log(admin)
+      admin.ecoPoints = parseFloat(admin.ecoPoints) + parseFloat(req.body.points)
+      await admin.save();  
+    }).clone()*/
+    
     try {
         const userOfering = await User.findById({_id:req.user.id});
-        if (userOfering == null) res.status(404).json({error:"userOfering not found"});
+        if (userOfering == null){
+          res.status(404).json({error:"userOfering not found"});
+          return
+        } 
       
         const userTaking = await User.findById({_id:req.body.userTaking});
-        if (userTaking == null) res.status(404).json({error:"userTaking not found"});
+        if (userTaking == null){
+          res.status(404).json({error:"userTaking not found"});
+          return
+        }
 
-        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
+        if (req.user.id == req.body.userTaking){
+          res.status(404).json({error:"userTaking == userOfering"});
+          return
+        }
        
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
-        if (product == null) res.status(404).json({error:"product not found"});
+        if (product == null) {
+          res.status(404).json({error:"product not found"});
+          return
+        }
+        if (userTaking.ecoPoints < tradeGive.points){
+           res.status(404).json({error:"not enought points"});
+           return
+        }
 
-        if (userTaking.ecoPoints < tradeGive.points) res.status(404).json({error:"not enought points"});
-        
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
           await product.save();
           await tradeGive.save();
-          adminController.increaseGifts();
+         
 
           // ==================
           // get user rewards

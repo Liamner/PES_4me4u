@@ -26,7 +26,7 @@ exports.readAllProducts =  async (req, res) => {
 exports.readProduct = async (req, res) => {
   try {
     await Product.findById({ _id: req.params.id }, async (error, product) => {
-      if (product.userId != req.user.id) {
+      if (product && product.userId != req.user.id) {
         console.log('Not my product')
         product.views =  product.views + 1;
         await product.save();
@@ -150,8 +150,7 @@ exports.createProduct = async (req, res) => {
                                     {$push : {
                                       products: newProduct
                                     }
-                                  });
-    adminController.increaseProducts();                          
+                                  });                        
     res.status(201).json(product);}
 
   } catch (error) {

@@ -1,8 +1,12 @@
 const TradeExchange = require('../models/tradeExchange.js');
 const Product = require('../models/product.js');
 const User = require('../models/user.js');
+const Admin = require('../models/admin.js');
+
 const adminController = require ('../controllers/apiAdmin.js')
 const { ObjectId } = require('mongodb');
+
+const adminId = "61da133ecaf3d945081b65ee";
 
 exports.readAllTradeExchange = async (req, res) => {
     try {
@@ -36,25 +40,49 @@ exports.readAllTradeExchange = async (req, res) => {
     tradeExchange.userTaking = req.body.userTaking;
     tradeExchange.productOfering = req.body.productOfering;
     tradeExchange.productTaking = req.body.productTaking;
-    tradeExchange.publishingDate = req.body.publishingDate;
+    tradeExchange.publishingDate = Date.now();
     tradeExchange.points = req.body.points; 
-     
+
+    /*
+    await Admin.findById({_id: adminId}, async (error, admin) => {
+      console.log(admin)
+      admin.ecoPoints = parseFloat(admin.ecoPoints) + parseFloat(req.body.points)
+      await admin.save();  
+    }).clone()
+     */
     try {
         const userOfering = await User.findById({_id:req.user.id});
-        if (userOfering == null) res.status(404).json({error:"userOfering not found"});
-      
+        if (userOfering == null){
+           res.status(404).json({error:"userOfering not found"});
+           return
+        }
         const userTaking = await User.findById({_id:req.body.userTaking});
-        if (userTaking == null) res.status(404).json({error:"userTaking not found"});
+        if (userTaking == null) {
+          res.status(404).json({error:"userTaking not found"});
+          return
+        }
 
-        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
-       
+        if (req.user.id == req.body.userTaking){
+          res.status(404).json({error:"userTaking == userOfering"});
+          return
+        }
+
         const productOfering = await Product.findById({_id:req.body.productOfering, userId: req.user.id});
-        if (productOfering == null) res.status(404).json({error:"productOfering not found"});
-
+        if (productOfering == null){
+           res.status(404).json({error:"productOfering not found"});
+           return
+        }
         const productTaking = await Product.findById({_id:req.body.productTaking, userId: req.body.userTaking});
-        if (productTaking == null) res.status(404).json({error:"productTaking not found"}); 
-        
-        if (userTaking.ecoPoints < tradeExchange.points) res.status(404).json({error:"not enought points"});
+        if (productTaking == null){
+           res.status(404).json({error:"productTaking not found"}); 
+           return
+        }
+
+        if (userTaking.ecoPoints < tradeExchange.points){
+          res.status(404).json({error:"not enought points"});
+          return
+        }
+
         
         if (userOfering != null && userTaking != null && productOfering != null && productTaking  != null && req.body.userOfering != req.body.userTaking) {
           productOfering.state = "reserved";
@@ -64,7 +92,7 @@ exports.readAllTradeExchange = async (req, res) => {
           await productTaking.save();
 
           await tradeExchange.save();
-          adminController.increaseExchanges();
+          //adminController.increaseExchanges();
 
           // ==================
           // get user rewards
@@ -87,7 +115,7 @@ exports.readAllTradeExchange = async (req, res) => {
           // ==================
           // getRewards
           // ==================
-          const userRewards = await User.findById({_id:req.user.id});
+         /* const userRewards = await User.findById({_id:req.user.id});
           let nexchanges = userRewards.changes;
           let points = userRewards.ecoPoints;
           let rewards = 0;
@@ -161,7 +189,7 @@ exports.readAllTradeExchange = async (req, res) => {
           }
           if (rewardT != 0) userLevelT.ecoPoints += parseFloat(rewardT);
           if (nivelNuevoT != 0) userLevelT.level = nivelNuevoT;
-          await userLevelT.save();
+          await userLevelT.save();*/
 
           res.status(201).json(tradeExchange);  
      }

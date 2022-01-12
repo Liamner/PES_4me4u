@@ -52,20 +52,37 @@ exports.readAllTradeExchange = async (req, res) => {
      */
     try {
         const userOfering = await User.findById({_id:req.user.id});
-        if (userOfering == null) res.status(404).json({error:"userOfering not found"});
-      
+        if (userOfering == null){
+           res.status(404).json({error:"userOfering not found"});
+           return
+        }
         const userTaking = await User.findById({_id:req.body.userTaking});
-        if (userTaking == null) res.status(404).json({error:"userTaking not found"});
+        if (userTaking == null) {
+          res.status(404).json({error:"userTaking not found"});
+          return
+        }
 
-        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
-       
+        if (req.user.id == req.body.userTaking){
+          res.status(404).json({error:"userTaking == userOfering"});
+          return
+        }
+
         const productOfering = await Product.findById({_id:req.body.productOfering, userId: req.user.id});
-        if (productOfering == null) res.status(404).json({error:"productOfering not found"});
-
+        if (productOfering == null){
+           res.status(404).json({error:"productOfering not found"});
+           return
+        }
         const productTaking = await Product.findById({_id:req.body.productTaking, userId: req.body.userTaking});
-        if (productTaking == null) res.status(404).json({error:"productTaking not found"}); 
-        
-        //if (userTaking.ecoPoints < tradeExchange.points) res.status(404).json({error:"not enought points"});
+        if (productTaking == null){
+           res.status(404).json({error:"productTaking not found"}); 
+           return
+        }
+
+        if (userTaking.ecoPoints < tradeExchange.points){
+          res.status(404).json({error:"not enought points"});
+          return
+        }
+
         
         if (userOfering != null && userTaking != null && productOfering != null && productTaking  != null && req.body.userOfering != req.body.userTaking) {
           productOfering.state = "reserved";

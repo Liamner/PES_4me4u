@@ -48,19 +48,38 @@ exports.readAllTradeLoan = async (req, res) => {
     try {
       console.log('---1----')
         const userOfering = await User.findById({_id:req.user.id});
-        if (userOfering == null) res.status(404).json({error:"userOfering not found"});
+        if (userOfering == null) {
+          res.status(404).json({error:"userOfering not found"});
+        return
+        }
       
         const userTaking = await User.findById({_id:req.body.userTaking});
-        if (userTaking == null) res.status(404).json({error:"userTaking not found"});
+        if (userTaking == null){
+          res.status(404).json({error:"userTaking not found"});
+          return
+        } 
+   
+        if (req.user.id == req.body.userTaking){ 
+          res.status(404).json({error:"userTaking == userOfering"});
+          return
+       }
 
-        if (req.user.id == req.body.userTaking) res.status(404).json({error:"userTaking == userOfering"});
-       
         const product = await Product.findById({_id:req.body.product, userId: req.user.id});
-        if (product == null) res.status(404).json({error:"product not found"});
 
-        if (tradeLoan.publishingDate > req.body.returnDate) res.status(404).json({error:"returnDate invalid"});
+        if (product == null){ 
+          res.status(404).json({error:"product not found"});
+          return
+        }
+
+        if (tradeLoan.publishingDate > req.body.returnDate){
+          res.status(404).json({error:"returnDate invalid"});
+          return
+        } 
   
-        //if (userTaking.ecoPoints < tradeLoan.points) res.status(404).json({error:"not enought points"});
+        if (userTaking.ecoPoints < tradeLoan.points){
+           res.status(404).json({error:"not enought points"});
+           return
+        }
 
         if (userOfering != null && userTaking != null && product != null && req.body.userOfering != req.body.userTaking) {
           product.state = "reserved";
@@ -80,8 +99,8 @@ exports.readAllTradeLoan = async (req, res) => {
           if(estimatedPoints >= 1 && estimatedPoints <= 15) total = parseFloat(eco)+parseFloat(estimatedPoints)
           else res.status(400).json({error: 'Estimated points are too high'})
           userO.ecoPoints = total;
-          //userTak.ecoPoints -= parseFloat(estimatedPoints);
-          userTak.ecoPoints += parseFloat(estimatedPoints);
+          userTak.ecoPoints -= parseFloat(estimatedPoints);
+          //userTak.ecoPoints += parseFloat(estimatedPoints);
           await userO.save();
           await userTak.save();
 

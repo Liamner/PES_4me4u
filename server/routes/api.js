@@ -383,6 +383,7 @@ module.exports = function(app) {
   router.route('/admin/categories').get(adminController.numCategories)
   router.route('/admin/productsReported').get(adminController.numPorductosReportados)
   router.route('/admin/topProducts').get(adminController.topProducts)
+  router.route('/admin/ecopoints').get(userController.getAllEcopoints)
   return router;
 
 

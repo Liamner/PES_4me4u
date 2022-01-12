@@ -180,7 +180,12 @@ export default function CreateProduct({ navigation }: RootTabScreenProps<'Create
         });
     });
 
-    navigation.navigate('FirstScreen')
+    Alert.alert(
+      "Producto creado",
+      "El producto ha sido creado",
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ])
 
   }
 

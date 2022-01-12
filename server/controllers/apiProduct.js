@@ -150,8 +150,7 @@ exports.createProduct = async (req, res) => {
                                     {$push : {
                                       products: newProduct
                                     }
-                                  });
-    adminController.increaseProducts();                          
+                                  });                        
     res.status(201).json(product);}
 
   } catch (error) {

@@ -206,8 +206,6 @@ exports.readLoans =  async (req, res) => {
       //const adminId = req.params.id;
       //const adminId = "61d8d7022ba81367f067e683";
       const admin = await Admin.findById({_id: adminId});
-      admin.products += 1;
-      admin.save();
   
       //res.status(200).json(admin);
       //console.log(admin);

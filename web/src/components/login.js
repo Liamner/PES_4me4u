@@ -23,10 +23,10 @@ export default function Login({ setToken }) {
       setUser(response.data.user.userId)
     }
     catch (err) {
-      if(err.request.status === 400) {
+      if(err.request.status === 401 || err.request.status === 404) {
         setError('Email y/o contraseña incorrecta')
       }
-      else if(err.request.status === 401) {
+      else if(err.request.status === 403) {
         setError('No tienes permisos para entrar')
       }
       else {

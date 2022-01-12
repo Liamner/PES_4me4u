@@ -195,7 +195,6 @@ module.exports = function(app) {
   //router.route('/user/:id/follow')
   //  .post(authenticateJWT, userController.follow)
 
-    
   // ======================
   // ---- Trade Routes ----
   // ======================
@@ -357,8 +356,8 @@ module.exports = function(app) {
   router.route('/admin/:id/ecoPoints')
     .get(adminController.readEcoPoints)
 
-  router.route('/admin/:id/increaseEcopoints')
-    .put(adminController.increaseEcopoints);
+  //router.route('/admin/:id/increaseEcopoints')
+  //  .put(adminController.increaseEcopoints);
 
   router.route('/admin/:id/increaseBlockedUsers')
     .put(adminController.increaseBlockedUsers);

@@ -20,6 +20,7 @@ import ChatList from '../screens/ChatList';
 import ChatView from '../screens/ChatView';
 import ReportProduct from '../screens/ReportProduct';
 import UserProducts from '../screens/UserProducts';
+import ReportUser from '../screens/ReportUser';
 
 import { RootStackParamList } from '../types';
 
@@ -43,7 +44,8 @@ export default function RootNavigator() {
       <Stack.Screen name="ProductRead" component={ProductRead} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="UserProducts" component={UserProducts} options={{ headerShown: true, headerShadowVisible: false }} /> 
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} /> 
-      <Stack.Screen name="ReportProduct" component={ReportProduct} options={{ headerShown: true, headerShadowVisible: false }} />     
+      <Stack.Screen name="ReportProduct" component={ReportProduct} options={{ headerShown: true, headerShadowVisible: false }} />
+      <Stack.Screen name="ReportUser" component={ReportUser} options={{ headerShown: true, headerShadowVisible: false }} />     
 
 
       <Stack.Group screenOptions={{ presentation: 'modal' }}>

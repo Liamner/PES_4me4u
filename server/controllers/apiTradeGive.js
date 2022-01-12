@@ -61,7 +61,7 @@ exports.readAllTradeGive = async (req, res) => {
           // ==================
           // get user rewards
           // ==================
-          const userO = await User.findById({_id:req.user.id});
+          /*const userO = await User.findById({_id:req.user.id});
           const userTak = await User.findById({_id:req.body.userTaking});
           userO.gift += 1;
           let estimatedPoints = req.body.points;
@@ -114,7 +114,7 @@ exports.readAllTradeGive = async (req, res) => {
           }
           if (reward != 0) userLevel.ecoPoints += parseFloat(reward);
           if (nivelNuevo != 0) userLevel.level = nivelNuevo;
-          await userLevel.save();
+          await userLevel.save();*/
           res.status(201).json(tradeGive);  
         }
 

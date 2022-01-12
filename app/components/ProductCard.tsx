@@ -95,7 +95,7 @@ export function ProductCard({ navigation, id, uid, name, imageUri, arrayTratos, 
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate("ProductRead", { pid: id, reload: false })}>
+        <TouchableOpacity onPress={() => navigation.navigate("ProductRead", id)}>
           <Image source={{ uri: imageUri }} style={styles.cameraImage} />
         </TouchableOpacity>
         <View

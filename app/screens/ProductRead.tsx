@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export default function ViewProduct({ navigation, route }: RootTabScreenProps<'ViewProduct'>) {
   const uid = '61d1ebbfaa8e09aa5f530d5e';
 
-  const pid = route.params.pid;
+  const pid = route.params;
   //Variables de las respuestas API
   const [user, setUser] = useState('@Usuario');
   const [userid, setUserID] = useState('');
